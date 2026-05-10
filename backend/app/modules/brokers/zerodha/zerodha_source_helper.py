@@ -83,7 +83,6 @@ async def fetch_holdings_json(enctoken: str) -> list[dict[str, Any]]:
         client.cookies.set("enctoken", enctoken, domain="kite.zerodha.com")
         res = await client.get(HOLDINGS_PATH)
         if res.status_code in (401, 403):
-            # Zerodha returns 403 for expired/invalid tokens on the OMS path
             raise httpx.HTTPStatusError(
                 f"enctoken rejected ({res.status_code})", request=res.request, response=res
             )

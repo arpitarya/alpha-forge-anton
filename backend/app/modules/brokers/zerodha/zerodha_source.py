@@ -10,9 +10,9 @@ import httpx
 from app.core.logging import get_logger
 from app.modules.brokers._http import clear_session
 from app.modules.brokers.base import AssetClass, BrokerSource, Holding, SourceKind, SourceStatus
-from app.modules.brokers.zerodha_csv import ZerodhaCSVSource as _ZerodhaCSV
-from app.modules.brokers.zerodha_dump import is_csv_fresh, live_csv_path, read_csv, write_csv
-from app.modules.brokers.zerodha_kite_helper import (
+from app.modules.brokers.zerodha.csv import ZerodhaCSVSource as _ZerodhaCSV
+from app.modules.brokers.zerodha.zerodha_dump import is_csv_fresh, live_csv_path, read_csv, write_csv
+from app.modules.brokers.zerodha.zerodha_source_helper import (
     REQUIRED_ENV,
     acquire_enctoken,
     env,
@@ -21,7 +21,6 @@ from app.modules.brokers.zerodha_kite_helper import (
 
 logger = get_logger("brokers.zerodha_kite")
 
-# Re-exports for sibling Zerodha sources (Coin) that want to share the session.
 __all__ = ["ZerodhaKiteSource", "acquire_enctoken", "env", "REQUIRED_ENV"]
 
 

@@ -1,11 +1,13 @@
-"""Zerodha holdings CSV cache — fetches via CDP, caches to CSV for CSV_TTL_SECONDS.
+"""Zerodha holdings CSV cache — fetches via CDP, caches to CSV.
 
-Live CSV : ~/.alphaforge/portfolio-dumps/zerodha-holdings-live.csv  (1-hour TTL)
+TTL controlled by ZERODHA_REFETCH_SECONDS (root .env). Default 1h.
+
+Live CSV : ~/.alphaforge/portfolio-dumps/zerodha-holdings-live.csv
 Dated CSV: zerodha-holdings-YYYY-MM-DD.csv  (archival snapshot, written alongside)
 
 Run standalone:
-    python -m app.modules.brokers.zerodha_dump
-    python -m app.modules.brokers.zerodha_dump --force-login
+    python -m app.modules.brokers.zerodha.dump
+    python -m app.modules.brokers.zerodha.dump --force-login
 """
 
 from __future__ import annotations
@@ -20,7 +22,7 @@ from pathlib import Path
 from typing import Any
 
 from app.core.logging import get_logger
-from app.modules.brokers.zerodha_kite_helper import acquire_enctoken, fetch_holdings_json
+from app.modules.brokers.zerodha.zerodha_source_helper import acquire_enctoken, fetch_holdings_json
 
 logger = get_logger("brokers.zerodha_dump")
 
@@ -30,7 +32,8 @@ CSV_HEADERS = (
     "quantity", "average_price", "last_price",
     "invested", "current_value", "pnl", "pnl_pct",
 )
-CSV_TTL_SECONDS = 3600
+def _ttl_seconds() -> int:
+    return int(os.getenv("ZERODHA_REFETCH_SECONDS", "3600"))
 
 
 def _dump_dir() -> Path:
@@ -47,7 +50,7 @@ def live_csv_path() -> Path:
 
 def is_csv_fresh() -> bool:
     p = live_csv_path()
-    return p.exists() and (time.time() - p.stat().st_mtime) < CSV_TTL_SECONDS
+    return p.exists() and (time.time() - p.stat().st_mtime) < _ttl_seconds()
 
 
 def read_csv() -> list[dict[str, str]]:

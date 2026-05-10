@@ -154,6 +154,14 @@ zerodha-chrome:
         --user-data-dir="$HOME/.cache/alphaforge-chrome" \
         https://kite.zerodha.com/ &
 
+# Dump today's Groww holdings to ~/.alphaforge/portfolio-dumps/*.csv
+groww-dump:
+    cd backend && uv run python -m app.modules.brokers.groww.groww_dump
+
+# Force fresh Groww login, then dump.
+groww-dump-force:
+    cd backend && uv run python -m app.modules.brokers.groww.groww_dump --force-login
+
 # Dump today's Zerodha holdings to ~/.alphaforge/portfolio-dumps/*.xlsx
 # (waits for manual login in the CDP-attached Chrome if no cached session).
 zerodha-dump:

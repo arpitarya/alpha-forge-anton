@@ -11,12 +11,14 @@ back to CSV upload (the new API sources also implement `parse()` so the
 from __future__ import annotations
 
 from app.modules.brokers.base import BrokerSource
-from app.modules.brokers.zerodha_kite import ZerodhaKiteSource
+from app.modules.brokers.groww import GrowwSource
+from app.modules.brokers.zerodha import ZerodhaKiteSource
 
 
 def _build_sources() -> dict[str, BrokerSource]:
     instances: list[BrokerSource] = [
         ZerodhaKiteSource(),    # slug: zerodha
+        GrowwSource(),          # slug: groww  (CSV active; CDP fetch stub)
     ]
     return {s.slug: s for s in instances}
 

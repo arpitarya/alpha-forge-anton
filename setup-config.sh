@@ -47,7 +47,7 @@ RANDOM_KEYS=("JWT_SECRET_KEY" "POSTGRES_PASSWORD")
 MANUAL_KEYS=(
     "GEMINI_API_KEY" "GROQ_API_KEY"
     "HUGGINGFACE_API_KEY" "OPENROUTER_API_KEY"
-    "ZERODHA_USER_ID"
+    "ZERODHA_USER_ID" "GROWW_USER_ID"
 )
 
 # ── Keys to prompt for interactively when blank ──────────────────────────────
@@ -55,6 +55,7 @@ MANUAL_KEYS=(
 # Add a new entry per line to extend.
 PROMPT_KEYS=(
     "ZERODHA_USER_ID|Zerodha client ID (e.g. AB1234) — login is manual, no password stored|0"
+    "GROWW_USER_ID|Groww registered email or user ID — login is manual, no password stored|0"
 )
 
 # ── Output helpers ─────────────────────────────────────────────────────────────
