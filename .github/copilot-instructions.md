@@ -83,6 +83,7 @@ just setup-mcp            # Install Playwright Chromium + configure .vscode/sett
 - **Logging**: Backend uses `from app.core.logging import get_logger`; Frontend uses `import { getLogger } from "@/lib/logger"`. Logs write to `logs/` dir (gitignored). Configure via `LOG_LEVEL`, `LOG_DIR`, `LOG_FILE` env vars.
 - **New UI component?** Add to `packages/solar-orb-ui/src/components/`, export from `src/index.ts`, rebuild with `pnpm build`
 - **New broker?** Implement `BaseBroker` in `backend/app/services/broker_{name}.py`
+- **Broker CSV dumps**: See [docs/broker-csv-dumps.md](../docs/broker-csv-dumps.md) — all broker `*_dump.py` files must use `dump_utils.py` helpers; never duplicate path, permission, or P&L logic.
 - **Database migrations**: `cd backend && pdm run alembic revision --autogenerate -m "description"`
 - **Environment variables**: All ports defined in `.env.port` at repo root. Add new vars to the appropriate `.env.example` file — never commit `.env`
 - **Design tokens**: Source of truth is `packages/solar-orb-ui/src/tokens/` (JSON + TS). CSS tokens in `theme.css` must stay in sync.

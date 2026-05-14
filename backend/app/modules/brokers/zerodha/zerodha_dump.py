@@ -2,93 +2,52 @@
 
 TTL controlled by ZERODHA_REFETCH_SECONDS (root .env). Default 1h.
 
-Live CSV : ~/.alphaforge/portfolio-dumps/zerodha-holdings-live.csv
-Dated CSV: zerodha-holdings-YYYY-MM-DD.csv  (archival snapshot, written alongside)
-
 Run standalone:
-    python -m app.modules.brokers.zerodha.dump
-    python -m app.modules.brokers.zerodha.dump --force-login
+    python -m app.modules.brokers.zerodha.zerodha_dump
+    python -m app.modules.brokers.zerodha.zerodha_dump --force-login
 """
-
 from __future__ import annotations
 
 import asyncio
-import csv
 import os
 import sys
-import time
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import app.modules.brokers.dump_utils as _du
 from app.core.logging import get_logger
 from app.modules.brokers.zerodha.zerodha_source_helper import acquire_enctoken, fetch_holdings_json
 
 logger = get_logger("brokers.zerodha_dump")
+SLUG = "zerodha"
 
-DEFAULT_DUMP_DIR = Path.home() / ".alphaforge" / "portfolio-dumps"
-CSV_HEADERS = (
-    "tradingsymbol", "isin", "exchange",
-    "quantity", "average_price", "last_price",
-    "invested", "current_value", "pnl", "pnl_pct",
-)
-def _ttl_seconds() -> int:
+
+def _ttl() -> int:
     return int(os.getenv("ZERODHA_REFETCH_SECONDS", "3600"))
 
 
-def _dump_dir() -> Path:
-    raw = os.getenv("PORTFOLIO_DUMP_DIR", "").strip()
-    p = Path(raw).expanduser().resolve() if raw else DEFAULT_DUMP_DIR
-    p.mkdir(parents=True, exist_ok=True)
-    os.chmod(p, 0o700)
-    return p
-
-
 def live_csv_path() -> Path:
-    return _dump_dir() / "zerodha-holdings-live.csv"
+    return _du.live_csv_path(SLUG)
 
 
 def is_csv_fresh() -> bool:
-    p = live_csv_path()
-    return p.exists() and (time.time() - p.stat().st_mtime) < _ttl_seconds()
+    return _du.is_csv_fresh(SLUG, _ttl())
 
 
 def read_csv() -> list[dict[str, str]]:
-    with live_csv_path().open(newline="", encoding="utf-8") as fh:
-        return list(csv.DictReader(ln for ln in fh if not ln.startswith("#")))
-
-
-def _row_values(r: dict[str, Any]) -> list[Any]:
-    qty = float(r.get("quantity") or 0)
-    avg = float(r.get("average_price") or 0)
-    ltp = float(r.get("last_price") or 0)
-    invested, cur = qty * avg, qty * ltp
-    pnl = cur - invested
-    return [
-        r.get("tradingsymbol"), r.get("isin"), r.get("exchange"),
-        qty, avg, ltp, round(invested, 2), round(cur, 2),
-        round(pnl, 2), round((pnl / invested * 100) if invested else 0.0, 2),
-    ]
+    return _du.read_csv(SLUG)
 
 
 def write_csv(rows: list[dict[str, Any]], dst: Path) -> None:
-    dumped_at = datetime.now(timezone.utc).isoformat()
-    with dst.open("w", newline="", encoding="utf-8") as fh:
-        fh.write(f"# source=zerodha  dumped_at_utc={dumped_at}  holdings_count={len(rows)}\n")
-        w = csv.writer(fh)
-        w.writerow(CSV_HEADERS)
-        for r in rows:
-            w.writerow(_row_values(r))
-    os.chmod(dst, 0o600)
+    _du.write_csv(rows, dst, source=SLUG)
 
 
 async def dump_zerodha(*, force_login: bool = False) -> Path:
     enctoken = await acquire_enctoken(force=force_login)
     rows = await fetch_holdings_json(enctoken)
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     live = live_csv_path()
     write_csv(rows, live)
-    write_csv(rows, _dump_dir() / f"zerodha-holdings-{today}.csv")
+    write_csv(rows, _du.dated_csv_path(SLUG))
     logger.info("Zerodha: dumped %d holdings → %s", len(rows), live)
     return live
 

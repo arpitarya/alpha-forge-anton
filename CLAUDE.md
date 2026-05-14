@@ -16,7 +16,7 @@ alpha-forge/
 │   │   ├── auth/        routes + User ORM
 │   │   ├── market/      routes + market_data service
 │   │   ├── portfolio/   routes + Holding/Order/Watchlist ORM
-│   │   ├── brokers/     pluggable BrokerSource adapters (Zerodha Kite/Coin, Groww, Angel One, Wint, Dezerv) + aggregator + registry. Used by portfolio routes
+│   │   ├── brokers/     pluggable BrokerSource adapters (Zerodha Kite/Coin, Groww, Angel One, Wint, Dezerv) + aggregator + registry. Used by portfolio routes. All CSV portfolio dumps share `dump_utils.py` (path, permissions, headers, P&L calc)
 │   │   ├── memory/      EmbeddingService + MemoryService + ScreenerPickEmbedding/ConversationMemory ORM. Used by ai + screener
 │   │   ├── ai/          routes + AIService (RAG, sentiment, screener Q&A)
 │   │   ├── llm/         routes + LLMGateway thin wrapper
@@ -111,6 +111,7 @@ alpha-forge/
 - `backend/app/modules/__init__.py` — registers every feature router under `/api/v1/*`
 - `backend/app/modules/brokers/base.py` — `BrokerSource` ABC; implement for new brokers
 - `backend/app/modules/brokers/registry.py` — broker source registry (slug → class)
+- `backend/app/modules/brokers/dump_utils.py` — shared CSV-dump utilities (path, permissions, headers, P&L) used by every broker. See [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md).
 - `backend/app/modules/screener/screener_service.py` — Screener picks storage/retrieval
 - `backend/app/modules/screener/screener_routes.py` — Screener API endpoints
 - `backend/app/modules/llm/llm_service.py` — LLM Gateway thin wrapper
@@ -245,6 +246,7 @@ alphaforge-repo-context-mcp                                     # Same server (a
 - When a new module or feature is built, create an `implement.txt` inside that module's directory logging what was built, decisions made, and status; then link it from the root-level `implement.txt` so all modules can be tracked from one place
 - Broker tokens encrypted at rest
 - CORS restricted to frontend origin only
+- **All broker CSV dumps must follow [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md)** — single source of truth for path, permissions, headers, and P&L logic.
 - No guaranteed return claims anywhere in code or UI
 - Follow the file layout + naming rules in [structure/](structure/README.md). Each top-level module has its own `files.md` and `variables.md`; consult them before creating a new file or naming a new symbol.
 

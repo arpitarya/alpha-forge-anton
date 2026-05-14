@@ -1,3 +1,7 @@
+## Broker CSV Dumps
+
+All broker holdings dumps share a single implementation. See [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md).
+
 ## graphify
 
 This project has a graphify knowledge graph at graphify-out/.
