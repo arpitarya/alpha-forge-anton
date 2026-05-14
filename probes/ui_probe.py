@@ -109,6 +109,52 @@ async def run(base: str, cdp_port: int) -> bool:
         _record("Portfolio page loads", ok, f"HTTP {resp.status if resp else '?'}")
         await page.screenshot(path=str(SHOT_DIR / "03-portfolio.png"))
 
+        # ── 5a. Portfolio data quality ─────────────────────────────────
+        print("\n── Portfolio data quality")
+
+        # Check holdings API responds with data
+        import httpx  # noqa: PLC0415
+
+        token_val = await page.evaluate("() => localStorage.getItem('af_token')")
+        headers = {"Authorization": f"Bearer {token_val}"} if token_val else {}
+        api_base = base.replace(":3000", ":8000")
+        async with httpx.AsyncClient(base_url=api_base, headers=headers, timeout=10.0) as client:
+            try:
+                r = await client.get("/api/portfolio/holdings")
+                _record("Holdings API responds", r.status_code < 400, f"HTTP {r.status_code}")
+                if r.status_code < 400:
+                    payload = r.json()
+                    totals = payload.get("totals", {})
+                    holdings = payload.get("holdings", [])
+                    _record("Holdings list non-empty", len(holdings) > 0, f"{len(holdings)} holdings")
+                    _record("Invested > 0", totals.get("invested", 0) > 0, f"₹{totals.get('invested', 0):,.0f}")
+                    _record("Current value > 0", totals.get("current_value", 0) > 0, f"₹{totals.get('current_value', 0):,.0f}")
+
+                    # Per-broker data checks
+                    for slug in ("zerodha", "groww", "wintwealth"):
+                        broker_holdings = [h for h in holdings if h.get("source") == slug]
+                        if broker_holdings:
+                            bad_pnl_pct = [
+                                h for h in broker_holdings
+                                if h.get("invested", 0) > 0
+                                and abs(h.get("pnl_pct", 0) - (
+                                    (h["current_value"] - h["invested"]) / h["invested"] * 100
+                                )) > 0.01
+                            ]
+                            _record(
+                                f"{slug}: pnl_pct consistent with invested/current_value",
+                                len(bad_pnl_pct) == 0,
+                                f"{len(bad_pnl_pct)} inconsistent row(s)" if bad_pnl_pct else "",
+                            )
+                            ltp_zero = [h for h in broker_holdings if h.get("last_price", 0) == 0]
+                            _record(
+                                f"{slug}: no holdings with ltp=0",
+                                len(ltp_zero) == 0,
+                                f"{len(ltp_zero)} row(s) with ltp=0" if ltp_zero else "",
+                            )
+            except Exception as e:  # noqa: BLE001
+                _record("Holdings API reachable", False, str(e))
+
         # ── 6. Session persists across reload ─────────────────────────
         print("\n── Session persistence")
         await page.reload(wait_until="networkidle")

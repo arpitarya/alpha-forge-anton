@@ -119,16 +119,46 @@ def _pick(row: dict[str, Any], *keys: str, default: Any = None) -> Any:
     return default
 
 
+# Groww V2 holdings API returns prices/values in paise (1/100 INR).
+# tr_live (/tr_live/segment/...) returns rupees. Mixing the two yields ~100× errors.
+_PAISE_FIELDS = frozenset({
+    "holdingAvgPrice", "ltp", "currentValue", "holdingValue",
+    "totalCurrentValue", "currentHoldingValue", "unrealisedHoldingValue", "currentWorth",
+})
+
+
+def _price_field(row: dict[str, Any], *keys: str) -> float:
+    """Return first non-empty value from `keys` in **rupees**, scaling paise fields by 1/100."""
+    for k in keys:
+        v = row.get(k)
+        if v in (None, ""):
+            continue
+        f = _to_float(v)
+        return f / 100.0 if k in _PAISE_FIELDS else f
+    return 0.0
+
+
 def normalize(row: dict[str, Any]) -> dict[str, Any]:
     """Map a Groww holdings row to the shared dict shape used by dump.py."""
     sd = row.get("symbolData") if isinstance(row.get("symbolData"), dict) else {}
     qty = _to_float(
         _pick(row, "holdingQty", "netQty", "quantity", "totalQuantity", "holdingQuantity")
     )
-    avg = _to_float(
-        _pick(row, "holdingAvgPrice", "netPrice", "averagePrice", "avgPrice", "buyPrice")
+    avg = _price_field(
+        row, "holdingAvgPrice", "netPrice", "averagePrice", "avgPrice", "buyPrice"
     )
-    ltp = _to_float(_pick(row, "ltp", "lastTradedPrice", "currentPrice", "nav"))
+    ltp = _price_field(row, "ltp", "lastTradedPrice", "currentPrice", "nav")
+    # Groww's holdings API usually returns ltp=0; derive from total current value instead.
+    if not ltp and qty:
+        total_cur = _price_field(
+            row, "currentValue", "holdingValue", "totalCurrentValue",
+            "currentHoldingValue", "unrealisedHoldingValue", "currentWorth",
+        )
+        if total_cur:
+            ltp = total_cur / qty
+    name = _pick(
+        sd, "companyShortName", "companyName", "displayName", "symbolName", "shortName"
+    ) or _pick(row, "companyShortName", "companyName", "displayName", "name")
     return {
         "tradingsymbol": str(
             _pick(
@@ -137,6 +167,7 @@ def normalize(row: dict[str, Any]) -> dict[str, Any]:
             or _pick(row, "tradingSymbol", "symbol", "nseScriptCode", "scripCode")
             or ""
         ).upper(),
+        "name": str(name).strip() if name else "",
         "isin": _pick(sd, "symbolIsin") or _pick(row, "isin", "isinCode") or "",
         "exchange": _pick(sd, "exchange") or _pick(row, "exchange", "exchangeName") or "NSE",
         "quantity": qty,
@@ -210,6 +241,7 @@ async def _capture_holdings_via_reload(
 def _merge_ltps(body: Any, out: dict[str, float]) -> None:
     if not isinstance(body, dict):
         return
+    # Primary shape: exchangeAggRespMap.EXCHANGE.priceLivePointsMap.SYM.{value|ltp|close}
     agg = body.get("exchangeAggRespMap") or {}
     for exch_payload in agg.values():
         if not isinstance(exch_payload, dict):
@@ -218,6 +250,18 @@ def _merge_ltps(body: Any, out: dict[str, float]) -> None:
         for sym, point in prices.items():
             if isinstance(point, dict):
                 v = point.get("value") or point.get("ltp") or point.get("close")
+                if v is not None:
+                    out[str(sym).upper()] = float(v)
+    # Fallback: flat SYM→price map nested under common top-level keys
+    for top_key in ("data", "payload", "liveData", "priceData", "prices"):
+        flat = body.get(top_key)
+        if not isinstance(flat, dict):
+            continue
+        for sym, val in flat.items():
+            if isinstance(val, (int, float)):
+                out[str(sym).upper()] = float(val)
+            elif isinstance(val, dict):
+                v = val.get("value") or val.get("ltp") or val.get("close") or val.get("price")
                 if v is not None:
                     out[str(sym).upper()] = float(v)
 

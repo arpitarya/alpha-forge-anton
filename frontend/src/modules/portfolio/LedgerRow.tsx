@@ -5,17 +5,21 @@ import { ASSET_LABEL } from "./ledger.utils";
 
 export function LedgerRow({ h }: { h: HoldingDTO }) {
   const tone = h.pnl >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]";
+  // Bonds/gold have cryptic ISIN-like symbols — surface the human name as the primary identifier.
+  const namedClass = h.asset_class === "bond" || h.asset_class === "gold";
+  const primary = namedClass && h.name ? h.name : h.symbol;
+  const secondary = namedClass && h.name ? h.symbol : h.name;
   return (
     <tr
       key={`${h.source}-${h.symbol}-${h.isin ?? ""}`}
       className="border-b border-dashed border-[color:var(--line)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--accent)_5%,transparent)]"
     >
-      <td className="px-6 py-3">
+      <td className="px-6 py-3 max-w-md">
         <div className="flex flex-col">
-          <span className="font-semibold">{h.symbol}</span>
-          {h.name && (
-            <span className="text-[10px] uppercase tracking-[0.14em] text-[color:var(--fg-3)] truncate max-w-xs">
-              {h.name}
+          <span className="font-semibold leading-snug">{primary}</span>
+          {secondary && (
+            <span className="text-[10px] uppercase tracking-[0.14em] text-[color:var(--fg-3)] leading-snug">
+              {secondary}
             </span>
           )}
         </div>

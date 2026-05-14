@@ -32,13 +32,18 @@ with `chmod 600`.
 **Column headers (line 2) — `dump_utils.CSV_HEADERS`**
 
 ```
-tradingsymbol, isin, exchange, quantity, average_price, last_price,
+tradingsymbol, name, isin, exchange, quantity, average_price, last_price,
 invested, current_value, pnl, pnl_pct
 ```
 
 `invested`, `current_value`, `pnl`, and `pnl_pct` are computed by
 `dump_utils._row_values()` from `quantity`, `average_price`, and
 `last_price`. Never recompute them in broker-specific code.
+
+`name` (company / instrument display name) is optional — older dumps written
+before the column existed still validate. Populate it in the broker normalizer
+when the source returns it (Groww V2 → `symbolData.companyShortName`,
+Wint Wealth → `productName`). Zerodha's Kite API does not return it.
 
 ## API
 

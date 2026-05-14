@@ -49,6 +49,26 @@ async def main() -> None:
                     body_preview = _shape_summary(body)
                     if "tr_live" in url or "latest_aggregated" in url:
                         full_body = body
+                    # Diagnose ltp vs currentValue in holdings rows
+                    if any(n in url for n in ("holding", "user/holdings")):
+                        rows: object = body
+                        if isinstance(body, dict):
+                            for k in ("payload", "data", "holdings", "holdingsList"):
+                                if isinstance(body.get(k), list):
+                                    rows = body[k]
+                                    break
+                        if isinstance(rows, list) and rows and isinstance(rows[0], dict):
+                            s = rows[0]
+                            body_preview = {
+                                **(body_preview if isinstance(body_preview, dict) else {"summary": body_preview}),
+                                "_diag": {
+                                    "ltp": s.get("ltp"),
+                                    "currentValue": s.get("currentValue"),
+                                    "holdingValue": s.get("holdingValue"),
+                                    "holdingAvgPrice": s.get("holdingAvgPrice"),
+                                    "holdingQty": s.get("holdingQty"),
+                                },
+                            }
                 except Exception as e:  # noqa: BLE001
                     body_preview = f"<json parse failed: {e}>"
             else:

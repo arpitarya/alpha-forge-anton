@@ -26,7 +26,7 @@ class GrowwCSVSource(BrokerSource):
                 continue
             isin = pick(row, "ISIN") or None
             is_mf = bool(pick(row, "Units") or pick(row, "NAV"))
-            asset_class = AssetClass.MF if is_mf else AssetClass.EQUITY
+            asset_class = AssetClass.MUTUAL_FUND if is_mf else AssetClass.EQUITY
             qty = to_float(pick(row, "Quantity", "Units", "Qty"))
             avg = to_float(pick(row, "Average Price", "Avg Price", "NAV"))
             ltp = to_float(pick(row, "LTP", "Current NAV", "Current Price"))

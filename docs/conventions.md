@@ -41,10 +41,17 @@ Legacy violations: [convention/violations.md](../convention/violations.md)
 | Backend route file | `{domain}_routes.py` — register in `app/modules/__init__.py` |
 | Backend service | `{domain}_service.py` — business logic lives here, never in routes |
 | Backend utils | `{domain}_utils.py` — max 50 lines |
-| New broker | Implement `BrokerSource` ABC from `base.py`; register in `registry.py`; CSV dumps → use `dump_utils.py` ([broker-csv-dumps.md](broker-csv-dumps.md)) |
+| New broker | Implement `BrokerSource` ABC from `base.py`; register in `registry.py`; CSV dumps → use `dump_utils.py` ([broker-csv-dumps.md](broker-csv-dumps.md)). CSV parsers must use `AssetClass.MUTUAL_FUND` (not `AssetClass.MF`). |
 | New UI component | Add to `packages/solar-orb-ui/src/components/`, export from `src/index.ts`, rebuild with `pnpm build` |
 | Frontend module file | `{domain}.{api\|query\|types\|utils}.ts` under `src/modules/{domain}/` |
 | Design tokens | Source of truth is `packages/solar-orb-ui/src/tokens/` (JSON + TS). Keep `theme.css` in sync |
+
+## Portfolio Display Conventions
+
+- `pnl_pct` from the API is **overall unrealized %**, not a day-return. Never label it "today".
+- `CountUp` with `format="inr"` passes the raw value through `formatNumber`, which preserves the sign. Always pass `Math.abs(value)` to `CountUp` when you are supplying a signed prefix (`"+₹"` / `"−₹"`).
+- Use `▲` / `▼` conditionally on sign; never hardcode one direction.
+- **Bonds & gold**: prefer `name` over `symbol` for the primary label (treemap cell, ledger row). Their symbols are usually ISINs/scripCodes that aren't human-recognizable. In the ledger, the full name is shown un-truncated (wraps within the symbol column) with the cryptic `symbol` code below it. For equity/MF, keep `symbol` primary with `name` underneath in smaller font.
 
 ## Testing
 

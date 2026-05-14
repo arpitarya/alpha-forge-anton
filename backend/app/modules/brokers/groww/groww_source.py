@@ -43,6 +43,7 @@ def _holding_from_row(r: dict, slug: str) -> Holding:
         source=slug,
         asset_class=AssetClass.EQUITY,
         symbol=str(r.get("tradingsymbol") or "").upper(),
+        name=r.get("name") or None,
         isin=r.get("isin") or None,
         quantity=qty,
         avg_price=avg,
@@ -59,7 +60,8 @@ def _holding_from_csv(r: dict[str, str], slug: str) -> Holding:
     g = r.get
     return Holding(
         source=slug, asset_class=AssetClass.EQUITY,
-        symbol=str(g("tradingsymbol") or "").upper(), isin=g("isin") or None,
+        symbol=str(g("tradingsymbol") or "").upper(),
+        name=g("name") or None, isin=g("isin") or None,
         quantity=float(g("quantity") or 0), avg_price=float(g("average_price") or 0),
         last_price=float(g("last_price") or 0), invested=float(g("invested") or 0),
         current_value=float(g("current_value") or 0), pnl=float(g("pnl") or 0),

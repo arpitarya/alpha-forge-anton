@@ -25,7 +25,7 @@ export function PortfolioHeader({
       <Stat
         label="Total Value"
         value={<CountUp value={t.current_value} format="inr" prefix="₹" />}
-        delta={`▲ ₹${Math.round(t.pnl).toLocaleString("en-IN")} · ${t.pnl_pct.toFixed(2)}% today`}
+        delta={`${t.pnl >= 0 ? "▲" : "▼"} ₹${Math.abs(Math.round(t.pnl)).toLocaleString("en-IN")} · ${Math.abs(t.pnl_pct).toFixed(2)}% overall`}
         deltaTone={t.pnl >= 0 ? "up" : "dn"}
       />
       <Stat
@@ -38,12 +38,12 @@ export function PortfolioHeader({
         label="Unrealized P&L"
         value={
           <CountUp
-            value={t.pnl}
+            value={Math.abs(t.pnl)}
             format="inr"
             prefix={t.pnl >= 0 ? "+₹" : "−₹"}
           />
         }
-        delta={`${t.pnl >= 0 ? "+" : ""}${t.pnl_pct.toFixed(2)}% overall`}
+        delta={`${t.pnl >= 0 ? "+" : "−"}${Math.abs(t.pnl_pct).toFixed(2)}% overall`}
         deltaTone={t.pnl >= 0 ? "up" : "dn"}
       />
       <Stat

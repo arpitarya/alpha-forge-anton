@@ -60,15 +60,18 @@ class HoldingsAggregator:
         total = sum(x.current_value for x in h) or 1.0
         rects = squarify([x.current_value / total for x in h], 0, 0, 1, 1)
         cells: list[TreemapCell] = []
+        named_classes = (AssetClass.BOND, AssetClass.GOLD)
         for hold, (lx, ly, lw, lh) in zip(h, rects, strict=False):
             sub = (
                 f"{hold.asset_class.value} · ₹{round(hold.current_value):,}"
                 if hold.current_value
                 else hold.asset_class.value
             )
+            # Bonds/gold have cryptic scripCodes — prefer the human name when available.
+            label = hold.name if (hold.name and hold.asset_class in named_classes) else hold.symbol
             cells.append(
                 TreemapCell(
-                    symbol=hold.symbol, sublabel=sub,
+                    symbol=label, sublabel=sub,
                     value=hold.current_value,
                     pct=round(hold.current_value / total * 100, 2),
                     pnl=hold.pnl, pnl_pct=hold.pnl_pct,

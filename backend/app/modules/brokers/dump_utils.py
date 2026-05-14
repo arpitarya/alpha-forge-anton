@@ -11,10 +11,12 @@ from typing import Any
 _REPO_ROOT = Path(__file__).resolve().parents[4]  # backend/app/modules/brokers/ → alpha-forge/
 DEFAULT_DUMP_DIR = Path.home() / ".alphaforge" / "portfolio-dumps"
 CSV_HEADERS = (
-    "tradingsymbol", "isin", "exchange",
+    "tradingsymbol", "name", "isin", "exchange",
     "quantity", "average_price", "last_price",
     "invested", "current_value", "pnl", "pnl_pct",
 )
+# `name` is optional so older dumps still validate after the schema change.
+_REQUIRED_HEADERS = frozenset(h for h in CSV_HEADERS if h != "name")
 _CSV_MAX_BYTES = 5 * 1024 * 1024  # 5 MB
 
 
@@ -53,7 +55,7 @@ def validate_csv(path: Path) -> None:
             if line.startswith("#"):
                 continue
             actual = {h.strip() for h in next(csv.reader([line]), [])}
-            missing = set(CSV_HEADERS) - actual
+            missing = _REQUIRED_HEADERS - actual
             if missing:
                 raise ValueError(f"CSV missing required columns: {missing}")
             break
@@ -73,7 +75,7 @@ def _row_values(r: dict[str, Any]) -> list[Any]:
     invested, cur = qty * avg, qty * ltp
     pnl = cur - invested
     return [
-        r.get("tradingsymbol"), r.get("isin"), r.get("exchange"),
+        r.get("tradingsymbol"), r.get("name") or "", r.get("isin"), r.get("exchange"),
         qty, avg, ltp, round(invested, 2), round(cur, 2),
         round(pnl, 2), round((pnl / invested * 100) if invested else 0.0, 2),
     ]
