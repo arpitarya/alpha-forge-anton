@@ -1,106 +1,25 @@
-# AlphaForge — Project Guidelines
+# AlphaForge — Copilot Instructions
 
-## What This Is
+Personal AI-powered portfolio management & investment terminal for Indian markets.
+Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-hosted, MIT licensed.
 
-Personal AI-powered portfolio management & investment terminal for Indian markets (NSE/BSE). Built for personal use — not a SaaS product.
-Monorepo (pnpm workspaces): Python/FastAPI backend + Next.js/TypeScript frontend + `@alphaforge/solar-orb-ui` design system package.
+## Docs Index
 
-## Architecture
+| Topic | File |
+|-------|------|
+| Architecture, repo tree, tech decisions, key files | [docs/architecture.md](../docs/architecture.md) |
+| Coding conventions (Python + TypeScript) | [docs/conventions.md](../docs/conventions.md) |
+| CLI commands (setup, run, build, migrate, clean) | [docs/commands.md](../docs/commands.md) |
+| Guardrails & project rules | [docs/guardrails.md](../docs/guardrails.md) |
+| Broker CSV dumps (shared dump_utils contract) | [docs/broker-csv-dumps.md](../docs/broker-csv-dumps.md) |
+| Graphify knowledge graph | [docs/graphify.md](../docs/graphify.md) |
 
-- **Backend** (`backend/`): Python 3.14, FastAPI, SQLAlchemy 2.0 async, PostgreSQL, Redis, Celery
-- **Frontend** (`frontend/`): Next.js 15 (App Router), React 19, TypeScript strict, Tailwind CSS v4, TanStack React Query v5
-- **UI Package** (`packages/solar-orb-ui/`): Publishable component library (Button, Input, Card, Badge, Icon, Text) + design tokens + fonts. Built with tsup → ESM + CJS + DTS
-- **AI Layer**: OpenAI + LangChain for market analysis, RAG, conversational chat
-- **Broker Integration**: Abstract `BaseBroker` interface in `backend/app/services/broker_base.py` — all brokers implement this
+## Quick Rules
 
-## Code Style
-
-### Python (backend/)
-- **Package manager**: PDM with uv as resolver/installer (`pdm install`, NOT pip). Uses repo-root venv (`.venv/`) configured via `backend/pdm.toml`
-- **Python version**: Pinned via `.python-version` (pyenv) — currently 3.14.2
-- **Formatter/Linter**: ruff (line-length=100, target py314)
-- **Type hints**: Required on all function signatures
-- **Async**: Use `async def` for all route handlers and service methods
-- **Models**: SQLAlchemy 2.0 `mapped_column` style (see `backend/app/models/`)
-- **Config**: Pydantic `BaseSettings` loaded from `.env` (see `backend/app/core/config.py`)
-- **Imports**: Use absolute imports from `app.` (e.g., `from app.core.config import settings`)
-
-### TypeScript (frontend/)
-- **Package manager**: pnpm (NOT npm or yarn). Config in `.npmrc` (exact versions, engine-strict)
-- **Node version**: Pinned via `.nvmrc` (nvm)
-- **Strict mode**: enabled in tsconfig.json
-- **Components**: Functional components only, no class components
-- **State management**: Zustand stores in `frontend/src/lib/store.ts`
-- **API calls**: Use the typed API client in `frontend/src/lib/api.ts` (axios-based)
-- **Styling**: Tailwind utility classes; CSS variables for the Solar Terminal dark theme (defined in `globals.css`). Font: Space Grotesk. Uses Material Symbols Outlined for icons.
-- **UI components**: Import from `@alphaforge/solar-orb-ui` or via re-export at `@/components/solar-orb`
-- **Linting**: Biome v2 for formatting + linting; ESLint v9 flat config for Next.js rules
-- **Data fetching**: TanStack React Query v5 — typed hooks in `frontend/src/lib/queries.ts`
-- **File naming**: PascalCase for components (`MarketOverview.tsx`), camelCase for utilities (`api.ts`)
-- **Terminal components**: Landing page components live in `frontend/src/components/terminal/` — barrel-exported from `index.ts`
-
-## Build & Run
-
-```bash
-# Full repo setup (prereqs, venv, all deps, env files, dirs)
-./setup.sh                # One command to set up everything
-
-# Or step by step:
-./setup.sh --prereqs      # Check/install pyenv, nvm, pnpm, pdm
-./setup.sh --venv         # Create .venv from .python-version
-./setup.sh --backend      # Backend deps (PDM → .venv)
-./setup.sh --frontend     # Frontend + workspace deps (pnpm)
-./setup.sh --screener     # Screener ML deps (pip → .venv)
-./setup.sh --env          # Scaffold .env files from examples
-./setup.sh --dirs         # Create log/data/model directories
-
-# Infrastructure (PostgreSQL + Redis) — choose one:
-./setup.sh --db                                                   # Native macOS (Homebrew)
-# OR
-docker compose -f infra/docker-compose.yml up -d                  # Container (OrbStack recommended)
-
-# Start dev servers
-just dev-local            # Backend + frontend via Procfile
-# OR individually:
-just backend              # Backend only
-just frontend             # Frontend only
-
-# Copilot Browser Integration (Playwright MCP)
-just setup-mcp            # Install Playwright Chromium + configure .vscode/settings.json
-
-# Screener pipeline
-./setup.sh --pipeline     # Full data → train → backtest
-./setup.sh --scan         # Daily live scan
-```
-
-## Conventions
-
-- **Documentation**: Everytime a message is typed or change is made into the code update the documentation with the same
-- **Planning**: When planning a new module or feature, create a `PLAN.md` inside that module's directory (e.g., `screener/PLAN.md`) with the full plan, goals, phases, and design decisions. Then add a reference link to the root-level `PLAN.md` so all module plans can be tracked from one place.
-- **Implementation tracking**: When a new module or feature is built, create an `implement.txt` file inside that module's directory (e.g., `screener/implement.txt`) logging what was built, decisions made, and status. Then add a reference link to the root-level `implement.txt` so all modules can be tracked from one place.
-- **API routes** live in `backend/app/routes/` — one file per domain (market, trade, ai, etc.)
-- **Services** live in `backend/app/services/` — business logic, never in route handlers
-- **Logging**: Backend uses `from app.core.logging import get_logger`; Frontend uses `import { getLogger } from "@/lib/logger"`. Logs write to `logs/` dir (gitignored). Configure via `LOG_LEVEL`, `LOG_DIR`, `LOG_FILE` env vars.
-- **New UI component?** Add to `packages/solar-orb-ui/src/components/`, export from `src/index.ts`, rebuild with `pnpm build`
-- **New broker?** Implement `BaseBroker` in `backend/app/services/broker_{name}.py`
-- **Broker CSV dumps**: See [docs/broker-csv-dumps.md](../docs/broker-csv-dumps.md) — all broker `*_dump.py` files must use `dump_utils.py` helpers; never duplicate path, permission, or P&L logic.
-- **Database migrations**: `cd backend && pdm run alembic revision --autogenerate -m "description"`
-- **Environment variables**: All ports defined in `.env.port` at repo root. Add new vars to the appropriate `.env.example` file — never commit `.env`
-- **Design tokens**: Source of truth is `packages/solar-orb-ui/src/tokens/` (JSON + TS). CSS tokens in `theme.css` must stay in sync.
-- **AI outputs always include disclaimer**: "Not SEBI registered investment advice"
-- All financial amounts use `float` for now (will migrate to `Decimal` before production)
-
-## Testing
-
-- Backend: `cd backend && pdm run pytest -v`
-- Frontend: `cd frontend && pnpm lint && pnpm type-check`
-
-## Documentation
-
-Detailed docs in `docs/`: WHY.md (vision), WHAT.md (features), HOW.md (architecture), GETTING_STARTED.md (setup).
-
-## graphify
-
-Before answering architecture or codebase questions, read `graphify-out/GRAPH_REPORT.md` if it exists.
-If `graphify-out/wiki/index.md` exists, navigate it for deep questions.
-Type `/graphify` in Copilot Chat to build or update the knowledge graph.
+- Files ≤ **100 lines** (≤ **50** for `*_utils.py` / `*.utils.ts`)
+- Python: `async def` everywhere, absolute imports from `app.`, Pydantic v2, ruff
+- TypeScript: strict mode, functional components, pnpm, Biome v2
+- New broker dumps → always use `dump_utils.py`
+- All AI outputs include financial disclaimer
+- Never commit `.env` files or API keys
+- Type `/graphify` in Copilot Chat to build or update the knowledge graph
