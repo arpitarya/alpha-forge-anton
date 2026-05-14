@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "just backend-debug",
+      "type": "shell",
+      "command": "bash -c 'just backend-debug & BGPID=$!; until nc -z 127.0.0.1 5678 2>/dev/null; do sleep 0.2; done; echo debugpy_ready; wait $BGPID'",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "backend-debug",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "debugpy_ready"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    }
+  ]
+}

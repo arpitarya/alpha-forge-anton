@@ -25,6 +25,7 @@
       "name": "Backend: Attach (debugpy on :5678)",
       "type": "debugpy",
       "request": "attach",
+      "preLaunchTask": "just backend-debug",
       "connect": {
         "host": "127.0.0.1",
         "port": 5678
