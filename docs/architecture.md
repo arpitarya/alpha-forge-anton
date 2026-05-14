@@ -96,10 +96,14 @@ alpha-forge/
 - `backend/app/modules/memory/embedding_service.py` — `EmbeddingService` (Gemini text-embedding-004)
 
 ### Frontend
-- `frontend/src/app/page.tsx` — Terminal landing page (Solar Terminal dashboard)
+- `frontend/src/app/page.tsx` — Terminal landing page; wrapped in `BootGate` (boot sequence plays on every fresh load, then auto-advances to terminal)
+- `frontend/src/app/portfolio/page.tsx` — Portfolio page (treemap + ledger + rebalance rail; SourcesPanel removed from this layout)
 - `frontend/src/app/globals.css` — Theme variables (Solar Terminal design tokens)
-- `frontend/src/components/terminal/` — Terminal page component package
-- `frontend/src/components/terminal/ScreenerPicks.tsx` — Screener picks display component
+- `frontend/next.config.mjs` — Next.js config: CSP headers (allows `fonts.googleapis.com` + `fonts.gstatic.com` for Material Symbols icons), API rewrites
+- `frontend/src/modules/dashboard/TerminalTopBar.tsx` — Top nav (SVG logo mark + ALPHA/FORGE wordmark; Terminal + Portfolio tabs; no icon sidebar)
+- `frontend/src/modules/dashboard/BootScreen.tsx` — Full-screen animated boot checklist (7 services, progress bar, corner labels); transitions to terminal on complete
+- `frontend/src/modules/dashboard/BootGate.tsx` — Client wrapper that shows BootScreen first, then unmounts it and renders children
+- `frontend/src/modules/dashboard/TerminalRail.tsx` — Icon sidebar (unused; nav lives in the top bar per Hi-Fi design)
 - `frontend/src/lib/api.ts` — Axios HTTP client (interceptors only; per-domain `*.api.ts` lives in each module)
 - `frontend/src/lib/logger.ts` — Frontend logging setup (wraps @alphaforge/logger)
 - `frontend/src/modules/<name>/<name>.api.ts` — Per-domain axios calls

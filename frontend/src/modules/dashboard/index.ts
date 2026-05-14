@@ -3,6 +3,8 @@ export * from "./dashboard.query";
 export * from "./dashboard.types";
 
 export { AlphaBriefCard } from "./AlphaBriefCard";
+export { BootGate } from "./BootGate";
+export { BootScreen } from "./BootScreen";
 export { OrbStage } from "./OrbStage";
 export { TerminalRail } from "./TerminalRail";
 export { TerminalStats } from "./TerminalStats";

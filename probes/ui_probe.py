@@ -1,12 +1,14 @@
 """Playwright UI probe — exercises the AlphaForge frontend auth + navigation flow.
 
-By default attaches to the existing AlphaForge Chrome (CDP port 9299, started
-via `just zerodha-chrome`). Pass --headless to spin up a fresh browser instead.
+Attaches to the existing AlphaForge Chrome via CDP — the same session used by
+the broker probes (Zerodha, Groww, Wint Wealth). Start Chrome once with:
 
-Usage:
-    just ui-probe                          # CDP, existing Chrome (default)
-    just ui-probe --headless               # fresh headless Chromium
-    just ui-probe --headed                 # fresh headed Chromium
+    just zerodha-chrome          # opens CDP on port 9299
+
+Then run this probe (backend + frontend must be running):
+
+    just ui-probe                          # CDP :9299 (default)
+    uv run python probes/ui_probe.py
     uv run python probes/ui_probe.py --cdp-port 9299
 
 Environment overrides:
@@ -28,6 +30,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 
+from app.modules.brokers._cdp import connect_existing_chrome
+
 BASE_URL = os.getenv("AF_FRONTEND", "http://localhost:3000")
 CDP_PORT = int(os.getenv("BROKER_CDP_PORT", "9299"))
 USERNAME = os.getenv("PROBE_USER", "admin")
@@ -43,28 +47,13 @@ def _record(label: str, ok: bool, detail: str = "") -> None:
     print(f"  {icon}  {label}" + (f"  {detail}" if detail else ""))
 
 
-async def _get_page(pw, cdp_port: int | None, headed: bool):  # type: ignore[no-untyped-def]
-    """Return (page, browser, playwright, is_cdp) ready for use."""
-    if cdp_port is not None:
-        from app.modules.brokers._cdp import connect_existing_chrome
-        pw_inst, browser = await connect_existing_chrome(cdp_port)
-        ctx = browser.contexts[0] if browser.contexts else await browser.new_context()
-        page = await ctx.new_page()
-        return page, browser, pw_inst, True
-
-    from playwright.async_api import async_playwright
-    pw_inst = await async_playwright().start()
-    browser = await pw_inst.chromium.launch(headless=not headed)
-    ctx = await browser.new_context(viewport={"width": 1440, "height": 900})
-    page = await ctx.new_page()
-    return page, browser, pw_inst, False
-
-
-async def run(base: str, cdp_port: int | None, headed: bool) -> bool:
+async def run(base: str, cdp_port: int) -> bool:
     SHOT_DIR.mkdir(parents=True, exist_ok=True)
     console_errors: list[str] = []
 
-    page, browser, pw_inst, is_cdp = await _get_page(None, cdp_port, headed)
+    pw, browser = await connect_existing_chrome(cdp_port)
+    ctx = browser.contexts[0] if browser.contexts else await browser.new_context()
+    page = await ctx.new_page()
     page.on("console", lambda m: console_errors.append(m.text) if m.type == "error" else None)
 
     try:
@@ -90,7 +79,7 @@ async def run(base: str, cdp_port: int | None, headed: bool) -> bool:
         await page.click('button[type="submit"]')
         try:
             await page.wait_for_url(lambda url: "/login" not in url, timeout=10_000)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             print(f"    (navigation wait: {exc})")
 
         logged_in = "/login" not in page.url
@@ -105,7 +94,7 @@ async def run(base: str, cdp_port: int | None, headed: bool) -> bool:
         token = await page.evaluate("() => localStorage.getItem('af_token')")
         _record("JWT token in localStorage", bool(token), "present" if token else "MISSING")
 
-        # ── 4. Dashboard API calls ────────────────────────────────────
+        # ── 4. Dashboard ──────────────────────────────────────────────
         print("\n── Dashboard")
         pre = len(console_errors)
         await page.wait_for_timeout(1500)
@@ -135,11 +124,8 @@ async def run(base: str, cdp_port: int | None, headed: bool) -> bool:
         await page.screenshot(path=str(SHOT_DIR / "04-after-logout.png"))
 
     finally:
-        if is_cdp:
-            await page.close()   # leave the user's Chrome session intact
-        else:
-            await browser.close()
-        await pw_inst.stop()
+        await page.close()   # leave the rest of the Chrome session intact
+        await pw.stop()
 
     return all(ok for _, ok, _ in _results)
 
@@ -149,22 +135,16 @@ def main() -> None:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--base", default=BASE_URL, help=f"Frontend URL (default: {BASE_URL})")
-    g = parser.add_mutually_exclusive_group()
-    g.add_argument("--cdp-port", type=int, default=CDP_PORT,
-                   help=f"Attach to existing Chrome on this CDP port (default: {CDP_PORT})")
-    g.add_argument("--headless", action="store_true",
-                   help="Launch fresh headless Chromium instead of using existing Chrome")
-    g.add_argument("--headed", action="store_true",
-                   help="Launch fresh headed Chromium instead of using existing Chrome")
+    parser.add_argument(
+        "--cdp-port", type=int, default=CDP_PORT,
+        help=f"CDP port of the existing AlphaForge Chrome (default: {CDP_PORT})",
+    )
     args = parser.parse_args()
 
-    cdp_port = None if (args.headless or args.headed) else args.cdp_port
-    mode = f"CDP :{cdp_port}" if cdp_port else ("headed" if args.headed else "headless")
-
-    print(f"AlphaForge UI Probe  →  {args.base}  [{mode}]")
+    print(f"AlphaForge UI Probe  →  {args.base}  [CDP :{args.cdp_port}]")
     print(f"Screenshots          →  {SHOT_DIR}")
 
-    ok = asyncio.run(run(args.base, cdp_port, args.headed))
+    ok = asyncio.run(run(args.base, args.cdp_port))
 
     print("\n── Summary")
     passed = sum(1 for _, o, _ in _results if o)

@@ -3,19 +3,17 @@
 import { AppShell } from "@alphaforge/solar-orb-ui";
 import { useState } from "react";
 import {
-  Ledger,
-  PortfolioHeader,
-  type PortfolioView,
-  RebalanceRail,
-  SourcesPanel,
-  Treemap,
-} from "@/modules/portfolio";
-import {
-  TerminalRail,
   TerminalTicker,
   TerminalTopBar,
   TerminalVoice,
 } from "@/modules/dashboard";
+import {
+  Ledger,
+  PortfolioHeader,
+  type PortfolioView,
+  RebalanceRail,
+  Treemap,
+} from "@/modules/portfolio";
 
 export default function PortfolioPage() {
   const [view, setView] = useState<PortfolioView>("tree");
@@ -24,28 +22,22 @@ export default function PortfolioPage() {
     <AppShell
       header={<TerminalTopBar />}
       ticker={<TerminalTicker />}
-      rail={<TerminalRail />}
       footer={<TerminalVoice />}
     >
-      <div className="grid h-full grid-cols-12 grid-rows-[auto_1fr_auto] gap-3 min-h-0">
-        {/* Header strip */}
-        <div className="col-span-12">
+      <div className="grid h-full grid-cols-[1fr_300px] grid-rows-[auto_1fr] gap-3 min-h-0">
+        {/* Header stats strip */}
+        <div className="col-span-2">
           <PortfolioHeader view={view} onViewChange={setView} />
         </div>
 
         {/* Main: treemap or ledger */}
-        <div className="col-span-9 min-h-0">
+        <div className="min-h-0 overflow-hidden">
           {view === "tree" ? <Treemap /> : <Ledger />}
         </div>
 
         {/* Right rail: rebalance */}
-        <div className="col-span-3 row-span-2 min-h-0">
+        <div className="min-h-0">
           <RebalanceRail />
-        </div>
-
-        {/* Bottom: sources management */}
-        <div className="col-span-9 min-h-0 max-h-[280px]">
-          <SourcesPanel />
         </div>
       </div>
     </AppShell>

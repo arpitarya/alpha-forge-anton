@@ -6,9 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 const ITEMS = [
   { id: "terminal", icon: "terminal", label: "Terminal", href: "/" },
   { id: "portfolio", icon: "account_balance_wallet", label: "Portfolio", href: "/portfolio" },
-  { id: "markets", icon: "monitoring", label: "Markets", href: "/markets" },
-  { id: "screener", icon: "search", label: "Screener", href: "/screener" },
-  { id: "chat", icon: "forum", label: "Chat", href: "/chat" },
 ];
 
 function isActive(pathname: string | null, href: string): boolean {

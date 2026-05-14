@@ -17,6 +17,7 @@ Legacy violations: [convention/violations.md](../convention/violations.md)
 - Pydantic v2 for request/response models
 - SQLAlchemy 2.0 `mapped_column` style
 - Ruff for lint + format (line-length=100, target py314)
+- Pyrefly for type-checking (`just typecheck` — replaces mypy)
 - Package manager: `uv sync` (NOT pip)
 - Logging: `from app.core.logging import get_logger`
 

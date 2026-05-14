@@ -2,41 +2,44 @@ import { AppShell } from "@alphaforge/solar-orb-ui";
 import {
   AlphaBriefCard,
   OrbStage,
-  TerminalRail,
   TerminalStats,
   TerminalTicker,
   TerminalTopBar,
   TerminalVoice,
   WatchlistCard,
 } from "@/modules/dashboard";
+import { BootGate } from "@/modules/dashboard/BootGate";
 
 export default function Home() {
   return (
-    <AppShell
-      header={<TerminalTopBar />}
-      ticker={<TerminalTicker />}
-      rail={<TerminalRail />}
-      footer={<TerminalVoice />}
-    >
-      <div className="grid h-full grid-cols-12 grid-rows-[1fr_auto] gap-3 min-h-0">
-        {/* Left: Alpha Brief */}
-        <div className="col-span-3 row-span-2 min-h-0">
-          <AlphaBriefCard />
-        </div>
+    <BootGate>
+      <AppShell
+        header={<TerminalTopBar />}
+        ticker={<TerminalTicker />}
+        footer={<TerminalVoice />}
+      >
+        <div className="grid h-full grid-cols-[300px_1fr_300px] grid-rows-[1fr_auto] gap-3 min-h-0">
+          {/* Left: Alpha Brief */}
+          <div className="row-span-2 min-h-0">
+            <AlphaBriefCard />
+          </div>
 
-        {/* Center: Orb + stats */}
-        <section className="col-span-6 flex min-h-0 flex-col gap-3">
-          <div className="flex-1 min-h-0">
+          {/* Center: Orb */}
+          <div className="min-h-0">
             <OrbStage />
           </div>
-          <TerminalStats />
-        </section>
 
-        {/* Right: Watchlist + Risk Meter */}
-        <div className="col-span-3 row-span-2 min-h-0">
-          <WatchlistCard />
+          {/* Right: Watchlist + Risk Meter */}
+          <div className="row-span-2 min-h-0">
+            <WatchlistCard />
+          </div>
+
+          {/* Center bottom: Stats */}
+          <div className="min-h-0">
+            <TerminalStats />
+          </div>
         </div>
-      </div>
-    </AppShell>
+      </AppShell>
+    </BootGate>
   );
 }

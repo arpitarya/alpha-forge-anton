@@ -1,14 +1,11 @@
 "use client";
 
-import { Kbd, LiveDot, TopBar, type TopBarNavItem } from "@alphaforge/solar-orb-ui";
+import { Kbd, LiveDot, Logo, TopBar, type TopBarNavItem } from "@alphaforge/solar-orb-ui";
 import { usePathname, useRouter } from "next/navigation";
 
 const NAV_ITEMS: Array<{ id: string; label: string; href: string }> = [
   { id: "terminal", label: "Terminal", href: "/" },
   { id: "portfolio", label: "Portfolio", href: "/portfolio" },
-  { id: "markets", label: "Markets", href: "/markets" },
-  { id: "screener", label: "Screener", href: "/screener" },
-  { id: "chat", label: "Chat", href: "/chat" },
 ];
 
 function isActive(pathname: string | null, href: string): boolean {
@@ -32,18 +29,13 @@ export function TerminalTopBar() {
     <TopBar
       brand={
         <>
-          <div
-            className="grid h-7 w-7 place-items-center border-[1.5px] border-[color:var(--accent)] font-mono font-bold text-[color:var(--accent)] shadow-[0_0_18px_var(--glow),inset_0_0_12px_var(--glow)]"
-            style={{
-              background:
-                "radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 60%)",
-            }}
-          >
-            △F
+          <div style={{ filter: "drop-shadow(0 0 12px var(--glow))" }}>
+            <Logo variant="icon" size="xs" />
           </div>
-          <span className="font-bold uppercase tracking-[0.24em] text-[12px] text-[color:var(--accent)]">
-            Alpha Forge
-          </span>
+          <div className="flex flex-col gap-[2px] leading-none">
+            <span className="font-[800] tracking-[0.18em] text-[13px] text-[color:var(--fg)]">ALPHA</span>
+            <span className="font-[500] tracking-[0.32em] text-[10px] text-[color:var(--fg-3)]">FORGE</span>
+          </div>
         </>
       }
       nav={nav}
