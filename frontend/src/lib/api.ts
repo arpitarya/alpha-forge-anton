@@ -19,6 +19,12 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.response?.status === 401 && typeof window !== "undefined") {
+      if (window.location.pathname !== "/login") {
+        localStorage.removeItem("af_token");
+        window.location.replace("/login");
+      }
+    }
     log.error(
       { status: error.response?.status, url: error.config?.url },
       "API request failed: %s",

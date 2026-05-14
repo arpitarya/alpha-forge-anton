@@ -15,6 +15,7 @@ CSV_HEADERS = (
     "quantity", "average_price", "last_price",
     "invested", "current_value", "pnl", "pnl_pct",
 )
+_CSV_MAX_BYTES = 5 * 1024 * 1024  # 5 MB
 
 
 def dump_dir() -> Path:
@@ -43,8 +44,25 @@ def is_csv_fresh(slug: str, ttl_seconds: int) -> bool:
     return p.exists() and (time.time() - p.stat().st_mtime) < ttl_seconds
 
 
+def validate_csv(path: Path) -> None:
+    """Raise ValueError for oversized or missing-column CSV files."""
+    if path.stat().st_size > _CSV_MAX_BYTES:
+        raise ValueError(f"CSV exceeds 5 MB limit: {path.name}")
+    with path.open(newline="", encoding="utf-8") as fh:
+        for line in fh:
+            if line.startswith("#"):
+                continue
+            actual = {h.strip() for h in next(csv.reader([line]), [])}
+            missing = set(CSV_HEADERS) - actual
+            if missing:
+                raise ValueError(f"CSV missing required columns: {missing}")
+            break
+
+
 def read_csv(slug: str) -> list[dict[str, str]]:
-    with live_csv_path(slug).open(newline="", encoding="utf-8") as fh:
+    path = live_csv_path(slug)
+    validate_csv(path)
+    with path.open(newline="", encoding="utf-8") as fh:
         return list(csv.DictReader(ln for ln in fh if not ln.startswith("#")))
 
 

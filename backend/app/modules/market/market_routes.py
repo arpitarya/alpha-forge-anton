@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
+
+from app.core.deps import get_current_user
 
 from app.core.logging import get_logger
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 logger = get_logger("routes.market")
 
 

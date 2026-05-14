@@ -4,11 +4,15 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 from app.core.config import settings
-from app.core.logging import setup_logging, get_logger
+from app.core.limiter import limiter
+from app.core.logging import get_logger, setup_logging
 from app.modules import api_router
 
 logger = get_logger("app")
@@ -20,6 +24,7 @@ async def lifespan(app: FastAPI):
     logger.info("AlphaForge starting up (env=%s)", settings.app_env)
 
     from app.modules.memory.embedding_service import get_embedding_service
+
     embed_svc = get_embedding_service()
     logger.info("Embedding service ready (model=%s)", settings.embedding_model)
 
@@ -39,13 +44,17 @@ def create_app() -> FastAPI:
         redoc_url="/redoc" if settings.debug else None,
     )
 
-    # CORS
+    # Rate limiter
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+    # CORS — origins locked down; methods/headers explicit
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
         allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_methods=["GET", "POST", "PUT", "DELETE"],
+        allow_headers=["Authorization", "Content-Type", "Accept"],
     )
 
     # Routes

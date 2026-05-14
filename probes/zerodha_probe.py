@@ -1,7 +1,7 @@
 """Attach to existing CDP Chrome, read Zerodha enctoken, probe Kite OMS API.
 
 Run while logged in to kite.zerodha.com in the AlphaForge Chrome:
-    cd backend && uv run python scripts/zerodha_probe.py
+    just zerodha-probe
 
 Unlike the Groww/Wint Wealth probes (XHR interception), Zerodha has a
 documented REST API. This probe reads the enctoken from the live Chrome
@@ -16,7 +16,7 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 
 import httpx
 

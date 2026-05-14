@@ -5,7 +5,9 @@ Disclaimer: Not SEBI registered investment advice.
 
 from __future__ import annotations
 
-from fastapi import APIRouter, BackgroundTasks, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, Query
+
+from app.core.deps import get_current_user
 
 from app.core.logging import get_logger
 from app.modules.screener.screener_helper import backfill_all_picks, embed_picks_background
@@ -15,7 +17,7 @@ from app.modules.screener.screener_schemas import (
 )
 from app.modules.screener.screener_service import ScreenerService
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 logger = get_logger("routes.screener")
 screener_service = ScreenerService()
 

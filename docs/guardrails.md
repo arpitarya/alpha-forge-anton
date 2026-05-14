@@ -4,10 +4,16 @@
 
 - Never commit `.env` files or API keys — add new vars to the appropriate `.env.example` instead
 - Broker tokens encrypted at rest
-- CORS restricted to frontend origin only
+- CORS restricted to frontend origin only; allowed methods/headers are explicit (not `*`)
 - No guaranteed return claims anywhere in code or UI
 - All AI outputs must include financial disclaimer: "Not SEBI registered investment advice"
 - All financial amounts use `float` for now (will migrate to `Decimal` before production)
+- Password hashing uses `bcrypt` directly (passlib removed — incompatible with bcrypt 4.x)
+- Auth enforced via `Depends(get_current_user)` on all routes except `/health` and `/auth/token`
+- Dev login: `admin` / `alphaforge-dev` — must set `ADMIN_PASSWORD_HASH` in production
+- Cloud LLM providers disabled in `APP_ENV=development` unless `ALLOW_CLOUD_LLM_IN_DEV=true`
+- Broker outbound HTTP guarded against unapproved hosts in dev mode via `BROKER_ALLOWED_HOSTS`
+- Run `just audit` to scan Python + Node dependencies for known CVEs
 
 ## Documentation
 

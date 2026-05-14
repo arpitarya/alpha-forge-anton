@@ -1,7 +1,11 @@
-"""Attach to existing CDP Chrome, intercept Groww holdings-page XHRs.
+"""Attach to existing CDP Chrome, intercept Wint Wealth portfolio-page XHRs.
 
-Run while the Groww holdings page is open in the AlphaForge Chrome:
-    cd backend && uv run python scripts/groww_probe.py
+Run while logged in to wintwealth.com in the AlphaForge Chrome:
+    just wintwealth-probe
+
+Prints a shape summary of every matching XHR. Look for a response with
+`isin`, `units`, `currentPrice`, or `securityName` — that is the holdings
+payload that drives `_NEEDLES` and `normalize()` in wintwealth_source_helper.
 """
 
 from __future__ import annotations
@@ -11,23 +15,38 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 
 from app.modules.brokers._cdp import connect_existing_chrome, find_or_open_page
 
-HOLDINGS_PAGE = "https://groww.in/stocks/user/holdings"
-NEEDLES = ("holding", "portfolio", "tr_live", "stocks-portfolio", "user/holdings")
+# Probe-confirmed: the holdings XHR fires on the /portfolio/bonds/ page.
+# api.wintwealth.com/investments/v2?userId=...&investmentType=CURRENT&productType=BOND
+PORTFOLIO_PAGE = "https://www.wintwealth.com/portfolio/bonds/"
+NEEDLES = ("investments", "portfolio", "holdings", "transaction", "bond", "dashboard")
 
 
 async def main() -> None:
     pw, browser = await connect_existing_chrome()
-    page = await find_or_open_page(browser, HOLDINGS_PAGE, "groww.in")
+    page = await find_or_open_page(browser, PORTFOLIO_PAGE, "wintwealth.com")
+
+    if "/login" in page.url or "sign" in page.url.lower():
+        print("Not logged in — please log in to wintwealth.com in Chrome first.")
+        await browser.close()
+        await pw.stop()
+        return
+
+    if "/portfolio" not in page.url and "/investment" not in page.url:
+        print(f"Navigating to {PORTFOLIO_PAGE}...")
+        try:
+            await page.goto(PORTFOLIO_PAGE, wait_until="domcontentloaded", timeout=20000)
+        except Exception as e:  # noqa: BLE001
+            print(f"nav warning: {e}")
 
     captured: list[dict] = []
 
-    async def on_response(resp):  # noqa: ANN001
+    async def on_response(resp) -> None:  # noqa: ANN001
         url = resp.url
-        if "groww.in" not in url:
+        if "wintwealth.com" not in url:
             return
         if not any(n in url.lower() for n in NEEDLES):
             return
@@ -41,29 +60,22 @@ async def main() -> None:
                 except Exception:  # noqa: BLE001
                     req_body = req.post_data
             ct = (resp.headers.get("content-type") or "").lower()
-            body_preview: object
-            full_body: object = None
             if "application/json" in ct:
                 try:
                     body = await resp.json()
                     body_preview = _shape_summary(body)
-                    if "tr_live" in url or "latest_aggregated" in url:
-                        full_body = body
                 except Exception as e:  # noqa: BLE001
                     body_preview = f"<json parse failed: {e}>"
             else:
                 txt = await resp.text()
                 body_preview = f"<{ct or 'no-ct'}, {len(txt)} chars>"
-            entry = {
+            captured.append({
                 "status": resp.status,
                 "method": req.method,
                 "url": url,
                 "request_body": req_body,
                 "shape": body_preview,
-            }
-            if full_body is not None:
-                entry["full_body"] = full_body
-            captured.append(entry)
+            })
         except Exception as e:  # noqa: BLE001
             captured.append({"status": resp.status, "url": url, "error": str(e)})
 
@@ -82,6 +94,12 @@ async def main() -> None:
         print(json.dumps(c, indent=2, default=str))
         print("-" * 60)
 
+    if not captured:
+        print(
+            "Nothing captured — the page may require interaction to trigger the XHR.\n"
+            "Try scrolling or clicking on the portfolio tab, then re-run."
+        )
+
     await browser.close()
     await pw.stop()
 
@@ -97,7 +115,6 @@ def _shape_summary(body: object) -> object:
         }
     if isinstance(body, dict):
         out: dict = {"type": "dict", "keys": sorted(body.keys())}
-        # Find first list-of-dicts inside
         for k, v in body.items():
             if isinstance(v, list) and v and isinstance(v[0], dict):
                 out["first_list_at"] = k

@@ -11,6 +11,7 @@ import os
 import time
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 import httpx
 from cryptography.fernet import Fernet, InvalidToken
@@ -27,12 +28,44 @@ DEFAULT_HEADERS = {
     "Accept-Language": "en-IN,en;q=0.9",
 }
 
+# Hosts that broker HTTP calls are permitted to reach in dev mode.
+_DEV_APPROVED_HOSTS: frozenset[str] = frozenset({
+    "localhost",
+    "127.0.0.1",
+    "api.kite.trade",
+    "kite.zerodha.com",
+    "groww.in",
+    "api.groww.in",
+    "wintwealth.com",
+    "api.wintwealth.com",
+    "niftyindices.com",
+    "www.nseindia.com",
+})
+
+
+def _check_dev_host(base_url: str) -> None:
+    """Raise RuntimeError if base_url is not on the approved list in dev mode."""
+    if os.getenv("APP_ENV", "development") != "development" or not base_url:
+        return
+    host = urlparse(base_url).hostname or ""
+    extra = {
+        h.strip()
+        for h in os.getenv("BROKER_ALLOWED_HOSTS", "").split(",")
+        if h.strip()
+    }
+    if host and host not in (_DEV_APPROVED_HOSTS | extra):
+        raise RuntimeError(
+            f"Dev guard: outbound request to '{host}' is not approved. "
+            "Add it to BROKER_ALLOWED_HOSTS or set APP_ENV=production to bypass."
+        )
+
 
 def make_client(
     base_url: str = "",
     headers: dict[str, str] | None = None,
     cookies: dict[str, str] | None = None,
 ) -> httpx.AsyncClient:
+    _check_dev_host(base_url)
     merged_headers = {**DEFAULT_HEADERS, **(headers or {})}
     return httpx.AsyncClient(
         base_url=base_url,

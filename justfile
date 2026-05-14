@@ -89,20 +89,6 @@ dev-docker:
 down:
     docker compose --env-file .env.port -f infra/docker-compose.yml down
 
-# ── Python Workspace (uv) ────────────────────────
-
-# Sync the entire Python workspace (backend + screener + llm-gateway + logger-py)
-sync:
-    uv sync
-
-# Add a dependency to a workspace member  (usage: just add backend httpx)
-add member pkg:
-    cd {{member}} && uv add {{pkg}}
-
-# Lock without installing (refresh uv.lock only)
-lock:
-    uv lock
-
 # ── Backend ──────────────────────────────────────
 
 # Run backend dev server
@@ -128,64 +114,6 @@ frontend:
 # Install frontend Node dependencies
 frontend-install:
     bash setup.sh --frontend
-
-# ── Screener ─────────────────────────────────────
-
-# (install handled by `just sync` — screener is a workspace member)
-
-# Run full screener pipeline (data → train → backtest)
-screener-pipeline:
-    bash setup.sh --pipeline
-
-# Run daily screener live scan
-screener-scan:
-    bash setup.sh --scan
-
-# ── Brokers ──────────────────────────────────────
-
-# Launch Chrome with CDP debugging port for Zerodha login (one-time per session).
-# Log in to kite.zerodha.com inside this window, then run `just zerodha-dump`.
-zerodha-chrome:
-    @echo "🌐 Launching Chrome with CDP port 9299 (loopback only)..."
-    @mkdir -p "$HOME/.cache/alphaforge-chrome"
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
-        --remote-debugging-port=9299 \
-        --remote-debugging-address=127.0.0.1 \
-        --user-data-dir="$HOME/.cache/alphaforge-chrome" \
-        https://kite.zerodha.com/ &
-
-# Dump today's Groww holdings to ~/.alphaforge/portfolio-dumps/*.csv
-groww-dump:
-    cd backend && uv run python -m app.modules.brokers.groww.groww_dump
-
-# Force fresh Groww login, then dump.
-groww-dump-force:
-    cd backend && uv run python -m app.modules.brokers.groww.groww_dump --force-login
-
-# Dump today's Zerodha holdings to ~/.alphaforge/portfolio-dumps/*.xlsx
-# (waits for manual login in the CDP-attached Chrome if no cached session).
-zerodha-dump:
-    cd backend && uv run python -m app.modules.brokers.zerodha_dump
-
-# Force fresh login (clears cached enctoken, then dumps).
-zerodha-dump-force:
-    cd backend && uv run python -m app.modules.brokers.zerodha_dump --force-login
-
-# ── LLM Gateway ──────────────────────────────────
-
-# (install handled by `just sync` — the workspace pulls llm-gateway as an editable member)
-
-# Run llm-gateway test suite
-llm-gateway-test:
-    cd llm-gateway && uv run pytest -v
-
-# Show LLM provider health and remaining quota
-llm-providers:
-    uv run python -m alphaforge_llm_gateway providers
-
-# Run LLM benchmark across all providers
-llm-benchmark:
-    uv run python -m alphaforge_llm_gateway benchmark
 
 # ── Database / Infrastructure ────────────────────
 
@@ -234,16 +162,19 @@ test-backend:
 test-frontend:
     cd frontend && pnpm lint && pnpm type-check
 
+# ── Security ─────────────────────────────────────
+
+# Audit Python + Node dependencies for known CVEs
+audit:
+    uv run pip-audit --desc
+    cd frontend && pnpm audit --audit-level=high
+
 # ── Quality ──────────────────────────────────────
 
 # Lint everything
 lint:
-    uv run ruff check .
-    cd frontend && pnpm lint
-
-# Auto-format everything
-format:
     uv run ruff format .
+    cd frontend && pnpm lint
 
 # ── Cleanup ──────────────────────────────────────
 

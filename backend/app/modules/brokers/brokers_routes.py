@@ -4,14 +4,16 @@ from __future__ import annotations
 
 import asyncio
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
+
+from app.core.deps import get_current_user
 
 from app.core.logging import get_logger
 from app.modules.brokers.aggregator import HoldingsAggregator
 from app.modules.brokers.base import SourceKind
 from app.modules.brokers.registry import SOURCES, get_source
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 logger = get_logger("routes.brokers")
 
 

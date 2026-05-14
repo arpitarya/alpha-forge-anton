@@ -43,4 +43,5 @@ dev = [
     "nbstripout>=0.7",
     "nbdime>=4.0",
     "jupytext>=1.16",
+    "pip-audit>=2.7.0",
 ]

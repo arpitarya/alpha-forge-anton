@@ -8,7 +8,9 @@ from __future__ import annotations
 import random
 from datetime import datetime, timezone
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+
+from app.core.deps import get_current_user
 
 from app.modules.dashboard.dashboard_schemas import (
     BriefBlock,
@@ -21,7 +23,7 @@ from app.modules.dashboard.dashboard_schemas import (
 )
 from app.modules.dashboard.dashboard_seed import BRIEF_SEED, TICKER_SEED, WATCHLIST_SEED
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 @router.get("/ticker", response_model=list[TickerItem])

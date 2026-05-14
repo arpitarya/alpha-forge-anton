@@ -7,14 +7,15 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from app.core.deps import get_current_user
 from app.core.logging import get_logger
 from app.modules.brokers import SOURCES, HoldingsAggregator
 from app.modules.brokers.base import SourceKind
 from app.modules.brokers.brokers_routes import router as sources_router
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 aggregator = HoldingsAggregator()
 logger = get_logger("routes.portfolio")
 

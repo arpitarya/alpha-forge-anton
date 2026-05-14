@@ -78,9 +78,21 @@ class LLMGateway:
 
         Reads: GEMINI_API_KEY, GROQ_API_KEY, HUGGINGFACE_API_KEY,
                OPENROUTER_API_KEY, OLLAMA_BASE_URL
+
+        In development mode cloud providers are disabled unless
+        ALLOW_CLOUD_LLM_IN_DEV=true is set, preventing accidental quota burn.
         """
         if env_file:
             _load_dotenv(env_file)
+
+        app_env = os.environ.get("APP_ENV", "development")
+        allow_cloud = os.environ.get("ALLOW_CLOUD_LLM_IN_DEV", "").lower() in ("1", "true", "yes")
+
+        if app_env == "development" and not allow_cloud:
+            logger.info(
+                "Dev mode: cloud LLM providers disabled. Set ALLOW_CLOUD_LLM_IN_DEV=true to enable."
+            )
+            return cls(ollama_url=os.environ.get("OLLAMA_BASE_URL", ""))
 
         return cls(
             gemini_key=os.environ.get("GEMINI_API_KEY", ""),

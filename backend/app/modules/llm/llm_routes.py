@@ -5,8 +5,10 @@ Disclaimer: Not SEBI registered investment advice.
 
 from __future__ import annotations
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, Request
 
+from app.core.deps import get_current_user
+from app.core.limiter import limiter
 from app.core.logging import get_logger
 from app.modules.llm.benchmark_routes import router as benchmark_router
 from app.modules.llm.llm_schemas import (
@@ -16,7 +18,7 @@ from app.modules.llm.llm_schemas import (
 )
 from app.modules.llm.llm_service import get_gateway
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 logger = get_logger("routes.llm")
 
 
@@ -28,30 +30,33 @@ def _to_response(r) -> LLMResponseModel:
 
 
 @router.post("/complete", response_model=LLMResponseModel)
-async def complete(request: CompleteRequest):
+@limiter.limit("20/minute")
+async def complete(request: Request, body: CompleteRequest):
     from alphaforge_llm_gateway.types import LLMProvider, QueryType
 
-    messages = [{"role": m.role, "content": m.content} for m in request.messages]
-    provider = LLMProvider(request.provider) if request.provider else None
-    logger.info("LLM complete: type=%s, provider=%s", request.query_type, request.provider)
+    messages = [{"role": m.role, "content": m.content} for m in body.messages]
+    provider = LLMProvider(body.provider) if body.provider else None
+    logger.info("LLM complete: type=%s, provider=%s", body.query_type, body.provider)
     response = await get_gateway().complete(
-        QueryType(request.query_type), messages,
-        provider=provider, model=request.model,
-        temperature=request.temperature, max_tokens=request.max_tokens,
+        QueryType(body.query_type), messages,
+        provider=provider, model=body.model,
+        temperature=body.temperature, max_tokens=body.max_tokens,
     )
     return _to_response(response)
 
 
 @router.post("/analyze-screener", response_model=LLMResponseModel)
-async def analyze_screener(request: AnalyzeRequest):
-    logger.info("LLM analyze-screener: %d chars", len(request.raw_output))
-    return _to_response(await get_gateway().analyze_screener(request.raw_output))
+@limiter.limit("10/minute")
+async def analyze_screener(request: Request, body: AnalyzeRequest):
+    logger.info("LLM analyze-screener: %d chars", len(body.raw_output))
+    return _to_response(await get_gateway().analyze_screener(body.raw_output))
 
 
 @router.post("/explain-picks", response_model=LLMResponseModel)
-async def explain_picks(request: AnalyzeRequest):
-    logger.info("LLM explain-picks: %d chars", len(request.raw_output))
-    return _to_response(await get_gateway().explain_picks(request.raw_output))
+@limiter.limit("10/minute")
+async def explain_picks(request: Request, body: AnalyzeRequest):
+    logger.info("LLM explain-picks: %d chars", len(body.raw_output))
+    return _to_response(await get_gateway().explain_picks(body.raw_output))
 
 
 @router.get("/providers")
