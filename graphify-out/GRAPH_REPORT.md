@@ -1,7 +1,7 @@
 # Graph Report - alpha-forge  (2026-05-14)
 
 ## Corpus Check
-- 233 files · ~410,504 words
+- 233 files · ~413,183 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary

@@ -259,10 +259,111 @@ def _build_sources() -> dict[str, BrokerSource]:
     instances: list[BrokerSource] = [
         ZerodhaKiteSource(),
         GrowwSource(),
-        MyBrokerSource(),   # ← add here
+        WintWealthSource(),  # ← already wired
+        MyBrokerSource(),    # ← add here
     ]
     return {s.slug: s for s in instances}
 ```
+
+---
+
+## Wint Wealth (`wintwealth`)
+
+Fixed-income platform (corporate bonds, NCDs, SGBs). No public API — uses the CDP browser-fetch pattern identical to Groww.
+
+| Detail | Value |
+|--------|-------|
+| Slug | `wintwealth` |
+| Auth | CDP browser fetch (`fetch_holdings_via_browser`) |
+| `REQUIRED_ENV` | `WINTWEALTH_USER_ID` |
+| Asset classes | `AssetClass.BOND` (default), `AssetClass.GOLD` (SGBs) |
+| CSV TTL | `WINTWEALTH_REFETCH_SECONDS` (default `3600`) |
+| **Confirmed endpoint** | `api.wintwealth.com/investments/v2?investmentType=CURRENT&productType=BOND` |
+| **Trigger page** | `wintwealth.com/portfolio/bonds/` |
+| **Holdings key** | `investments` (list inside the JSON response) |
+
+**Field mapping** (probe-confirmed):
+
+| API field | `normalize()` key | Notes |
+|-----------|------------------|-------|
+| `isin` | `isin` | ISIN code |
+| `productName` | `name` | Issuer name |
+| `scripCode` | `tradingsymbol` | e.g. `1090NFL28` |
+| `totalQuantity` | `quantity` | Number of bonds held |
+| `investment` | → `average_price` | Total invested ÷ qty |
+| `currentValue` | → `last_price` | Total current value ÷ qty |
+| `productType` | `asset_type` | `BOND` → `bond`, `SGB`/`GOLD` → `gold` |
+
+**Setup**: log in to `wintwealth.com` inside the AlphaForge Chrome session (port 9299), then set `WINTWEALTH_USER_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
+
+**Asset-type mapping**: `productType` from each row drives the class — `SGB` or `GOLD` → `AssetClass.GOLD`; everything else → `AssetClass.BOND`. CSV-cached rows default to `AssetClass.BOND`.
+
+**Standalone dump**:
+
+```bash
+python -m app.modules.brokers.wintwealth.wintwealth_dump
+python -m app.modules.brokers.wintwealth.wintwealth_dump --force-login
+ls ~/.alphaforge/portfolio-dumps/wintwealth-*
+```
+
+**Dev notebook**: [backend/notebooks/wintwealth_dev.ipynb](../backend/notebooks/wintwealth_dev.ipynb)
+
+**XHR probe** (run before implementing `normalize()` to discover the real API shape):
+
+```bash
+cd backend && uv run python scripts/wintwealth_probe.py
+```
+
+[backend/scripts/wintwealth_probe.py](../backend/scripts/wintwealth_probe.py) attaches to the AlphaForge Chrome, reloads the portfolio page, and prints a compact shape summary of every matching XHR. Look for a response containing `isin`, `units`, `currentPrice`, or `securityName` — those fields confirm you've found the holdings endpoint. Use the URL to update `_NEEDLES` and the key names to refine `normalize()` in `wintwealth_source_helper.py`.
+
+---
+
+## Dev notebooks
+
+One notebook per broker lives in `backend/notebooks/`. Each exercises all
+`/portfolio/*` endpoints scoped to that broker and works in both
+`MODE="http"` (live server) and `MODE="in_process"` (FastAPI test client).
+
+| Broker | Notebook | Auth |
+|--------|----------|------|
+| Zerodha | [zerodha_dev.ipynb](../backend/notebooks/zerodha_dev.ipynb) | CDP enctoken (`kite.zerodha.com`) |
+| Groww | [groww_dev.ipynb](../backend/notebooks/groww_dev.ipynb) | CDP browser fetch (`groww.in`) |
+| Wint Wealth | [wintwealth_dev.ipynb](../backend/notebooks/wintwealth_dev.ipynb) | CDP browser fetch (`wintwealth.com`) |
+
+## XHR probes
+
+Probe scripts in `backend/scripts/` attach to Chrome and print every
+matching XHR shape. Run these **before** implementing `normalize()` to
+discover the real endpoint URL and response key names.
+
+| Broker | Probe script | Technique |
+|--------|-------------|-----------|
+| Zerodha | [zerodha_probe.py](../backend/scripts/zerodha_probe.py) | Reads `enctoken` cookie → direct Kite OMS REST calls |
+| Groww | [groww_probe.py](../backend/scripts/groww_probe.py) | XHR interception on page reload |
+| Wint Wealth | [wintwealth_probe.py](../backend/scripts/wintwealth_probe.py) | XHR interception on page reload |
+
+```bash
+cd backend && uv run python scripts/zerodha_probe.py
+cd backend && uv run python scripts/groww_probe.py
+cd backend && uv run python scripts/wintwealth_probe.py
+```
+
+Zerodha's probe is different: rather than intercepting XHRs, it reads the
+`enctoken` cookie from Chrome and fires direct REST calls against the Kite
+OMS API (`/oms/portfolio/holdings`, `/oms/portfolio/positions`,
+`/oms/user/profile`, `/oms/user/margins`). Useful for verifying the token
+is still valid and inspecting the live holdings shape.
+
+Sections in each notebook:
+1. Source info — verify `status: ready`
+2. Sync — triggers CDP fetch + CSV cache
+3. Upload CSV — offline fallback
+4. Holdings — filtered by slug
+5. Allocation breakdown
+6. Treemap
+7. Rebalance / drift
+8. Standalone dump (Wint Wealth only — bypasses FastAPI)
+9. Reset in-memory cache
 
 ---
 
