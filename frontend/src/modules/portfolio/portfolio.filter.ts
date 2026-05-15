@@ -65,7 +65,8 @@ export function applyFilter(rows: HoldingDTO[], f: FilterState): HoldingDTO[] {
   return [...filtered].sort((a, b) => {
     const va = getter(a);
     const vb = getter(b);
-    if (typeof va === "string" && typeof vb === "string") return va.localeCompare(vb) * dir;
+    if (typeof va === "string" && typeof vb === "string")
+      return va.localeCompare(vb, "en", { numeric: true, sensitivity: "base" }) * dir;
     return ((va as number) - (vb as number)) * dir;
   });
 }

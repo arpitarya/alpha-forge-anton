@@ -1,4 +1,4 @@
-"""Angel One holdings CSV cache — fetches via SmartAPI, caches to CSV.
+"""Angel One holdings CSV cache — fetches via CDP browser, caches to CSV.
 
 TTL controlled by ANGELONE_REFETCH_SECONDS (root .env). Default 1h.
 
@@ -16,7 +16,7 @@ from typing import Any
 
 import app.modules.brokers.dump_utils as _du
 from app.core.logging import get_logger
-from app.modules.brokers.angelone.angelone_source_helper import acquire_token, fetch_holdings_json
+from app.modules.brokers.angelone.angelone_source_helper import fetch_holdings_via_browser
 
 logger = get_logger("brokers.angelone_dump")
 SLUG = "angelone"
@@ -43,8 +43,7 @@ def write_csv(rows: list[dict[str, Any]], dst: Path) -> None:
 
 
 async def dump_angelone(*, force_login: bool = False) -> Path:
-    token = await acquire_token(force=force_login)
-    rows = await fetch_holdings_json(token)
+    rows = await fetch_holdings_via_browser(force_login=force_login)
     live = live_csv_path()
     write_csv(rows, live)
     write_csv(rows, _du.dated_csv_path(SLUG))

@@ -1,4 +1,4 @@
-"""Angel One equity holdings CSV source (smartapi.angelbroking.com export)."""
+"""Angel One equity holdings CSV source (angelone.in portfolio export)."""
 
 from __future__ import annotations
 

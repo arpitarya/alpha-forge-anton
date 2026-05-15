@@ -21,7 +21,7 @@ from app.modules.brokers.base import (
     SourceStatus,
     WalletBalance,
 )
-from app.modules.brokers.groww.csv import GrowwCSVSource as _GrowwCSV
+from app.modules.brokers.groww.groww_csv import GrowwCSVSource as _GrowwCSV
 from app.modules.brokers.groww.groww_cash_helper import capture_groww_cash
 from app.modules.brokers.groww.groww_dump import (
     is_csv_fresh,

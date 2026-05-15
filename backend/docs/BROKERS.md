@@ -5,7 +5,7 @@
 The portfolio module aggregates holdings from six sources. Each source is one of two kinds:
 
 - **CSV** — user uploads an export. The broker offers no free API; this is the only legal path.
-- **API** — pulled programmatically. Only Angel One falls in this bucket on the free tier.
+- **API** — pulled programmatically. AlphaForge attaches over CDP to an authenticated Chrome session.
 
 | Source | Slug | Kind | Where to get the data |
 |---|---|---|---|
@@ -14,7 +14,7 @@ The portfolio module aggregates holdings from six sources. Each source is one of
 | Groww | `groww` | CSV | [groww.in](https://groww.in) → **Reports** → Holdings → Export (stocks **or** MF) |
 | Dezerv | `dezerv` | CSV | Dezerv app → **Statements** → Holdings export |
 | Wint Wealth | `wint-wealth` | CSV | Wint Wealth app → **Investments** → Export |
-| Angel One | `angel-one` | API | [smartapi.angelbroking.com](https://smartapi.angelbroking.com) — register an app, see below |
+| Angel One | `angel-one` | API | CDP web-app fetch — log in to [angelone.in](https://angelone.in) in the AlphaForge Chrome (see below) |
 
 > Disclaimer: Not SEBI registered investment advice. This module reads holdings only — no orders are placed.
 
@@ -29,38 +29,38 @@ The portfolio module aggregates holdings from six sources. Each source is one of
 | Groww | **No** | Reverse-engineered endpoints exist; we don't ship them (ToS). |
 | Dezerv | **No** public API. |
 | Wint Wealth | **No** public API. |
-| Angel One SmartAPI | **Yes** — free with an API key + TOTP. |
+| Angel One | **No** stable free API for personal use — we fetch via the authenticated web app over CDP. |
 
 We chose the honest path: free + official + reproducible. As paid integrations get added (Kite Connect later, etc.), they slot into the same `BrokerSource` ABC without rewriting routes or the frontend.
 
 ---
 
-## Angel One — SmartAPI setup
+## Angel One — CDP setup
 
-1. Create a SmartAPI app at <https://smartapi.angelbroking.com/>. Take note of the **API key**.
-2. In the Angel One mobile app, go to **Profile → 2FA** and enable TOTP. Save the **base32 secret** (this is what `pyotp` consumes).
-3. Add to `backend/.env`:
+SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, frequent 401s), so AlphaForge attaches to the running Chrome over CDP and captures the XHR the Angel One web app itself makes — same pattern as Groww and Wint Wealth.
 
-   ```bash
-   ANGEL_ONE_API_KEY=<your_smartapi_key>
-   ANGEL_ONE_CLIENT_CODE=<your_trading_client_id>   # e.g. ABCD12345
-   ANGEL_ONE_PASSWORD=<login_pin_or_mpin>
-   ANGEL_ONE_TOTP_SECRET=<base32_secret_from_step_2>
-   ```
-
-4. Install `pyotp` (lazy import — only needed for Angel One):
+1. Start Chrome with the debugging port (one-time):
 
    ```bash
-   cd backend && pdm add pyotp
+   /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+       --remote-debugging-port=9299 \
+       --user-data-dir="$HOME/.cache/alphaforge-chrome"
    ```
 
-5. Trigger a sync:
+2. Log in to [angelone.in](https://angelone.in) inside that Chrome window.
+3. Add your client ID to `.env.cred.local`:
 
    ```bash
-   curl -X POST http://localhost:8000/api/v1/portfolio/sources/angel-one/sync
+   ANGELONE_CLIENT_ID=<your_angel_one_client_id>
    ```
 
-If anything is missing, the source returns a `RuntimeError` listing the missing env vars — no silent fallback.
+4. Trigger a sync:
+
+   ```bash
+   curl -X POST http://localhost:8000/api/v1/portfolio/sources/angelone/sync
+   ```
+
+If the session has expired the first attempt fails fast and the next call re-opens the login page (you finish 2FA in your own browser — AlphaForge never sees your password or OTP).
 
 ---
 
@@ -143,8 +143,8 @@ pdm run python scripts/dev_brokers.py holdings
 pdm run python scripts/dev_brokers.py treemap --source zerodha
 pdm run python scripts/dev_brokers.py rebalance
 
-# Trigger Angel One pull (requires creds — see above)
-pdm run python scripts/dev_brokers.py sync angel-one
+# Trigger Angel One pull (requires CDP Chrome session — see above)
+pdm run python scripts/dev_brokers.py sync angelone
 
 # Reset
 pdm run python scripts/dev_brokers.py reset zerodha
@@ -172,9 +172,12 @@ The `/portfolio` page consumes the same endpoints via `useHoldings`, `useTreemap
 
 ## Adding a new source
 
-1. Create `backend/app/services/brokers/<your_source>.py` extending `BrokerSource`. Set `slug`, `label`, `kind`, and override **either** `parse(stream, filename)` (CSV) **or** `async fetch()` (API).
-2. Register it in `backend/app/services/brokers/registry.py` (one line in `_build_sources()`).
-3. Add a fixture CSV at `backend/tests/fixtures/broker_csvs/<source>_<kind>.csv` and a `Test<YourSource>Parser` class in `tests/test_brokers.py`.
-4. Add an entry to the matrix at the top of this file.
+See [docs/broker-source-integration.md](../../docs/broker-source-integration.md) for the full file-layout contract. Short version:
+
+1. Create the broker package under `backend/app/modules/brokers/<slug>/` — `{slug}_source.py`, `{slug}_source_helper.py`, `{slug}_dump.py`, `{slug}_csv.py`, and `__init__.py`. The source extends `BrokerSource`; set `slug`, `label`, `kind`, and override **either** `parse(stream, filename)` (CSV) **or** `async fetch()` (API).
+2. Register it in `backend/app/modules/brokers/registry.py` (one line in `_build_sources()`).
+3. Add a fixture CSV at `backend/tests/fixtures/broker_csvs/<slug>_holdings.csv` and a `Test<YourSource>Parser` class in `tests/test_brokers.py`.
+4. **Add a dev notebook** at `backend/notebooks/<slug>_dev.ipynb` — copy `wintwealth_dev.ipynb` and replace the slug. Required: this is how the source is verified end-to-end without booting the frontend.
+5. Add an entry to the matrix at the top of this file.
 
 That's it — the routes, aggregator, treemap layout, frontend `<SourcesPanel/>`, and CLI tester all pick it up automatically.

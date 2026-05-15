@@ -9,11 +9,13 @@ How AlphaForge fetches, caches, and exposes holdings from a broker. Read this be
 ```
 registry.py          ← process-wide {slug → BrokerSource} map
     └── BrokerSource (base.py)   ← ABC; two entry-points: fetch() + parse()
-            ├── {slug}_source.py      ← the public adapter (implements BrokerSource)
+            ├── {slug}_source.py         ← the public adapter (implements BrokerSource)
             ├── {slug}_source_helper.py  ← auth + HTTP/CDP calls (pure async)
-            ├── {slug}_dump.py        ← thin TTL-cache wrapper around dump_utils
-            └── csv.py                ← CSV-upload fallback parser
+            ├── {slug}_dump.py           ← thin TTL-cache wrapper around dump_utils
+            └── {slug}_csv.py            ← CSV-upload fallback parser
 ```
+
+Sibling: `backend/notebooks/{slug}_dev.ipynb` — REPL-style end-to-end exercise of every `/portfolio/*` endpoint scoped to the source. Required for every new broker (see step 4 of "Register the new source" below).
 
 `dump_utils.py` is shared across every broker — path resolution, file permissions, CSV headers, and P&L computation all live there.
 
@@ -70,10 +72,16 @@ Create these six files under `backend/app/modules/brokers/{slug}/`:
 | `{slug}_source_helper.py` | REQUIRED_ENV, auth, raw data fetch | ≤ 100 |
 | `{slug}_dump.py` | TTL wrappers + standalone CLI | ≤ 70 |
 | `{slug}_source.py` | `BrokerSource` subclass | ≤ 100 |
-| `csv.py` | CSV-upload parser (may delegate to `_GrowwCSV` pattern) | ≤ 60 |
+| `{slug}_csv.py` | CSV-upload parser (may delegate to `_GrowwCSV` pattern) | ≤ 60 |
 | `{slug}_routes.py` | (optional) broker-specific extra endpoints | ≤ 50 |
 
-Then register in `registry.py` (one line).
+Plus one notebook under `backend/notebooks/`:
+
+| File | Purpose |
+|------|---------|
+| `{slug}_dev.ipynb` | End-to-end REPL: sync, holdings, allocation, treemap, rebalance, wallet, standalone dump, reset. Mirror an existing notebook (e.g. `wintwealth_dev.ipynb`). |
+
+Then register in `registry.py` (one line) and add the notebook (see step 4 below).
 
 ---
 
@@ -166,7 +174,7 @@ import httpx
 from app.core.logging import get_logger
 from app.modules.brokers._http import clear_session
 from app.modules.brokers.base import AssetClass, BrokerSource, Holding, SourceKind, SourceStatus
-from app.modules.brokers.mybroker.csv import MyBrokerCSVSource as _CSV
+from app.modules.brokers.mybroker.mybroker_csv import MyBrokerCSVSource as _CSV
 from app.modules.brokers.mybroker.mybroker_dump import is_csv_fresh, live_csv_path, read_csv, write_csv
 from app.modules.brokers.mybroker.mybroker_source_helper import REQUIRED_ENV, acquire_token, env, fetch_holdings_json
 
@@ -265,7 +273,7 @@ Patterns in use:
 | Source | Endpoint / mechanism |
 |--------|----------------------|
 | Zerodha | `GET /oms/user/margins` — reuses the Kite enctoken; reads `data.equity.available.cash`. Force-relogin on 401/403 |
-| Angel One | `GET /rest/secure/angelbroking/user/v1/getRMS` — `data.availablecash` (falls back to `net` / `availablelimitmargin`). Force-relogin on 401/403 |
+| Angel One | `angelone/angelone_cash_helper.py` — opens a fresh tab at `trade.angelone.in/funds/funds` over CDP, listens for the funds/RMS XHR, DFS-scans the JSON for `availablecash` / `availableMargin` / `net` / `availablelimitmargin` |
 | Groww | `groww/groww_cash_helper.py` — opens a fresh tab at `groww.in/v2/balance` over CDP, registers a response listener on the dashboard's own XHR (`/api/user/v*/balance`, `/userbalance/v1`, etc.), DFS-scans the JSON for any `availableMargin` / `availableBalance` / `walletBalance` field, then closes the tab |
 | Wint Wealth | not yet supported (`supports_cash = False`; wallet card shows "Cash N/A") |
 
@@ -277,7 +285,9 @@ Routes:
 
 ## Register the new source
 
-In [registry.py](../backend/app/modules/brokers/registry.py):
+Four steps. Do not skip step 4 — the notebook is the single artifact that proves the source works end-to-end without booting the frontend.
+
+**1. Wire the source into the registry** — [registry.py](../backend/app/modules/brokers/registry.py):
 
 ```python
 from app.modules.brokers.mybroker import MyBrokerSource
@@ -286,11 +296,30 @@ def _build_sources() -> dict[str, BrokerSource]:
     instances: list[BrokerSource] = [
         ZerodhaKiteSource(),
         GrowwSource(),
-        WintWealthSource(),  # ← already wired
+        WintWealthSource(),
+        AngelOneSource(),
         MyBrokerSource(),    # ← add here
     ]
     return {s.slug: s for s in instances}
 ```
+
+**2. Declare credentials** — add the env var(s) with empty defaults to [.env.cred.example](../.env.cred.example) (tracked) so other contributors know what to fill in `.env.cred.local`.
+
+**3. Add a CSV fixture + parser test** — drop a sample export at `backend/tests/fixtures/broker_csvs/{slug}_holdings.csv` and add a `Test{Broker}Parser` class in `backend/tests/test_brokers.py`. The shared `BrokerSource.parse()` contract is what the `/sources/{slug}/upload` endpoint relies on.
+
+**4. Add a dev notebook (required)** — copy `backend/notebooks/wintwealth_dev.ipynb` to `backend/notebooks/{slug}_dev.ipynb` and search-and-replace the slug + auth instructions. The notebook must exercise, in order:
+
+1. `GET /portfolio/sources/{slug}` — confirm `status` transitions on env var presence
+2. `POST /portfolio/sources/{slug}/sync` — trigger the live fetch
+3. `POST /portfolio/sources/{slug}/upload` — confirm the CSV fallback still works
+4. `GET /portfolio/holdings?source={slug}` + allocation
+5. `GET /portfolio/treemap?source={slug}`
+6. `GET /portfolio/rebalance?source={slug}`
+7. `POST /portfolio/wallets/{slug}/sync` — only if `supports_cash = True`
+8. Standalone `dump_{slug}()` call — bypasses FastAPI, proves the helper works alone
+9. Cache reset
+
+Both `MODE = "http"` (against a live server) and `MODE = "in_process"` (FastAPI `TestClient`) must run clean.
 
 ---
 
@@ -347,40 +376,43 @@ cd backend && uv run python scripts/wintwealth_probe.py
 
 ## Angel One (`angelone`)
 
-Full-service broker with a **free official API** (SmartAPI). Auth is fully
-headless — no Chrome / CDP attach required.
+SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, 401s on long-lived JWTs). AlphaForge now attaches to the running Chrome over CDP and captures the XHR Angel One's own web app makes — same pattern as Groww and Wint Wealth.
 
 | Detail | Value |
 |--------|-------|
 | Slug | `angelone` |
-| Auth | SmartAPI: `loginByPassword` (client code + MPIN + local TOTP) → `jwtToken` |
-| `REQUIRED_ENV` | `ANGELONE_API_KEY`, `ANGELONE_CLIENT_ID`, `ANGELONE_MPIN`, `ANGELONE_TOTP_SECRET` |
-| Asset classes | `AssetClass.EQUITY` (SmartAPI's `getAllHolding` returns equity only) |
+| Auth | Manual login at `angelone.in` inside the AlphaForge Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
+| `REQUIRED_ENV` | `ANGELONE_CLIENT_ID` |
+| Asset classes | `AssetClass.EQUITY` (Bonds/SGBs/MFs come back in the same response but aren't surfaced yet) |
 | CSV TTL | `ANGELONE_REFETCH_SECONDS` (default `3600`) |
-| **Login endpoint** | `apiconnect.angelone.in/rest/auth/angelbroking/user/v1/loginByPassword` |
-| **Holdings endpoint** | `apiconnect.angelone.in/rest/secure/angelbroking/portfolio/v1/getAllHolding` |
-| **Holdings key** | `data.holdings` |
+| **Trigger page** | `www.angelone.in/trade/portfolio/equity` |
+| **Confirmed holdings endpoint** | `POST portfolio-prod.angelone.in/family/v2/superportfolio` |
+| **Holdings key** | `data.EquityPortfolio.HoldingDetail` |
+| **Confirmed cash endpoint** | `POST amx-*.angelone.in/funds/v2/getRMSLimit` |
+| **Cash key** | `data.netAvailableFunds` (fallback: `fundsForTrading`, `fundsAvailable`) |
+| **Helpers** | [`angelone_source_helper.py`](../backend/app/modules/brokers/angelone/angelone_source_helper.py), [`angelone_cash_helper.py`](../backend/app/modules/brokers/angelone/angelone_cash_helper.py) |
 
-**Field mapping** (SmartAPI response → `_holding_from_row`):
+**Field mapping** (probe-confirmed superportfolio row → `normalize()` → `_holding_from_row`):
 
 | API field | `Holding` field | Notes |
 |-----------|-----------------|-------|
-| `tradingsymbol` | `symbol` | Upper-cased |
+| `tradeSymbol` | `symbol` | Upper-cased; carries the series suffix (e.g. `PGINVIT-IV`). Falls back to `symbolName`. |
+| `compName` / `details` | `name` | — |
 | `isin` | `isin` | — |
-| `exchange` | `exchange` | `NSE` / `BSE` |
-| `quantity` | `quantity` | — |
-| `averageprice` | `avg_price` | Note: no underscore (SmartAPI quirk) |
-| `ltp` | `last_price` | Falls back to `close` if absent |
+| `exchName` | `exchange` | Default `NSE` |
+| `qty` / `total_qty` / `AvlQty` | `quantity` | — |
+| `avgPrice` / `baseAvgPrice` | `avg_price` | — |
+| `ltp` | `last_price` | Falls back to `avg_price` if absent |
 
 **Setup**:
 
-1. Register a free app at [smartapi.angelbroking.com](https://smartapi.angelbroking.com/) — pick "Trading" app type — to get an API key.
-2. Enable TOTP on your Angel One account (Profile → Settings → 2FA). Copy the base32 secret shown under the QR code.
-3. Fill `ANGELONE_API_KEY`, `ANGELONE_CLIENT_ID`, `ANGELONE_MPIN`, `ANGELONE_TOTP_SECRET` in `.env.cred.local`. The source auto-upgrades to `READY`.
+1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-chrome`.
+2. Log in to [angelone.in](https://angelone.in) inside that Chrome window.
+3. Set `ANGELONE_CLIENT_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
 
-AlphaForge derives the 6-digit TOTP locally via `pyotp` — the shared secret never leaves the machine. The acquired `jwtToken` is encrypted on disk via `_http.save_session` (same Fernet key as other brokers).
+AlphaForge never sees your password or TOTP — login + 2FA happen in your own Chrome; the backend just reads the authenticated XHR off the wire.
 
-**Mutual funds**: SmartAPI's free tier exposes equity holdings only. For MF, use the CSV upload fallback (`/sources/angelone/upload`) with an Angel One MF export.
+**Mutual funds**: not exposed by the equity holdings page. For MF, use the CSV upload fallback (`/sources/angelone/upload`) with an Angel One MF export.
 
 **Standalone dump**:
 
@@ -403,6 +435,9 @@ One notebook per broker lives in `backend/notebooks/`. Each exercises all
 | Zerodha | [zerodha_dev.ipynb](../backend/notebooks/zerodha_dev.ipynb) | CDP enctoken (`kite.zerodha.com`) |
 | Groww | [groww_dev.ipynb](../backend/notebooks/groww_dev.ipynb) | CDP browser fetch (`groww.in`) |
 | Wint Wealth | [wintwealth_dev.ipynb](../backend/notebooks/wintwealth_dev.ipynb) | CDP browser fetch (`wintwealth.com`) |
+| Angel One | [angelone_dev.ipynb](../backend/notebooks/angelone_dev.ipynb) | CDP browser fetch (`angelone.in`) |
+
+Every new broker must ship a notebook in this list — see step 4 of [Register the new source](#register-the-new-source).
 
 ## XHR probes
 
@@ -412,14 +447,16 @@ discover the real endpoint URL and response key names.
 
 | Broker | Probe script | Technique |
 |--------|-------------|-----------|
-| Zerodha | [zerodha_probe.py](../backend/scripts/zerodha_probe.py) | Reads `enctoken` cookie → direct Kite OMS REST calls |
-| Groww | [groww_probe.py](../backend/scripts/groww_probe.py) | XHR interception on page reload |
-| Wint Wealth | [wintwealth_probe.py](../backend/scripts/wintwealth_probe.py) | XHR interception on page reload |
+| Zerodha | [zerodha_probe.py](../probes/zerodha_probe.py) | Reads `enctoken` cookie → direct Kite OMS REST calls |
+| Groww | [groww_probe.py](../probes/groww_probe.py) | XHR interception on page reload |
+| Wint Wealth | [wintwealth_probe.py](../probes/wintwealth_probe.py) | XHR interception on page reload |
+| Angel One | [angelone_probe.py](../probes/angelone_probe.py) | XHR interception across holdings + funds pages |
 
 ```bash
-cd backend && uv run python scripts/zerodha_probe.py
-cd backend && uv run python scripts/groww_probe.py
-cd backend && uv run python scripts/wintwealth_probe.py
+uv run python probes/zerodha_probe.py
+uv run python probes/groww_probe.py
+uv run python probes/wintwealth_probe.py
+uv run python probes/angelone_probe.py
 ```
 
 Zerodha's probe is different: rather than intercepting XHRs, it reads the

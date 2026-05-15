@@ -10,7 +10,7 @@ from typing import IO
 
 from app.core.logging import get_logger
 from app.modules.brokers.base import AssetClass, BrokerSource, Holding, SourceKind, SourceStatus
-from app.modules.brokers.wintwealth.csv import WintWealthCSVSource as _CSV
+from app.modules.brokers.wintwealth.wintwealth_csv import WintWealthCSVSource as _CSV
 from app.modules.brokers.wintwealth.wintwealth_dump import is_csv_fresh, live_csv_path, read_csv, write_csv
 from app.modules.brokers.wintwealth.wintwealth_source_helper import REQUIRED_ENV, env, fetch_holdings_via_browser
 

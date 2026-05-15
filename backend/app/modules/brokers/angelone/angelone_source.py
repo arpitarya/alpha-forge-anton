@@ -1,8 +1,10 @@
-"""Angel One holdings — BrokerSource impl over SmartAPI + CSV cache.
+"""Angel One holdings — BrokerSource impl over CDP browser fetch + CSV cache.
 
-Free SmartAPI app + TOTP: register at smartapi.angelbroking.com, enable TOTP
-on the account, set ANGELONE_API_KEY / CLIENT_ID / MPIN / TOTP_SECRET in
-.env.cred.local. The 6-digit code is derived locally each login.
+Auth flow: user logs in to angelone.in inside the AlphaForge Chrome instance
+started with --remote-debugging-port=9299. `fetch()` attaches over CDP, runs
+the holdings API call inside the authenticated page, and caches the result to
+CSV. Subsequent `fetch()` calls within ANGELONE_REFETCH_SECONDS return from
+the CSV cache without re-launching Chrome.
 """
 
 from __future__ import annotations
@@ -10,10 +12,8 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import IO
 
-import httpx
-
 from app.core.logging import get_logger
-from app.modules.brokers._http import clear_session
+from app.modules.brokers.angelone.angelone_cash_helper import capture_angelone_cash
 from app.modules.brokers.angelone.angelone_dump import (
     is_csv_fresh,
     live_csv_path,
@@ -22,12 +22,10 @@ from app.modules.brokers.angelone.angelone_dump import (
 )
 from app.modules.brokers.angelone.angelone_source_helper import (
     REQUIRED_ENV,
-    acquire_token,
     env,
-    fetch_holdings_json,
-    fetch_rms_json,
+    fetch_holdings_via_browser,
 )
-from app.modules.brokers.angelone.csv import AngelOneCSVSource as _AngelOneCSV
+from app.modules.brokers.angelone.angelone_csv import AngelOneCSVSource as _AngelOneCSV
 from app.modules.brokers.base import (
     AssetClass,
     BrokerSource,
@@ -39,19 +37,20 @@ from app.modules.brokers.base import (
 
 logger = get_logger("brokers.angelone")
 
-__all__ = ["REQUIRED_ENV", "AngelOneSource", "acquire_token", "env"]
+__all__ = ["REQUIRED_ENV", "AngelOneSource", "env"]
 
 
 def _holding_from_row(r: dict, slug: str) -> Holding:
-    # SmartAPI uses lowercase keys without underscores (averageprice, ltp).
     qty = float(r.get("quantity") or 0)
-    avg = float(r.get("averageprice") or r.get("average_price") or 0)
-    ltp = float(r.get("ltp") or r.get("last_price") or r.get("close") or 0)
-    inv, cur = qty * avg, qty * ltp
+    avg = float(r.get("average_price") or 0)
+    ltp = float(r.get("last_price") or 0)
+    inv = qty * avg
+    cur = qty * ltp
     pnl = cur - inv
     return Holding(
         source=slug, asset_class=AssetClass.EQUITY,
         symbol=str(r.get("tradingsymbol") or "").upper(),
+        name=r.get("name") or None,
         isin=r.get("isin") or None,
         quantity=qty, avg_price=avg, last_price=ltp,
         invested=inv, current_value=cur, pnl=pnl,
@@ -75,13 +74,13 @@ def _holding_from_csv(r: dict[str, str], slug: str) -> Holding:
 
 class AngelOneSource(BrokerSource):
     slug = "angelone"
-    label = "Angel One (SmartAPI)"
+    label = "Angel One"
     kind = SourceKind.API
     supports_cash = True
     notes = (
-        "Register a free app at smartapi.angelbroking.com, enable TOTP, then "
-        "set ANGELONE_API_KEY / CLIENT_ID / MPIN / TOTP_SECRET in "
-        ".env.cred.local. AlphaForge derives the TOTP locally."
+        "Manual login: log in to angelone.in inside the AlphaForge Chrome "
+        "(started with --remote-debugging-port=9299). AlphaForge never "
+        "stores your password or TOTP. Set ANGELONE_CLIENT_ID in .env.cred.local."
     )
 
     def __init__(self) -> None:
@@ -99,15 +98,12 @@ class AngelOneSource(BrokerSource):
             logger.info("Angel One: %d holdings from CSV cache", len(rows))
             return [_holding_from_csv(r, self.slug) for r in rows]
         try:
-            token = await acquire_token()
-            rows = await fetch_holdings_json(token)
-        except httpx.HTTPStatusError as e:
-            status = e.response.status_code if e.response is not None else None
-            if status in (401, 403):
-                logger.warning("Angel One: auth rejected (%s) — forcing re-login", status)
-                clear_session("angelone")
-                token = await acquire_token(force=True)
-                rows = await fetch_holdings_json(token)
+            rows = await fetch_holdings_via_browser()
+        except Exception as e:
+            msg = str(e).lower()
+            if any(k in msg for k in ("401", "403", "login", "expired")):
+                logger.warning("Angel One: fetch failed (%s) — retrying with forced login", e)
+                rows = await fetch_holdings_via_browser(force_login=True)
             else:
                 raise
         write_csv(rows, live_csv_path())
@@ -116,19 +112,8 @@ class AngelOneSource(BrokerSource):
         return out
 
     async def fetch_cash(self) -> WalletBalance:
-        token = await acquire_token()
-        try:
-            data = await fetch_rms_json(token)
-        except httpx.HTTPStatusError as e:
-            if e.response is not None and e.response.status_code in (401, 403):
-                clear_session("angelone")
-                token = await acquire_token(force=True)
-                data = await fetch_rms_json(token)
-            else:
-                raise
-        cash = float(
-            data.get("availablecash") or data.get("net") or data.get("availablelimitmargin") or 0.0
-        )
+        cash = await capture_angelone_cash()
+        logger.info("Angel One: captured wallet cash ₹%.2f via CDP", cash)
         return WalletBalance(
             source=self.slug, currency="INR", cash=round(cash, 2),
             as_of=datetime.now(UTC),

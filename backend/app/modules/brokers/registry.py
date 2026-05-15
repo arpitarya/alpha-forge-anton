@@ -22,7 +22,7 @@ def _build_sources() -> dict[str, BrokerSource]:
         ZerodhaKiteSource(),    # slug: zerodha
         GrowwSource(),          # slug: groww       (CSV active; CDP fetch stub)
         WintWealthSource(),     # slug: wintwealth  (CDP browser fetch; bonds/SGBs)
-        AngelOneSource(),       # slug: angelone    (SmartAPI + TOTP)
+        AngelOneSource(),       # slug: angelone    (CDP browser fetch)
     ]
     return {s.slug: s for s in instances}
 

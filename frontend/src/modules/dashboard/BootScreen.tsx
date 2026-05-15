@@ -21,7 +21,7 @@ export const BOOT_STEPS: BootStep[] = [
   { key: "zerodha",  label: "Zerodha (Kite) · holdings source",   status: "warn", doneStatus: "not linked" },
   { key: "groww",    label: "Groww · holdings source",     status: "warn", doneStatus: "not linked" },
   { key: "wintwealth", label: "Wint Wealth · holdings source", status: "warn", doneStatus: "not linked" },
-  { key: "angelone", label: "Angel One (SmartAPI) · holdings source", status: "warn", doneStatus: "not linked" },
+  { key: "angelone", label: "Angel One · holdings source", status: "warn", doneStatus: "not linked" },
 ];
 
 const NOW_STATUS: Record<string, string> = {
@@ -29,7 +29,7 @@ const NOW_STATUS: Record<string, string> = {
   zerodha:     "resuming kite session…",
   groww:       "reading cached holdings…",
   wintwealth:  "loading bonds & SGBs…",
-  angelone:    "establishing SmartAPI session…",
+  angelone:    "attaching to Angel One session…",
 };
 
 const HEADLINES: Record<string, string> = {

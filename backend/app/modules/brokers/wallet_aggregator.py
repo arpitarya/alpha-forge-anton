@@ -1,8 +1,8 @@
 """Per-broker wallet view — free cash + holdings roll-up + sync metadata.
 
 Drives the wallet strip on the Portfolio screen. Wallet cash is fetched
-lazily (the home view doesn't need to wait on a Kite/SmartAPI round-trip
-on every page load); call `sync_one` / `sync_all` to refresh it.
+lazily (the home view doesn't need to wait on a CDP round-trip on every
+page load); call `sync_one` / `sync_all` to refresh it.
 """
 
 from __future__ import annotations

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.modules.brokers.wintwealth.csv import WintWealthCSVSource
+from app.modules.brokers.wintwealth.wintwealth_csv import WintWealthCSVSource
 from app.modules.brokers.wintwealth.wintwealth_source import WintWealthSource
 
 __all__ = ["WintWealthCSVSource", "WintWealthSource"]

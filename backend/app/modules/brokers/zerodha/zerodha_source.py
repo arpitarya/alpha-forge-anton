@@ -19,7 +19,7 @@ from app.modules.brokers.base import (
     SourceStatus,
     WalletBalance,
 )
-from app.modules.brokers.zerodha.csv import ZerodhaCSVSource as _ZerodhaCSV
+from app.modules.brokers.zerodha.zerodha_csv import ZerodhaCSVSource as _ZerodhaCSV
 from app.modules.brokers.zerodha.zerodha_dump import (
     is_csv_fresh,
     live_csv_path,

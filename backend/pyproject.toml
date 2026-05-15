@@ -39,7 +39,6 @@ dependencies = [
     "langchain-openai>=0.2.0",
     # Vector DB
     "pgvector>=0.3.0",
-    "pyotp>=2.9.0",
     "debugpy>=1.8.20",
     "ipykernel>=7.2.0",
     "cryptography>=47.0.0",
