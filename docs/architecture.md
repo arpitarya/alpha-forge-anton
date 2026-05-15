@@ -19,7 +19,6 @@ alpha-forge/
 │   │   ├── brokers/     pluggable BrokerSource adapters (Zerodha Kite/Coin, Groww, Angel One, Wint, Dezerv) + aggregator + registry. Used by portfolio routes. All CSV portfolio dumps share `dump_utils.py` — see broker-csv-dumps.md
 │   │   ├── memory/      EmbeddingService + MemoryService + ScreenerPickEmbedding/ConversationMemory ORM. Used by ai + screener
 │   │   ├── ai/          routes + AIService (RAG, sentiment, screener Q&A)
-│   │   ├── llm/         routes + LLMGateway thin wrapper
 │   │   ├── screener/    routes + ScreenerService
 │   │   ├── trade/       routes (paper/live trade endpoints)
 │   │   └── dashboard/   routes (cross-module aggregation)
@@ -43,13 +42,9 @@ alpha-forge/
 │       ├── ai/          ai.{api,query}.ts + AIChat
 │       ├── trade/       trade.{api,query}.ts
 │       ├── screener/    screener.{api,query,types,utils}.ts + ScreenerPanel
-│       ├── llm/         llm.{api,query,types}.ts
 │       ├── dashboard/   dashboard.{api,query,types}.ts + terminal-home components
 │       └── auth/        auth.api.ts
 ├── infra/            Infrastructure configs (docker-compose for services, devcontainer)
-├── llm-gateway/      Publishable Python package (alphaforge-llm-gateway)
-│   ├── src/alphaforge_llm_gateway/  LLMGateway, providers, router, rate_limiter, cost_guard, CLI
-│   └── notebooks/    Interactive Jupyter playground for provider comparison & benchmarks
 ├── repo-context-mcp/ Tool-agnostic MCP server — gives Claude/Copilot/Cursor/any MCP client semantic + structural context over this repo
 │   └── src/alphaforge_repo_context/  server, indexer, chunker, embeddings, watcher, tools/
 ├── docs/             WHY.md, WHAT.md, HOW.md, GETTING_STARTED.md + canonical shared docs for AI agents
@@ -60,7 +55,7 @@ alpha-forge/
 
 | Area | Choice | Notes |
 |------|--------|-------|
-| Python pkg mgr | uv (workspace) | Single `uv.lock` at repo root; members declared in `[tool.uv.workspace]`. One `.venv/` shared across backend, screener, llm-gateway, logger-py |
+| Python pkg mgr | uv (workspace) | Single `uv.lock` at repo root; members declared in `[tool.uv.workspace]`. One `.venv/` shared across backend, screener, logger-py |
 | Python version | pyenv | Pinned in `.python-version` (3.14.2) |
 | Node pkg mgr | pnpm | Lockfile: `pnpm-lock.yaml`; config in `.npmrc` |
 | Node version | nvm | Pinned in `.nvmrc` |
@@ -71,7 +66,6 @@ alpha-forge/
 | DB | PostgreSQL 16 | Async via asyncpg + SQLAlchemy |
 | Cache | Redis 7 | Quotes cache, pub/sub, Celery broker |
 | AI | OpenAI + LangChain | RAG with market data context |
-| LLM Gateway | alphaforge-llm-gateway | 5 free providers (Gemini, Groq, HuggingFace, OpenRouter, Ollama), smart routing, $0 cost wall |
 | Repo Context MCP | alphaforge-repo-context-mcp | Local stdio MCP server; pgvector-backed semantic + structural repo context for Claude/Copilot/Cursor/any MCP client |
 | Brokers | Abstract BrokerSource interface | Zerodha first, then Groww, Angel One, Upstox |
 | Local infra | brew services (Postgres, Redis) | Containers optional via OrbStack |
@@ -90,8 +84,6 @@ alpha-forge/
 - `backend/app/modules/brokers/dump_utils.py` — shared CSV-dump utilities (path, permissions, headers, P&L). See [broker-csv-dumps.md](broker-csv-dumps.md)
 - `backend/app/modules/screener/screener_service.py` — Screener picks storage/retrieval
 - `backend/app/modules/screener/screener_routes.py` — Screener API endpoints
-- `backend/app/modules/llm/llm_service.py` — LLM Gateway thin wrapper
-- `backend/app/modules/llm/llm_routes.py` — LLM Gateway API endpoints
 - `backend/app/modules/memory/memory_service.py` — `MemoryService` (RAG retrieval over picks + chats)
 - `backend/app/modules/memory/embedding_service.py` — `EmbeddingService` (Gemini text-embedding-004)
 
@@ -113,7 +105,7 @@ alpha-forge/
   - `AppearanceSection.tsx` — Theme tiles + accent swatches (wired to `useTheme()`)
   - `DisplaySection.tsx` — Chrome behavior (always-visible vs auto-hide), voice bar toggle, orb size/speed/HUD, ticker speed, reduce motion, number jitter
   - `MarketsSection.tsx` — Primary exchange, number format, currency, after-hours, refresh cadence
-  - `AlphaSection.tsx` — Voice wake, reply style, LLM provider pin, confidence floor, auto-rebalance, screener visibility
+  - `AlphaSection.tsx` — Voice wake, reply style, confidence floor, auto-rebalance, screener visibility
   - `NotifSection.tsx` — Price/risk/signal toggles, threshold slider, email digest cadence + address
   - `AccountSection.tsx` — Profile (avatar, name, status), connected brokers list, hotkey reference
   - `PrivacySection.tsx` — Telemetry / crash / training toggles, retention select, danger actions
@@ -143,10 +135,6 @@ alpha-forge/
 - `packages/solar-orb-ui/src/tokens/index.ts` — Design tokens (TypeScript)
 - `packages/solar-orb-ui/src/tokens/tokens.json` — Design tokens (JSON, machine-readable)
 - `packages/solar-orb-ui/tsup.config.ts` — Package build config
-- `llm-gateway/src/alphaforge_llm_gateway/__init__.py` — LLM Gateway barrel export
-- `llm-gateway/src/alphaforge_llm_gateway/gateway.py` — Main LLMGateway class (from_env, complete, analyze_screener)
-- `llm-gateway/src/alphaforge_llm_gateway/cli.py` — CLI: analyze-screener, explain-picks, chat, benchmark, providers
-- `llm-gateway/notebooks/llm_gateway_playground.ipynb` — Interactive notebook for provider comparison
 - `repo-context-mcp/src/alphaforge_repo_context/server.py` — MCP server entry (stdio); exposes `search_code`, `get_symbol`, `module_overview`, `recent_changes`, `read_file_range`
 - `repo-context-mcp/src/alphaforge_repo_context/indexer.py` — Walk → chunk → embed → pgvector
 - `repo-context-mcp/src/alphaforge_repo_context/chunker.py` — AST (Python), regex (TS/TSX), section (Markdown), sliding-window fallback

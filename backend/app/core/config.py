@@ -38,13 +38,6 @@ class Settings(BaseSettings):
     # Defaults to bcrypt("alphaforge-dev") in dev; must be set explicitly in production.
     admin_password_hash: str = _DEV_PASSWORD_HASH
 
-    # ── LLM Gateway (free multi-provider) ────────
-    gemini_api_key: str = ""
-    groq_api_key: str = ""
-    huggingface_api_key: str = ""
-    openrouter_api_key: str = ""
-    ollama_base_url: str = "http://localhost:11434"
-
     # ── Vector / Memory ──────────────────────────
     embedding_model: str = "text-embedding-004"
     embedding_dimensions: int = 768

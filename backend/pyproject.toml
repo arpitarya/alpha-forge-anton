@@ -24,7 +24,6 @@ dependencies = [
     "python-multipart>=0.0.12",
     # Internal packages (resolved via [tool.uv.sources] in the workspace root)
     "alphaforge-logger",
-    "alphaforge-llm-gateway",
     # Indian broker SDKs
     "kiteconnect>=5.0.0",
     # Browser automation (broker web logins that block headless httpx)

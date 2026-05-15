@@ -638,18 +638,18 @@
       "file_type": "rationale",
       "source_file": "probes/angelone_probe.py",
       "source_location": "L1",
-      "id": "angelone_probe_rationale_1",
       "community": 4,
-      "norm_label": "attach to existing cdp chrome, intercept angel one portfolio + funds xhrs.  run"
+      "norm_label": "attach to existing cdp chrome, intercept angel one portfolio + funds xhrs.  run",
+      "id": "angelone_probe_rationale_1"
     },
     {
       "label": "Compact preview: top-level keys + first list-of-dict path with sample.",
       "file_type": "rationale",
       "source_file": "probes/angelone_probe.py",
       "source_location": "L32",
-      "id": "angelone_probe_rationale_32",
       "community": 4,
-      "norm_label": "compact preview: top-level keys + first list-of-dict path with sample."
+      "norm_label": "compact preview: top-level keys + first list-of-dict path with sample.",
+      "id": "angelone_probe_rationale_32"
     },
     {
       "label": "ui_probe.py",
@@ -8405,9 +8405,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_instruments.py",
       "source_location": "L102",
-      "id": "zerodha_instruments_rationale_102",
       "community": 10,
-      "norm_label": "return tradingsymbol\u2192instrument_type (eq/etf) map."
+      "norm_label": "return tradingsymbol\u2192instrument_type (eq/etf) map.",
+      "id": "zerodha_instruments_rationale_102"
     },
     {
       "label": "__init__.py",
@@ -8540,9 +8540,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_csv.py",
       "source_location": "L1",
-      "id": "zerodha_csv_rationale_1",
       "community": 2,
-      "norm_label": "zerodha equity holdings csv source (console.zerodha.com)."
+      "norm_label": "zerodha equity holdings csv source (console.zerodha.com).",
+      "id": "zerodha_csv_rationale_1"
     },
     {
       "label": "zerodha_source_helper.py",
@@ -8621,27 +8621,27 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source_helper.py",
       "source_location": "L38",
-      "id": "zerodha_source_helper_rationale_38",
       "community": 4,
-      "norm_label": "acquire enctoken from an already-running chrome (cdp, port 9299).      if the us"
+      "norm_label": "acquire enctoken from an already-running chrome (cdp, port 9299).      if the us",
+      "id": "zerodha_source_helper_rationale_38"
     },
     {
       "label": "GET /oms/user/margins \u2192 equity available cash for the Kite account.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source_helper.py",
       "source_location": "L80",
-      "id": "zerodha_source_helper_rationale_80",
       "community": 14,
-      "norm_label": "get /oms/user/margins \u2192 equity available cash for the kite account."
+      "norm_label": "get /oms/user/margins \u2192 equity available cash for the kite account.",
+      "id": "zerodha_source_helper_rationale_80"
     },
     {
       "label": "GET /api/mf/holdings \u2192 COIN mutual fund holdings (empty list if not subscribed).",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source_helper.py",
       "source_location": "L97",
-      "id": "zerodha_source_helper_rationale_97",
       "community": 14,
-      "norm_label": "get /api/mf/holdings \u2192 coin mutual fund holdings (empty list if not subscribed)."
+      "norm_label": "get /api/mf/holdings \u2192 coin mutual fund holdings (empty list if not subscribed).",
+      "id": "zerodha_source_helper_rationale_97"
     },
     {
       "label": "zerodha_source.py",
@@ -8774,9 +8774,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/groww/groww_csv.py",
       "source_location": "L1",
-      "id": "groww_csv_rationale_1",
       "community": 2,
-      "norm_label": "groww equity/mf holdings csv source (groww.in \u2192 portfolio \u2192 export).  groww csv"
+      "norm_label": "groww equity/mf holdings csv source (groww.in \u2192 portfolio \u2192 export).  groww csv",
+      "id": "groww_csv_rationale_1"
     },
     {
       "label": "groww_cash_helper.py",
@@ -9242,9 +9242,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/angelone/angelone_cash_helper.py",
       "source_location": "L1",
-      "id": "angelone_cash_helper_rationale_1",
       "community": 2,
-      "norm_label": "angel one \u2014 capture free-cash balance via cdp from the funds page.  probe-confir"
+      "norm_label": "angel one \u2014 capture free-cash balance via cdp from the funds page.  probe-confir",
+      "id": "angelone_cash_helper_rationale_1"
     },
     {
       "label": "angelone_source_helper.py",
@@ -9332,18 +9332,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "source_location": "L61",
-      "id": "angelone_source_helper_rationale_61",
       "community": 4,
-      "norm_label": "drill into the superportfolio response to pull out holdingdetail rows."
+      "norm_label": "drill into the superportfolio response to pull out holdingdetail rows.",
+      "id": "angelone_source_helper_rationale_61"
     },
     {
       "label": "Map a superportfolio HoldingDetail row to the shared dict shape.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "source_location": "L80",
-      "id": "angelone_source_helper_rationale_80",
       "community": 4,
-      "norm_label": "map a superportfolio holdingdetail row to the shared dict shape."
+      "norm_label": "map a superportfolio holdingdetail row to the shared dict shape.",
+      "id": "angelone_source_helper_rationale_80"
     },
     {
       "label": "angelone_source.py",
@@ -9458,9 +9458,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/angelone/angelone_csv.py",
       "source_location": "L1",
-      "id": "angelone_csv_rationale_1",
       "community": 2,
-      "norm_label": "angel one equity holdings csv source (angelone.in portfolio export)."
+      "norm_label": "angel one equity holdings csv source (angelone.in portfolio export).",
+      "id": "angelone_csv_rationale_1"
     },
     {
       "label": "angelone_dump.py",
@@ -9800,9 +9800,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/wintwealth/wintwealth_csv.py",
       "source_location": "L1",
-      "id": "wintwealth_csv_rationale_1",
       "community": 2,
-      "norm_label": "wint wealth holdings csv source (wintwealth.com \u2192 portfolio \u2192 export).  wint wea"
+      "norm_label": "wint wealth holdings csv source (wintwealth.com \u2192 portfolio \u2192 export).  wint wea",
+      "id": "wintwealth_csv_rationale_1"
     },
     {
       "label": "llm_schemas.py",
@@ -15988,9 +15988,9 @@
       "weight": 0.8,
       "_src": "init_rationale_1",
       "_tgt": "zerodha_csv_zerodhacsvsource",
+      "confidence_score": 0.5,
       "source": "init_rationale_1",
-      "target": "zerodha_csv_zerodhacsvsource",
-      "confidence_score": 0.5
+      "target": "zerodha_csv_zerodhacsvsource"
     },
     {
       "relation": "uses",
@@ -16012,9 +16012,9 @@
       "weight": 0.8,
       "_src": "init_rationale_1",
       "_tgt": "groww_csv_growwcsvsource",
+      "confidence_score": 0.5,
       "source": "init_rationale_1",
-      "target": "groww_csv_growwcsvsource",
-      "confidence_score": 0.5
+      "target": "groww_csv_growwcsvsource"
     },
     {
       "relation": "uses",
@@ -16036,9 +16036,9 @@
       "weight": 0.8,
       "_src": "init_rationale_1",
       "_tgt": "angelone_csv_angelonecsvsource",
+      "confidence_score": 0.5,
       "source": "init_rationale_1",
-      "target": "angelone_csv_angelonecsvsource",
-      "confidence_score": 0.5
+      "target": "angelone_csv_angelonecsvsource"
     },
     {
       "relation": "uses",
@@ -16060,9 +16060,9 @@
       "weight": 0.8,
       "_src": "init_rationale_1",
       "_tgt": "wintwealth_csv_wintwealthcsvsource",
+      "confidence_score": 0.5,
       "source": "init_rationale_1",
-      "target": "wintwealth_csv_wintwealthcsvsource",
-      "confidence_score": 0.5
+      "target": "wintwealth_csv_wintwealthcsvsource"
     },
     {
       "relation": "uses",
@@ -28179,8 +28179,8 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source.py",
       "source_location": "L102",
       "weight": 1.0,
-      "_src": "zerodha_source_mf_holding_from_row",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_source_mf_holding_from_row",
       "source": "str",
       "target": "zerodha_source_mf_holding_from_row"
     },
@@ -28263,8 +28263,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_cash_helper.py",
       "source_location": "L37",
       "weight": 1.0,
-      "_src": "angelone_cash_helper_to_float",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "angelone_cash_helper_to_float",
       "source": "str",
       "target": "angelone_cash_helper_to_float"
     },
@@ -28275,8 +28275,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "source_location": "L87",
       "weight": 1.0,
-      "_src": "angelone_source_helper_normalize",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "angelone_source_helper_normalize",
       "source": "str",
       "target": "angelone_source_helper_normalize"
     },
@@ -28311,8 +28311,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_source.py",
       "source_location": "L103",
       "weight": 1.0,
-      "_src": "angelone_source_angelonesource_fetch",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "angelone_source_angelonesource_fetch",
       "source": "str",
       "target": "angelone_source_angelonesource_fetch"
     },
@@ -33183,8 +33183,8 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_csv.py",
       "source_location": "L23",
       "weight": 1.0,
-      "_src": "zerodha_csv_zerodhacsvsource_parse",
-      "_tgt": "csv_helper_to_float",
+      "_src": "csv_helper_to_float",
+      "_tgt": "zerodha_csv_zerodhacsvsource_parse",
       "source": "csv_helper_to_float",
       "target": "zerodha_csv_zerodhacsvsource_parse"
     },
@@ -33195,8 +33195,8 @@
       "source_file": "backend/app/modules/brokers/groww/groww_csv.py",
       "source_location": "L30",
       "weight": 1.0,
-      "_src": "groww_csv_growwcsvsource_parse",
-      "_tgt": "csv_helper_to_float",
+      "_src": "csv_helper_to_float",
+      "_tgt": "groww_csv_growwcsvsource_parse",
       "source": "csv_helper_to_float",
       "target": "groww_csv_growwcsvsource_parse"
     },
@@ -33207,8 +33207,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_csv.py",
       "source_location": "L23",
       "weight": 1.0,
-      "_src": "angelone_csv_angelonecsvsource_parse",
-      "_tgt": "csv_helper_to_float",
+      "_src": "csv_helper_to_float",
+      "_tgt": "angelone_csv_angelonecsvsource_parse",
       "source": "csv_helper_to_float",
       "target": "angelone_csv_angelonecsvsource_parse"
     },
@@ -33219,8 +33219,8 @@
       "source_file": "backend/app/modules/brokers/wintwealth/wintwealth_csv.py",
       "source_location": "L33",
       "weight": 1.0,
-      "_src": "wintwealth_csv_wintwealthcsvsource_parse",
-      "_tgt": "csv_helper_to_float",
+      "_src": "csv_helper_to_float",
+      "_tgt": "wintwealth_csv_wintwealthcsvsource_parse",
       "source": "csv_helper_to_float",
       "target": "wintwealth_csv_wintwealthcsvsource_parse"
     },
@@ -33267,8 +33267,8 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_csv.py",
       "source_location": "L20",
       "weight": 1.0,
-      "_src": "zerodha_csv_zerodhacsvsource_parse",
-      "_tgt": "csv_helper_pick",
+      "_src": "csv_helper_pick",
+      "_tgt": "zerodha_csv_zerodhacsvsource_parse",
       "source": "csv_helper_pick",
       "target": "zerodha_csv_zerodhacsvsource_parse"
     },
@@ -33279,8 +33279,8 @@
       "source_file": "backend/app/modules/brokers/groww/groww_csv.py",
       "source_location": "L24",
       "weight": 1.0,
-      "_src": "groww_csv_growwcsvsource_parse",
-      "_tgt": "csv_helper_pick",
+      "_src": "csv_helper_pick",
+      "_tgt": "groww_csv_growwcsvsource_parse",
       "source": "csv_helper_pick",
       "target": "groww_csv_growwcsvsource_parse"
     },
@@ -33291,8 +33291,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_csv.py",
       "source_location": "L20",
       "weight": 1.0,
-      "_src": "angelone_csv_angelonecsvsource_parse",
-      "_tgt": "csv_helper_pick",
+      "_src": "csv_helper_pick",
+      "_tgt": "angelone_csv_angelonecsvsource_parse",
       "source": "csv_helper_pick",
       "target": "angelone_csv_angelonecsvsource_parse"
     },
@@ -33303,8 +33303,8 @@
       "source_file": "backend/app/modules/brokers/wintwealth/wintwealth_csv.py",
       "source_location": "L26",
       "weight": 1.0,
-      "_src": "wintwealth_csv_wintwealthcsvsource_parse",
-      "_tgt": "csv_helper_pick",
+      "_src": "csv_helper_pick",
+      "_tgt": "wintwealth_csv_wintwealthcsvsource_parse",
       "source": "csv_helper_pick",
       "target": "wintwealth_csv_wintwealthcsvsource_parse"
     },
@@ -34083,8 +34083,8 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source_helper.py",
       "source_location": "L99",
       "weight": 1.0,
-      "_src": "zerodha_source_helper_fetch_mf_holdings_json",
-      "_tgt": "http_make_client",
+      "_src": "http_make_client",
+      "_tgt": "zerodha_source_helper_fetch_mf_holdings_json",
       "source": "http_make_client",
       "target": "zerodha_source_helper_fetch_mf_holdings_json"
     },
@@ -34635,8 +34635,8 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source.py",
       "source_location": "L83",
       "weight": 1.0,
-      "_src": "zerodha_source_holding_from_csv",
-      "_tgt": "broker_schemas_assetclass",
+      "_src": "broker_schemas_assetclass",
+      "_tgt": "zerodha_source_holding_from_csv",
       "source": "broker_schemas_assetclass",
       "target": "zerodha_source_holding_from_csv"
     },
@@ -35571,8 +35571,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_cash_helper.py",
       "source_location": "L55",
       "weight": 1.0,
-      "_src": "angelone_cash_helper_capture_angelone_cash",
-      "_tgt": "cdp_connect_existing_chrome",
+      "_src": "cdp_connect_existing_chrome",
+      "_tgt": "angelone_cash_helper_capture_angelone_cash",
       "source": "cdp_connect_existing_chrome",
       "target": "angelone_cash_helper_capture_angelone_cash"
     },
@@ -35583,8 +35583,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "source_location": "L137",
       "weight": 1.0,
-      "_src": "angelone_source_helper_fetch_holdings_via_browser",
-      "_tgt": "cdp_connect_existing_chrome",
+      "_src": "cdp_connect_existing_chrome",
+      "_tgt": "angelone_source_helper_fetch_holdings_via_browser",
       "source": "cdp_connect_existing_chrome",
       "target": "angelone_source_helper_fetch_holdings_via_browser"
     },
@@ -35643,8 +35643,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "source_location": "L140",
       "weight": 1.0,
-      "_src": "angelone_source_helper_fetch_holdings_via_browser",
-      "_tgt": "cdp_find_or_open_page",
+      "_src": "cdp_find_or_open_page",
+      "_tgt": "angelone_source_helper_fetch_holdings_via_browser",
       "source": "cdp_find_or_open_page",
       "target": "angelone_source_helper_fetch_holdings_via_browser"
     },
@@ -36134,11 +36134,11 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_csv.py",
       "source_location": "L8",
       "weight": 0.8,
-      "_src": "zerodha_csv_zerodhacsvsource",
-      "_tgt": "base_brokersource",
+      "_src": "base_brokersource",
+      "_tgt": "zerodha_csv_zerodhacsvsource",
+      "confidence_score": 0.5,
       "source": "base_brokersource",
-      "target": "zerodha_csv_zerodhacsvsource",
-      "confidence_score": 0.5
+      "target": "zerodha_csv_zerodhacsvsource"
     },
     {
       "relation": "uses",
@@ -36146,11 +36146,11 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_csv.py",
       "source_location": "L8",
       "weight": 0.8,
-      "_src": "zerodha_csv_rationale_1",
-      "_tgt": "base_brokersource",
+      "_src": "base_brokersource",
+      "_tgt": "zerodha_csv_rationale_1",
+      "confidence_score": 0.5,
       "source": "base_brokersource",
-      "target": "zerodha_csv_rationale_1",
-      "confidence_score": 0.5
+      "target": "zerodha_csv_rationale_1"
     },
     {
       "relation": "uses",
@@ -36182,11 +36182,11 @@
       "source_file": "backend/app/modules/brokers/groww/groww_csv.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "groww_csv_growwcsvsource",
-      "_tgt": "base_brokersource",
+      "_src": "base_brokersource",
+      "_tgt": "groww_csv_growwcsvsource",
+      "confidence_score": 0.5,
       "source": "base_brokersource",
-      "target": "groww_csv_growwcsvsource",
-      "confidence_score": 0.5
+      "target": "groww_csv_growwcsvsource"
     },
     {
       "relation": "uses",
@@ -36194,11 +36194,11 @@
       "source_file": "backend/app/modules/brokers/groww/groww_csv.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "groww_csv_rationale_1",
-      "_tgt": "base_brokersource",
+      "_src": "base_brokersource",
+      "_tgt": "groww_csv_rationale_1",
+      "confidence_score": 0.5,
       "source": "base_brokersource",
-      "target": "groww_csv_rationale_1",
-      "confidence_score": 0.5
+      "target": "groww_csv_rationale_1"
     },
     {
       "relation": "uses",
@@ -36254,11 +36254,11 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_csv.py",
       "source_location": "L8",
       "weight": 0.8,
-      "_src": "angelone_csv_angelonecsvsource",
-      "_tgt": "base_brokersource",
+      "_src": "base_brokersource",
+      "_tgt": "angelone_csv_angelonecsvsource",
+      "confidence_score": 0.5,
       "source": "base_brokersource",
-      "target": "angelone_csv_angelonecsvsource",
-      "confidence_score": 0.5
+      "target": "angelone_csv_angelonecsvsource"
     },
     {
       "relation": "uses",
@@ -36266,11 +36266,11 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_csv.py",
       "source_location": "L8",
       "weight": 0.8,
-      "_src": "angelone_csv_rationale_1",
-      "_tgt": "base_brokersource",
+      "_src": "base_brokersource",
+      "_tgt": "angelone_csv_rationale_1",
+      "confidence_score": 0.5,
       "source": "base_brokersource",
-      "target": "angelone_csv_rationale_1",
-      "confidence_score": 0.5
+      "target": "angelone_csv_rationale_1"
     },
     {
       "relation": "uses",
@@ -36302,11 +36302,11 @@
       "source_file": "backend/app/modules/brokers/wintwealth/wintwealth_csv.py",
       "source_location": "L14",
       "weight": 0.8,
-      "_src": "wintwealth_csv_wintwealthcsvsource",
-      "_tgt": "base_brokersource",
+      "_src": "base_brokersource",
+      "_tgt": "wintwealth_csv_wintwealthcsvsource",
+      "confidence_score": 0.5,
       "source": "base_brokersource",
-      "target": "wintwealth_csv_wintwealthcsvsource",
-      "confidence_score": 0.5
+      "target": "wintwealth_csv_wintwealthcsvsource"
     },
     {
       "relation": "uses",
@@ -36314,11 +36314,11 @@
       "source_file": "backend/app/modules/brokers/wintwealth/wintwealth_csv.py",
       "source_location": "L14",
       "weight": 0.8,
-      "_src": "wintwealth_csv_rationale_1",
-      "_tgt": "base_brokersource",
+      "_src": "base_brokersource",
+      "_tgt": "wintwealth_csv_rationale_1",
+      "confidence_score": 0.5,
       "source": "base_brokersource",
-      "target": "wintwealth_csv_rationale_1",
-      "confidence_score": 0.5
+      "target": "wintwealth_csv_rationale_1"
     },
     {
       "relation": "uses",
@@ -36411,8 +36411,8 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_instruments.py",
       "source_location": "L90",
       "weight": 1.0,
-      "_src": "zerodha_instruments_ensure_loaded",
-      "_tgt": "base_brokersource_info",
+      "_src": "base_brokersource_info",
+      "_tgt": "zerodha_instruments_ensure_loaded",
       "source": "base_brokersource_info",
       "target": "zerodha_instruments_ensure_loaded"
     },
@@ -36531,8 +36531,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "source_location": "L53",
       "weight": 1.0,
-      "_src": "angelone_source_helper_ensure_logged_in",
-      "_tgt": "base_brokersource_info",
+      "_src": "base_brokersource_info",
+      "_tgt": "angelone_source_helper_ensure_logged_in",
       "source": "base_brokersource_info",
       "target": "angelone_source_helper_ensure_logged_in"
     },
@@ -36543,8 +36543,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "source_location": "L148",
       "weight": 1.0,
-      "_src": "angelone_source_helper_fetch_holdings_via_browser",
-      "_tgt": "base_brokersource_info",
+      "_src": "base_brokersource_info",
+      "_tgt": "angelone_source_helper_fetch_holdings_via_browser",
       "source": "base_brokersource_info",
       "target": "angelone_source_helper_fetch_holdings_via_browser"
     },
@@ -36567,8 +36567,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_source.py",
       "source_location": "L116",
       "weight": 1.0,
-      "_src": "angelone_source_angelonesource_fetch_cash",
-      "_tgt": "base_brokersource_info",
+      "_src": "base_brokersource_info",
+      "_tgt": "angelone_source_angelonesource_fetch_cash",
       "source": "base_brokersource_info",
       "target": "angelone_source_angelonesource_fetch_cash"
     },
@@ -37239,8 +37239,8 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source.py",
       "source_location": "L155",
       "weight": 1.0,
-      "_src": "zerodha_source_zerodhakitesource_fetch",
-      "_tgt": "zerodha_instruments_type_lookup",
+      "_src": "zerodha_instruments_type_lookup",
+      "_tgt": "zerodha_source_zerodhakitesource_fetch",
       "source": "zerodha_instruments_type_lookup",
       "target": "zerodha_source_zerodhakitesource_fetch"
     },
@@ -37287,8 +37287,8 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source.py",
       "source_location": "L135",
       "weight": 1.0,
-      "_src": "zerodha_source_zerodhakitesource_fetch",
-      "_tgt": "zerodha_instruments_type_lookup_sync",
+      "_src": "zerodha_instruments_type_lookup_sync",
+      "_tgt": "zerodha_source_zerodhakitesource_fetch",
       "source": "zerodha_instruments_type_lookup_sync",
       "target": "zerodha_source_zerodhakitesource_fetch"
     },
@@ -37538,11 +37538,11 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source.py",
       "source_location": "L22",
       "weight": 0.8,
-      "_src": "zerodha_source_zerodhakitesource",
-      "_tgt": "zerodha_csv_zerodhacsvsource",
+      "_src": "zerodha_csv_zerodhacsvsource",
+      "_tgt": "zerodha_source_zerodhakitesource",
+      "confidence_score": 0.5,
       "source": "zerodha_csv_zerodhacsvsource",
-      "target": "zerodha_source_zerodhakitesource",
-      "confidence_score": 0.5
+      "target": "zerodha_source_zerodhakitesource"
     },
     {
       "relation": "uses",
@@ -37550,11 +37550,11 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source.py",
       "source_location": "L22",
       "weight": 0.8,
-      "_src": "zerodha_source_rationale_1",
-      "_tgt": "zerodha_csv_zerodhacsvsource",
+      "_src": "zerodha_csv_zerodhacsvsource",
+      "_tgt": "zerodha_source_rationale_1",
+      "confidence_score": 0.5,
       "source": "zerodha_csv_zerodhacsvsource",
-      "target": "zerodha_source_rationale_1",
-      "confidence_score": 0.5
+      "target": "zerodha_source_rationale_1"
     },
     {
       "relation": "calls",
@@ -37563,8 +37563,8 @@
       "source_file": "backend/tests/test_brokers.py",
       "source_location": "L45",
       "weight": 1.0,
-      "_src": "test_brokers_testzerodhaparser_test_parses_console_export",
-      "_tgt": "zerodha_csv_zerodhacsvsource",
+      "_src": "zerodha_csv_zerodhacsvsource",
+      "_tgt": "test_brokers_testzerodhaparser_test_parses_console_export",
       "source": "zerodha_csv_zerodhacsvsource",
       "target": "test_brokers_testzerodhaparser_test_parses_console_export"
     },
@@ -37575,8 +37575,8 @@
       "source_file": "backend/tests/test_brokers.py",
       "source_location": "L57",
       "weight": 1.0,
-      "_src": "test_brokers_testzerodhaparser_test_pnl_pct_negative_for_loss",
-      "_tgt": "zerodha_csv_zerodhacsvsource",
+      "_src": "zerodha_csv_zerodhacsvsource",
+      "_tgt": "test_brokers_testzerodhaparser_test_pnl_pct_negative_for_loss",
       "source": "zerodha_csv_zerodhacsvsource",
       "target": "test_brokers_testzerodhaparser_test_pnl_pct_negative_for_loss"
     },
@@ -37923,8 +37923,8 @@
       "source_file": "backend/app/modules/brokers/zerodha/zerodha_source.py",
       "source_location": "L162",
       "weight": 1.0,
-      "_src": "zerodha_source_zerodhakitesource_fetch",
-      "_tgt": "zerodha_source_helper_fetch_mf_holdings_json",
+      "_src": "zerodha_source_helper_fetch_mf_holdings_json",
+      "_tgt": "zerodha_source_zerodhakitesource_fetch",
       "source": "zerodha_source_helper_fetch_mf_holdings_json",
       "target": "zerodha_source_zerodhakitesource_fetch"
     },
@@ -38342,11 +38342,11 @@
       "source_file": "backend/app/modules/brokers/groww/groww_source.py",
       "source_location": "L24",
       "weight": 0.8,
-      "_src": "groww_source_growwsource",
-      "_tgt": "groww_csv_growwcsvsource",
+      "_src": "groww_csv_growwcsvsource",
+      "_tgt": "groww_source_growwsource",
+      "confidence_score": 0.5,
       "source": "groww_csv_growwcsvsource",
-      "target": "groww_source_growwsource",
-      "confidence_score": 0.5
+      "target": "groww_source_growwsource"
     },
     {
       "relation": "uses",
@@ -38354,11 +38354,11 @@
       "source_file": "backend/app/modules/brokers/groww/groww_source.py",
       "source_location": "L24",
       "weight": 0.8,
-      "_src": "groww_source_rationale_1",
-      "_tgt": "groww_csv_growwcsvsource",
+      "_src": "groww_csv_growwcsvsource",
+      "_tgt": "groww_source_rationale_1",
+      "confidence_score": 0.5,
       "source": "groww_csv_growwcsvsource",
-      "target": "groww_source_rationale_1",
-      "confidence_score": 0.5
+      "target": "groww_source_rationale_1"
     },
     {
       "relation": "calls",
@@ -39375,8 +39375,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_source.py",
       "source_location": "L115",
       "weight": 1.0,
-      "_src": "angelone_source_angelonesource_fetch_cash",
-      "_tgt": "angelone_cash_helper_capture_angelone_cash",
+      "_src": "angelone_cash_helper_capture_angelone_cash",
+      "_tgt": "angelone_source_angelonesource_fetch_cash",
       "source": "angelone_cash_helper_capture_angelone_cash",
       "target": "angelone_source_angelonesource_fetch_cash"
     },
@@ -39748,9 +39748,9 @@
       "weight": 0.8,
       "_src": "angelone_source_angelonesource",
       "_tgt": "angelone_csv_angelonecsvsource",
+      "confidence_score": 0.5,
       "source": "angelone_source_angelonesource",
-      "target": "angelone_csv_angelonecsvsource",
-      "confidence_score": 0.5
+      "target": "angelone_csv_angelonecsvsource"
     },
     {
       "relation": "calls",
@@ -39844,9 +39844,9 @@
       "weight": 0.8,
       "_src": "angelone_source_rationale_1",
       "_tgt": "angelone_csv_angelonecsvsource",
+      "confidence_score": 0.5,
       "source": "angelone_source_rationale_1",
-      "target": "angelone_csv_angelonecsvsource",
-      "confidence_score": 0.5
+      "target": "angelone_csv_angelonecsvsource"
     },
     {
       "relation": "contains",
@@ -40227,8 +40227,8 @@
       "source_file": "backend/app/modules/brokers/wintwealth/wintwealth_csv.py",
       "source_location": "L25",
       "weight": 1.0,
-      "_src": "wintwealth_csv_wintwealthcsvsource_parse",
-      "_tgt": "wintwealth_dump_read_csv",
+      "_src": "wintwealth_dump_read_csv",
+      "_tgt": "wintwealth_csv_wintwealthcsvsource_parse",
       "source": "wintwealth_dump_read_csv",
       "target": "wintwealth_csv_wintwealthcsvsource_parse"
     },
@@ -40432,9 +40432,9 @@
       "weight": 0.8,
       "_src": "wintwealth_source_wintwealthsource",
       "_tgt": "wintwealth_csv_wintwealthcsvsource",
+      "confidence_score": 0.5,
       "source": "wintwealth_source_wintwealthsource",
-      "target": "wintwealth_csv_wintwealthcsvsource",
-      "confidence_score": 0.5
+      "target": "wintwealth_csv_wintwealthcsvsource"
     },
     {
       "relation": "calls",
@@ -40468,9 +40468,9 @@
       "weight": 0.8,
       "_src": "wintwealth_source_rationale_1",
       "_tgt": "wintwealth_csv_wintwealthcsvsource",
+      "confidence_score": 0.5,
       "source": "wintwealth_source_rationale_1",
-      "target": "wintwealth_csv_wintwealthcsvsource",
-      "confidence_score": 0.5
+      "target": "wintwealth_csv_wintwealthcsvsource"
     },
     {
       "relation": "contains",
@@ -40659,8 +40659,8 @@
       "source_file": "backend/tests/test_brokers.py",
       "source_location": "L47",
       "weight": 1.0,
-      "_src": "test_brokers_testzerodhaparser_test_parses_console_export",
-      "_tgt": "wintwealth_csv_wintwealthcsvsource_parse",
+      "_src": "wintwealth_csv_wintwealthcsvsource_parse",
+      "_tgt": "test_brokers_testzerodhaparser_test_parses_console_export",
       "source": "wintwealth_csv_wintwealthcsvsource_parse",
       "target": "test_brokers_testzerodhaparser_test_parses_console_export"
     },
@@ -40671,8 +40671,8 @@
       "source_file": "backend/tests/test_brokers.py",
       "source_location": "L59",
       "weight": 1.0,
-      "_src": "test_brokers_testzerodhaparser_test_pnl_pct_negative_for_loss",
-      "_tgt": "wintwealth_csv_wintwealthcsvsource_parse",
+      "_src": "wintwealth_csv_wintwealthcsvsource_parse",
+      "_tgt": "test_brokers_testzerodhaparser_test_pnl_pct_negative_for_loss",
       "source": "wintwealth_csv_wintwealthcsvsource_parse",
       "target": "test_brokers_testzerodhaparser_test_pnl_pct_negative_for_loss"
     },
@@ -40683,8 +40683,8 @@
       "source_file": "backend/tests/test_brokers.py",
       "source_location": "L76",
       "weight": 1.0,
-      "_src": "test_brokers_ingest_zerodha",
-      "_tgt": "wintwealth_csv_wintwealthcsvsource_parse",
+      "_src": "wintwealth_csv_wintwealthcsvsource_parse",
+      "_tgt": "test_brokers_ingest_zerodha",
       "source": "wintwealth_csv_wintwealthcsvsource_parse",
       "target": "test_brokers_ingest_zerodha"
     },
@@ -40695,8 +40695,8 @@
       "source_file": "mcp/src/alphaforge_repo_context/chunker.py",
       "source_location": "L71",
       "weight": 1.0,
-      "_src": "chunker_chunk_python",
-      "_tgt": "wintwealth_csv_wintwealthcsvsource_parse",
+      "_src": "wintwealth_csv_wintwealthcsvsource_parse",
+      "_tgt": "chunker_chunk_python",
       "source": "wintwealth_csv_wintwealthcsvsource_parse",
       "target": "chunker_chunk_python"
     },
@@ -40707,8 +40707,8 @@
       "source_file": "packages/solar-orb-ui/src/components/ThemeProvider.tsx",
       "source_location": "L36",
       "weight": 1.0,
-      "_src": "themeprovider_readpersisted",
-      "_tgt": "wintwealth_csv_wintwealthcsvsource_parse",
+      "_src": "wintwealth_csv_wintwealthcsvsource_parse",
+      "_tgt": "themeprovider_readpersisted",
       "source": "wintwealth_csv_wintwealthcsvsource_parse",
       "target": "themeprovider_readpersisted"
     },

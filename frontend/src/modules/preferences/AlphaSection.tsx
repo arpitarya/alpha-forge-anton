@@ -1,6 +1,6 @@
 "use client";
 
-import { PrefSeg, PrefSelect, PrefSlider, PrefTog } from "./PrefControls";
+import { PrefSeg, PrefSlider, PrefTog } from "./PrefControls";
 import { PrefGroup } from "./PrefGroup";
 import { PrefRow } from "./PrefRow";
 import type { PrefDraft } from "./usePrefStore";
@@ -32,22 +32,6 @@ export function AlphaSection({ t, setTweak }: AlphaSectionProps) {
                 { value: "verbose", label: "Verbose" },
               ]}
               onChange={(v) => setTweak("aiPersonality", v)}
-            />
-          }
-        />
-        <PrefRow
-          name="LLM provider"
-          desc="The gateway routes to your fastest provider — pin one for determinism."
-          control={
-            <PrefSelect
-              value={t.llm}
-              options={[
-                { value: "auto", label: "Auto · pick fastest" },
-                { value: "gemini", label: "Gemini 2.5 Pro" },
-                { value: "groq", label: "Groq Llama" },
-                { value: "local", label: "Local · Ollama" },
-              ]}
-              onChange={(v) => setTweak("llm", v)}
             />
           }
         />

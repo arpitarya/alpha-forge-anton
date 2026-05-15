@@ -23,7 +23,6 @@ export interface PrefDraft {
   // Alpha AI
   voiceWake: boolean;
   aiPersonality: "concise" | "balanced" | "verbose";
-  llm: "auto" | "gemini" | "groq" | "local";
   confidence: number;
   autoRebalance: "off" | "weekly" | "monthly";
   showScreener: boolean;
@@ -60,7 +59,6 @@ export const DEFAULTS: PrefDraft = {
   refresh: "5s",
   voiceWake: true,
   aiPersonality: "balanced",
-  llm: "auto",
   confidence: 0.8,
   autoRebalance: "off",
   showScreener: true,
