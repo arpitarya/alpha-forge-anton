@@ -10,7 +10,6 @@
 ./setup.sh --venv         # Create .venv via `uv venv` (reads .python-version)
 ./setup.sh --backend      # Sync the entire Python workspace (uv sync) + Playwright browsers
 ./setup.sh --frontend     # Frontend + workspace deps (pnpm) + build solar-orb-ui
-./setup.sh --screener     # Alias for --backend (screener is a workspace member now)
 ./setup.sh --env          # Scaffold .env files from examples
 ./setup.sh --dirs         # Create log/data/model directories
 ./setup.sh --db           # Setup local PostgreSQL + Redis (macOS Homebrew)
@@ -53,17 +52,6 @@ cd backend && uv run alembic revision --autogenerate -m "description"
 
 # ── Copilot Browser Integration ──────────────────────────────────────────────
 just setup-mcp                            # Install Playwright Chromium + MCP config
-
-# ── Screener pipeline ────────────────────────────────────────────────────────
-./setup.sh --pipeline     # Full data → train → backtest
-./setup.sh --scan         # Daily live scan
-
-# ── LLM Gateway ──────────────────────────────────────────────────────────────
-just llm-gateway-install                                         # Install package into .venv
-just llm-providers                                               # Show provider health + quota
-just llm-benchmark                                               # Benchmark all providers
-python -m alphaforge_llm_gateway chat                            # Interactive chat
-python -m alphaforge_llm_gateway analyze-screener -f picks.txt   # Analyze screener output
 
 # ── Repo Context MCP ─────────────────────────────────────────────────────────
 cd repo-context-mcp && pdm install                               # Install deps

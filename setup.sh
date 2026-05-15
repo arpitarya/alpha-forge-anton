@@ -1,22 +1,17 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# AlphaForge — Full Repository Setup & Screener Pipeline Runner
+# AlphaForge — Full Repository Setup
 # ==============================================================================
-# Disclaimer: NOT SEBI registered investment advice. For personal research only.
-#
 # Usage:
 #   ./setup.sh                  # Full repo setup (prereqs + venv + deps + env + dirs)
 #   ./setup.sh --prereqs        # Check/install system prerequisites only
 #   ./setup.sh --venv           # Create Python venv only
 #   ./setup.sh --backend        # Install backend Python dependencies only
 #   ./setup.sh --frontend       # Install frontend + workspace Node dependencies only
-#   ./setup.sh --screener       # Install screener Python dependencies only
 #   ./setup.sh --env            # Create .env files from examples (non-destructive)
 #   ./setup.sh --dirs           # Create all required directories
 #   ./setup.sh --graphify       # Setup graphify for Claude, Codex, Copilot, hooks, and graph
 #   ./setup.sh --db             # Setup local PostgreSQL + Redis (macOS Homebrew)
-#   ./setup.sh --pipeline       # Run full screener data → train → backtest pipeline
-#   ./setup.sh --scan           # Run daily live scan (requires trained models)
 #   ./setup.sh --help           # Show usage
 # ==============================================================================
 
@@ -24,10 +19,8 @@ set -euo pipefail
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SCREENER_DIR="$REPO_ROOT/screener"
 VENV_DIR="$REPO_ROOT/.venv"
 PYTHON="$VENV_DIR/bin/python"
-PIP="$VENV_DIR/bin/pip"
 
 REQUIRED_PYTHON_MAJOR=3
 REQUIRED_PYTHON_MINOR=14
@@ -49,7 +42,7 @@ section() { echo -e "\n${BOLD}── $* ──${NC}"; }
 
 usage() {
     cat <<EOF
-AlphaForge — Full Repository Setup & Screener Pipeline
+AlphaForge — Full Repository Setup
 
 Usage: $(basename "$0") [OPTION]
 
@@ -59,15 +52,10 @@ Setup:
   --venv          Create repo-root Python venv (.venv/) from .python-version
   --backend       Sync the uv workspace (installs all Python deps, then Playwright browsers)
   --frontend      Install frontend + workspace Node packages (pnpm)
-  --screener      Alias for --backend (kept for backwards compat — uv sync covers it)
   --env           Scaffold .env files from .env.example templates (non-destructive)
-  --dirs          Create required directories (logs, screener data, model dirs)
+  --dirs          Create required directories (logs)
   --graphify      Setup graphify for Claude, Codex, Copilot, hooks, and graph refresh
   --db            Setup local PostgreSQL 16 + Redis via Homebrew (macOS only)
-
-Screener Pipeline:
-  --pipeline      Run full pipeline: data → features → dataset → train → backtest
-  --scan          Run daily live scan (requires trained models)
 
 Misc:
   --help          Show this help message
@@ -78,7 +66,7 @@ Prerequisites:
   - nvm (Node.js pinned in .nvmrc)
   - pnpm (workspace package manager)
   - uv (Python package manager — workspace-aware)
-  - Homebrew (for PostgreSQL, Redis, libomp)
+  - Homebrew (for PostgreSQL, Redis)
   - graphify (optional knowledge graph helper; install via: uv tool install graphifyy)
 
 EOF
@@ -185,26 +173,6 @@ check_uv() {
     fi
 }
 
-check_macos_deps() {
-    if [[ "$(uname)" != "Darwin" ]]; then
-        return
-    fi
-
-    # LightGBM requires libomp on macOS
-    if ! brew list libomp &>/dev/null; then
-        warn "libomp not installed — required for LightGBM on macOS"
-        read -rp "Install libomp via Homebrew? [y/N] " ans
-        if [[ "$ans" =~ ^[Yy]$ ]]; then
-            brew install libomp
-            ok "libomp installed"
-        else
-            warn "Skipping libomp install. LightGBM may fail to import."
-        fi
-    else
-        ok "libomp found (required by LightGBM)"
-    fi
-}
-
 check_all_prereqs() {
     section "Checking Prerequisites"
     check_brew
@@ -212,7 +180,6 @@ check_all_prereqs() {
     check_nvm_and_node
     check_pnpm
     check_uv
-    check_macos_deps
 }
 
 # ── Python Venv ───────────────────────────────────────────────────────────────
@@ -262,21 +229,8 @@ create_dirs() {
     section "Required Directories"
 
     local dirs=(
-        # Logs
         "$REPO_ROOT/backend/logs"
         "$REPO_ROOT/frontend/logs"
-        # Screener data pipeline
-        "$SCREENER_DIR/data/raw/ohlcv"
-        "$SCREENER_DIR/data/raw/indices"
-        "$SCREENER_DIR/data/raw/nse_supplementary"
-        "$SCREENER_DIR/features"
-        "$SCREENER_DIR/dataset/output"
-        "$SCREENER_DIR/models/saved/lightgbm"
-        "$SCREENER_DIR/models/saved/xgboost"
-        "$SCREENER_DIR/backtest"
-        "$SCREENER_DIR/live/picks"
-        "$SCREENER_DIR/reports"
-        "$SCREENER_DIR/notebooks"
     )
 
     for d in "${dirs[@]}"; do
@@ -330,8 +284,8 @@ setup_graphify() {
 sync_workspace() {
     section "Python Workspace (uv sync)"
 
-    info "Syncing all workspace members (backend, screener, llm-gateway, logger-py)..."
-    cd "$REPO_ROOT" && uv sync
+    info "Syncing all workspace members (backend, logger-py)..."
+    cd "$REPO_ROOT" && uv sync --group dev
     ok "Workspace synced into $VENV_DIR"
 
     info "Installing nbstripout git filter (strips notebook outputs before commit)..."
@@ -350,9 +304,7 @@ sync_workspace() {
     install_headless_browser
 }
 
-# Back-compat shims — both flags now route to sync_workspace.
-install_backend()  { sync_workspace; }
-install_screener() { sync_workspace; }
+install_backend() { sync_workspace; }
 
 # ── Frontend / Workspace Dependencies ─────────────────────────────────────────
 
@@ -370,13 +322,12 @@ install_frontend() {
     ok "solar-orb-ui built"
 }
 
-# ── Headless Browser Dependencies ─────────────────────────────────────────────────────
+# ── Headless Browser Dependencies ─────────────────────────────────────────────
 
 install_headless_browser() {
     section "Headless Browser Dependencies"
 
     check_venv
-    # Install Playwright browser binaries (needed for Zerodha Kite web login)
     info "Installing Playwright Chromium browser..."
     "$PYTHON" -m playwright install chromium
     ok "Playwright Chromium installed"
@@ -416,7 +367,6 @@ full_setup() {
     setup_graphify
     install_backend
     install_frontend
-    install_screener
     install_headless_browser
     echo ""
     echo "╔══════════════════════════════════════════════╗"
@@ -442,155 +392,6 @@ full_setup() {
     echo "     just backend           # Backend only"
     echo "     just frontend          # Frontend only"
     echo ""
-    echo "  5. Run screener pipeline (optional):"
-    echo "     ./setup.sh --pipeline"
-    echo ""
-}
-
-# ── Screener: Pipeline ───────────────────────────────────────────────────────
-
-run_pipeline() {
-    echo ""
-    echo "============================================"
-    echo "  AlphaForge Screener — Full Pipeline"
-    echo "============================================"
-    echo ""
-
-    check_venv
-
-    # Phase 1: Data Pipeline
-    info "PHASE 1: Data Pipeline"
-    echo "────────────────────────────────────────────"
-
-    info "[1.1] Fetching stock universe from NSE..."
-    "$PYTHON" -m screener.data.fetch_universe
-    ok "Universe fetched"
-
-    info "[1.2] Downloading historical OHLCV data (this may take 10-15 min for full universe)..."
-    "$PYTHON" -m screener.data.fetch_ohlcv
-    ok "OHLCV data downloaded"
-
-    info "[1.3] Fetching supplementary NSE data (delivery %, bulk/block deals)..."
-    "$PYTHON" -m screener.data.fetch_nse_data --nse-only
-    ok "NSE supplementary data fetched"
-
-    info "[1.4] Downloading index benchmarks (NIFTY 50, SENSEX, BANK NIFTY, NIFTY IT)..."
-    "$PYTHON" -m screener.data.fetch_nse_data --indices-only
-    ok "Index benchmarks downloaded"
-
-    echo ""
-
-    # Phase 2: Feature Engineering
-    info "PHASE 2: Feature Engineering"
-    echo "────────────────────────────────────────────"
-
-    info "[2.x] Building all features (technical, relative strength, fundamental, NSE)..."
-    "$PYTHON" -m screener.features.build_features
-    ok "Features built"
-
-    echo ""
-
-    # Phase 3: Dataset Construction
-    info "PHASE 3: Dataset Construction"
-    echo "────────────────────────────────────────────"
-
-    info "[3.x] Building ML-ready dataset (features + labels)..."
-    "$PYTHON" -m screener.dataset.build_dataset
-    ok "Dataset built"
-
-    echo ""
-
-    # Phase 4: Model Training
-    info "PHASE 4: Model Training"
-    echo "────────────────────────────────────────────"
-
-    info "[4.1] Running baseline rules strategies..."
-    "$PYTHON" -m screener.models.baseline_rules --strategy all
-    ok "Baseline evaluation complete"
-
-    info "[4.2] Training LightGBM classifier (walk-forward CV)..."
-    "$PYTHON" -m screener.models.train_lightgbm
-    ok "LightGBM trained and saved"
-
-    info "[4.3] Training XGBoost classifier (walk-forward CV)..."
-    "$PYTHON" -m screener.models.train_xgboost
-    ok "XGBoost trained and saved"
-
-    info "[4.5] Generating feature importance report..."
-    "$PYTHON" -m screener.models.feature_importance --save-report
-    ok "Feature importance report saved"
-
-    echo ""
-
-    # Phase 5: Backtesting
-    info "PHASE 5: Backtesting"
-    echo "────────────────────────────────────────────"
-
-    info "[5.x] Running backtest engine across all strategies..."
-    "$PYTHON" -m screener.backtest.engine
-    ok "Backtest engine complete"
-
-    info "[5.4] Generating comparison report..."
-    "$PYTHON" -m screener.backtest.report
-    ok "Backtest report saved to screener/reports/"
-
-    echo ""
-    echo "============================================"
-    ok "Full pipeline complete!"
-    echo "============================================"
-    echo ""
-    echo "  Reports:  screener/reports/backtest_report.txt"
-    echo "  Models:   screener/models/saved/{lightgbm,xgboost}/"
-    echo ""
-    echo "  Run daily scan:  ./setup.sh --scan"
-    echo ""
-}
-
-# ── Screener: Daily Scan ─────────────────────────────────────────────────────
-
-check_trained_models() {
-    local lgb_model="$SCREENER_DIR/models/saved/lightgbm/model.txt"
-    local xgb_model="$SCREENER_DIR/models/saved/xgboost/model.json"
-    if [[ ! -f "$lgb_model" ]] && [[ ! -f "$xgb_model" ]]; then
-        fail "No trained models found. Run '--pipeline' first to train models."
-    fi
-    [[ -f "$lgb_model" ]] && ok "LightGBM model found"
-    [[ -f "$xgb_model" ]] && ok "XGBoost model found"
-}
-
-run_scan() {
-    echo ""
-    echo "============================================"
-    echo "  AlphaForge Screener — Daily Scan"
-    echo "============================================"
-    echo ""
-
-    check_venv
-    check_trained_models
-
-    info "Updating OHLCV data (incremental)..."
-    "$PYTHON" -m screener.data.fetch_ohlcv --incremental
-    ok "OHLCV data updated"
-
-    info "Running daily scan with LightGBM..."
-    "$PYTHON" -m screener.live.scan --model lightgbm --top-n 20
-    ok "LightGBM scan complete"
-
-    info "Running daily scan with XGBoost..."
-    "$PYTHON" -m screener.live.scan --model xgboost --top-n 20
-    ok "XGBoost scan complete"
-
-    info "Generating signal explanations..."
-    "$PYTHON" -m screener.live.explain --model lightgbm --top-n 10
-    ok "Explanations generated"
-
-    info "Checking model drift..."
-    "$PYTHON" -m screener.live.retrain drift --model all
-    ok "Drift check complete"
-
-    echo ""
-    ok "Daily scan complete! Picks saved to screener/live/picks/"
-    echo ""
 }
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -603,13 +404,10 @@ case "${1:-}" in
     --venv)         create_venv ;;
     --backend)      install_backend ;;
     --frontend)     install_frontend ;;
-    --screener)     install_screener ;;
     --env)          scaffold_env_files ;;
     --dirs)         create_dirs ;;
     --graphify)     setup_graphify ;;
     --db)           setup_db ;;
-    --pipeline)     run_pipeline ;;
-    --scan)         run_scan ;;
     "")             full_setup ;;
     *)              fail "Unknown option: $1 (use --help for usage)" ;;
 esac

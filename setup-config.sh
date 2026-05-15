@@ -335,12 +335,12 @@ if (( GEN_SECRETS )); then
     for entry in "${MAPPINGS[@]}"; do
         dst="$REPO_ROOT/${entry##*:}"
         [[ -f "$dst" ]] || continue
-        for k in "${FERNET_KEYS[@]}"; do
+        for k in ${FERNET_KEYS[@]+"${FERNET_KEYS[@]}"}; do
             fill_blank_secret "$k" \
                 "$PY -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())'" \
                 "$dst"
         done
-        for k in "${RANDOM_KEYS[@]}"; do
+        for k in ${RANDOM_KEYS[@]+"${RANDOM_KEYS[@]}"}; do
             fill_blank_secret "$k" \
                 "$PY -c 'import secrets; print(secrets.token_urlsafe(48))'" \
                 "$dst"

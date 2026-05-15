@@ -23,3 +23,9 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 - All AI outputs include financial disclaimer
 - Never commit `.env` files or API keys
 - Type `/graphify` in Copilot Chat to build or update the knowledge graph
+
+## graphify
+
+Before answering architecture or codebase questions, read `graphify-out/GRAPH_REPORT.md` if it exists.
+If `graphify-out/wiki/index.md` exists, navigate it for deep questions.
+Type `/graphify` in Copilot Chat to build or update the knowledge graph.

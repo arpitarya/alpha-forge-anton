@@ -22,15 +22,7 @@ logger = get_logger("app")
 async def lifespan(app: FastAPI):
     setup_logging()
     logger.info("AlphaForge starting up (env=%s)", settings.app_env)
-
-    from app.modules.memory.embedding_service import get_embedding_service
-
-    embed_svc = get_embedding_service()
-    logger.info("Embedding service ready (model=%s)", settings.embedding_model)
-
     yield
-
-    await embed_svc.close()
     logger.info("AlphaForge shutting down")
 
 

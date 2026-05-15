@@ -12,15 +12,13 @@ dependencies = []
 [tool.uv.workspace]
 members = [
     "backend",
-    "screener",
     "packages/logger-py",
 ]
 
 # Local workspace deps resolve to the in-tree member, not PyPI.
 [tool.uv.sources]
-alphaforge-backend  = { workspace = true }
-alphaforge-screener = { workspace = true }
-alphaforge-logger   = { workspace = true }
+alphaforge-backend = { workspace = true }
+alphaforge-logger  = { workspace = true }
 
 # Pull every workspace member into `.venv` on `uv sync`.
 [tool.uv]
@@ -29,7 +27,6 @@ default-groups = ["all"]
 [dependency-groups]
 all = [
     "alphaforge-backend",
-    "alphaforge-screener",
     "alphaforge-logger",
 ]
 dev = [
@@ -47,7 +44,6 @@ dev = [
 [tool.pyrefly]
 project_includes = [
     "backend/app",
-    "screener",
     "packages/logger-py/src",
     "mcp/src",
 ]

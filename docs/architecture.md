@@ -14,12 +14,8 @@ alpha-forge/
 │   ├── app/modules/  Feature modules — each owns its routes/service/models
 │   │   ├── health/      /api/v1/* health endpoint
 │   │   ├── auth/        routes + User ORM
-│   │   ├── market/      routes + market_data service
 │   │   ├── portfolio/   routes + Holding/Order/Watchlist ORM
 │   │   ├── brokers/     pluggable BrokerSource adapters (Zerodha Kite/Coin, Groww, Angel One, Wint, Dezerv) + aggregator + registry. Used by portfolio routes. All CSV portfolio dumps share `dump_utils.py` — see broker-csv-dumps.md
-│   │   ├── memory/      EmbeddingService + MemoryService + ScreenerPickEmbedding/ConversationMemory ORM. Used by ai + screener
-│   │   ├── ai/          routes + AIService (RAG, sentiment, screener Q&A)
-│   │   ├── screener/    routes + ScreenerService
 │   │   ├── trade/       routes (paper/live trade endpoints)
 │   │   └── dashboard/   routes (cross-module aggregation)
 │   ├── app/main.py   FastAPI app factory; mounts api_router from app.modules
@@ -37,11 +33,10 @@ alpha-forge/
 │   ├── src/app/      Pages and layouts (Solar Terminal theme)
 │   ├── src/lib/      Cross-cutting infra: `api.ts` (axios client), `logger.ts`, `providers.tsx`, `store.ts`
 │   └── src/modules/  Feature modules — mirrors backend/app/modules layout
-│       ├── market/      market.api.ts + market.query.ts
 │       ├── portfolio/   portfolio.{api,query,types}.ts + components (Ledger, Treemap, SourcesPanel, ...)
 │       ├── ai/          ai.{api,query}.ts + AIChat
 │       ├── trade/       trade.{api,query}.ts
-│       ├── screener/    screener.{api,query,types,utils}.ts + ScreenerPanel
+│       ├── screener/    ScreenerPanel (hardcoded stub — no live API)
 │       ├── dashboard/   dashboard.{api,query,types}.ts + terminal-home components
 │       └── auth/        auth.api.ts
 ├── infra/            Infrastructure configs (docker-compose for services, devcontainer)
@@ -82,11 +77,6 @@ alpha-forge/
 - `backend/app/modules/brokers/base.py` — `BrokerSource` ABC; implement for new brokers
 - `backend/app/modules/brokers/registry.py` — broker source registry (slug → class)
 - `backend/app/modules/brokers/dump_utils.py` — shared CSV-dump utilities (path, permissions, headers, P&L). See [broker-csv-dumps.md](broker-csv-dumps.md)
-- `backend/app/modules/screener/screener_service.py` — Screener picks storage/retrieval
-- `backend/app/modules/screener/screener_routes.py` — Screener API endpoints
-- `backend/app/modules/memory/memory_service.py` — `MemoryService` (RAG retrieval over picks + chats)
-- `backend/app/modules/memory/embedding_service.py` — `EmbeddingService` (Gemini text-embedding-004)
-
 ### Frontend
 - `frontend/src/app/layout.tsx` — Root layout. Mounts `ThemeProvider` → `QueryProvider` → `AuthGuard` → `BootGate`, so the boot sequence runs once for the whole app and survives client-side route changes (`/`, `/portfolio`, `/preferences`)
 - `frontend/src/app/page.tsx` — Terminal landing page (no longer wraps `BootGate` — that's now in the root layout)

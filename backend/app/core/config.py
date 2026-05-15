@@ -38,12 +38,6 @@ class Settings(BaseSettings):
     # Defaults to bcrypt("alphaforge-dev") in dev; must be set explicitly in production.
     admin_password_hash: str = _DEV_PASSWORD_HASH
 
-    # ── Vector / Memory ──────────────────────────
-    embedding_model: str = "text-embedding-004"
-    embedding_dimensions: int = 768
-    memory_top_k: int = 5
-    memory_max_age_days: int = 90
-
     # ── CORS ─────────────────────────────────────
     cors_origins: list[str] = ["http://localhost:3000"]
 
