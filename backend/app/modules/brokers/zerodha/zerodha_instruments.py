@@ -1,9 +1,8 @@
-"""Kite instrument-master cache → tradingsymbol→name lookup for Zerodha holdings.
+"""Kite instrument-master cache → tradingsymbol→name/type lookup for Zerodha holdings.
 
-The Kite holdings JSON does not include company names. This module fetches
-the public Kite instruments dump (https://api.kite.trade/instruments, ~3 MB,
-no auth) once per TTL and caches it as a CSV on disk so we can resolve
-`tradingsymbol` → `name` when materialising Holding rows.
+The Kite holdings JSON omits company names and instrument types. This module
+fetches the public Kite instruments dump once per TTL to resolve tradingsymbol
+→ name and instrument_type (EQ/ETF) when materialising Holding rows.
 
 Disclaimer: Not SEBI registered investment advice.
 """
@@ -22,9 +21,11 @@ logger = get_logger("brokers.zerodha_instruments")
 
 INSTRUMENTS_URL = "https://api.kite.trade/instruments"
 _TTL_ENV = "ZERODHA_INSTRUMENTS_TTL_SECONDS"
-_DEFAULT_TTL = 24 * 60 * 60  # 24h
+_DEFAULT_TTL = 24 * 60 * 60
+_TRACKED_TYPES = {"EQ", "ETF"}
 
 _NAME_BY_SYMBOL: dict[str, str] | None = None
+_TYPE_BY_SYMBOL: dict[str, str] | None = None
 
 
 def _cache_path():
@@ -55,44 +56,69 @@ async def _refresh_cache() -> None:
     logger.info("Zerodha instruments: cached %d bytes → %s", len(text), p)
 
 
-def _parse_cached() -> dict[str, str]:
-    """Build tradingsymbol→name map from cached CSV (EQ instruments only)."""
-    out: dict[str, str] = {}
+def _parse_cached() -> tuple[dict[str, str], dict[str, str]]:
+    names: dict[str, str] = {}
+    types: dict[str, str] = {}
     with _cache_path().open("r", encoding="utf-8", newline="") as fh:
-        reader = csv.DictReader(fh)
-        for row in reader:
-            if row.get("instrument_type") != "EQ":
+        for row in csv.DictReader(fh):
+            itype = (row.get("instrument_type") or "").upper()
+            if itype not in _TRACKED_TYPES:
                 continue
             sym = (row.get("tradingsymbol") or "").upper().strip()
+            if not sym:
+                continue
+            types.setdefault(sym, itype)
             name = (row.get("name") or "").strip()
-            if sym and name:
-                out.setdefault(sym, name)
-    return out
+            if name:
+                names.setdefault(sym, name)
+    return names, types
 
 
-async def name_lookup() -> dict[str, str]:
-    """Return tradingsymbol→name map, refreshing the on-disk cache if stale."""
-    global _NAME_BY_SYMBOL
+async def _ensure_loaded() -> None:
+    global _NAME_BY_SYMBOL, _TYPE_BY_SYMBOL
     if not _is_fresh():
         try:
             await _refresh_cache()
-            _NAME_BY_SYMBOL = None
+            _NAME_BY_SYMBOL = _TYPE_BY_SYMBOL = None
         except Exception as e:
             logger.warning("Zerodha instruments: refresh failed (%s) — using cache if any", e)
             if not _cache_path().exists():
-                return {}
+                _NAME_BY_SYMBOL = _TYPE_BY_SYMBOL = {}
+                return
     if _NAME_BY_SYMBOL is None:
-        _NAME_BY_SYMBOL = _parse_cached()
-        logger.info("Zerodha instruments: loaded %d EQ names", len(_NAME_BY_SYMBOL))
-    return _NAME_BY_SYMBOL
+        _NAME_BY_SYMBOL, _TYPE_BY_SYMBOL = _parse_cached()
+        logger.info(
+            "Zerodha instruments: loaded %d names, %d types",
+            len(_NAME_BY_SYMBOL), len(_TYPE_BY_SYMBOL or {}),
+        )
+
+
+async def name_lookup() -> dict[str, str]:
+    await _ensure_loaded()
+    return _NAME_BY_SYMBOL or {}
+
+
+async def type_lookup() -> dict[str, str]:
+    """Return tradingsymbol→instrument_type (EQ/ETF) map."""
+    await _ensure_loaded()
+    return _TYPE_BY_SYMBOL or {}
+
+
+def _load_sync() -> None:
+    global _NAME_BY_SYMBOL, _TYPE_BY_SYMBOL
+    if _NAME_BY_SYMBOL is not None:
+        return
+    if not _cache_path().exists():
+        _NAME_BY_SYMBOL = _TYPE_BY_SYMBOL = {}
+        return
+    _NAME_BY_SYMBOL, _TYPE_BY_SYMBOL = _parse_cached()
 
 
 def name_lookup_sync() -> dict[str, str]:
-    """Synchronous lookup using the on-disk cache only — never triggers a fetch."""
-    global _NAME_BY_SYMBOL
-    if _NAME_BY_SYMBOL is not None:
-        return _NAME_BY_SYMBOL
-    if not _cache_path().exists():
-        return {}
-    _NAME_BY_SYMBOL = _parse_cached()
-    return _NAME_BY_SYMBOL
+    _load_sync()
+    return _NAME_BY_SYMBOL or {}
+
+
+def type_lookup_sync() -> dict[str, str]:
+    _load_sync()
+    return _TYPE_BY_SYMBOL or {}

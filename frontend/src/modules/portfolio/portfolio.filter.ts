@@ -1,3 +1,4 @@
+import { primaryLabel } from "./ledger.utils";
 import type { HoldingDTO } from "./portfolio.types";
 
 export type PnLMode = "all" | "up" | "dn";
@@ -38,7 +39,7 @@ const KEY: Record<SortKey, (h: HoldingDTO) => number | string> = {
   pnl: (h) => h.pnl,
   pnl_pct: (h) => h.pnl_pct,
   qty: (h) => h.quantity,
-  alpha: (h) => h.symbol,
+  alpha: (h) => primaryLabel(h),
   source: (h) => h.source,
   asset_class: (h) => h.asset_class,
   avg_price: (h) => h.avg_price,

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { ASSET_LABEL } from "./ledger.utils";
+import { ASSET_LABEL, primaryLabel } from "./ledger.utils";
 import type { HoldingDTO } from "./portfolio.types";
 
 function highlight(text: string | null | undefined, q?: string): ReactNode {
@@ -22,9 +22,8 @@ function highlight(text: string | null | undefined, q?: string): ReactNode {
 
 export function LedgerRow({ h, query }: { h: HoldingDTO; query?: string }) {
   const tone = h.pnl >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]";
-  const namedClass = h.asset_class === "bond" || h.asset_class === "gold";
-  const primary = namedClass && h.name ? h.name : h.symbol;
-  const secondary = namedClass && h.name ? h.symbol : h.name;
+  const primary = primaryLabel(h);
+  const secondary = primary === h.symbol ? h.name : h.symbol;
   return (
     <tr
       key={`${h.source}-${h.symbol}-${h.isin ?? ""}`}

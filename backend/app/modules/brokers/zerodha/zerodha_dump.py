@@ -16,7 +16,11 @@ from typing import Any
 
 import app.modules.brokers.dump_utils as _du
 from app.core.logging import get_logger
-from app.modules.brokers.zerodha.zerodha_source_helper import acquire_enctoken, fetch_holdings_json
+from app.modules.brokers.zerodha.zerodha_source_helper import (
+    acquire_enctoken,
+    fetch_holdings_json,
+    fetch_mf_holdings_json,
+)
 
 logger = get_logger("brokers.zerodha_dump")
 SLUG = "zerodha"
@@ -45,6 +49,14 @@ def write_csv(rows: list[dict[str, Any]], dst: Path) -> None:
 async def dump_zerodha(*, force_login: bool = False) -> Path:
     enctoken = await acquire_enctoken(force=force_login)
     rows = await fetch_holdings_json(enctoken)
+    try:
+        mf_rows = await fetch_mf_holdings_json(enctoken)
+        for r in mf_rows:
+            r["name"] = r.get("fund", "")
+            r.setdefault("asset_class", "mutual_fund")
+        rows = rows + mf_rows
+    except Exception as e:
+        logger.warning("Zerodha COIN: MF dump failed (%s) — equity/ETF only", e)
     live = live_csv_path()
     write_csv(rows, live)
     write_csv(rows, _du.dated_csv_path(SLUG))

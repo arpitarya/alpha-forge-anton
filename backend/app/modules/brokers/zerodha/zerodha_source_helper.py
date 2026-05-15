@@ -24,6 +24,7 @@ logger = get_logger("brokers.zerodha_kite_helper")
 KITE_BASE = "https://kite.zerodha.com"
 HOLDINGS_PATH = "/oms/portfolio/holdings"
 MARGINS_PATH = "/oms/user/margins"
+COIN_HOLDINGS_PATH = "/api/mf/holdings"
 REQUIRED_ENV: tuple[str, ...] = ("ZERODHA_USER_ID",)
 
 _LOGIN_URL = "https://kite.zerodha.com/"
@@ -90,6 +91,23 @@ async def fetch_margins_json(enctoken: str) -> dict[str, Any]:
     if payload.get("status") != "success":
         raise RuntimeError(f"Zerodha margins failed: {payload.get('message') or payload}")
     return dict(payload.get("data") or {})
+
+
+async def fetch_mf_holdings_json(enctoken: str) -> list[dict[str, Any]]:
+    """GET /api/mf/holdings → COIN mutual fund holdings (empty list if not subscribed)."""
+    headers = {"Authorization": f"enctoken {enctoken}", "X-Kite-Version": "3"}
+    async with make_client(base_url=KITE_BASE, headers=headers) as client:
+        client.cookies.set("enctoken", enctoken, domain="kite.zerodha.com")
+        res = await client.get(COIN_HOLDINGS_PATH)
+        if res.status_code in (401, 403):
+            raise httpx.HTTPStatusError(
+                f"enctoken rejected ({res.status_code})", request=res.request, response=res
+            )
+        res.raise_for_status()
+        payload: dict[str, Any] = res.json()
+    if payload.get("status") != "success":
+        raise RuntimeError(f"Zerodha COIN MF failed: {payload.get('message') or payload}")
+    return list(payload.get("data") or [])
 
 
 async def fetch_holdings_json(enctoken: str) -> list[dict[str, Any]]:

@@ -9,8 +9,7 @@ The portfolio module aggregates holdings from six sources. Each source is one of
 
 | Source | Slug | Kind | Where to get the data |
 |---|---|---|---|
-| Zerodha (equities) | `zerodha` | CSV | [console.zerodha.com](https://console.zerodha.com) → **Holdings** → Download → CSV |
-| Zerodha Coin (MF) | `zerodha-coin` | CSV | [coin.zerodha.com](https://coin.zerodha.com) → **Statements** → Holdings → CSV |
+| Zerodha (equity + ETF + COIN MF) | `zerodha` | API | CDP session — log in to [kite.zerodha.com](https://kite.zerodha.com) in the AlphaForge Chrome (see below) |
 | Groww | `groww` | CSV | [groww.in](https://groww.in) → **Reports** → Holdings → Export (stocks **or** MF) |
 | Dezerv | `dezerv` | CSV | Dezerv app → **Statements** → Holdings export |
 | Wint Wealth | `wint-wealth` | CSV | Wint Wealth app → **Investments** → Export |
@@ -24,8 +23,7 @@ The portfolio module aggregates holdings from six sources. Each source is one of
 
 | Broker | Free public API? | Notes |
 |---|---|---|
-| Zerodha (Kite Connect) | **No** — ₹2000/mo per app | The Console CSV export is free + official. |
-| Zerodha Coin | **No** | Same — only CSV. |
+| Zerodha (Kite Connect) | **No** — ₹2000/mo per app | We fetch equity/ETF from `/oms/portfolio/holdings` and COIN MF from `/api/mf/holdings` via the enctoken captured over CDP. |
 | Groww | **No** | Reverse-engineered endpoints exist; we don't ship them (ToS). |
 | Dezerv | **No** public API. |
 | Wint Wealth | **No** public API. |
