@@ -10,6 +10,7 @@ back to CSV upload (the new API sources also implement `parse()` so the
 
 from __future__ import annotations
 
+from app.modules.brokers.angelone import AngelOneSource
 from app.modules.brokers.base import BrokerSource
 from app.modules.brokers.groww import GrowwSource
 from app.modules.brokers.wintwealth import WintWealthSource
@@ -21,6 +22,7 @@ def _build_sources() -> dict[str, BrokerSource]:
         ZerodhaKiteSource(),    # slug: zerodha
         GrowwSource(),          # slug: groww       (CSV active; CDP fetch stub)
         WintWealthSource(),     # slug: wintwealth  (CDP browser fetch; bonds/SGBs)
+        AngelOneSource(),       # slug: angelone    (SmartAPI + TOTP)
     ]
     return {s.slug: s for s in instances}
 

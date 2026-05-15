@@ -9,12 +9,20 @@ return from the CSV cache without re-launching Chrome.
 
 from __future__ import annotations
 
-import os
+from datetime import UTC, datetime
 from typing import IO
 
 from app.core.logging import get_logger
-from app.modules.brokers.base import AssetClass, BrokerSource, Holding, SourceKind, SourceStatus
+from app.modules.brokers.base import (
+    AssetClass,
+    BrokerSource,
+    Holding,
+    SourceKind,
+    SourceStatus,
+    WalletBalance,
+)
 from app.modules.brokers.groww.csv import GrowwCSVSource as _GrowwCSV
+from app.modules.brokers.groww.groww_cash_helper import capture_groww_cash
 from app.modules.brokers.groww.groww_dump import (
     is_csv_fresh,
     live_csv_path,
@@ -29,7 +37,7 @@ from app.modules.brokers.groww.groww_source_helper import (
 
 logger = get_logger("brokers.groww")
 
-__all__ = ["GrowwSource", "REQUIRED_ENV", "env"]
+__all__ = ["REQUIRED_ENV", "GrowwSource", "env"]
 
 
 def _holding_from_row(r: dict, slug: str) -> Holding:
@@ -73,6 +81,7 @@ class GrowwSource(BrokerSource):
     slug = "groww"
     label = "Groww"
     kind = SourceKind.API
+    supports_cash = True
     notes = (
         "Manual login: log in to groww.in inside the AlphaForge Chrome "
         "(started with --remote-debugging-port=9299). AlphaForge never "
@@ -111,3 +120,11 @@ class GrowwSource(BrokerSource):
         out = [_holding_from_row(r, self.slug) for r in rows]
         logger.info("Groww: fetched %d holdings → cached to CSV", len(out))
         return out
+
+    async def fetch_cash(self) -> WalletBalance:
+        cash = await capture_groww_cash()
+        logger.info("Groww: captured wallet cash ₹%.2f via CDP", cash)
+        return WalletBalance(
+            source=self.slug, currency="INR", cash=round(cash, 2),
+            as_of=datetime.now(UTC),
+        )

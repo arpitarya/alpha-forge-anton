@@ -9,13 +9,4 @@ export const ASSET_LABEL: Record<string, string> = {
   other: "Other",
 };
 
-export const LEDGER_HEADERS = [
-  "Symbol",
-  "Source",
-  "Class",
-  "Qty",
-  "Avg",
-  "LTP",
-  "Value",
-  "P&L",
-];
+export const LEDGER_HEADERS = ["Symbol", "Source", "Class", "Qty", "Avg", "LTP", "Value", "P&L"];

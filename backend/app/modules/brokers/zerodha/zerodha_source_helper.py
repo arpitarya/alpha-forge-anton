@@ -23,6 +23,7 @@ logger = get_logger("brokers.zerodha_kite_helper")
 
 KITE_BASE = "https://kite.zerodha.com"
 HOLDINGS_PATH = "/oms/portfolio/holdings"
+MARGINS_PATH = "/oms/user/margins"
 REQUIRED_ENV: tuple[str, ...] = ("ZERODHA_USER_ID",)
 
 _LOGIN_URL = "https://kite.zerodha.com/"
@@ -72,6 +73,23 @@ async def acquire_enctoken(force: bool = False) -> str:
     save_session("zerodha", {"enctoken": enctoken, "user_id": env("ZERODHA_USER_ID")})
     logger.info("Zerodha: acquired new enctoken via CDP-attached Chrome")
     return enctoken
+
+
+async def fetch_margins_json(enctoken: str) -> dict[str, Any]:
+    """GET /oms/user/margins → equity available cash for the Kite account."""
+    headers = {"Authorization": f"enctoken {enctoken}", "X-Kite-Version": "3"}
+    async with make_client(base_url=KITE_BASE, headers=headers) as client:
+        client.cookies.set("enctoken", enctoken, domain="kite.zerodha.com")
+        res = await client.get(MARGINS_PATH)
+        if res.status_code in (401, 403):
+            raise httpx.HTTPStatusError(
+                f"enctoken rejected ({res.status_code})", request=res.request, response=res
+            )
+        res.raise_for_status()
+        payload: dict[str, Any] = res.json()
+    if payload.get("status") != "success":
+        raise RuntimeError(f"Zerodha margins failed: {payload.get('message') or payload}")
+    return dict(payload.get("data") or {})
 
 
 async def fetch_holdings_json(enctoken: str) -> list[dict[str, Any]]:

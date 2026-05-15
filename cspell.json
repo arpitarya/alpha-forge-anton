@@ -18,7 +18,11 @@
   "words": [
     "alembic",
     "alphaforge",
+    "angelbroking",
+    "angelone",
+    "apiconnect",
     "asyncpg",
+    "averageprice",
     "axios",
     "bcrypt",
     "biome",
@@ -26,6 +30,7 @@
     "clsx",
     "demat",
     "fastapi",
+    "fernet",
     "fyers",
     "groww",
     "httpx",
@@ -42,13 +47,16 @@
     "passlib",
     "postcss",
     "pydantic",
+    "pyotp",
     "pytest",
     "recharts",
     "ruff",
     "shoonya",
     "skypack",
+    "smartapi",
     "socketio",
     "sqlalchemy",
+    "tradingsymbol",
     "tailwindcss",
     "tanstack",
     "tsconfig",
@@ -95,11 +103,13 @@
         "ESM",
         "JWT",
         "LLM",
+        "MPIN",
         "ORM",
         "PDM",
         "PNPM",
         "RAG",
-        "SSR"
+        "SSR",
+        "TOTP"
       ]
     }
   ]

@@ -23,7 +23,9 @@ export function SourcesPanel() {
       const ok = Object.values(r.results).filter((v) => v.ok).length;
       const failed = Object.values(r.results).filter((v) => !v.ok).length;
       const total = ok + failed;
-      setSyncSummary(failed ? `${ok}/${total} synced, ${failed} failed` : `All ${ok} sources synced`);
+      setSyncSummary(
+        failed ? `${ok}/${total} synced, ${failed} failed` : `All ${ok} sources synced`,
+      );
       onAfter();
     } catch (e) {
       setSyncSummary(readErr(e));

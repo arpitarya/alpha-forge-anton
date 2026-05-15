@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  CountUp,
-  SegmentedControl,
-  Stat,
-} from "@alphaforge/solar-orb-ui";
+import { CountUp, SegmentedControl, Stat } from "@alphaforge/solar-orb-ui";
 import { useHoldings } from "@/modules/portfolio";
 
 export type PortfolioView = "tree" | "ledger";
@@ -36,13 +32,7 @@ export function PortfolioHeader({
       />
       <Stat
         label="Unrealized P&L"
-        value={
-          <CountUp
-            value={Math.abs(t.pnl)}
-            format="inr"
-            prefix={t.pnl >= 0 ? "+₹" : "−₹"}
-          />
-        }
+        value={<CountUp value={Math.abs(t.pnl)} format="inr" prefix={t.pnl >= 0 ? "+₹" : "−₹"} />}
         delta={`${t.pnl >= 0 ? "+" : "−"}${Math.abs(t.pnl_pct).toFixed(2)}% overall`}
         deltaTone={t.pnl >= 0 ? "up" : "dn"}
       />

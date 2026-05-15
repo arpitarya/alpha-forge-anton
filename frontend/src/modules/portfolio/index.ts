@@ -1,11 +1,17 @@
+export { FilterBar, type PortfolioView } from "./FilterBar";
+export { Ledger } from "./Ledger";
 export * from "./portfolio.api";
+export * from "./portfolio.filter";
 export * from "./portfolio.query";
 export * from "./portfolio.types";
-
-export { Ledger } from "./Ledger";
-export { PortfolioHeader, type PortfolioView } from "./PortfolioHeader";
+export { PortfolioCompactBar } from "./PortfolioCompactBar";
+export { PortfolioHeader } from "./PortfolioHeader";
 export { RebalanceRail } from "./RebalanceRail";
-export { SourcesPanel } from "./SourcesPanel";
-export { SourceRow } from "./SourceRow";
 export { SourceOtpDialog } from "./SourceOtpDialog";
+export { SourceRow } from "./SourceRow";
+export { SourcesPanel } from "./SourcesPanel";
+export { SourceSpotlight } from "./SourceSpotlight";
+export { SummaryBar } from "./SummaryBar";
 export { Treemap } from "./Treemap";
+export { WalletCard } from "./WalletCard";
+export { WalletStrip } from "./WalletStrip";

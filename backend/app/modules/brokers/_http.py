@@ -38,6 +38,8 @@ _DEV_APPROVED_HOSTS: frozenset[str] = frozenset({
     "api.groww.in",
     "wintwealth.com",
     "api.wintwealth.com",
+    "apiconnect.angelone.in",
+    "smartapi.angelbroking.com",
     "niftyindices.com",
     "www.nseindia.com",
 })

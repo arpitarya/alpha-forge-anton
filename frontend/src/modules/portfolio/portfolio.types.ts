@@ -98,3 +98,24 @@ export interface SyncAllResultDTO {
   totals: PortfolioTotalsDTO;
   disclaimer: string;
 }
+
+export interface WalletInfoDTO {
+  slug: string;
+  label: string;
+  supports_cash: boolean;
+  cash: number;
+  currency: string;
+  cash_available: boolean;
+  cash_error: string | null;
+  cash_as_of: string | null;
+  holdings_value: number;
+  holdings_count: number;
+  pnl: number;
+  pnl_pct: number;
+  last_synced_at: string | null;
+}
+
+export interface WalletsResponseDTO {
+  wallets: WalletInfoDTO[];
+  disclaimer: string;
+}

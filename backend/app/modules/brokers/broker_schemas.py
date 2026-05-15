@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 
 from pydantic import BaseModel, Field
@@ -46,7 +46,7 @@ class Holding(BaseModel):
     pnl_pct: float
     sector: str | None = None
     exchange: str | None = None
-    as_of: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    as_of: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class SourceInfo(BaseModel):
@@ -58,3 +58,15 @@ class SourceInfo(BaseModel):
     last_synced_at: datetime | None = None
     error_message: str | None = None
     notes: str | None = None
+
+
+class WalletBalance(BaseModel):
+    """Free cash sitting inside a broker wallet (not deployed in holdings)."""
+    source: str
+    currency: str = "INR"
+    cash: float = 0.0
+    # When the cash figure was last refreshed by the broker (None if never fetched).
+    as_of: datetime | None = None
+    # `available` is True when the broker exposes a cash endpoint we can read.
+    available: bool = True
+    error: str | None = None

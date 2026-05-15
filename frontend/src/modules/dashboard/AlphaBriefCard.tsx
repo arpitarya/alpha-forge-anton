@@ -40,11 +40,6 @@ export function AlphaBriefCard() {
         ))}
       </div>
 
-      {data?.disclaimer && (
-        <Text variant="caption" tone="subtle" className="mt-auto pt-4 text-center">
-          {data.disclaimer}
-        </Text>
-      )}
     </Card>
   );
 }

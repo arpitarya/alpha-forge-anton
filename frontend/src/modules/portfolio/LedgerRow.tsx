@@ -1,11 +1,27 @@
 "use client";
 
-import type { HoldingDTO } from "./portfolio.types";
+import type { ReactNode } from "react";
 import { ASSET_LABEL } from "./ledger.utils";
+import type { HoldingDTO } from "./portfolio.types";
 
-export function LedgerRow({ h }: { h: HoldingDTO }) {
+function highlight(text: string | null | undefined, q?: string): ReactNode {
+  if (!text || !q) return text ?? "";
+  const t = String(text);
+  const i = t.toLowerCase().indexOf(q.toLowerCase());
+  if (i < 0) return t;
+  return (
+    <>
+      {t.slice(0, i)}
+      <mark className="bg-[color:color-mix(in_srgb,var(--accent)_24%,transparent)] text-[color:var(--accent)]">
+        {t.slice(i, i + q.length)}
+      </mark>
+      {t.slice(i + q.length)}
+    </>
+  );
+}
+
+export function LedgerRow({ h, query }: { h: HoldingDTO; query?: string }) {
   const tone = h.pnl >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]";
-  // Bonds/gold have cryptic ISIN-like symbols — surface the human name as the primary identifier.
   const namedClass = h.asset_class === "bond" || h.asset_class === "gold";
   const primary = namedClass && h.name ? h.name : h.symbol;
   const secondary = namedClass && h.name ? h.symbol : h.name;
@@ -16,10 +32,10 @@ export function LedgerRow({ h }: { h: HoldingDTO }) {
     >
       <td className="px-6 py-3 max-w-md">
         <div className="flex flex-col">
-          <span className="font-semibold leading-snug">{primary}</span>
+          <span className="font-semibold leading-snug">{highlight(primary, query)}</span>
           {secondary && (
             <span className="text-[10px] uppercase tracking-[0.14em] text-[color:var(--fg-3)] leading-snug">
-              {secondary}
+              {highlight(secondary, query)}
             </span>
           )}
         </div>

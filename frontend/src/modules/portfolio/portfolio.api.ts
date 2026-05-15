@@ -18,7 +18,9 @@ export const portfolioApi = {
   syncSource: (slug: string) => api.post(`/portfolio/sources/${slug}/sync`),
   syncAll: () => api.post("/portfolio/sources/sync-all"),
   startLogin: (slug: string) => api.post(`/portfolio/sources/${slug}/start-login`),
-  submitOtp: (slug: string, code: string) =>
-    api.post(`/portfolio/sources/${slug}/otp`, { code }),
+  submitOtp: (slug: string, code: string) => api.post(`/portfolio/sources/${slug}/otp`, { code }),
   resetSource: (slug: string) => api.post(`/portfolio/sources/${slug}/reset`),
+  listWallets: () => api.get("/portfolio/wallets"),
+  syncWallets: () => api.post("/portfolio/wallets/sync"),
+  syncWallet: (slug: string) => api.post(`/portfolio/wallets/${slug}/sync`),
 };

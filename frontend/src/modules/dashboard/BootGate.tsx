@@ -1,19 +1,60 @@
 "use client";
 
-import { type ReactNode, useCallback, useState } from "react";
-import { BootScreen } from "./BootScreen";
+import { usePathname } from "next/navigation";
+import { type ReactNode, useCallback, useEffect, useState } from "react";
+import { fetchBootReport } from "./boot.api";
+import type { BootService } from "./boot.types";
+import { BOOT_STEPS, type BootStep, BootScreen } from "./BootScreen";
 
 type Phase = "boot" | "exiting" | "done";
 
 const FADE_OUT_MS = 450; // must match boot-screen-out animation duration
+const SESSION_KEY = "af-booted";
+
+function toStep(s: BootService): BootStep {
+  return { key: s.key, label: s.label, status: s.status, doneStatus: s.detail };
+}
 
 export function BootGate({ children }: { children: ReactNode }) {
-  const [phase, setPhase] = useState<Phase>("boot");
+  const pathname = usePathname();
+  const skip = pathname === "/login";
+
+  const [phase, setPhase] = useState<Phase>("done");
+  const [hydrated, setHydrated] = useState(false);
+  const [steps, setSteps] = useState<BootStep[]>(BOOT_STEPS);
+
+  useEffect(() => {
+    if (skip) {
+      setPhase("done");
+      setHydrated(true);
+      return;
+    }
+    const booted = typeof window !== "undefined" && sessionStorage.getItem(SESSION_KEY) === "1";
+    if (booted) {
+      setPhase("done");
+      setHydrated(true);
+      return;
+    }
+    // Real probe: fetch live system snapshot. If it fails the static fallback
+    // in BOOT_STEPS still produces a usable splash.
+    fetchBootReport()
+      .then((r) => setSteps(r.services.map(toStep)))
+      .catch(() => { /* fallback already in state */ })
+      .finally(() => {
+        setPhase("boot");
+        setHydrated(true);
+      });
+  }, [skip]);
 
   const handleDone = useCallback(() => {
     setPhase("exiting");
-    setTimeout(() => setPhase("done"), FADE_OUT_MS);
+    setTimeout(() => {
+      sessionStorage.setItem(SESSION_KEY, "1");
+      setPhase("done");
+    }, FADE_OUT_MS);
   }, []);
+
+  if (!hydrated) return null;
 
   if (phase === "done") {
     return (
@@ -31,5 +72,5 @@ export function BootGate({ children }: { children: ReactNode }) {
     );
   }
 
-  return <BootScreen onDone={handleDone} exiting={phase === "exiting"} />;
+  return <BootScreen steps={steps} onDone={handleDone} exiting={phase === "exiting"} />;
 }

@@ -17,7 +17,7 @@ Environment overrides:
     PROBE_PASS=alphaforge-dev
     BROKER_CDP_PORT=9299
 
-Screenshots are saved to /tmp/alphaforge-probe/.
+Screenshots are saved to <repo-root>/screenshots/.
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ BASE_URL = os.getenv("AF_FRONTEND", "http://localhost:3000")
 CDP_PORT = int(os.getenv("BROKER_CDP_PORT", "9299"))
 USERNAME = os.getenv("PROBE_USER", "admin")
 PASSWORD = os.getenv("PROBE_PASS", "alphaforge-dev")
-SHOT_DIR = Path("/tmp/alphaforge-probe")
+SHOT_DIR = Path(__file__).resolve().parent.parent / "screenshots"
 
 _results: list[tuple[str, bool, str]] = []
 

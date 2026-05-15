@@ -73,9 +73,22 @@ export function useSourceRow(slug: string, onAfter: () => void) {
   }
 
   return {
-    upload, sync, reset, startLogin, submitOtp,
-    error, otpVisible, otpCode, otpStatus,
-    setOtpCode, setOtpVisible, setOtpStatus,
-    handleUpload, handleSync, handleStartLogin, handleSubmitOtp, handleReset,
+    upload,
+    sync,
+    reset,
+    startLogin,
+    submitOtp,
+    error,
+    otpVisible,
+    otpCode,
+    otpStatus,
+    setOtpCode,
+    setOtpVisible,
+    setOtpStatus,
+    handleUpload,
+    handleSync,
+    handleStartLogin,
+    handleSubmitOtp,
+    handleReset,
   };
 }

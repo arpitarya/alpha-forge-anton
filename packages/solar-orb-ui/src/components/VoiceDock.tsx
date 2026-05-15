@@ -23,12 +23,13 @@ export interface VoiceDockProps {
 export function VoiceDock({ mic, center, cta, className }: VoiceDockProps) {
   return (
     <footer
+      data-af-voice
       className={twMerge(
         clsx(
-          "relative flex flex-none items-center gap-6 min-h-[80px]",
-          "rounded-[var(--radius-sm)] border border-[color:var(--line)]",
+          "af-voice group/voice relative flex flex-none items-center gap-4 min-h-[36px]",
+          "rounded-[8px] border border-[color:var(--line)]",
           "bg-[color:color-mix(in_srgb,var(--surface)_82%,transparent)]",
-          "px-6 py-4 backdrop-blur-md",
+          "px-3.5 py-1.5 [backdrop-filter:blur(18px)] [-webkit-backdrop-filter:blur(18px)]",
           "before:absolute before:left-0 before:top-0 before:h-full before:w-0.5",
           "before:bg-[linear-gradient(180deg,transparent,var(--accent),transparent)]",
           "before:opacity-50 before:content-['']",
@@ -37,7 +38,7 @@ export function VoiceDock({ mic, center, cta, className }: VoiceDockProps) {
       )}
     >
       {mic && <div className="flex flex-none items-center">{mic}</div>}
-      <div className="flex min-w-0 flex-1 items-center gap-5">{center}</div>
+      <div className="flex min-w-0 flex-1 items-center gap-3.5">{center}</div>
       {cta && <div className="flex flex-none items-center">{cta}</div>}
     </footer>
   );

@@ -28,6 +28,7 @@ Legacy violations: [convention/violations.md](../convention/violations.md)
 - Zustand for global state (no Redux, no Context API for global state)
 - All API calls through the typed axios client in `src/lib/api.ts`
 - Tailwind utility classes; CSS variables for dark Solar Terminal theme
+- Tailwind v4: workspace packages must be listed in `globals.css` with `@source` so arbitrary-value classes (e.g. `grid-cols-[28px_1fr_auto_auto]`) used inside `packages/*/src` actually compile. Tailwind v4's Preflight no longer sets `cursor: pointer` on `button` — `globals.css` re-applies it; don't add `cursor-pointer` per-button
 - `@alphaforge/solar-orb-ui` — import components, fonts, and theme tokens from here
 - Biome v2 for formatting + linting; ESLint v9 flat config for Next.js rules
 - TanStack React Query v5 for data fetching (hooks in per-domain `*.query.ts`)

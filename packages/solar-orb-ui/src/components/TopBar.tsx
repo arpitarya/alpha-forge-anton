@@ -19,31 +19,32 @@ export interface TopBarProps {
 }
 
 /**
- * Hi-Fi `.top` — branded header strip with nav buttons.
+ * Hi-Fi `.top` — slim global header. Padding/sizes track the Hi-Fi spec:
+ * 4px 14px outer, 32px min-height, 8px radius, nav buttons 4px 10px @ 9px font.
  *
- * Nav buttons use a comfortable click target (44px tall, 11px font) so the
- * header is keyboard- and pointer-friendly without dwarfing the rest of the
- * chrome. Active tab gets the underline glow.
+ * Auto-hide: when an ancestor carries `chrome-autohide`, the bar collapses to
+ * a thin accent strip and expands on hover/focus.
  */
 export function TopBar({ brand, nav, right, className }: TopBarProps) {
   return (
     <header
+      data-af-top
       className={twMerge(
         clsx(
-          "relative flex flex-none items-center justify-between gap-6",
-          "rounded-[var(--radius-sm)] border border-[color:var(--line)]",
-          "bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)]",
-          "px-5 py-3 backdrop-blur-md",
-          "after:absolute after:inset-x-5 after:-bottom-px after:h-px",
-          "after:bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--accent)_60%,transparent),transparent)]",
-          "after:opacity-50 after:content-['']",
+          "af-top group/top relative flex min-h-[32px] flex-none items-center justify-between gap-3.5",
+          "rounded-[8px] border border-[color:var(--line)]",
+          "bg-[color:color-mix(in_srgb,var(--surface)_78%,transparent)]",
+          "px-3.5 py-1 [backdrop-filter:blur(20px)] [-webkit-backdrop-filter:blur(20px)]",
+          "after:absolute after:inset-x-6 after:-bottom-px after:h-px",
+          "after:bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--accent)_45%,transparent),transparent)]",
+          "after:opacity-35 after:content-['']",
           className,
         ),
       )}
     >
-      {brand && <div className="flex items-center gap-3.5">{brand}</div>}
+      {brand && <div className="flex items-center gap-2.5">{brand}</div>}
       {nav && nav.length > 0 && (
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-0.5">
           {nav.map((item) => (
             <button
               key={item.id}
@@ -51,15 +52,14 @@ export function TopBar({ brand, nav, right, className }: TopBarProps) {
               disabled={item.disabled}
               onClick={item.onClick}
               className={clsx(
-                "relative inline-flex h-10 items-center justify-center rounded-[var(--radius-sm)]",
-                "px-5 font-mono text-[11px] uppercase tracking-[0.22em] transition-colors",
-                "min-w-[110px]",
+                "relative inline-flex items-center justify-center rounded-[5px]",
+                "px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.22em] transition-colors",
                 item.active
-                  ? "text-[color:var(--accent)] bg-[color:color-mix(in_srgb,var(--accent)_8%,transparent)]"
-                  : "text-[color:var(--fg-3)] hover:text-[color:var(--fg)] hover:bg-[color:color-mix(in_srgb,var(--accent)_4%,transparent)]",
+                  ? "text-[color:var(--accent)]"
+                  : "text-[color:var(--fg-3)] hover:text-[color:var(--fg-2)]",
                 item.disabled && "opacity-50 cursor-not-allowed",
                 item.active &&
-                  "after:absolute after:inset-x-3 after:-bottom-1 after:h-0.5 after:bg-[color:var(--accent)] after:shadow-[0_0_10px_var(--glow)] after:content-['']",
+                  "after:absolute after:left-1/2 after:-bottom-0.5 after:h-[1.5px] after:w-[18px] after:-translate-x-1/2 after:rounded-[1px] after:bg-[color:var(--accent)] after:shadow-[0_0_8px_var(--glow)] after:content-['']",
               )}
             >
               {item.label}
@@ -68,7 +68,7 @@ export function TopBar({ brand, nav, right, className }: TopBarProps) {
         </nav>
       )}
       {right && (
-        <div className="flex items-center gap-4 font-mono text-[11px] text-[color:var(--fg-3)]">
+        <div className="flex items-center gap-2 font-mono text-[9.5px] text-[color:var(--fg-3)]">
           {right}
         </div>
       )}

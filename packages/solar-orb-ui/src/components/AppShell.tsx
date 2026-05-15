@@ -34,8 +34,8 @@ export function AppShell({
     <div
       className={twMerge(
         clsx(
-          "flex h-screen w-full flex-col gap-2 overflow-hidden",
-          "px-4 pt-3 pb-3",
+          "flex h-screen w-full flex-col gap-2.5 overflow-hidden",
+          "px-[18px] pt-[14px] pb-[14px]",
           "bg-[color:var(--bg)]",
           "[background-image:radial-gradient(900px_600px_at_50%_40%,var(--glow),transparent_70%),radial-gradient(600px_400px_at_10%_100%,var(--glow),transparent_70%)]",
           className,

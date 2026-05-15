@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Button,
-  Card,
-  Chip,
-  ProgressBar,
-  Text,
-} from "@alphaforge/solar-orb-ui";
+import { Button, Card, Chip, ProgressBar, Text } from "@alphaforge/solar-orb-ui";
 import { useRebalance } from "@/modules/portfolio";
 
 const CLASS_LABEL: Record<string, string> = {
@@ -38,15 +32,17 @@ export function RebalanceRail() {
           aria-hidden
         />
         <div className="flex flex-col">
-          <Text variant="tag" tone="accent">Alpha · Rebalance</Text>
+          <Text variant="tag" tone="accent">
+            Alpha · Rebalance
+          </Text>
           <Text variant="title">Drift vs target allocation</Text>
         </div>
       </div>
 
       <div className="flex flex-col gap-3 border-l-2 border-[color:var(--accent)] pl-3">
         <Text variant="body" tone="muted">
-          Targets are a balanced default (60/15/15/5/3/2). Suggestions below
-          fire when any class drifts more than ±5%.
+          Targets are a balanced default (60/15/15/5/3/2). Suggestions below fire when any class
+          drifts more than ±5%.
         </Text>
       </div>
 

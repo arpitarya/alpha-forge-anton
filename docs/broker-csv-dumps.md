@@ -43,7 +43,12 @@ invested, current_value, pnl, pnl_pct
 `name` (company / instrument display name) is optional — older dumps written
 before the column existed still validate. Populate it in the broker normalizer
 when the source returns it (Groww V2 → `symbolData.companyShortName`,
-Wint Wealth → `productName`). Zerodha's Kite API does not return it.
+Wint Wealth → `productName`). Zerodha's Kite holdings JSON does not include it;
+`zerodha_instruments.py` fetches the public Kite instruments dump
+(`https://api.kite.trade/instruments`, ~3 MB, 24h TTL, cached to
+`{dump_dir}/zerodha-instruments.csv`) and provides a `tradingsymbol → name`
+lookup that is applied in `_holding_from_row` / `_holding_from_csv`. TTL is
+overridable via `ZERODHA_INSTRUMENTS_TTL_SECONDS`.
 
 ## API
 

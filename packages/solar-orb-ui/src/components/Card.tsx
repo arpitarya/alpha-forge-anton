@@ -35,7 +35,7 @@ export function Card({
     <div
       className={twMerge(
         clsx(
-          "relative overflow-hidden rounded-[var(--radius-md)] p-5",
+          "relative overflow-hidden rounded-[10px] p-5",
           variantStyles[variant],
           hover && "transition-colors duration-300 hover:bg-[color:var(--surface-hi)]",
           glow && "card-glow",

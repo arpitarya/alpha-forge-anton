@@ -248,6 +248,33 @@ class MyBrokerSource(BrokerSource):
 
 ---
 
+## Wallet cash (free balance in the broker)
+
+A source can optionally expose its free-cash figure to power the Portfolio
+wallet strip. To opt in:
+
+1. Set the class attribute `supports_cash = True`.
+2. Override `async def fetch_cash(self) -> WalletBalance` — return a
+   `WalletBalance(source=self.slug, cash=…, currency="INR", as_of=now)`.
+3. The base class wraps it in `sync_cash()` which catches exceptions and
+   stores an "unavailable" balance so a Kite/SmartAPI hiccup never breaks
+   the wallets endpoint.
+
+Patterns in use:
+
+| Source | Endpoint / mechanism |
+|--------|----------------------|
+| Zerodha | `GET /oms/user/margins` — reuses the Kite enctoken; reads `data.equity.available.cash`. Force-relogin on 401/403 |
+| Angel One | `GET /rest/secure/angelbroking/user/v1/getRMS` — `data.availablecash` (falls back to `net` / `availablelimitmargin`). Force-relogin on 401/403 |
+| Groww | `groww/groww_cash_helper.py` — opens a fresh tab at `groww.in/v2/balance` over CDP, registers a response listener on the dashboard's own XHR (`/api/user/v*/balance`, `/userbalance/v1`, etc.), DFS-scans the JSON for any `availableMargin` / `availableBalance` / `walletBalance` field, then closes the tab |
+| Wint Wealth | not yet supported (`supports_cash = False`; wallet card shows "Cash N/A") |
+
+Routes:
+
+- `GET /portfolio/wallets` — list of `WalletInfo` (slug, label, cash, currency, holdings_value, holdings_count, pnl, pnl_pct, last_synced_at)
+- `POST /portfolio/wallets/sync` — refresh cash on every source that opts in (parallel)
+- `POST /portfolio/wallets/{slug}/sync` — refresh one broker (used by the "⟳ Refresh" button in the source spotlight)
+
 ## Register the new source
 
 In [registry.py](../backend/app/modules/brokers/registry.py):
@@ -315,6 +342,53 @@ cd backend && uv run python scripts/wintwealth_probe.py
 ```
 
 [backend/scripts/wintwealth_probe.py](../backend/scripts/wintwealth_probe.py) attaches to the AlphaForge Chrome, reloads the portfolio page, and prints a compact shape summary of every matching XHR. Look for a response containing `isin`, `units`, `currentPrice`, or `securityName` — those fields confirm you've found the holdings endpoint. Use the URL to update `_NEEDLES` and the key names to refine `normalize()` in `wintwealth_source_helper.py`.
+
+---
+
+## Angel One (`angelone`)
+
+Full-service broker with a **free official API** (SmartAPI). Auth is fully
+headless — no Chrome / CDP attach required.
+
+| Detail | Value |
+|--------|-------|
+| Slug | `angelone` |
+| Auth | SmartAPI: `loginByPassword` (client code + MPIN + local TOTP) → `jwtToken` |
+| `REQUIRED_ENV` | `ANGELONE_API_KEY`, `ANGELONE_CLIENT_ID`, `ANGELONE_MPIN`, `ANGELONE_TOTP_SECRET` |
+| Asset classes | `AssetClass.EQUITY` (SmartAPI's `getAllHolding` returns equity only) |
+| CSV TTL | `ANGELONE_REFETCH_SECONDS` (default `3600`) |
+| **Login endpoint** | `apiconnect.angelone.in/rest/auth/angelbroking/user/v1/loginByPassword` |
+| **Holdings endpoint** | `apiconnect.angelone.in/rest/secure/angelbroking/portfolio/v1/getAllHolding` |
+| **Holdings key** | `data.holdings` |
+
+**Field mapping** (SmartAPI response → `_holding_from_row`):
+
+| API field | `Holding` field | Notes |
+|-----------|-----------------|-------|
+| `tradingsymbol` | `symbol` | Upper-cased |
+| `isin` | `isin` | — |
+| `exchange` | `exchange` | `NSE` / `BSE` |
+| `quantity` | `quantity` | — |
+| `averageprice` | `avg_price` | Note: no underscore (SmartAPI quirk) |
+| `ltp` | `last_price` | Falls back to `close` if absent |
+
+**Setup**:
+
+1. Register a free app at [smartapi.angelbroking.com](https://smartapi.angelbroking.com/) — pick "Trading" app type — to get an API key.
+2. Enable TOTP on your Angel One account (Profile → Settings → 2FA). Copy the base32 secret shown under the QR code.
+3. Fill `ANGELONE_API_KEY`, `ANGELONE_CLIENT_ID`, `ANGELONE_MPIN`, `ANGELONE_TOTP_SECRET` in `.env.cred.local`. The source auto-upgrades to `READY`.
+
+AlphaForge derives the 6-digit TOTP locally via `pyotp` — the shared secret never leaves the machine. The acquired `jwtToken` is encrypted on disk via `_http.save_session` (same Fernet key as other brokers).
+
+**Mutual funds**: SmartAPI's free tier exposes equity holdings only. For MF, use the CSV upload fallback (`/sources/angelone/upload`) with an Angel One MF export.
+
+**Standalone dump**:
+
+```bash
+python -m app.modules.brokers.angelone.angelone_dump
+python -m app.modules.brokers.angelone.angelone_dump --force-login
+ls ~/.alphaforge/portfolio-dumps/angelone-*
+```
 
 ---
 

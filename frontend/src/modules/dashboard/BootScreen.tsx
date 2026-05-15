@@ -2,47 +2,54 @@
 
 import { Logo } from "@alphaforge/solar-orb-ui";
 import { useEffect, useRef, useState } from "react";
+import type { BootStatus } from "./boot.types";
 
-interface Step {
+export interface BootStep {
   key: string;
   label: string;
+  /** Final status of this system once the probe completes. */
+  status: BootStatus;
+  /** Short status text rendered on the right (e.g. "ready", "12ms", "not linked"). */
   doneStatus: string;
 }
 
-const STEPS: Step[] = [
-  { key: "backend",  label: "backend · fastapi on :8000",          doneStatus: "142ms"  },
-  { key: "postgres", label: "postgres · 16 ready",                  doneStatus: "08ms"   },
-  { key: "redis",    label: "redis · pubsub connected",             doneStatus: "04ms"   },
-  { key: "kite",     label: "zerodha · kite session",               doneStatus: "synced" },
-  { key: "llm",      label: "llm gateway · gemini / groq / local",  doneStatus: "ready"  },
-  { key: "screener", label: "screener · loading cached features",   doneStatus: "ready"  },
-  { key: "ticks",    label: "watchlist · streaming ticks",          doneStatus: "ready"  },
+/** Static fallback used only if the live probe call fails. Real boot rows
+ * come from `GET /api/v1/health/boot` via `BootGate`. */
+export const BOOT_STEPS: BootStep[] = [
+  { key: "backend",  label: "Backend · FastAPI gateway",   status: "ok",   doneStatus: "online"     },
+  { key: "database", label: "Database · Postgres ready",   status: "ok",   doneStatus: "ready"      },
+  { key: "zerodha",  label: "Zerodha (Kite) · holdings source",   status: "warn", doneStatus: "not linked" },
+  { key: "groww",    label: "Groww · holdings source",     status: "warn", doneStatus: "not linked" },
+  { key: "wintwealth", label: "Wint Wealth · holdings source", status: "warn", doneStatus: "not linked" },
+  { key: "angelone", label: "Angel One (SmartAPI) · holdings source", status: "warn", doneStatus: "not linked" },
 ];
 
 const NOW_STATUS: Record<string, string> = {
-  kite:     "syncing 12 positions…",
-  llm:      "benchmarking providers",
-  screener: "loading cached features",
-  ticks:    "streaming ticks…",
+  database:    "querying postgres…",
+  zerodha:     "resuming kite session…",
+  groww:       "reading cached holdings…",
+  wintwealth:  "loading bonds & SGBs…",
+  angelone:    "establishing SmartAPI session…",
 };
 
 const HEADLINES: Record<string, string> = {
-  backend:  "Give me a second — I'm spinning up your terminal.",
-  postgres: "Connecting to your data.",
-  redis:    "Wiring up the live feed.",
-  kite:     "Pulling your Zerodha positions…",
-  llm:      "Picking the best LLM for the job.",
-  screener: "Loading screener features.",
-  ticks:    "Almost ready — streaming ticks.",
-  done:     "Welcome back, Arpit.",
+  backend:    "Give me a second — I'm spinning up your terminal.",
+  database:   "Connecting to your data.",
+  zerodha:    "Pulling your Zerodha positions…",
+  groww:      "Loading your Groww book…",
+  wintwealth: "Reading Wint Wealth bonds & SGBs…",
+  angelone:   "Refreshing your Angel One snapshot…",
+  done:       "Welcome back, Arpit.",
 };
 
 export interface BootScreenProps {
+  /** Service checklist rendered + animated through. Defaults to `BOOT_STEPS`. */
+  steps?: BootStep[];
   onDone: () => void;
   exiting?: boolean;
 }
 
-export function BootScreen({ onDone, exiting = false }: BootScreenProps) {
+export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false }: BootScreenProps) {
   const [done, setDone] = useState(3);
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
@@ -54,7 +61,7 @@ export function BootScreen({ onDone, exiting = false }: BootScreenProps) {
     function next() {
       step += 1;
       setDone(step);
-      if (step < STEPS.length) {
+      if (step < steps.length) {
         t = setTimeout(next, 700 + Math.random() * 500);
       } else {
         t = setTimeout(() => onDoneRef.current(), 650);
@@ -63,12 +70,12 @@ export function BootScreen({ onDone, exiting = false }: BootScreenProps) {
 
     t = setTimeout(next, 900);
     return () => clearTimeout(t);
-  }, []);
+  }, [steps.length]);
 
-  const pct = Math.round((done / STEPS.length) * 100);
-  const currentKey = done < STEPS.length ? STEPS[done].key : "done";
+  const pct = Math.round((done / steps.length) * 100);
+  const currentKey = done < steps.length ? steps[done].key : "done";
   const headline = HEADLINES[currentKey] ?? HEADLINES.done;
-  const allDone = done >= STEPS.length;
+  const allDone = done >= steps.length;
 
   return (
     <>
@@ -205,15 +212,27 @@ export function BootScreen({ onDone, exiting = false }: BootScreenProps) {
 
           {/* Service rows */}
           <ul className="flex flex-col gap-3">
-            {STEPS.map((s, idx) => {
-              const isOk  = idx < done;
-              const isNow = idx === done;
-              const status = isOk
-                ? s.doneStatus
-                : isNow
-                ? (NOW_STATUS[s.key] ?? "…")
-                : "queued";
-              const glyph = isOk ? "✓" : isNow ? "◐" : "○";
+            {steps.map((s, idx) => {
+              const isDone = idx < done;
+              const isNow  = idx === done;
+              type RowState = BootStatus | "pending" | "queued";
+              const probeStatus: RowState = isDone ? s.status : isNow ? "pending" : "queued";
+              const detail = isDone ? s.doneStatus : isNow ? (NOW_STATUS[s.key] ?? "…") : "queued";
+              const glyph =
+                probeStatus === "ok"      ? "✓" :
+                probeStatus === "warn"    ? "!" :
+                probeStatus === "error"   ? "✗" :
+                probeStatus === "pending" ? "◐" : "○";
+              const glyphColor =
+                probeStatus === "ok"      ? "var(--green)" :
+                probeStatus === "warn"    ? "var(--accent)" :
+                probeStatus === "error"   ? "var(--red)" :
+                probeStatus === "pending" ? "var(--accent)" : "var(--fg-4)";
+              const detailColor =
+                probeStatus === "warn"    ? "var(--accent)" :
+                probeStatus === "error"   ? "var(--red)" :
+                isNow                     ? "var(--accent)" :
+                isDone                    ? "var(--fg-3)" : "var(--fg-4)";
 
               return (
                 <li
@@ -223,22 +242,22 @@ export function BootScreen({ onDone, exiting = false }: BootScreenProps) {
                     gridTemplateColumns: "18px 1fr auto",
                     animation: `boot-row-in 0.4s ${0.05 + idx * 0.055}s cubic-bezier(0.2,0,0,1) both`,
                     transition: "color 0.35s ease, opacity 0.35s ease",
-                    opacity: !isOk && !isNow ? 0.45 : 1,
+                    opacity: !isDone && !isNow ? 0.45 : 1,
                   }}
                 >
                   <span
                     className="grid h-[18px] w-[18px] place-items-center text-sm"
                     style={{
-                      color: isOk ? "var(--green)" : isNow ? "var(--accent)" : "var(--fg-4)",
+                      color: glyphColor,
                       transition: "color 0.35s ease",
-                      animation: isNow ? "boot-step-spin 1.4s linear infinite" : undefined,
+                      animation: probeStatus === "pending" ? "boot-step-spin 1.4s linear infinite" : undefined,
                     }}
                   >
                     {glyph}
                   </span>
                   <span
                     style={{
-                      color: isOk || isNow ? "var(--fg)" : "var(--fg-3)",
+                      color: isDone || isNow ? "var(--fg)" : "var(--fg-3)",
                       transition: "color 0.35s ease",
                     }}
                   >
@@ -246,12 +265,9 @@ export function BootScreen({ onDone, exiting = false }: BootScreenProps) {
                   </span>
                   <span
                     className="text-[11px] uppercase tracking-[0.18em]"
-                    style={{
-                      color: isNow ? "var(--accent)" : isOk ? "var(--fg-3)" : "var(--fg-4)",
-                      transition: "color 0.35s ease",
-                    }}
+                    style={{ color: detailColor, transition: "color 0.35s ease" }}
                   >
-                    {status}
+                    {detail}
                   </span>
                 </li>
               );
@@ -287,7 +303,7 @@ export function BootScreen({ onDone, exiting = false }: BootScreenProps) {
           </div>
 
           <div className="mt-2 flex justify-between font-mono text-[10px] tracking-[0.2em] uppercase text-[color:var(--fg-3)]">
-            <span>{done} of {STEPS.length} services online</span>
+            <span>{done} of {steps.length} services online</span>
             <span
               style={{
                 color: allDone ? "var(--green)" : "var(--accent)",
@@ -295,7 +311,7 @@ export function BootScreen({ onDone, exiting = false }: BootScreenProps) {
                 transition: "color 0.4s ease",
               }}
             >
-              {allDone ? "● READY" : `~${((STEPS.length - done) * 0.8).toFixed(1)}s remaining`}
+              {allDone ? "● READY" : `~${((steps.length - done) * 0.8).toFixed(1)}s remaining`}
             </span>
           </div>
         </div>

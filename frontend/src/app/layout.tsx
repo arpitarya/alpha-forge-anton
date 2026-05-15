@@ -2,6 +2,7 @@ import { ThemeProvider } from "@alphaforge/solar-orb-ui";
 import type { Metadata } from "next";
 import { QueryProvider } from "@/lib/providers";
 import { AuthGuard } from "@/modules/auth/auth.guard";
+import { BootGate } from "@/modules/dashboard/BootGate";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -62,7 +63,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="h-screen overflow-hidden bg-black font-body text-on-surface antialiased selection:bg-primary/30">
         <ThemeProvider>
           <QueryProvider>
-            <AuthGuard>{children}</AuthGuard>
+            <AuthGuard>
+              <BootGate>{children}</BootGate>
+            </AuthGuard>
           </QueryProvider>
         </ThemeProvider>
       </body>

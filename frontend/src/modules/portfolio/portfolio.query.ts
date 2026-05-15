@@ -6,6 +6,7 @@ import type {
   SourceInfoDTO,
   SyncAllResultDTO,
   TreemapResponseDTO,
+  WalletsResponseDTO,
 } from "./portfolio.types";
 
 export function useHoldings(source?: string) {
@@ -75,5 +76,25 @@ export function useSubmitOtp() {
 export function useResetSource() {
   return useMutation({
     mutationFn: (slug: string) => portfolioApi.resetSource(slug).then((r) => r.data),
+  });
+}
+
+export function useWallets() {
+  return useQuery<WalletsResponseDTO>({
+    queryKey: ["portfolio", "wallets"],
+    queryFn: () => portfolioApi.listWallets().then((r) => r.data),
+    staleTime: 30_000,
+  });
+}
+
+export function useSyncWallet() {
+  return useMutation({
+    mutationFn: (slug: string) => portfolioApi.syncWallet(slug).then((r) => r.data),
+  });
+}
+
+export function useSyncAllWallets() {
+  return useMutation({
+    mutationFn: () => portfolioApi.syncWallets().then((r) => r.data),
   });
 }

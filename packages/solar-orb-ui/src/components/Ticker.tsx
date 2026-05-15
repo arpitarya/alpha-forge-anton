@@ -46,9 +46,9 @@ export function Ticker({ items, speedSeconds = 48, className }: TickerProps) {
     <div
       className={twMerge(
         clsx(
-          "relative flex h-7 items-center overflow-hidden rounded-[var(--radius-sm)]",
+          "relative flex h-7 items-center overflow-hidden rounded-[8px]",
           "border border-[color:var(--line)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)]",
-          "px-4 font-mono text-[11px] text-[color:var(--fg-2)] whitespace-nowrap",
+          "px-[18px] font-mono text-[11px] text-[color:var(--fg-2)] whitespace-nowrap",
           className,
         ),
       )}

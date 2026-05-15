@@ -5,7 +5,7 @@ Disclaimer: Not SEBI registered investment advice.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
@@ -14,6 +14,7 @@ from app.core.logging import get_logger
 from app.modules.brokers import SOURCES, HoldingsAggregator
 from app.modules.brokers.base import SourceKind
 from app.modules.brokers.brokers_routes import router as sources_router
+from app.modules.brokers.wallet_aggregator import list_wallets, sync_all, sync_one
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
 aggregator = HoldingsAggregator()
@@ -24,19 +25,19 @@ _STALE_SECONDS = 3600
 
 async def _maybe_sync(source: str | None) -> None:
     """Sync any API source whose cached data is missing or older than _STALE_SECONDS."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     targets = [SOURCES[source]] if source else list(SOURCES.values())
     for src in targets:
         if src.kind != SourceKind.API:
             continue
         age = (
-            (now - src._last_synced_at).total_seconds()  # noqa: SLF001
+            (now - src._last_synced_at).total_seconds()
             if src._last_synced_at else float("inf")
         )
         if age > _STALE_SECONDS:
             try:
                 await src.sync()
-            except Exception:  # noqa: BLE001
+            except Exception:
                 logger.warning("Auto-sync failed for %s — returning cached data", src.slug)
 
 
@@ -73,6 +74,35 @@ async def get_rebalance():
         "targets": {k.value: v for k, v in aggregator.targets.items()},
         "disclaimer": "Not SEBI registered investment advice.",
     }
+
+
+@router.get("/wallets")
+async def get_wallets():
+    return {
+        "wallets": [w.model_dump(mode="json") for w in list_wallets()],
+        "disclaimer": "Not SEBI registered investment advice.",
+    }
+
+
+@router.post("/wallets/sync")
+async def post_sync_wallets():
+    refreshed = await sync_all()
+    return {
+        "wallets": [w.model_dump(mode="json") for w in refreshed.values()],
+        "disclaimer": "Not SEBI registered investment advice.",
+    }
+
+
+@router.post("/wallets/{slug}/sync")
+async def post_sync_one_wallet(slug: str):
+    try:
+        info = await sync_one(slug)
+    except KeyError as e:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
+    except Exception as e:
+        logger.exception("Wallet sync failed for %s", slug)
+        raise HTTPException(400, f"Wallet sync failed: {e}") from e
+    return {"wallet": info.model_dump(mode="json")}
 
 
 router.include_router(sources_router, prefix="/sources")
