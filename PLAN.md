@@ -6,6 +6,8 @@ Central index of all module-level plans. Each module maintains its own `PLAN.md`
 
 | Module | Plan | Status |
 |--------|------|--------|
+| **LLM Research Agent** | [llm/PLAN.md](llm/PLAN.md) | Planning |
+| **News Module** | [news/PLAN.md](news/PLAN.md) | Planning |
 | **Repo Context MCP** | [repo-context-mcp/PLAN.md](repo-context-mcp/PLAN.md) | Implemented (v0.1) |
 | **Solar Orb UI** | [packages/solar-orb-ui/PLAN.md](packages/solar-orb-ui/PLAN.md) | Phases 1-4 components complete |
 | **Solar Orb Ball** | [packages/solar-orb-ball/PLAN.md](packages/solar-orb-ball/PLAN.md) | Phase 1 complete (lib + playground) |

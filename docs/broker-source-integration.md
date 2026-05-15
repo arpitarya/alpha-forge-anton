@@ -275,7 +275,8 @@ Patterns in use:
 | Zerodha | `GET /oms/user/margins` — reuses the Kite enctoken; reads `data.equity.available.cash`. Force-relogin on 401/403 |
 | Angel One | `angelone/angelone_cash_helper.py` — opens a fresh tab at `trade.angelone.in/funds/funds` over CDP, listens for the funds/RMS XHR, DFS-scans the JSON for `availablecash` / `availableMargin` / `net` / `availablelimitmargin` |
 | Groww | `groww/groww_cash_helper.py` — opens a fresh tab at `groww.in/v2/balance` over CDP, registers a response listener on the dashboard's own XHR (`/api/user/v*/balance`, `/userbalance/v1`, etc.), DFS-scans the JSON for any `availableMargin` / `availableBalance` / `walletBalance` field, then closes the tab |
-| Wint Wealth | not yet supported (`supports_cash = False`; wallet card shows "Cash N/A") |
+| IndMoney | not supported (`supports_cash = False`; wallet card shows "Cash N/A") |
+| Ticker Tape | not supported (`supports_cash = False`; wallet card shows "Cash N/A") |
 
 Routes:
 
@@ -296,8 +297,9 @@ def _build_sources() -> dict[str, BrokerSource]:
     instances: list[BrokerSource] = [
         ZerodhaKiteSource(),
         GrowwSource(),
-        WintWealthSource(),
         AngelOneSource(),
+        IndMoneyCSVSource(),
+        TickerTapeCSVSource(),
         MyBrokerSource(),    # ← add here
     ]
     return {s.slug: s for s in instances}
@@ -323,54 +325,65 @@ Both `MODE = "http"` (against a live server) and `MODE = "in_process"` (FastAPI 
 
 ---
 
-## Wint Wealth (`wintwealth`)
+## IndMoney (`indmoney`)
 
-Fixed-income platform (corporate bonds, NCDs, SGBs). No public API — uses the CDP browser-fetch pattern identical to Groww.
+Multi-asset wealth platform (Indian stocks, mutual funds, US stocks, gold via SGBs/gold funds). CSV upload only.
 
 | Detail | Value |
 |--------|-------|
-| Slug | `wintwealth` |
-| Auth | CDP browser fetch (`fetch_holdings_via_browser`) |
-| `REQUIRED_ENV` | `WINTWEALTH_USER_ID` |
-| Asset classes | `AssetClass.BOND` (default), `AssetClass.GOLD` (SGBs) |
-| CSV TTL | `WINTWEALTH_REFETCH_SECONDS` (default `3600`) |
-| **Confirmed endpoint** | `api.wintwealth.com/investments/v2?investmentType=CURRENT&productType=BOND` |
-| **Trigger page** | `wintwealth.com/portfolio/bonds/` |
-| **Holdings key** | `investments` (list inside the JSON response) |
+| Slug | `indmoney` |
+| Auth | CSV upload — no API |
+| Asset classes | `EQUITY` (default), `MUTUAL_FUND` (NAV/Units present), `GOLD` (name contains gold/sgb) |
+| Kind | `SourceKind.CSV` |
 
-**Field mapping** (probe-confirmed):
+**CSV column aliases** (flexible pick — export format varies):
 
-| API field | `normalize()` key | Notes |
-|-----------|------------------|-------|
-| `isin` | `isin` | ISIN code |
-| `productName` | `name` | Issuer name |
-| `scripCode` | `tradingsymbol` | e.g. `1090NFL28` |
-| `totalQuantity` | `quantity` | Number of bonds held |
-| `investment` | → `average_price` | Total invested ÷ qty |
-| `currentValue` | → `last_price` | Total current value ÷ qty |
-| `productType` | `asset_type` | `BOND` → `bond`, `SGB`/`GOLD` → `gold` |
+| Holding field | CSV columns tried |
+|---------------|------------------|
+| symbol | Instrument Name, Fund Name, Company Name, Symbol, ISIN |
+| isin | ISIN |
+| quantity | Quantity, Units, Qty |
+| avg_price | Average Price, Avg Buy Price, Purchase NAV, Buy Price |
+| last_price | Current Price, Current NAV, LTP, CMP |
+| invested | Invested Amount, Invested, Purchase Value |
+| current_value | Current Value, Portfolio Value, Market Value |
+| pnl | P&L, Returns, Gain/Loss, Gain Loss |
 
-**Setup**: log in to `wintwealth.com` inside the AlphaForge Chrome session (port 9299), then set `WINTWEALTH_USER_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
+**Export**: indmoney.com → Portfolio → Download / Export
 
-**Asset-type mapping**: `productType` from each row drives the class — `SGB` or `GOLD` → `AssetClass.GOLD`; everything else → `AssetClass.BOND`. CSV-cached rows default to `AssetClass.BOND`.
+**Fixture**: `backend/tests/fixtures/broker_csvs/indmoney_holdings.csv`
 
-**Standalone dump**:
+---
 
-```bash
-python -m app.modules.brokers.wintwealth.wintwealth_dump
-python -m app.modules.brokers.wintwealth.wintwealth_dump --force-login
-ls ~/.alphaforge/portfolio-dumps/wintwealth-*
-```
+## Ticker Tape (`tickertape`)
 
-**Dev notebook**: [backend/notebooks/wintwealth_dev.ipynb](../backend/notebooks/wintwealth_dev.ipynb)
+Portfolio tracker (tickertape.in by Smallcase). Used primarily for gold ETFs and SGBs.
 
-**XHR probe** (run before implementing `normalize()` to discover the real API shape):
+| Detail | Value |
+|--------|-------|
+| Slug | `tickertape` |
+| Auth | CSV upload — no API |
+| Asset classes | `GOLD` (default, when name/ticker matches gold keywords), `EQUITY` (otherwise) |
+| Kind | `SourceKind.CSV` |
 
-```bash
-cd backend && uv run python scripts/wintwealth_probe.py
-```
+**CSV column aliases**:
 
-[backend/scripts/wintwealth_probe.py](../backend/scripts/wintwealth_probe.py) attaches to the AlphaForge Chrome, reloads the portfolio page, and prints a compact shape summary of every matching XHR. Look for a response containing `isin`, `units`, `currentPrice`, or `securityName` — those fields confirm you've found the holdings endpoint. Use the URL to update `_NEEDLES` and the key names to refine `normalize()` in `wintwealth_source_helper.py`.
+| Holding field | CSV columns tried |
+|---------------|------------------|
+| symbol | Ticker, Symbol, Name, ISIN |
+| name | Name |
+| isin | ISIN |
+| quantity | Quantity, Qty, Units |
+| avg_price | Buy Avg., Buy Avg, Avg Buy Price, Average Price |
+| last_price | CMP, LTP, Current Price, Current Value Per Unit |
+| invested | Invested, Invested Amount, Buy Value |
+| current_value | Current Value, Market Value, Portfolio Value |
+| pnl | P&L, Returns, Gain/Loss |
+| pnl_pct | P&L %, P&L%, Returns % |
+
+**Export**: tickertape.in → Portfolio → Export CSV
+
+**Fixture**: `backend/tests/fixtures/broker_csvs/tickertape_gold.csv`
 
 ---
 
@@ -434,8 +447,9 @@ One notebook per broker lives in `backend/notebooks/`. Each exercises all
 |--------|----------|------|
 | Zerodha | [zerodha_dev.ipynb](../backend/notebooks/zerodha_dev.ipynb) | CDP enctoken (`kite.zerodha.com`) |
 | Groww | [groww_dev.ipynb](../backend/notebooks/groww_dev.ipynb) | CDP browser fetch (`groww.in`) |
-| Wint Wealth | [wintwealth_dev.ipynb](../backend/notebooks/wintwealth_dev.ipynb) | CDP browser fetch (`wintwealth.com`) |
 | Angel One | [angelone_dev.ipynb](../backend/notebooks/angelone_dev.ipynb) | CDP browser fetch (`angelone.in`) |
+| IndMoney | TBD | CSV upload |
+| Ticker Tape | TBD | CSV upload |
 
 Every new broker must ship a notebook in this list — see step 4 of [Register the new source](#register-the-new-source).
 
@@ -449,13 +463,11 @@ discover the real endpoint URL and response key names.
 |--------|-------------|-----------|
 | Zerodha | [zerodha_probe.py](../probes/zerodha_probe.py) | Reads `enctoken` cookie → direct Kite OMS REST calls |
 | Groww | [groww_probe.py](../probes/groww_probe.py) | XHR interception on page reload |
-| Wint Wealth | [wintwealth_probe.py](../probes/wintwealth_probe.py) | XHR interception on page reload |
 | Angel One | [angelone_probe.py](../probes/angelone_probe.py) | XHR interception across holdings + funds pages |
 
 ```bash
 uv run python probes/zerodha_probe.py
 uv run python probes/groww_probe.py
-uv run python probes/wintwealth_probe.py
 uv run python probes/angelone_probe.py
 ```
 
@@ -467,14 +479,13 @@ is still valid and inspecting the live holdings shape.
 
 Sections in each notebook:
 1. Source info — verify `status: ready`
-2. Sync — triggers CDP fetch + CSV cache
-3. Upload CSV — offline fallback
-4. Holdings — filtered by slug
-5. Allocation breakdown
-6. Treemap
-7. Rebalance / drift
-8. Standalone dump (Wint Wealth only — bypasses FastAPI)
-9. Reset in-memory cache
+2. Sync — triggers CDP fetch + CSV cache (API sources) / Upload CSV (CSV sources)
+3. Holdings — filtered by slug
+4. Allocation breakdown
+5. Treemap
+6. Rebalance / drift
+7. Standalone dump (API sources only — bypasses FastAPI)
+8. Reset in-memory cache
 
 ---
 

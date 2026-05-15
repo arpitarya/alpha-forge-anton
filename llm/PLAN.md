@@ -15,6 +15,8 @@ Related plan: [backend/app/modules/news/PLAN.md](../backend/app/modules/news/PLA
 5. Evaluation question bank that benchmarks providers and feeds the router
 6. **Any new LLM provider can be added in one file with no changes elsewhere**
 7. **Each provider can be tested in complete isolation before being wired into the system**
+8. **Full token usage tracking — summary and per-call detail — visible in the AlphaForge UI**
+9. **All LLM management (provider keys, usage, health) accessible from the app — no terminal needed**
 
 ## Non-goals
 
@@ -59,6 +61,160 @@ User (chat or voice)
   ├── RateLimiter          ← per-provider token-bucket; auto-resets on window roll
   └── Handover             ← context bridge when model switches mid-session
 ```
+
+---
+
+## Token Cost Tracking
+
+Every LLM call is recorded in a `LlmCallLedger` table. The UI exposes both a summary
+(monthly totals at a glance) and a full per-call detail view.
+
+### LlmCallLedger ORM
+
+```python
+class LlmCallLedger(Base):
+    id: uuid
+    session_id: str | None       # ResearchSession FK (null for eval runner calls)
+    provider: str                # "groq", "gemini-flash", "claude-sdk"
+    model: str                   # exact model name used
+    query_type: str              # QueryType slug
+    prompt_tokens: int
+    completion_tokens: int
+    total_tokens: int            # prompt + completion
+    latency_ms: int
+    is_paid: bool                # True only for ClaudeSdkAdapter
+    cost_usd: Decimal            # $0.00 for all free providers; real cost for Claude
+    created_at: datetime
+```
+
+Cost calculation:
+- All free providers (Gemini, Groq, OpenRouter free, HuggingFace, Ollama): `cost_usd = 0.00`
+- Claude SDK: `cost_usd = (prompt_tokens / 1M) * input_rate + (completion_tokens / 1M) * output_rate`
+  Rates stored in `llm_service.py` as constants; updated when Anthropic changes pricing.
+
+### Summary view (Preferences → Alpha AI → Usage)
+
+| Metric | Grouping |
+|---|---|
+| Total tokens | This session / today / this month |
+| Tokens by provider | Bar chart per provider |
+| Tokens by query type | Bar chart per QueryType |
+| Claude invocations | Count + total cost this month |
+| Estimated total cost | Always shown; $0.00 for pure free-tier usage |
+| Avg latency per provider | ms; helps identify slow providers |
+
+### Detail view (Preferences → Alpha AI → Usage → "View all")
+
+Paginated ledger table: timestamp · provider · model · query type · prompt tokens ·
+completion tokens · cost · session link (opens that session in the research panel).
+Filterable by date range, provider, query type.
+Exportable as CSV for personal auditing.
+
+### API routes
+
+```
+GET  /api/v1/llm/usage/summary
+     ?period=today|week|month|all
+     → UsageSummary { total_tokens, by_provider, by_query_type, total_cost_usd, claude_calls }
+
+GET  /api/v1/llm/usage/ledger
+     ?page=1&limit=50&provider=groq&since=2026-05-01
+     → Page[LlmCallRecord]
+
+GET  /api/v1/llm/usage/export
+     ?since=2026-05-01&until=2026-05-31
+     → CSV download
+```
+
+---
+
+## API Key Management via Settings
+
+Provider API keys are manageable from Preferences → Alpha AI — no terminal or `.env`
+editing needed after initial setup. Keys are stored encrypted at rest (Fernet, same
+mechanism already used for broker tokens).
+
+### LlmProviderSettings ORM
+
+```python
+class LlmProviderSettings(Base):
+    provider: str           # primary key — "gemini", "groq", "openrouter", etc.
+    encrypted_key: bytes    # Fernet-encrypted API key
+    last_tested_at: datetime | None
+    test_status: str        # "ok" | "invalid" | "untested"
+    updated_at: datetime
+```
+
+### Key resolution order (at gateway startup)
+
+1. `LlmProviderSettings` table (if row exists and key is non-empty)
+2. Environment variable (`.env` fallback)
+3. Provider is skipped (not registered as available)
+
+This means `.env` keys still work during development; UI-saved keys take precedence
+in production without requiring a server restart.
+
+### API routes
+
+```
+GET  /api/v1/llm/settings
+     → List[ProviderKeyStatus]
+     # { provider, has_key, masked_key (last 4 chars), test_status, last_tested_at }
+     # Never returns the raw key
+
+PUT  /api/v1/llm/settings/{provider}
+     body: { api_key: str }
+     → ProviderKeyStatus
+     # Encrypts, saves, then immediately calls provider.health() to validate
+     # Sets test_status and last_tested_at before responding
+
+POST /api/v1/llm/settings/{provider}/test
+     → ProviderKeyStatus
+     # Re-runs health check against the stored key without changing anything
+
+DELETE /api/v1/llm/settings/{provider}
+     → 204
+     # Removes stored key; gateway falls back to env var
+```
+
+### Frontend — Preferences → Alpha AI → Provider Keys
+
+One row per registered provider:
+
+```
+[ Groq ]  ••••••••••••3f8a  [Test]  ✓ Working — last tested 2 min ago  [Edit]  [Remove]
+[ Gemini ] ••••••••••••91bc  [Test]  ✓ Working — last tested 1 hr ago   [Edit]  [Remove]
+[ Ollama ] http://localhost:11434      ✓ Local — always available               [Edit]
+[ Claude ] Not configured             — Confirm required each use        [Add key]
+```
+
+- "Edit" opens an inline input (masked, paste-friendly)
+- "Test" fires `POST /llm/settings/{provider}/test` and updates the status badge inline
+- Saving a new key fires `PUT /llm/settings/{provider}` — validation happens server-side
+- News source keys follow the same pattern in Preferences → Alpha AI → News Sources
+
+---
+
+## AlphaForge UI Surfaces
+
+All LLM-related management is accessible from within the app.
+No terminal commands needed for day-to-day use after initial setup.
+
+| Surface | Location | What it shows |
+|---|---|---|
+| Research chat + voice | Terminal home (primary panel) or `/research` | The main agent interface |
+| Model selector | Chat composer toolbar | Auto / pinned model dropdown |
+| Provider keys | Preferences → Alpha AI → Provider Keys | Add, test, remove API keys |
+| News source keys | Preferences → Alpha AI → News Sources | Same pattern as provider keys |
+| Token usage summary | Preferences → Alpha AI → Usage | Monthly totals, by provider, cost |
+| Token usage detail | Preferences → Alpha AI → Usage → "View all" | Full ledger, filterable, CSV export |
+| Provider health | Preferences → Alpha AI → Provider Health | Quota remaining, last-used, status |
+| Dev playground | `/dev/llm` (dev-only) | Raw SSE inspector, voice test, all providers |
+| Eval results | `/dev/llm/eval` (dev-only) | Benchmark scores per provider/query-type |
+
+The Alpha AI preferences section (`AlphaSection.tsx`) grows to cover all of the above.
+Existing preferences (voice wake, reply style, confidence floor, auto-rebalance, screener
+visibility) stay; the new subsections are added below them.
 
 ---
 
@@ -361,7 +517,12 @@ Backend integration (`backend/app/modules/`):
 ```
 llm/
 ├── llm_service.py                   # singleton LLMGateway wrapper
-└── llm_routes.py                    # GET /llm/providers, POST /llm/benchmark/run
+├── llm_routes.py                    # GET /llm/providers, POST /llm/benchmark/run
+├── llm_settings_service.py          # LlmProviderSettings ORM + key resolution
+├── llm_settings_routes.py           # GET/PUT/POST/DELETE /llm/settings/{provider}
+├── llm_ledger_models.py             # LlmCallLedger ORM
+├── llm_ledger_service.py            # write call records, query summaries
+└── llm_usage_routes.py              # GET /llm/usage/summary|ledger|export
 news/                                # see news/PLAN.md
 research/
 ├── agent_loop.py
@@ -394,6 +555,12 @@ frontend/src/modules/research/
 ├── research.query.ts
 ├── research.stream.ts
 └── research.types.ts
+frontend/src/modules/preferences/
+├── AlphaSection.tsx                 # extended with Provider Keys, News Sources, Usage subsections
+├── ProviderKeysPanel.tsx            # per-provider key row: masked input + Test + status badge
+├── NewsSourcesPanel.tsx             # same pattern for news source API keys
+├── UsageSummaryPanel.tsx            # monthly totals, by-provider bar chart, cost
+└── UsageLedgerDrawer.tsx            # paginated detail table + CSV export
 ```
 
 ---
@@ -412,6 +579,12 @@ RESEARCH_ENABLE_ENSEMBLE=true
 RESEARCH_ENSEMBLE_TIMEOUT_S=15
 RESEARCH_CLAUDE_ESCALATION=true
 LLM_DEV_PLAYGROUND=true             # auto-true when APP_ENV=development
+
+# Token ledger
+LLM_LEDGER_ENABLED=true             # set false to disable DB writes (e.g. high-volume eval runs)
+
+# Key storage encryption (reuses existing FERNET_KEY from broker token setup)
+# FERNET_KEY is already defined in backend/.env.example
 ```
 
 ---
@@ -424,10 +597,13 @@ LLM_DEV_PLAYGROUND=true             # auto-true when APP_ENV=development
 | 2 | `backend/app/modules/news/` | See news/PLAN.md; validate each source standalone first |
 | 3 | `llm/eval/` — questions.yaml (45 Qs), runner, judge | CLI only |
 | 4 | Backend `research/` — agent loop, tool registry, SSE routes | ConversationMemory reuse |
-| 5 | Handover + ClaudeSdkAdapter + `/dev/llm` playground | Test SSE, voice, model switch end-to-end |
-| 6 | Frontend `research/` — ResearchPanel, ModelSelector, VoiceController | Promote stream.ts; chat + voice |
-| 7 | Wire into terminal home + Alpha AI preferences | Replace old AIChat slot |
-| 8 | Run eval, update router chains | Benchmark → routing improvement loop |
+| 5 | `LlmCallLedger` ORM + `llm_ledger_service` + usage routes | Write ledger on every gateway call; expose summary + detail API |
+| 6 | `LlmProviderSettings` ORM + settings routes | Encrypted key storage; key resolution order wired into gateway |
+| 7 | Handover + ClaudeSdkAdapter + `/dev/llm` playground | Test SSE, voice, model switch, ledger writes end-to-end |
+| 8 | Frontend `research/` — ResearchPanel, ModelSelector, VoiceController | Promote stream.ts; chat + voice |
+| 9 | Preferences → Alpha AI extended: ProviderKeysPanel, NewsSourcesPanel, UsageSummaryPanel, UsageLedgerDrawer | Full in-app management; no terminal needed |
+| 10 | Wire research panel into terminal home | Replace old AIChat slot |
+| 11 | Run eval, update router chains | Benchmark → routing improvement loop |
 
 ---
 
@@ -440,3 +616,6 @@ LLM_DEV_PLAYGROUND=true             # auto-true when APP_ENV=development
 | Ensemble latency too high | `RESEARCH_ENSEMBLE_TIMEOUT_S` returns fastest N if judge stalls |
 | Context window overflow | Handover summarises turns older than 8; configurable |
 | HuggingFace no tool calling | Prompt-based extraction fallback in AgentLoop |
+| Ledger writes slow down responses | Fire-and-forget via `asyncio.create_task` — never on the critical path |
+| Fernet key rotation breaks stored provider keys | Re-encrypt on key rotation; document procedure in ops runbook |
+| User saves wrong API key | `PUT /llm/settings/{provider}` validates key before persisting — returns error if health check fails |

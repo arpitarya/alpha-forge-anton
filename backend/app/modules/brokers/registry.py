@@ -13,16 +13,18 @@ from __future__ import annotations
 from app.modules.brokers.angelone import AngelOneSource
 from app.modules.brokers.base import BrokerSource
 from app.modules.brokers.groww import GrowwSource
-from app.modules.brokers.wintwealth import WintWealthSource
+from app.modules.brokers.indmoney import IndMoneyCSVSource
+from app.modules.brokers.tickertape import TickerTapeCSVSource
 from app.modules.brokers.zerodha import ZerodhaKiteSource
 
 
 def _build_sources() -> dict[str, BrokerSource]:
     instances: list[BrokerSource] = [
         ZerodhaKiteSource(),    # slug: zerodha
-        GrowwSource(),          # slug: groww       (CSV active; CDP fetch stub)
-        WintWealthSource(),     # slug: wintwealth  (CDP browser fetch; bonds/SGBs)
-        AngelOneSource(),       # slug: angelone    (CDP browser fetch)
+        GrowwSource(),          # slug: groww      (CDP browser fetch)
+        AngelOneSource(),       # slug: angelone   (CDP browser fetch)
+        IndMoneyCSVSource(),    # slug: indmoney   (CSV upload)
+        TickerTapeCSVSource(),  # slug: tickertape (CSV upload; gold)
     ]
     return {s.slug: s for s in instances}
 

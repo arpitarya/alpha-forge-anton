@@ -27,6 +27,12 @@ Apply these on every file without looking up the docs:
 - All broker CSV dumps use `dump_utils.py` — see [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md)
 - Every code change must be accompanied by a doc update in the same session
 
+## Skills
+
+| Trigger | What it does |
+|---------|--------------|
+| `/broker` | Add, edit, or remove a broker source (registry, module files, fixtures, docs) |
+
 ## graphify
 
 This project has a graphify knowledge graph at graphify-out/.
