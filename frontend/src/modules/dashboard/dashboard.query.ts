@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { dashboardApi } from "./dashboard.api";
 import type {
   DashboardStatsDTO,
@@ -40,6 +40,39 @@ export function useDashboardBrief() {
     queryKey: ["dashboard", "brief"],
     queryFn: () => dashboardApi.getBrief().then((r) => r.data),
     staleTime: 60_000,
+  });
+}
+
+export function useAddTickerItem() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (symbol: string) => dashboardApi.addTicker(symbol).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["dashboard", "ticker"] }),
+  });
+}
+
+export function useDeleteTickerItem() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => dashboardApi.deleteTicker(id).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["dashboard", "ticker"] }),
+  });
+}
+
+export function useAddWatchlistItem() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (params: { symbol: string; sublabel: string }) =>
+      dashboardApi.addWatchlist(params.symbol, params.sublabel).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["dashboard", "watchlist"] }),
+  });
+}
+
+export function useDeleteWatchlistItem() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => dashboardApi.deleteWatchlist(id).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["dashboard", "watchlist"] }),
   });
 }
 

@@ -60,12 +60,15 @@ def _holding_from_row(
     pnl = current - invested
     symbol = str(r.get("tradingsymbol") or "").upper()
     itype = (types or {}).get(symbol, "EQ")
+    # Kite returns `day_change_percentage` for equity rows; falls back to 0.
+    day_pct = float(r.get("day_change_percentage") or r.get("day_change_pct") or 0)
     return Holding(
         source=slug, asset_class=_asset_class(itype),
         symbol=symbol, name=(r.get("name") or (names or {}).get(symbol)) or None,
         isin=r.get("isin"), quantity=qty, avg_price=avg, last_price=ltp,
         invested=invested, current_value=current, pnl=pnl,
         pnl_pct=(pnl / invested * 100) if invested else 0.0,
+        day_change_pct=day_pct,
         exchange=r.get("exchange"),
     )
 
@@ -89,7 +92,9 @@ def _holding_from_csv(
         quantity=float(g("quantity") or 0), avg_price=float(g("average_price") or 0),
         last_price=float(g("last_price") or 0), invested=float(g("invested") or 0),
         current_value=float(g("current_value") or 0), pnl=float(g("pnl") or 0),
-        pnl_pct=float(g("pnl_pct") or 0), exchange=g("exchange") or None,
+        pnl_pct=float(g("pnl_pct") or 0),
+        day_change_pct=float(g("day_change_pct") or 0),
+        exchange=g("exchange") or None,
     )
 
 

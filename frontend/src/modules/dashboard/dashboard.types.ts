@@ -1,4 +1,5 @@
 export interface TickerItemDTO {
+  id: string | null;
   symbol: string;
   price: string;
   change: string;
@@ -6,6 +7,7 @@ export interface TickerItemDTO {
 }
 
 export interface WatchlistItemDTO {
+  id: string | null;
   symbol: string;
   sublabel: string;
   price: string;

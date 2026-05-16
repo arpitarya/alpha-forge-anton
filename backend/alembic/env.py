@@ -11,6 +11,10 @@ from alembic import context
 from app.core.config import settings
 from app.core.database import Base
 # Import all models so Alembic can detect them
+from app.modules.dashboard.dashboard_models import (  # noqa: F401
+    DashboardTickerItem,
+    DashboardWatchlistItem,
+)
 from app.modules.portfolio.portfolio_models import Holding, Order, Watchlist  # noqa: F401
 
 config = context.config

@@ -8,6 +8,7 @@ DISCLAIMER = "Not SEBI registered investment advice."
 
 
 class TickerItem(BaseModel):
+    id: str | None = None
     symbol: str
     price: str
     change: str
@@ -15,11 +16,21 @@ class TickerItem(BaseModel):
 
 
 class WatchlistItem(BaseModel):
+    id: str | None = None
     symbol: str
     sublabel: str
     price: str
     change: str
     tone: str  # "up" | "dn"
+
+
+class CreateTickerItemRequest(BaseModel):
+    symbol: str
+
+
+class CreateWatchlistItemRequest(BaseModel):
+    symbol: str
+    sublabel: str = ""
 
 
 class RiskMeter(BaseModel):

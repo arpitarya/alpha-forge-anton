@@ -43,11 +43,21 @@ class HoldingsAggregator:
         invested = sum(_inr_invested(x) for x in h)
         current = sum(_inr_value(x) for x in h)
         pnl = current - invested
+        # Today's INR P&L: ∑ (day_change_pct/100 × INR-normalised current_value).
+        # Brokers that don't fill day_change_pct contribute 0.
+        day_pnl = sum(_inr_value(x) * (x.day_change_pct / 100.0) for x in h)
+        day_pnl_pct = (day_pnl / current * 100) if current else 0.0
+        up = sum(1 for x in h if x.day_change_pct > 0)
+        dn = sum(1 for x in h if x.day_change_pct < 0)
         return {
             "invested": round(invested, 2),
             "current_value": round(current, 2),
             "pnl": round(pnl, 2),
             "pnl_pct": round((pnl / invested * 100) if invested else 0.0, 2),
+            "day_pnl": round(day_pnl, 2),
+            "day_pnl_pct": round(day_pnl_pct, 2),
+            "day_up": up,
+            "day_dn": dn,
             "count": len(h),
         }
 

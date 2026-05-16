@@ -1,4 +1,17 @@
 {
   "notebook.diff.ignoreOutputs": true,
-  "notebook.diff.ignoreMetadata": true
+  "notebook.diff.ignoreMetadata": true,
+  "sqltools.connections": [
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "alphaforge",
+      "database": "alphaforge",
+      "username": "alphaforge"
+    }
+  ]
 }
