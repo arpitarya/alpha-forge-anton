@@ -20,7 +20,6 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 - Python: `async def` everywhere, absolute imports from `app.`, Pydantic v2, ruff
 - TypeScript: strict mode, functional components, pnpm, Biome v2
 - New broker dumps → always use `dump_utils.py`
-- All AI outputs include financial disclaimer
 - Never commit `.env` files or API keys
 - Type `/graphify` in Copilot Chat to build or update the knowledge graph
 

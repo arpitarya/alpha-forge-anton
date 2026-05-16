@@ -97,7 +97,7 @@
 
 ### Out of Scope (for now)
 - Fully automated trading bots (AlphaForge assists, user decides)
-- Financial advisory services (SEBI RIA registration not planned)
+- Financial advisory services
 - Proprietary brokerage / order routing
 - Mobile app (web-first; responsive PWA later)
 

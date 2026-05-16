@@ -206,7 +206,6 @@ Use `str, Enum` (or `IntEnum`) when the value is serialized — it's JSON-friend
 ```python
 DEFAULT_TIMEOUT_SEC = 30
 MAX_BATCH_SIZE = 100
-DISCLAIMER = "Not SEBI registered investment advice."
 
 DEFAULT_TARGETS_PCT: dict[AssetClass, float] = {
     AssetClass.EQUITY: 60.0,

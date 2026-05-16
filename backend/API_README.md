@@ -57,7 +57,7 @@ All three accept an optional `?source=<slug>` query param to scope results to on
   "totals": { "invested": 0, "current_value": 0, "pnl": 0, "pnl_pct": 0, "count": 0 },
   "allocation": [{ "asset_class": "equity", "value": 0, "pct": 0 }],
   "holdings": [{ "symbol": "RELIANCE", "quantity": 120, "avg_price": 2410, ... }],
-  "disclaimer": "..."
+
 }
 ```
 
@@ -232,4 +232,4 @@ Common HTTP status codes:
 
 ---
 
-> **Disclaimer:** AlphaForge is a personal research tool. Nothing here constitutes SEBI-registered investment advice.
+> AlphaForge is a personal research tool, not financial advice.

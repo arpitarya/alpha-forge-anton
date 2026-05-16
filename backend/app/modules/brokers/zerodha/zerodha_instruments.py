@@ -3,8 +3,6 @@
 The Kite holdings JSON omits company names and instrument types. This module
 fetches the public Kite instruments dump once per TTL to resolve tradingsymbol
 → name and instrument_type (EQ/ETF) when materialising Holding rows.
-
-Disclaimer: Not SEBI registered investment advice.
 """
 
 from __future__ import annotations

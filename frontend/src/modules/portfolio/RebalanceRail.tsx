@@ -128,11 +128,6 @@ export function RebalanceRail({ collapsed, onToggle }: RebalanceRailProps) {
         Simulate &amp; backtest
       </Button>
 
-      {data?.disclaimer && (
-        <Text variant="caption" tone="subtle" className="text-center">
-          {data.disclaimer}
-        </Text>
-      )}
     </Card>
   );
 }

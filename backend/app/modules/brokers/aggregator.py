@@ -1,7 +1,4 @@
-"""Holdings aggregator — read-only roll-up over registered BrokerSource caches.
-
-Disclaimer: Not SEBI registered investment advice.
-"""
+"""Holdings aggregator — read-only roll-up over registered BrokerSource caches."""
 
 from __future__ import annotations
 

@@ -23,7 +23,6 @@ Apply these on every file without looking up the docs:
 - Backend filenames: `{domain}_{role}.py` — Frontend: `{domain}.{role}.ts`
 - Python: `async def` everywhere, absolute imports from `app.`, Pydantic v2, ruff (line-length=100)
 - TypeScript: strict mode, functional components only, pnpm, Biome v2
-- All AI outputs include financial disclaimer
 - Never commit `.env` files or API keys
 - All broker CSV dumps use `dump_utils.py` — see [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md)
 - Every code change must be accompanied by a doc update in the same session

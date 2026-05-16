@@ -1,7 +1,4 @@
-"""Dashboard read-only feeds for the terminal home screen.
-
-Disclaimer: Not SEBI registered investment advice.
-"""
+"""Dashboard read-only feeds for the terminal home screen."""
 
 from __future__ import annotations
 

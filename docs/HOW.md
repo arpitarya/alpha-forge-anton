@@ -177,10 +177,9 @@ Structured Response:
 **System Prompt Strategy:**
 The AI is configured as a seasoned Indian market analyst with:
 - Deep knowledge of NSE/BSE market microstructure
-- Understanding of SEBI regulations, corporate actions, taxation
+- Understanding of corporate actions and taxation
 - Access to real-time data via function calling
 - Conservative bias (never aggressively recommend, always show risk)
-- Disclaimer awareness (not SEBI-registered, educational only)
 
 ---
 
@@ -235,7 +234,6 @@ This makes adding new brokers (Angel One, Upstox, Groww) a matter of implementin
 
 ### Regulatory Awareness
 - AlphaForge is a **tool**, not a financial advisor
-- Clear disclaimers on all AI outputs: "Not SEBI registered investment advice"
 - No guaranteed return claims
 - User data privacy — minimal data collection, no selling
 - Compliance with RBI's LRS guidelines for international investing features

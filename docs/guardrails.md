@@ -6,7 +6,6 @@
 - Broker tokens encrypted at rest
 - CORS restricted to frontend origin only; allowed methods/headers are explicit (not `*`)
 - No guaranteed return claims anywhere in code or UI
-- All AI outputs must include financial disclaimer: "Not SEBI registered investment advice"
 - All financial amounts use `float` for now (will migrate to `Decimal` before production)
 - Password hashing uses `bcrypt` directly (passlib removed — incompatible with bcrypt 4.x)
 - Auth enforced via `Depends(get_current_user)` on all routes except `/health` and `/auth/token`

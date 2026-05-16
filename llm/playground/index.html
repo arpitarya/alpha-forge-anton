@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>AlphaForge LLM Playground</title>
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: ui-sans-serif, system-ui, sans-serif; background:#0e1116; color:#dfe4ea;
+         margin:0; padding:24px; max-width:980px; margin-inline:auto; }
+  h1 { font-size: 18px; margin: 0 0 16px; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .card { background:#161b22; border:1px solid #2a313c; border-radius:8px; padding:14px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th,td { text-align:left; padding:6px 8px; border-bottom:1px solid #222a35; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; }
+  .ok { background:#0f3320; color:#4ade80; }
+  .bad { background:#3a1414; color:#f87171; }
+  textarea, input, select, button { font: inherit; background:#0b0e13; color:#dfe4ea;
+    border:1px solid #2a313c; border-radius:6px; padding:8px; }
+  textarea { width:100%; min-height:80px; resize:vertical; }
+  button { cursor:pointer; background:#1d4ed8; border-color:#1d4ed8; color:white; padding:8px 14px; }
+  button.secondary { background:transparent; color:#9ca3af; border-color:#2a313c; }
+  button:disabled { opacity:.6; cursor:wait; }
+  pre { background:#0b0e13; border:1px solid #2a313c; padding:10px; border-radius:6px;
+        white-space:pre-wrap; word-break:break-word; font-size:13px; max-height:340px; overflow:auto; }
+  .meta { color:#9ca3af; font-size:12px; margin-top:4px; }
+  .out { margin-top:12px; }
+  details summary { cursor:pointer; color:#9ca3af; font-size:12px; }
+</style>
+</head>
+<body>
+  <h1>AlphaForge LLM Playground</h1>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="row" style="justify-content:space-between; align-items:center">
+      <strong>Providers</strong>
+      <button class="secondary" id="refresh">Refresh</button>
+    </div>
+    <table id="providers"><thead>
+      <tr><th>Provider</th><th>Model</th><th>Status</th><th>Error</th><th></th></tr>
+    </thead><tbody></tbody></table>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <label>Provider
+        <select id="provider"></select>
+      </label>
+      <label style="flex:1">System (optional)
+        <input id="system" placeholder="You are a helpful assistant."
+               style="width:100%; box-sizing:border-box" />
+      </label>
+    </div>
+    <textarea id="prompt" placeholder="Ask anything — e.g. What is the current trend for Nifty 50?"></textarea>
+    <div class="row" style="margin-top:8px; justify-content:space-between">
+      <button id="send">Send</button>
+      <button id="all" class="secondary">Send to all available</button>
+    </div>
+    <div id="output"></div>
+  </div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const tbody = $("#providers tbody");
+const sel = $("#provider");
+let providers = [];
+
+async function loadProviders() {
+  const r = await fetch("/providers").then(r => r.json());
+  providers = r.providers;
+  tbody.innerHTML = "";
+  sel.innerHTML = "";
+  for (const p of providers) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${p.name}</td><td>${p.model}</td>
+      <td><span class="badge ${p.available ? 'ok' : 'bad'}">${p.available ? 'ready' : 'down'}</span></td>
+      <td style="color:#9ca3af; font-size:12px">${p.error || ''}</td>
+      <td><button class="secondary" data-test="${p.name}">Test</button></td>`;
+    tbody.appendChild(tr);
+    const opt = document.createElement("option");
+    opt.value = p.name; opt.textContent = `${p.name} — ${p.model}`;
+    if (!p.available) opt.textContent += " (down)";
+    sel.appendChild(opt);
+  }
+  tbody.querySelectorAll("button[data-test]").forEach(b => {
+    b.onclick = () => run(b.dataset.test, "pong", null, true);
+  });
+}
+
+function card(title) {
+  const el = document.createElement("div");
+  el.className = "card out";
+  el.innerHTML = `<strong>${title}</strong><div class="body"><em class="meta">running…</em></div>`;
+  $("#output").prepend(el);
+  return el.querySelector(".body");
+}
+
+async function run(provider, prompt, system, isTest=false) {
+  const body = card(provider + (isTest ? " (test)" : ""));
+  try {
+    const r = await fetch("/complete", {
+      method:"POST", headers:{"content-type":"application/json"},
+      body: JSON.stringify({provider, prompt, system}),
+    }).then(r => r.json());
+    if (r.ok) {
+      body.innerHTML = `<div class="meta">${r.model} · ${r.latency_ms}ms · ${r.prompt_tokens}+${r.completion_tokens} tok</div>
+        <pre>${escapeHtml(r.content)}</pre>`;
+    } else {
+      body.innerHTML = `<div class="meta">${r.latency_ms}ms</div>
+        <pre style="color:#f87171">${escapeHtml(r.error)}</pre>`;
+    }
+  } catch (e) {
+    body.innerHTML = `<pre style="color:#f87171">${escapeHtml(String(e))}</pre>`;
+  }
+}
+
+function escapeHtml(s){ return (s||"").replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+$("#refresh").onclick = loadProviders;
+$("#send").onclick = () => {
+  const p = $("#prompt").value.trim(); if (!p) return;
+  run(sel.value, p, $("#system").value || null);
+};
+$("#all").onclick = () => {
+  const p = $("#prompt").value.trim(); if (!p) return;
+  for (const x of providers) if (x.available) run(x.name, p, $("#system").value || null);
+};
+loadProviders();
+</script>
+</body>
+</html>

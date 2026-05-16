@@ -1,7 +1,4 @@
-"""Zerodha Kite equity, ETF, and COIN MF holdings — BrokerSource impl.
-
-Disclaimer: Not SEBI registered investment advice.
-"""
+"""Zerodha Kite equity, ETF, and COIN MF holdings — BrokerSource impl."""
 
 from __future__ import annotations
 

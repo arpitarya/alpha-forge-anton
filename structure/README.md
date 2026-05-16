@@ -30,8 +30,7 @@ These apply everywhere — no exceptions, regardless of language:
 3. **Booleans start with a question word.** `is_*`, `has_*`, `should_*`, `can_*`, `did_*`, `will_*`. A bare `disabled` is ambiguous on a multi-arg call.
 4. **Units in numeric names.** `refresh_interval_ms`, `lookback_days`, `cost_usd`, `pnl_pct`. Never `time = 5000`.
 5. **No paid SDKs / paid feeds without a flag.** The whole project is free-tier-first; if a paid integration ships later, it sits behind an explicit setting.
-6. **Disclaimer required on financial payloads.** Anything returned from a route that contains positions, picks, or alpha must include the literal `"Not SEBI registered investment advice."` — and there is a test for it.
-7. **Logs over prints.** Every module uses its language's logger (`alphaforge-logger` Python, `@alphaforge/logger` Node) with module-scoped names.
+6. **Logs over prints.** Every module uses its language's logger (`alphaforge-logger` Python, `@alphaforge/logger` Node) with module-scoped names.
 8. **Tests live next to the code they test** (frontend) or in a parallel `tests/` tree (Python).
 9. **Async by default** for any I/O. Synchronous I/O calls are an immediate review block.
 10. **Never log prompt/response bodies** in the LLM Gateway — metadata only.

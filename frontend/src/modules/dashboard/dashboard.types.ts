@@ -31,7 +31,6 @@ export interface BriefBlockDTO {
 export interface TerminalBriefDTO {
   blocks: BriefBlockDTO[];
   generated_at: string;
-  disclaimer: string;
 }
 
 export interface StatCardDTO {
@@ -46,5 +45,4 @@ export interface DashboardStatsDTO {
   net_worth: StatCardDTO;
   pnl_today: StatCardDTO;
   confidence: StatCardDTO;
-  disclaimer: string;
 }

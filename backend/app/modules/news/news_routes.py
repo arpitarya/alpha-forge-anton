@@ -1,7 +1,4 @@
-"""News API endpoints.
-
-Disclaimer: Not SEBI registered investment advice.
-"""
+"""News API endpoints."""
 
 from __future__ import annotations
 

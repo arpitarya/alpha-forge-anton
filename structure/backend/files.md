@@ -294,14 +294,6 @@ Services raise plain Python exceptions (`ValueError`, `RuntimeError`, custom sub
 
 Always via `get_logger("module.name")`. Module names mirror the dotted path (`routes.portfolio`, `services.brokers.angel_one`). Never call `logging.getLogger()` directly; the wrapper centralises file rotation.
 
-### Disclaimers
-
-Any payload returned from a route that contains investment data **must** include a `disclaimer` field with the literal:
-
-> Not SEBI registered investment advice.
-
-This is enforced by tests (search for `assert "disclaimer" in body`).
-
 ---
 
 ## Testing layout

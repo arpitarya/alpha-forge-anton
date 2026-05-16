@@ -45,7 +45,6 @@ export interface HoldingsResponseDTO {
   totals: PortfolioTotalsDTO;
   allocation: AllocationSliceDTO[];
   holdings: HoldingDTO[];
-  disclaimer: string;
 }
 
 export interface TreemapCellDTO {
@@ -65,7 +64,6 @@ export interface TreemapCellDTO {
 export interface TreemapResponseDTO {
   totals: PortfolioTotalsDTO;
   cells: TreemapCellDTO[];
-  disclaimer: string;
 }
 
 export interface RebalanceResponseDTO {
@@ -77,7 +75,6 @@ export interface RebalanceResponseDTO {
   }>;
   suggestions: Array<{ action: string }>;
   targets: Record<string, number>;
-  disclaimer: string;
 }
 
 export type SourceKind = "api";
@@ -97,7 +94,6 @@ export interface SourceInfoDTO {
 export interface SyncAllResultDTO {
   results: Record<string, { ok: boolean; count?: number; error?: string }>;
   totals: PortfolioTotalsDTO;
-  disclaimer: string;
 }
 
 export interface WalletInfoDTO {
@@ -118,5 +114,4 @@ export interface WalletInfoDTO {
 
 export interface WalletsResponseDTO {
   wallets: WalletInfoDTO[];
-  disclaimer: string;
 }

@@ -1,7 +1,4 @@
-"""Broker source plugins — pluggable CDP/API adapters for each holdings provider.
-
-Disclaimer: Not SEBI registered investment advice.
-"""
+"""Broker source plugins — pluggable CDP/API adapters for each holdings provider."""
 
 from __future__ import annotations
 

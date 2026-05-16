@@ -115,6 +115,17 @@ frontend:
 frontend-install:
     bash setup.sh --frontend
 
+# ── LLM ──────────────────────────────────────────
+
+# Run the standalone LLM provider playground (http://localhost:${LLM_PLAYGROUND_PORT})
+llm:
+    cd llm && uv run --with fastapi --with uvicorn --with python-dotenv \
+        uvicorn playground.server:app --host 127.0.0.1 --port ${LLM_PLAYGROUND_PORT} --reload
+
+# Probe every LLM provider once and print results (no server)
+llm-probe:
+    cd llm && uv run --with python-dotenv python -m playground.probe
+
 # ── Database / Infrastructure ────────────────────
 
 # Setup PostgreSQL & Redis via Homebrew (macOS, no Docker)

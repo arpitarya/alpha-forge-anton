@@ -20,7 +20,7 @@ Related plan: [news/PLAN.md](../news/PLAN.md)
 
 ## Non-goals
 
-- SEBI-registered advice (every output carries the mandatory disclaimer)
+- SEBI-registered advice
 - Real-time tick-level analysis (uses daily/hourly snapshots)
 - Managing trades (read-only; Trade module handles that separately)
 
@@ -43,7 +43,7 @@ User (chat or voice)
   ├── AgentLoop            ← tool-calling loop; streams chunks via SSE
   │     └── ToolRegistry   ← quote, holdings, screener, news, web_search, recall_memory
   ├── ResearchSession      ← ConversationMemory ORM; carries full context across model switches
-  └── ResponseShaper       ← appends SEBI disclaimer, cites sources, formats INR
+  └── ResponseShaper       ← cites sources, formats INR
         │
         ▼
 [LLM layer — llm/ workspace]
@@ -55,7 +55,9 @@ User (chat or voice)
   │     ├── GroqAdapter
   │     ├── OpenRouterAdapter
   │     ├── HuggingFaceAdapter
-  │     ├── OllamaAdapter
+  │     ├── CerebrasAdapter
+  │     ├── MistralAdapter
+  │     ├── DeepSeekAdapter
   │     └── ClaudeSdkAdapter   (gated by CostGuard + confirmation)
   ├── CostGuard            ← raises CostGuardError on any paid model/tier
   ├── RateLimiter          ← per-provider token-bucket; auto-resets on window roll
@@ -182,10 +184,12 @@ DELETE /api/v1/llm/settings/{provider}
 One row per registered provider:
 
 ```
-[ Groq ]  ••••••••••••3f8a  [Test]  ✓ Working — last tested 2 min ago  [Edit]  [Remove]
-[ Gemini ] ••••••••••••91bc  [Test]  ✓ Working — last tested 1 hr ago   [Edit]  [Remove]
-[ Ollama ] http://localhost:11434      ✓ Local — always available               [Edit]
-[ Claude ] Not configured             — Confirm required each use        [Add key]
+[ Groq ]     ••••••••••••3f8a  [Test]  ✓ Working — last tested 2 min ago  [Edit]  [Remove]
+[ Gemini ]   ••••••••••••91bc  [Test]  ✓ Working — last tested 1 hr ago   [Edit]  [Remove]
+[ Cerebras ] ••••••••••••7d2e  [Test]  ✓ Working — last tested 5 min ago  [Edit]  [Remove]
+[ Mistral ]  Not configured                                                [Add key]
+[ DeepSeek ] Not configured                                                [Add key]
+[ Claude ]   Not configured           — Confirm required each use         [Add key]
 ```
 
 - "Edit" opens an inline input (masked, paste-friendly)
@@ -311,7 +315,7 @@ Run one provider in isolation: `uv run pytest llm/tests/providers/test_groq.py -
 
 - Compact dropdown in the chat composer toolbar
 - Options: `Auto` (default) | Gemini Flash | Gemini Pro | Groq Llama-3.3 | Groq Gemma2 |
-  OpenRouter Auto | Ollama (local) | Claude (confirm required)
+  Cerebras Llama-3.3 | Mistral Small | DeepSeek Chat | OpenRouter Auto | Claude (confirm required)
 - Stored in session; persists via `localStorage`
 
 ### Auto-routing
@@ -336,11 +340,11 @@ Run one provider in isolation: `uv run pytest llm/tests/providers/test_groq.py -
 
 | QueryType | Default chain | Strategy |
 |---|---|---|
-| `news_lookup` | Groq Llama-3.3 → Gemini Flash → OpenRouter | Single |
-| `factoid` | Gemini Flash → Groq Gemma2 → OpenRouter | Single |
+| `news_lookup` | Cerebras → Groq Llama-3.3 → Gemini Flash → OpenRouter | Single |
+| `factoid` | Cerebras → Gemini Flash → Groq Gemma2 → OpenRouter | Single |
 | `portfolio_overview` | Gemini Flash → Groq Llama-3.3 | Single |
-| `stock_pick` | Gemini Flash ∥ Groq Llama-3.3 ∥ OpenRouter → Gemini Flash judge | **Ensemble** |
-| `investment_plan` | Same ensemble → Claude SDK escalation hint offered | **Ensemble + hint** |
+| `stock_pick` | DeepSeek Chat ∥ Gemini Flash ∥ Groq Llama-3.3 → Gemini Flash judge | **Ensemble** |
+| `investment_plan` | DeepSeek Chat ∥ Mistral Small ∥ Gemini Flash → Claude SDK escalation hint offered | **Ensemble + hint** |
 | `industry_news` | Tavily search → Groq summarise | Single + tool-heavy |
 | `multi_turn` | Gemini Flash (long context) | Single |
 
@@ -414,7 +418,7 @@ ledger persists the invocation (query, tokens, timestamp) for quota auditing.
 | `factoid` | 6 |
 | `multi_turn` | 4 |
 | `model_selection` | 3 (test "pick model X" + switch works correctly) |
-| `edge_cases` | 4 (ambiguous ticker, date arithmetic, INR formatting, disclaimer check) |
+| `edge_cases` | 3 (ambiguous ticker, date arithmetic, INR formatting) |
 
 Eval runner: runs all questions × all enabled providers; scores heuristically + LLM judge;
 writes `results/latest.json` → `QueryRouter` reads for chain ranking.
@@ -489,7 +493,9 @@ llm/
 │       ├── groq.py
 │       ├── openrouter.py
 │       ├── huggingface.py
-│       ├── ollama.py
+│       ├── cerebras.py
+│       ├── mistral.py
+│       ├── deepseek.py
 │       └── claude_sdk.py
 ├── eval/
 │   ├── questions.yaml
@@ -508,7 +514,9 @@ llm/
         ├── test_groq.py
         ├── test_openrouter.py
         ├── test_huggingface.py
-        ├── test_ollama.py
+        ├── test_cerebras.py
+        ├── test_mistral.py
+        ├── test_deepseek.py
         └── test_claude_sdk.py
 ```
 
@@ -572,7 +580,9 @@ GEMINI_API_KEY=
 GROQ_API_KEY=
 OPENROUTER_API_KEY=
 HF_API_KEY=
-OLLAMA_BASE_URL=http://localhost:11434
+CEREBRAS_API_KEY=
+MISTRAL_API_KEY=
+DEEPSEEK_API_KEY=
 
 ALLOW_CLOUD_LLM_IN_DEV=false
 RESEARCH_ENABLE_ENSEMBLE=true
@@ -593,7 +603,7 @@ LLM_LEDGER_ENABLED=true             # set false to disable DB writes (e.g. high-
 
 | Phase | Deliverable | Notes |
 |---|---|---|
-| 1 | `llm/` workspace: ABC, registry, types, cost_guard, rate_limiter, router, 5 adapters + notebook | Validate each adapter standalone in notebook before wiring backend |
+| 1 | `llm/` workspace: ABC, registry, types, cost_guard, rate_limiter, router, 8 adapters + notebook | Validate each adapter standalone in notebook before wiring backend |
 | 2 | `backend/app/modules/news/` | See news/PLAN.md; validate each source standalone first |
 | 3 | `llm/eval/` — questions.yaml (45 Qs), runner, judge | CLI only |
 | 4 | Backend `research/` — agent loop, tool registry, SSE routes | ConversationMemory reuse |

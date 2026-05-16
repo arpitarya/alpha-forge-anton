@@ -17,9 +17,6 @@ from app.modules.brokers.wallet_aggregator import list_wallets, sync_all, sync_o
 router = APIRouter(dependencies=[Depends(get_current_user)])
 logger = get_logger("routes.cash")
 
-_DISCLAIMER = "Not SEBI registered investment advice."
-
-
 def _as_cash(w) -> dict:  # type: ignore[no-untyped-def]
     d = w.model_dump(mode="json")
     d["source"] = d.pop("slug")
@@ -30,7 +27,7 @@ def _as_cash(w) -> dict:  # type: ignore[no-untyped-def]
 async def get_cash():
     """Cached free-cash state — no sync triggered, always instant."""
     cash = [_as_cash(w) for w in list_wallets() if w.supports_cash]
-    return {"cash": cash, "disclaimer": _DISCLAIMER}
+    return {"cash": cash}
 
 
 @router.post("/sync")
@@ -46,7 +43,7 @@ async def sync_all_cash():
         for slug, w in refreshed.items()
         if getattr(SOURCES.get(slug), "supports_cash", False)
     ]
-    return {"cash": cash, "disclaimer": _DISCLAIMER}
+    return {"cash": cash}
 
 
 @router.post("/{slug}/sync")
@@ -64,4 +61,4 @@ async def sync_one_cash(slug: str):
     except Exception as e:
         logger.exception("Cash sync failed for %s", slug)
         raise HTTPException(400, f"Cash sync failed: {e}") from e
-    return {"cash": _as_cash(wallet), "disclaimer": _DISCLAIMER}
+    return {"cash": _as_cash(wallet)}

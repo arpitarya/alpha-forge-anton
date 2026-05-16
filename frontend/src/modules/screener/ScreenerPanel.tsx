@@ -48,9 +48,6 @@ export function ScreenerPanel() {
         })}
       </div>
 
-      <Text variant="caption" tone="subtle" className="text-center pt-2">
-        Not SEBI registered investment advice
-      </Text>
     </Card>
   );
 }

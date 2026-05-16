@@ -15,7 +15,7 @@ The portfolio module aggregates holdings from five sources. Each source is one o
 | INDmoney (Indian equity, MF, US stocks, gold) | `indmoney` | API | CDP web-app fetch — log in to [indmoney.com](https://indmoney.com) in the AlphaForge Chrome |
 | Ticker Tape (SGBs, Gold ETFs, gold funds) | `tickertape` | API | CDP web-app fetch — log in to [tickertape.in](https://tickertape.in) in the AlphaForge Chrome |
 
-> Disclaimer: Not SEBI registered investment advice. This module reads holdings only — no orders are placed.
+> This module reads holdings only — no orders are placed.
 
 ---
 

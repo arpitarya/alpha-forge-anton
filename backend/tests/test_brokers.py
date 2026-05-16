@@ -135,7 +135,6 @@ class TestPortfolioRoutes:
         body = r.json()
         assert body["totals"]["count"] == 5
         assert "allocation" in body
-        assert "disclaimer" in body
 
     def test_holdings_seeded_data_persists(self, client):
         _seed_zerodha()
@@ -156,7 +155,6 @@ class TestPortfolioRoutes:
         assert r.status_code == 200
         body = r.json()
         assert len(body["cells"]) == 5
-        assert "disclaimer" in body
 
     def test_treemap_with_source_filter(self, loaded_client):
         r = loaded_client.get("/api/v1/portfolio/treemap?source=zerodha")

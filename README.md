@@ -12,8 +12,6 @@ AlphaForge is an open-source personal investment terminal for Indian markets (NS
 
 This project is built for personal use and research.
 
-Not SEBI registered investment advice.
-
 ---
 
 ## What Is New

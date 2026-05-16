@@ -63,5 +63,4 @@ async def sync_all_sources():
     return {
         "results": results,
         "totals": HoldingsAggregator().totals(),
-        "disclaimer": "Not SEBI registered investment advice.",
     }
