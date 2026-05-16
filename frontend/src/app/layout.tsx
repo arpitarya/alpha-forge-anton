@@ -1,9 +1,10 @@
 import { ThemeProvider } from "@alphaforge/solar-orb-ui";
 import type { Metadata } from "next";
+import "./globals.css";
 import { QueryProvider } from "@/lib/providers";
 import { AuthGuard } from "@/modules/auth/auth.guard";
+import { ChatProvider } from "@/modules/chat";
 import { BootGate } from "@/modules/dashboard/BootGate";
-import "./globals.css";
 
 export const metadata: Metadata = {
   title: "AlphaForge | Personal Investment Terminal",
@@ -64,7 +65,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <QueryProvider>
             <AuthGuard>
-              <BootGate>{children}</BootGate>
+              <BootGate>
+                <ChatProvider>{children}</ChatProvider>
+              </BootGate>
             </AuthGuard>
           </QueryProvider>
         </ThemeProvider>

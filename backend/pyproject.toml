@@ -25,6 +25,7 @@ dependencies = [
     # Internal packages (resolved via [tool.uv.sources] in the workspace root)
     "alphaforge-logger",
     "alphaforge-news",
+    "alphaforge-llm",
     # News aggregator deps
     "feedparser>=6.0.0",
     "asyncpraw>=7.7.0",

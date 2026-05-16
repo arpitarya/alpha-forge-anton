@@ -30,9 +30,9 @@ export function LedgerRow({ h, query }: { h: HoldingDTO; query?: string }) {
   return (
     <tr
       key={`${h.source}-${h.symbol}-${h.isin ?? ""}`}
-      className="border-b border-dashed border-[color:var(--line)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--accent)_5%,transparent)]"
+      className="border-b border-dashed border-[color:var(--line)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--accent)_5%,transparent)] h-[44px]"
     >
-      <td className="px-6 py-3 max-w-md">
+      <td className="px-6 py-1.5 max-w-md">
         <div className="flex flex-col">
           <span className="font-semibold leading-snug">{highlight(primary, query)}</span>
           {secondary && (
@@ -42,21 +42,21 @@ export function LedgerRow({ h, query }: { h: HoldingDTO; query?: string }) {
           )}
         </div>
       </td>
-      <td className="px-4 py-3 text-right font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--fg-3)]">
+      <td className="px-4 py-1.5 text-right font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--fg-3)]">
         {h.source}
       </td>
-      <td className="px-4 py-3 text-right font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--fg-3)]">
+      <td className="px-4 py-1.5 text-right font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--fg-3)]">
         {ASSET_LABEL[h.asset_class] ?? h.asset_class}
       </td>
-      <td className="px-4 py-3 text-right tabular-nums">
+      <td className="px-4 py-1.5 text-right tabular-nums">
         {h.quantity.toLocaleString(locale, { maximumFractionDigits: 4 })}
       </td>
-      <td className="px-4 py-3 text-right tabular-nums">{sym}{h.avg_price.toFixed(2)}</td>
-      <td className="px-4 py-3 text-right tabular-nums">{sym}{h.last_price.toFixed(2)}</td>
-      <td className="px-4 py-3 text-right tabular-nums">
+      <td className="px-4 py-1.5 text-right tabular-nums">{sym}{h.avg_price.toFixed(2)}</td>
+      <td className="px-4 py-1.5 text-right tabular-nums">{sym}{h.last_price.toFixed(2)}</td>
+      <td className="px-4 py-1.5 text-right tabular-nums">
         {sym}{Math.round(h.current_value).toLocaleString(locale)}
       </td>
-      <td className={`px-6 py-3 text-right tabular-nums ${tone}`}>
+      <td className={`px-6 py-1.5 text-right tabular-nums ${tone}`}>
         {h.pnl >= 0 ? "+" : ""}{sym}{Math.round(h.pnl).toLocaleString(locale)}{" "}
         <span className="opacity-70 text-[11px]">({h.pnl_pct.toFixed(2)}%)</span>
       </td>

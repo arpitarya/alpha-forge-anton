@@ -37,7 +37,11 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
+        // Proxy everything under /api/ to the backend, EXCEPT /api/v1/chat
+        // which is handled by the Next.js API route at app/api/v1/chat/route.ts
+        // (that route manually forwards the Authorization header, which
+        // Next.js rewrites strip).
+        source: "/api/:path((?!v1/chat(?:/|$)).*)",
         destination: `http://localhost:${backendPort}/api/:path*`,
       },
     ];

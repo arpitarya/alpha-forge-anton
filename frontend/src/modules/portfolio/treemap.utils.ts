@@ -30,7 +30,7 @@ export function squarify(values: number[], x: number, y: number, w: number, h: n
   const remaining = [...values];
   while (remaining.length) {
     const candidate = [...row, remaining[0]];
-    if (!row.length || worst(candidate, shortSide, total) >= worst(row, shortSide, total)) {
+    if (!row.length || worst(candidate, shortSide, total) <= worst(row, shortSide, total)) {
       row = candidate;
       remaining.shift();
     } else break;

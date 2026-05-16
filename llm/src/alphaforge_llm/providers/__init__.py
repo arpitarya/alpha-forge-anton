@@ -5,7 +5,6 @@ from __future__ import annotations
 from alphaforge_llm.providers.base import ProviderAdapter, ProviderHealth
 from alphaforge_llm.providers.cerebras import CerebrasAdapter
 from alphaforge_llm.providers.claude_sdk import ClaudeSdkAdapter
-from alphaforge_llm.providers.deepseek import DeepSeekAdapter
 from alphaforge_llm.providers.gemini import GeminiAdapter
 from alphaforge_llm.providers.groq import GroqAdapter
 from alphaforge_llm.providers.huggingface import HuggingFaceAdapter
@@ -19,7 +18,6 @@ REGISTRY: dict[str, ProviderAdapter] = {
     "huggingface": HuggingFaceAdapter(),
     "cerebras":    CerebrasAdapter(),
     "mistral":     MistralAdapter(),
-    "deepseek":    DeepSeekAdapter(),
     "claude-sdk":  ClaudeSdkAdapter(),
 }
 
@@ -29,7 +27,6 @@ __all__ = [
     "ProviderHealth",
     "CerebrasAdapter",
     "ClaudeSdkAdapter",
-    "DeepSeekAdapter",
     "GeminiAdapter",
     "GroqAdapter",
     "HuggingFaceAdapter",

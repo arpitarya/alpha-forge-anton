@@ -13,7 +13,7 @@ from alphaforge_llm.types import Message, ProviderResponse, ToolSchema
 logger = logging.getLogger(__name__)
 
 _BASE = "https://openrouter.ai/api/v1"
-_MODEL = "z-ai/glm-4.5-air:free"
+_MODEL = "google/gemma-4-26b-a4b-it:free"
 
 
 class OpenRouterAdapter(ProviderAdapter):
@@ -41,7 +41,7 @@ class OpenRouterAdapter(ProviderAdapter):
         try:
             result = await openai_complete(
                 base_url=_BASE, api_key=api_key, model=_MODEL,
-                provider_name=self.name, messages=messages,
+                provider_name=self.name, messages=messages, timeout=60.0,
             )
             self._last_error = None
             return result

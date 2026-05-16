@@ -64,7 +64,6 @@ alpha-forge/
 | Repo Context MCP | alphaforge-repo-context-mcp | Local stdio MCP server; pgvector-backed semantic + structural repo context for Claude/Copilot/Cursor/any MCP client |
 | Brokers | Abstract BrokerSource interface | Zerodha first, then Groww, Angel One, Upstox |
 | Local infra | brew services (Postgres, Redis) | Containers optional via OrbStack |
-| Browser MCP | Playwright MCP | Copilot can screenshot/inspect Chrome via `.vscode/settings.json` |
 | CI infra | devcontainer.json | GitHub Codespaces compatible |
 
 ## Key Files
@@ -74,11 +73,12 @@ alpha-forge/
 - `backend/app/core/config.py` — All environment variables
 - `backend/app/core/logging.py` — Backend logging setup (wraps alphaforge-logger)
 - `backend/app/modules/__init__.py` — registers every feature router under `/api/v1/*`
+- `backend/app/modules/chat/` — Alpha chat module: `chat_routes.py` (`POST /api/v1/chat/` → SSE), `chat_service.py` (gateway dispatch + streaming), `chat_schemas.py` (request schema + model→QueryType mapping)
 - `backend/app/modules/brokers/base.py` — `BrokerSource` ABC; implement for new brokers
 - `backend/app/modules/brokers/registry.py` — broker source registry (slug → class)
 - `backend/app/modules/brokers/dump_utils.py` — shared CSV-dump utilities (path, permissions, headers, P&L). See [broker-csv-dumps.md](broker-csv-dumps.md)
 ### Frontend
-- `frontend/src/app/layout.tsx` — Root layout. Mounts `ThemeProvider` → `QueryProvider` → `AuthGuard` → `BootGate`, so the boot sequence runs once for the whole app and survives client-side route changes (`/`, `/portfolio`, `/preferences`)
+- `frontend/src/app/layout.tsx` — Root layout. Mounts `ThemeProvider` → `QueryProvider` → `AuthGuard` → `BootGate` → `ChatProvider`, so the boot sequence and the global AlphaBar + ChatRail run once for the whole app across all routes
 - `frontend/src/app/page.tsx` — Terminal landing page (no longer wraps `BootGate` — that's now in the root layout)
 - `frontend/src/app/portfolio/page.tsx` — Portfolio page. Slim `PortfolioCompactBar` on top (TOTAL · INVESTED · P&L · DAY inline + wallet pills + a "More/Less" expand toggle) so tree / ledger get the dominant vertical space; expanded state reveals the full `WalletStrip`. Source spotlight + filter bar + summary + body (treemap or ledger) on the left, rebalance rail on the right. Filter state (query, sector chip, gainers/losers, sort key + dir, view, expand) is owned here
 - `frontend/src/modules/portfolio/PortfolioCompactBar.tsx` — Hi-Fi `.pf-summary-bar`: always-visible row with totals + wallet pills + expand caret. Mirrors the design's "Less / More" pattern so a single click reveals stat cards beneath
@@ -103,7 +103,8 @@ alpha-forge/
 - `frontend/src/app/globals.css` — Theme variables (Solar Terminal design tokens); `@source` directives extend Tailwind v4 content scanning into the workspace packages so arbitrary classes in `solar-orb-ui` resolve; restores the default `cursor: pointer` on `button` / `[role="button"]` that Tailwind v4's Preflight dropped
 - `frontend/next.config.mjs` — Next.js config: CSP headers (allows `fonts.googleapis.com` + `fonts.gstatic.com` for Material Symbols icons), API rewrites
 - `frontend/src/modules/dashboard/TerminalTopBar.tsx` — Slim global top bar per Hi-Fi spec (≈32px min-height, 4px×14px padding, 8px radius). SVG logo mark + ALPHA/FORGE wordmark; Terminal + Portfolio nav buttons; gear icon-button on the right routes to `/preferences`; no icon sidebar
-- `frontend/src/modules/dashboard/TerminalVoice.tsx` — Slim global voice dock (≈36px min-height, 6px×14px padding). 28px `MicIndicator`, 8-bar `Waveform`, rotating prompt copy, small Deploy CTA. Rendered as `<AppShell footer>` so it appears on every page
+- `frontend/src/modules/chat/` — Alpha chat module: `AlphaBar.tsx` (global bottom bar — Voice/Chat segmented toggle + model picker + Deploy), `ChatRail.tsx` (fixed right-side slide-over conversation thread; `ResponseBody` renders **markdown as safe React nodes** — bold/italic/inline-code/fenced-code/h2-h3/ul/ol/hr — no `dangerouslySetInnerHTML`), `ModelPicker.tsx` (model dropdown: Auto / Forge Pro / Forge Fast / Forge Local), `useChatStream.ts` (SSE fetch hook, multi-turn history up to 6 turns, streaming; forwards JWT from `localStorage["af_token"]` in the `Authorization` header), `ChatContext.tsx` (React context provider rendering AlphaBar + ChatRail globally), `chat.types.ts` (ModelId, ChatTurn, MODELS, `resolveAutoModel`). Mounted in `layout.tsx` as `<ChatProvider>` so it appears on every screen. **Security:** backend endpoint is JWT-gated (`Depends(get_current_user)`); frontend proxy (`/api/v1/chat` → `route.ts`) keeps provider API keys server-side only.
+- `frontend/src/modules/dashboard/TerminalVoice.tsx` — Legacy static voice dock (no longer rendered — replaced by `AlphaBar` from the chat module)
 - `packages/solar-orb-ui/src/components/TopBar.tsx` / `VoiceDock.tsx` — Reusable chrome containers carrying `data-af-top` / `data-af-voice` plus `.af-top` / `.af-voice` classes. Paired with `body.chrome-autohide` / `body.no-voice` rules in `frontend/src/app/globals.css` to enable Preferences → Display → Chrome behavior (collapses bars to an accent strip; hover/focus expands) and the voice-bar disable toggle
 - `frontend/src/modules/dashboard/BootScreen.tsx` — Full-screen animated boot checklist. Renders one row per real backend system (gateway, Postgres, every broker source); each row's glyph and detail are driven by the `status: BootStatus` field (`ok` ✓ green / `warn` ! amber / `error` ✗ red). `BOOT_STEPS` is the static fallback used only when the live probe fails
 - `frontend/src/modules/dashboard/boot.api.ts` + `boot.types.ts` — Frontend client and TS mirror of `BootReport` / `BootService` from the backend
@@ -132,7 +133,7 @@ alpha-forge/
 - `repo-context-mcp/README.md` — Wire-up snippets for Claude Code, VS Code/Copilot, Cursor, Cline, Zed, Windsurf
 
 ### Probes & Design
-- `probes/ui_probe.py` — End-to-end Playwright probe (auth guard, login, dashboard, portfolio, session, logout). Writes PNGs to `screenshots/` at the repo root
+- `probes/ui_probe.py` — End-to-end UI smoke test via CDP (port 9299). Attaches to existing Chrome session; exercises auth, dashboard, portfolio, and console-error checks. Writes PNGs to `/tmp/alphaforge-probe/`
 - `probes/ui_screens.py` — Lightweight screenshot helper. Auths via `POST /api/v1/auth/token`, stashes the JWT in localStorage, then snapshots `/`, `/portfolio`, `/preferences` at 1440×900
 - `probes/ui_pref_tabs.py` — Walks every Preferences sidebar tab and captures `preferences-<tab>.png` for design review
 - `screenshots/` — Probe output. Tracked dir; PNGs are overwritten on each run
@@ -146,5 +147,5 @@ alpha-forge/
 - `uv.lock` (repo root) — single lockfile for all Python workspace members
 - `pnpm-workspace.yaml` — Workspace root definition
 - `.env.port` — All service ports in one file
-- `.vscode/settings.json` — VS Code workspace settings (MCP server config for Playwright)
+- `.vscode/mcp.json` — VS Code MCP server config
 - `.env.example` / `backend/.env.example` / `frontend/.env.example` — Environment templates

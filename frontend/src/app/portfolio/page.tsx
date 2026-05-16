@@ -2,7 +2,7 @@
 
 import { AppShell } from "@alphaforge/solar-orb-ui";
 import { useEffect, useMemo, useState } from "react";
-import { TerminalTicker, TerminalTopBar, TerminalVoice } from "@/modules/dashboard";
+import { TerminalTicker, TerminalTopBar } from "@/modules/dashboard";
 import type { FilterState } from "@/modules/portfolio";
 import {
   applyFilter,
@@ -33,7 +33,7 @@ const DEFAULT_FILTER: FilterState = {
 };
 
 export default function PortfolioPage() {
-  const [view, setView] = useState<PortfolioView>("tree");
+  const [view, setView] = useState<PortfolioView>("ledger");
   const [source, setSource] = useState<string>("all");
   const [expanded, setExpanded] = useState<boolean>(false);
   const [railCollapsed, setRailCollapsed] = useState<boolean>(false);
@@ -91,7 +91,7 @@ export default function PortfolioPage() {
   const reset = () => setFilterState(DEFAULT_FILTER);
 
   return (
-    <AppShell header={<TerminalTopBar />} ticker={<TerminalTicker />} footer={<TerminalVoice />}>
+    <AppShell header={<TerminalTopBar />} ticker={<TerminalTicker />}>
       <div className="flex h-full min-h-0 flex-col gap-3">
         <PortfolioCompactBar
           source={source}

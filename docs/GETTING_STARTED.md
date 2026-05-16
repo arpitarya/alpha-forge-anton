@@ -132,12 +132,36 @@ DATABASE_URL=postgresql+asyncpg://alphaforge:alphaforge@localhost:5432/alphaforg
 REDIS_URL=redis://localhost:6379/0
 ```
 
-### Optional — AI Features
+### Optional — AI Features (Alpha Chat)
+
+Alpha chat routes through the `alphaforge-llm` gateway. Set **at least one** provider key:
 
 ```bash
-OPENAI_API_KEY=sk-...       # Required for AI chat and analysis
-OPENAI_MODEL=gpt-4o         # Or gpt-4o-mini for cheaper testing
+# Gemini (default auto-route target for most queries)
+GEMINI_API_KEY=AIza...
+
+# Groq — ultra-low latency (Llama / Mixtral)
+GROQ_API_KEY=gsk_...
+
+# Claude SDK (Anthropic) — investment plan & risk analysis
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Cerebras — fastest throughput (screeners / factoids)
+CEREBRAS_API_KEY=...
+
+# Mistral — EU-hosted, strong at finance (privacy/local intent)
+MISTRAL_API_KEY=...
+
+# OpenRouter — routes to GPT-4o, Command R+, etc.
+OPENROUTER_API_KEY=sk-or-...
+
+# HuggingFace Inference API — open-source models
+HUGGINGFACE_API_KEY=hf_...
 ```
+
+`model: "auto"` (the default) picks the provider automatically based on query intent (risk → Claude, screeners → Cerebras, general → Gemini). You only need keys for the providers you want available.
+
+> **Security:** The chat endpoint (`POST /api/v1/chat/`) requires a valid JWT (`Authorization: Bearer <token>`). The frontend proxy at `/api/v1/chat` forwards the token server-side; never expose provider API keys to the browser. Response text is rendered as safe React nodes — no `dangerouslySetInnerHTML` is used.
 
 ### Optional — Broker Integration
 
@@ -188,8 +212,6 @@ just db-revision msg="description"  # Create new migration
 just screener-pipeline     # Same as above, via Makefile
 just screener-scan         # Same as above, via Makefile
 
-# ── Misc ─────────────────────────────────────────
-just setup-mcp             # Install Playwright MCP for Copilot browser integration
 ```
 
 ---
@@ -288,36 +310,6 @@ infra/
 
 ---
 
-## Copilot + Browser Integration (Playwright MCP)
-
-Copilot can connect to Chrome to review mockups, screenshot live pages, and iterate on UI:
-
-```bash
-just setup-mcp          # Install Playwright Chromium + configure MCP
-```
-
-This installs the Playwright Chromium browser and configures the MCP server in `.vscode/settings.json`. After installation:
-
-1. **Restart VS Code** to activate the MCP server
-2. Copilot can now open URLs, take screenshots, click elements, and inspect your running frontend
-3. Use it to compare mockups (e.g. `design/terminal aka landing page/code.html`) against the live dev server
-
-The MCP configuration lives in [`.vscode/settings.json`](../.vscode/settings.json):
-```json
-{
-  "mcp": {
-    "servers": {
-      "playwright": {
-        "command": "npx",
-        "args": ["@playwright/mcp@latest"]
-      }
-    }
-  }
-}
-```
-
----
-
 ## Next Steps
 
 Once the base setup is running:
@@ -325,7 +317,6 @@ Once the base setup is running:
 1. **Explore the API** at http://localhost:8000/docs
 2. **Try the AI chat** (once you add an OpenAI key)
 3. **Connect a broker** (get Zerodha Kite API key from developers.kite.trade)
-4. **Set up Copilot browser integration** — `just setup-mcp` (see above)
-5. **Check the roadmap** in [WHAT.md](WHAT.md) for upcoming features
-6. **Open in Codespaces** for zero-setup cloud development
-7. **Contribute** — pick an issue, create a PR!
+4. **Check the roadmap** in [WHAT.md](WHAT.md) for upcoming features
+5. **Open in Codespaces** for zero-setup cloud development
+6. **Contribute** — pick an issue, create a PR!

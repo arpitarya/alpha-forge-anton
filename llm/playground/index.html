@@ -11,10 +11,11 @@
   .row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
   .card { background:#161b22; border:1px solid #2a313c; border-radius:8px; padding:14px; }
   table { width:100%; border-collapse:collapse; font-size:13px; }
-  th,td { text-align:left; padding:6px 8px; border-bottom:1px solid #222a35; }
+  th,td { text-align:left; padding:6px 8px; border-bottom:1px solid #222a35; vertical-align:top; }
   .badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; }
   .ok { background:#0f3320; color:#4ade80; }
   .bad { background:#3a1414; color:#f87171; }
+  .warn { background:#2d2008; color:#fbbf24; }
   textarea, input, select, button { font: inherit; background:#0b0e13; color:#dfe4ea;
     border:1px solid #2a313c; border-radius:6px; padding:8px; }
   textarea { width:100%; min-height:80px; resize:vertical; }
@@ -26,50 +27,117 @@
   .meta { color:#9ca3af; font-size:12px; margin-top:4px; }
   .out { margin-top:12px; }
   details summary { cursor:pointer; color:#9ca3af; font-size:12px; }
+
+  /* tabs */
+  .tabs { display:flex; gap:2px; margin-bottom:16px; border-bottom:1px solid #2a313c; }
+  .tab { padding:8px 16px; cursor:pointer; border:none; background:transparent;
+         color:#9ca3af; border-bottom:2px solid transparent; border-radius:0; }
+  .tab.active { color:#dfe4ea; border-bottom-color:#1d4ed8; }
+  .panel { display:none; }
+  .panel.active { display:block; }
+
+  /* eval */
+  .eval-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+  .rubric { color:#9ca3af; font-size:11px; font-style:italic; margin-top:4px; }
+  .pass-badge { padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600; }
+  .pass { background:#0f3320; color:#4ade80; }
+  .fail { background:#3a1414; color:#f87171; }
+  .eval-question { font-weight:600; font-size:13px; margin-bottom:4px; }
+  .eval-card { background:#161b22; border:1px solid #2a313c; border-radius:8px; padding:12px; margin-bottom:12px; }
+  .hits { font-size:11px; color:#60a5fa; margin-top:4px; }
+  .compare-table th { background:#0e1116; position:sticky; top:0; }
+  .compare-table td.pass-cell { background:#0a1f10; color:#4ade80; text-align:center; }
+  .compare-table td.fail-cell { background:#1f0a0a; color:#f87171; text-align:center; }
+  .compare-table td.err-cell  { background:#1a1400; color:#fbbf24; text-align:center; font-size:11px; }
+  .provider-progress { font-size:11px; color:#9ca3af; }
 </style>
 </head>
 <body>
   <h1>AlphaForge LLM Playground</h1>
 
-  <div class="card" style="margin-bottom:16px">
-    <div class="row" style="justify-content:space-between; align-items:center">
-      <strong>Providers</strong>
-      <button class="secondary" id="refresh">Refresh</button>
-    </div>
-    <table id="providers"><thead>
-      <tr><th>Provider</th><th>Model</th><th>Status</th><th>Error</th><th></th></tr>
-    </thead><tbody></tbody></table>
+  <div class="tabs">
+    <button type="button" class="tab active" data-tab="playground">Playground</button>
+    <button type="button" class="tab" data-tab="eval">Eval</button>
   </div>
 
-  <div class="card">
-    <div class="row">
-      <label>Provider
-        <select id="provider"></select>
-      </label>
-      <label style="flex:1">System (optional)
-        <input id="system" placeholder="You are a helpful assistant."
-               style="width:100%; box-sizing:border-box" />
-      </label>
+  <!-- PLAYGROUND PANEL -->
+  <div id="panel-playground" class="panel active">
+    <div class="card" style="margin-bottom:16px">
+      <div class="row" style="justify-content:space-between; align-items:center">
+        <strong>Providers</strong>
+        <button type="button" class="secondary" id="refresh">Refresh</button>
+      </div>
+      <table id="providers"><thead>
+        <tr><th>Provider</th><th>Model</th><th>Status</th><th>Error</th><th></th></tr>
+      </thead><tbody></tbody></table>
     </div>
-    <textarea id="prompt" placeholder="Ask anything — e.g. What is the current trend for Nifty 50?"></textarea>
-    <div class="row" style="margin-top:8px; justify-content:space-between">
-      <button id="send">Send</button>
-      <button id="all" class="secondary">Send to all available</button>
+
+    <div class="card">
+      <div class="row">
+        <label>Provider
+          <select id="provider"></select>
+        </label>
+        <label style="flex:1">System (optional)
+          <input id="system" placeholder="You are a helpful assistant."
+                 style="width:100%; box-sizing:border-box" />
+        </label>
+      </div>
+      <textarea id="prompt" placeholder="Ask anything — e.g. What is the current trend for Nifty 50?"></textarea>
+      <div class="row" style="margin-top:8px; justify-content:space-between">
+        <button type="button" id="send">Send</button>
+        <button type="button" id="all" class="secondary">Send to all available</button>
+      </div>
+      <div id="output"></div>
     </div>
-    <div id="output"></div>
+  </div>
+
+  <!-- EVAL PANEL -->
+  <div id="panel-eval" class="panel">
+    <div class="card" style="margin-bottom:16px">
+      <div class="row" style="align-items:center; justify-content:space-between">
+        <div class="row" style="align-items:center; margin:0; gap:12px">
+          <label>Provider
+            <select id="eval-provider"></select>
+          </label>
+          <label>Case
+            <select id="eval-case">
+              <option value="">— all cases —</option>
+            </select>
+          </label>
+        </div>
+        <div class="row" style="margin:0; gap:8px">
+          <button type="button" id="eval-run">Run Eval</button>
+          <button type="button" id="eval-run-all" class="secondary">Run All Models</button>
+        </div>
+      </div>
+      <div class="meta" style="margin-top:8px" id="eval-status"></div>
+    </div>
+    <div id="eval-output"></div>
   </div>
 
 <script>
 const $ = (s) => document.querySelector(s);
 const tbody = $("#providers tbody");
 const sel = $("#provider");
+const evalSel = $("#eval-provider");
 let providers = [];
 
+/* ── tabs ── */
+document.querySelectorAll(".tab").forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll(".tab,.panel").forEach(el => { el.classList.remove("active"); });
+    t.classList.add("active");
+    $(`#panel-${t.dataset.tab}`).classList.add("active");
+  };
+});
+
+/* ── providers ── */
 async function loadProviders() {
   const r = await fetch("/providers").then(r => r.json());
   providers = r.providers;
   tbody.innerHTML = "";
   sel.innerHTML = "";
+  evalSel.innerHTML = "";
   for (const p of providers) {
     const tr = document.createElement("tr");
     tr.innerHTML = `<td>${p.name}</td><td>${p.model}</td>
@@ -77,16 +145,19 @@ async function loadProviders() {
       <td style="color:#9ca3af; font-size:12px">${p.error || ''}</td>
       <td><button class="secondary" data-test="${p.name}">Test</button></td>`;
     tbody.appendChild(tr);
-    const opt = document.createElement("option");
-    opt.value = p.name; opt.textContent = `${p.name} — ${p.model}`;
-    if (!p.available) opt.textContent += " (down)";
-    sel.appendChild(opt);
+    const label = `${p.name} — ${p.model}${p.available ? '' : ' (down)'}`;
+    for (const s of [sel, evalSel]) {
+      const opt = document.createElement("option");
+      opt.value = p.name; opt.textContent = label;
+      s.appendChild(opt);
+    }
   }
   tbody.querySelectorAll("button[data-test]").forEach(b => {
     b.onclick = () => run(b.dataset.test, "pong", null, true);
   });
 }
 
+/* ── playground ── */
 function card(title) {
   const el = document.createElement("div");
   el.className = "card out";
@@ -125,7 +196,166 @@ $("#all").onclick = () => {
   const p = $("#prompt").value.trim(); if (!p) return;
   for (const x of providers) if (x.available) run(x.name, p, $("#system").value || null);
 };
-loadProviders();
+
+/* ── eval ── */
+async function loadEvalCases() {
+  try {
+    const r = await fetch("/eval/cases").then(r => r.json());
+    const casesSel = $("#eval-case");
+    casesSel.innerHTML = '<option value="">— all cases —</option>';
+    for (const c of r.cases) {
+      const opt = document.createElement("option");
+      opt.value = c.id;
+      opt.textContent = `[${c.category}] ${c.id} — ${c.question.slice(0,60)}…`;
+      casesSel.appendChild(opt);
+    }
+  } catch(e) { console.warn("eval cases load failed", e); }
+}
+
+function renderEvalResult(res) {
+  const passed = res.passed;
+  const badge = `<span class="pass-badge ${passed ? 'pass' : 'fail'}">${passed ? 'PASS' : 'FAIL'}</span>`;
+  const hits = res.any_hits?.length
+    ? `<div class="hits">✓ matched: ${res.any_hits.map(h => `<em>${escapeHtml(h)}</em>`).join(', ')}</div>` : '';
+  const err = res.error ? `<pre style="color:#f87171">${escapeHtml(res.error)}</pre>` : '';
+  return `
+    <div class="eval-card">
+      <div class="row" style="justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div>
+          <span class="badge warn">${escapeHtml(res.category)}</span>
+          <strong style="margin-left:6px">${escapeHtml(res.id)}</strong>
+        </div>
+        <div>${badge} <span class="meta">${res.latency_ms}ms · ${escapeHtml(res.model)}</span></div>
+      </div>
+      <div class="eval-question">${escapeHtml(res.question)}</div>
+      <div class="rubric">${escapeHtml(res.rubric || '')}</div>
+      ${hits}
+      ${err}
+      ${res.answer ? `<details style="margin-top:8px"><summary>Answer</summary><pre>${escapeHtml(res.answer)}</pre></details>` : ''}
+    </div>`;
+}
+
+$("#eval-run").onclick = async () => {
+  const provider = evalSel.value;
+  const caseId = $("#eval-case").value || undefined;
+  if (!provider) return;
+  const btn = $("#eval-run");
+  btn.disabled = true;
+  $("#eval-status").textContent = "Running…";
+  $("#eval-output").innerHTML = "";
+  try {
+    const r = await fetch("/eval/run", {
+      method:"POST", headers:{"content-type":"application/json"},
+      body: JSON.stringify({provider, case_id: caseId || null}),
+    }).then(r => r.json());
+    if (r.error) {
+      $("#eval-output").innerHTML = `<pre style="color:#f87171">${escapeHtml(r.error)}</pre>`;
+      return;
+    }
+    const passed = r.results.filter(x => x.passed).length;
+    const total = r.results.length;
+    $("#eval-status").innerHTML =
+      `<strong>${passed}/${total} passed</strong> · ${provider}`;
+    $("#eval-output").innerHTML = r.results.map(renderEvalResult).join("");
+  } catch(e) {
+    $("#eval-output").innerHTML = `<pre style="color:#f87171">${escapeHtml(String(e))}</pre>`;
+  } finally {
+    btn.disabled = false;
+  }
+};
+
+$("#eval-run-all").onclick = async () => {
+  const caseId = $("#eval-case").value || null;
+  const available = providers.filter(p => p.available);
+  if (!available.length) return;
+
+  const runBtn = $("#eval-run");
+  const allBtn = $("#eval-run-all");
+  runBtn.disabled = true;
+  allBtn.disabled = true;
+  $("#eval-output").innerHTML = "";
+
+  // Build comparison table skeleton with case rows × provider columns
+  const providerNames = available.map(p => p.name);
+  const casesResp = await fetch("/eval/cases").then(r => r.json());
+  const cases = caseId ? casesResp.cases.filter(c => c.id === caseId) : casesResp.cases;
+
+  // score[provider][caseId] = {passed, latency_ms, error}
+  const score = {};
+  for (const p of providerNames) score[p] = {};
+
+  function buildTable() {
+    const totalByProvider = {};
+    for (const p of providerNames) {
+      totalByProvider[p] = { passed: 0, total: 0 };
+      for (const c of cases) {
+        const s = score[p][c.id];
+        if (s !== undefined) {
+          totalByProvider[p].total++;
+          if (s.passed) totalByProvider[p].passed++;
+        }
+      }
+    }
+
+    const headerCells = providerNames.map(p => {
+      const t = totalByProvider[p];
+      const summary = t.total ? ` <span class="provider-progress">${t.passed}/${t.total}</span>` : "";
+      return `<th>${escapeHtml(p)}${summary}</th>`;
+    }).join("");
+
+    const rows = cases.map(c => {
+      const cells = providerNames.map(p => {
+        const s = score[p][c.id];
+        if (s === undefined) return `<td style="color:#555;text-align:center">…</td>`;
+        if (s.error) return `<td class="err-cell" title="${escapeHtml(s.error)}">ERR</td>`;
+        return `<td class="${s.passed ? 'pass-cell' : 'fail-cell'}">${s.passed ? '✓' : '✗'}<br><span style="font-size:10px">${s.latency_ms}ms</span></td>`;
+      }).join("");
+      return `<tr><td style="white-space:nowrap"><span class="badge warn">${escapeHtml(c.category)}</span> ${escapeHtml(c.id)}</td>${cells}</tr>`;
+    }).join("");
+
+    const totalRow = providerNames.map(p => {
+      const t = totalByProvider[p];
+      if (!t.total) return `<td style="text-align:center;color:#555">—</td>`;
+      const pct = Math.round(t.passed / t.total * 100);
+      return `<td style="text-align:center;font-weight:600;color:${t.passed===t.total?'#4ade80':t.passed>t.total/2?'#fbbf24':'#f87171'}">${t.passed}/${t.total} (${pct}%)</td>`;
+    }).join("");
+
+    return `<div class="card" style="overflow-x:auto">
+      <table class="compare-table" style="font-size:12px">
+        <thead><tr><th>Case</th>${headerCells}</tr></thead>
+        <tbody>${rows}</tbody>
+        <tfoot><tr><td><strong>Total</strong></td>${totalRow}</tr></tfoot>
+      </table>
+    </div>`;
+  }
+
+  // Run providers sequentially, updating table as each finishes
+  for (const p of providerNames) {
+    $("#eval-status").innerHTML = `Running <strong>${p}</strong>… (${providerNames.indexOf(p)+1}/${providerNames.length})`;
+    try {
+      const r = await fetch("/eval/run", {
+        method: "POST", headers: {"content-type": "application/json"},
+        body: JSON.stringify({provider: p.name || p, case_id: caseId}),
+      }).then(r => r.json());
+      for (const res of (r.results || [])) {
+        score[p][res.id] = {passed: res.passed, latency_ms: res.latency_ms, error: res.error || null};
+      }
+    } catch(e) {
+      for (const c of cases) score[p][c.id] = {passed: false, latency_ms: 0, error: String(e)};
+    }
+    $("#eval-output").innerHTML = buildTable();
+  }
+
+  const grand = providerNames.map(p => {
+    const vals = Object.values(score[p]);
+    return `${p}: ${vals.filter(v=>v.passed).length}/${vals.length}`;
+  }).join(" · ");
+  $("#eval-status").innerHTML = `<strong>Done</strong> · ${grand}`;
+  runBtn.disabled = false;
+  allBtn.disabled = false;
+};
+
+loadProviders().then(loadEvalCases);
 </script>
 </body>
 </html>

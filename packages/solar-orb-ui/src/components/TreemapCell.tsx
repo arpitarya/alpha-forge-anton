@@ -19,6 +19,11 @@ export interface TreemapCellProps {
   className?: string;
 }
 
+// Pixel-area thresholds for progressive disclosure
+const AREA_MICRO = 3000;   // only tint, no text
+const AREA_TINY  = 7000;   // symbol only, no sublabel/value
+const AREA_SMALL = 18000;  // symbol + change%, no sublabel
+
 /**
  * Hi-Fi `.tm-cell`. Designed to be absolutely positioned by a parent treemap
  * layout — pass `style={{ left, top, width, height }}`. Tint scales with
@@ -36,11 +41,21 @@ export function TreemapCell({
   onClick,
   className,
 }: TreemapCellProps) {
-  // Map |pnlPct| to a 0..40% tint mix.
-  const intensity = Math.min(40, Math.abs(pnlPct) * 18);
+  const w = (style as { width?: number })?.width ?? 0;
+  const h = (style as { height?: number })?.height ?? 0;
+  const area = w * h;
+
+  const isMicro = area < AREA_MICRO;
+  const isTiny  = area < AREA_TINY;
+  const isSmall = area < AREA_SMALL;
+
+  // Map |pnlPct| to a 4..38% tint mix — stronger signal at extremes.
+  const intensity = Math.min(38, 4 + Math.abs(pnlPct) * 4);
   const tone = pnlPct >= 0 ? "var(--green)" : "var(--red)";
   const bg = `color-mix(in srgb, ${tone} ${intensity}%, var(--surface))`;
   const isInteractive = !!onClick;
+
+  const pad = isTiny ? "p-1.5" : isSmall ? "p-2.5" : "p-3";
 
   return (
     <div
@@ -57,46 +72,56 @@ export function TreemapCell({
       style={{ ...style, background: bg }}
       className={twMerge(
         clsx(
-          "absolute flex flex-col justify-between overflow-hidden rounded-[var(--radius-sm)] p-3.5",
-          "border border-[color:var(--line-hi)]",
-          "transition-transform duration-300 hover:scale-[1.02] hover:z-10",
-          "hover:shadow-[0_0_40px_color-mix(in_srgb,var(--accent)_25%,transparent)]",
+          "absolute flex flex-col justify-between overflow-hidden rounded-[3px]",
+          "border border-[color:var(--line-hi)] border-opacity-40",
+          "transition-transform duration-200 hover:scale-[1.015] hover:z-10",
+          "hover:shadow-[0_0_28px_color-mix(in_srgb,var(--accent)_20%,transparent)]",
+          pad,
           isInteractive && "cursor-pointer",
           className,
         ),
       )}
     >
-      <div className="relative">
-        <div
-          className={clsx(
-            "font-semibold text-[color:var(--fg)]",
-            big ? "text-[22px]" : "text-base",
-          )}
-        >
-          {symbol}
-        </div>
-        {sublabel && (
-          <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--fg-3)]">
-            {sublabel}
+      {!isMicro && (
+        <>
+          <div className="relative min-h-0">
+            <div
+              className={clsx(
+                "truncate font-semibold leading-tight text-[color:var(--fg)]",
+                big ? "text-[18px]" : isTiny ? "text-[9px]" : isSmall ? "text-[11px]" : "text-[13px]",
+              )}
+            >
+              {symbol}
+            </div>
+            {!isTiny && !isSmall && sublabel && (
+              <div className="truncate font-mono text-[9px] uppercase tracking-[0.14em] text-[color:var(--fg-3)] opacity-70">
+                {sublabel}
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      {decoration && (
-        <div className="absolute right-2 top-2 opacity-50">{decoration}</div>
-      )}
-      <div className="flex items-end justify-between">
-        <div className="font-mono text-[13px] tabular-nums text-[color:var(--fg)]">
-          {value}
-        </div>
-        <div
-          className={clsx(
-            "font-mono text-[11px]",
-            pnlPct >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]",
+          {decoration && (
+            <div className="absolute right-1.5 top-1.5 opacity-40">{decoration}</div>
           )}
-        >
-          {change}
-        </div>
-      </div>
+          {!isTiny && (
+            <div className="flex items-end justify-between gap-1 min-h-0">
+              {!isSmall && (
+                <div className="truncate font-mono text-[11px] tabular-nums text-[color:var(--fg)] opacity-80">
+                  {value}
+                </div>
+              )}
+              <div
+                className={clsx(
+                  "font-mono tabular-nums ml-auto",
+                  isSmall ? "text-[9px]" : "text-[10px]",
+                  pnlPct >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]",
+                )}
+              >
+                {change}
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

@@ -44,7 +44,7 @@ export function Stat({
     <div
       className={twMerge(
         clsx(
-          "relative overflow-hidden rounded-[var(--radius-md)] p-5",
+          "relative overflow-hidden rounded-[var(--radius-md)] px-5 py-3",
           "bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)]",
           "border border-[color:var(--line)]",
           className,
@@ -66,7 +66,7 @@ export function Stat({
       <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-[color:var(--fg-3)]">
         {label}
       </div>
-      <div className="mt-1.5 text-3xl font-medium tracking-[-0.02em] text-[color:var(--fg)] tabular-nums">
+      <div className="mt-1 text-2xl font-medium tracking-[-0.02em] text-[color:var(--fg)] tabular-nums">
         {value}
       </div>
       {delta && (

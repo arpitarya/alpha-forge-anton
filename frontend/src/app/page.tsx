@@ -5,7 +5,6 @@ import {
   TerminalStats,
   TerminalTicker,
   TerminalTopBar,
-  TerminalVoice,
   WatchlistCard,
 } from "@/modules/dashboard";
 
@@ -14,9 +13,8 @@ export default function Home() {
     <AppShell
       header={<TerminalTopBar />}
       ticker={<TerminalTicker />}
-      footer={<TerminalVoice />}
     >
-      <div className="grid h-full grid-cols-[300px_1fr_300px] grid-rows-[1fr_auto] gap-3 min-h-0">
+      <div className="grid h-full grid-cols-[300px_1fr_300px] grid-rows-[1fr_108px] gap-3 min-h-0">
         {/* Left: Alpha Brief */}
         <div className="row-span-2 min-h-0">
           <AlphaBriefCard />

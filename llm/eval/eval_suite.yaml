@@ -1,0 +1,113 @@
+version: "1"
+description: "AlphaForge LLM eval suite — factoid + reasoning + edge-case questions"
+
+cases:
+  - id: nifty_pe
+    category: factoid
+    question: "What is the Nifty 50 PE ratio approximately right now?"
+    expected_keywords: ["PE", "ratio", "Nifty"]
+    expected_contains_any: ["20", "21", "22", "23", "24", "25"]
+    rubric: "Must mention a plausible PE number (range 18-30). Should note it is approximate."
+
+  - id: ltcg_tax
+    category: factoid
+    question: "What is the LTCG tax rate on equity mutual funds in India?"
+    expected_keywords: ["LTCG", "12.5", "1 lakh", "1,00,000"]
+    expected_contains_any: ["12.5%", "12.5 percent"]
+    rubric: "Must say 12.5% above ₹1L exemption. Should mention one-year holding period."
+
+  - id: nse_timing
+    category: factoid
+    question: "What time does NSE open and close?"
+    expected_keywords: ["9:15", "3:30", "AM", "PM"]
+    expected_contains_any: ["9:15", "9.15"]
+    rubric: "9:15 AM to 3:30 PM IST on weekdays."
+
+  - id: sip_basics
+    category: investment_plan
+    question: "I am 28 years old with no investments. I can save ₹10,000 per month. What should I do?"
+    expected_keywords: ["SIP", "equity", "mutual fund"]
+    expected_contains_any: ["SIP", "index fund", "equity fund", "mutual fund"]
+    rubric: |
+      Should recommend starting a monthly SIP in equity mutual funds.
+      Should mention long investment horizon is an advantage.
+      Should not give specific stock picks without more context.
+
+  - id: fd_vs_equity
+    category: investment_plan
+    question: "Should I move my FD savings to equity stocks?"
+    expected_keywords: ["risk", "equity", "FD", "fixed deposit"]
+    expected_contains_any: ["risk", "gradually", "allocation", "diversif"]
+    rubric: |
+      Must acknowledge risk difference between FD and equity.
+      Should suggest gradual allocation, not all-at-once switch.
+      Should not blindly say "yes invest everything".
+
+  - id: reliance_vs_tcs
+    category: stock_pick
+    question: "Compare RELIANCE and TCS for a 1-year investment horizon."
+    expected_keywords: ["RELIANCE", "TCS", "sector", "risk"]
+    expected_contains_any: ["conglomerate", "IT", "oil", "gas", "technology", "energy"]
+    rubric: |
+      Should contrast sectors (energy/conglomerate vs IT services).
+      Should mention each company's risk profile.
+      Should note that 1-year is short for equity.
+
+  - id: invalid_date
+    category: edge_case
+    question: "What was the Nifty 50 closing price on 32nd January 2025?"
+    expected_keywords: []
+    expected_contains_any: ["invalid", "doesn't exist", "no such date", "32nd", "not a valid"]
+    rubric: |
+      Must recognise 32nd January is not a real date.
+      Should say data is not available or the date is invalid.
+      Must NOT hallucinate a price.
+
+  - id: compound_calc
+    category: edge_case
+    question: "If I invest ₹1,00,000 today at 12% annual return compounded yearly for 10 years, what is the maturity value?"
+    expected_keywords: ["₹", "lakh", "crore"]
+    expected_contains_any: ["3,10", "3.10", "310", "3,10,584", "3.1 lakh"]
+    rubric: |
+      Answer should be approximately ₹3,10,585.
+      Must show working or at least the formula used.
+      Acceptable range: ₹3,05,000 – ₹3,15,000.
+
+  - id: penny_stock_circuit
+    category: factoid
+    question: "What is the circuit filter limit for penny stocks on NSE?"
+    expected_keywords: ["circuit", "5%", "10%", "20%"]
+    expected_contains_any: ["5%", "10%", "20%", "circuit limit", "circuit filter"]
+    rubric: |
+      Should mention SEBI-set circuit limits (5%, 10%, or 20% depending on stock category).
+      Should note the limit applies both ways (upper and lower).
+
+  - id: reliance_lot_size
+    category: factoid
+    question: "What is the lot size for RELIANCE futures on NSE?"
+    expected_keywords: ["lot", "RELIANCE", "futures"]
+    expected_contains_any: ["250", "500", "lot size"]
+    rubric: |
+      Lot size is 250 shares (as of early 2025).
+      Model should mention the number and that it can change with SEBI revision.
+      Acceptable if it says "approximately 250" or cites a recent revision.
+
+  - id: hdfc_vs_icici
+    category: stock_pick
+    question: "Between HDFC Bank and ICICI Bank, which is better for long-term holding?"
+    expected_keywords: ["HDFC", "ICICI", "bank", "NIM", "ROE"]
+    expected_contains_any: ["HDFC", "ICICI", "NPA", "ROE", "NIM", "management"]
+    rubric: |
+      Should compare fundamentals: NIM, ROE, NPA levels.
+      Must not give a definitive buy/sell recommendation without caveats.
+      Should mention both are quality franchises.
+
+  - id: adani_news
+    category: stock_news
+    question: "What is the latest news on Adani Group stocks?"
+    expected_keywords: ["Adani"]
+    expected_contains_any: ["Adani", "group", "port", "energy", "green"]
+    rubric: |
+      Model should acknowledge it may not have real-time data.
+      Should not hallucinate specific recent news headlines.
+      Can summarise known controversies and businesses.

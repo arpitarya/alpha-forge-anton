@@ -58,15 +58,6 @@ graphify-update:
 graphify-check:
     graphify check-update .
 
-# Install Playwright MCP server for Copilot browser integration
-setup-mcp:
-    @echo "🌐 Installing Playwright Chromium browser..."
-    npx playwright install chromium
-    @echo ""
-    @echo "✅ Playwright MCP ready — configured in .vscode/settings.json"
-    @echo "   Restart VS Code to activate the MCP server."
-    @echo "   Copilot can now open URLs, take screenshots, and inspect Chrome."
-
 # ── Full Stack ───────────────────────────────────
 
 # Start backend + frontend via Procfile (requires DB running)
@@ -119,12 +110,8 @@ frontend-install:
 
 # Run the standalone LLM provider playground (http://localhost:${LLM_PLAYGROUND_PORT})
 llm:
-    cd llm && uv run --with fastapi --with uvicorn --with python-dotenv \
-        uvicorn playground.server:app --host 127.0.0.1 --port ${LLM_PLAYGROUND_PORT} --reload
-
-# Probe every LLM provider once and print results (no server)
-llm-probe:
-    cd llm && uv run --with python-dotenv python -m playground.probe
+    -lsof -ti :${LLM_PLAYGROUND_PORT} | xargs kill -9 2>/dev/null || true
+    cd llm && uv run uvicorn playground.server:app --host 127.0.0.1 --port ${LLM_PLAYGROUND_PORT} --reload
 
 # ── Database / Infrastructure ────────────────────
 

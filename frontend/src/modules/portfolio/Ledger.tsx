@@ -54,7 +54,7 @@ export function Ledger({ holdings, query, sortBy, sortDir, onSort }: LedgerProps
                       }
                     }}
                     className={clsx(
-                      "border-b border-[color:var(--line-hi)] px-4 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-[color:var(--fg-3)] first:pl-6 last:pr-6",
+                      "border-b border-[color:var(--line-hi)] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-[color:var(--fg-3)] first:pl-6 last:pr-6",
                       c.align === "right" ? "text-right" : "text-left",
                       sortable && "cursor-pointer transition-colors hover:text-[color:var(--fg)]",
                       active && "text-[color:var(--accent)]",

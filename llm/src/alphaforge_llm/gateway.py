@@ -29,11 +29,15 @@ class LLMGateway:
         messages: list[Message],
         *,
         query_type: QueryType = QueryType.FACTOID,
+        preferred_provider: str | None = None,
         tools: list[ToolSchema] | None = None,
         confirmed: bool = False,
     ) -> ProviderResponse:
         available = await self._available_providers()
-        provider_name = self._router.pick(query_type, available)
+        if preferred_provider and preferred_provider in available:
+            provider_name = preferred_provider
+        else:
+            provider_name = self._router.pick(query_type, available)
         if not provider_name:
             raise RuntimeError("No providers available — check API keys")
 

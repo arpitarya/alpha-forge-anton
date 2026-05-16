@@ -8,7 +8,7 @@
 # ── Setup — granular ─────────────────────────────────────────────────────────
 ./setup.sh --prereqs      # Check/install pyenv, nvm, pnpm, uv
 ./setup.sh --venv         # Create .venv via `uv venv` (reads .python-version)
-./setup.sh --backend      # Sync the entire Python workspace (uv sync) + Playwright browsers
+./setup.sh --backend      # Sync the entire Python workspace (uv sync)
 ./setup.sh --frontend     # Frontend + workspace deps (pnpm) + build solar-orb-ui
 ./setup.sh --env          # Scaffold .env files from examples
 ./setup.sh --dirs         # Create log/data/model directories
@@ -49,9 +49,6 @@ docker compose -f infra/docker-compose.yml up -d                 # via OrbStack
 # ── Migrations ───────────────────────────────────────────────────────────────
 cd backend && uv run alembic upgrade head
 cd backend && uv run alembic revision --autogenerate -m "description"
-
-# ── Copilot Browser Integration ──────────────────────────────────────────────
-just setup-mcp                            # Install Playwright Chromium + MCP config
 
 # ── Repo Context MCP ─────────────────────────────────────────────────────────
 cd repo-context-mcp && pdm install                               # Install deps
