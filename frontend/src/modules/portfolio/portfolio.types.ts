@@ -79,7 +79,7 @@ export interface RebalanceResponseDTO {
   disclaimer: string;
 }
 
-export type SourceKind = "api" | "csv";
+export type SourceKind = "api";
 export type SourceStatus = "unconfigured" | "ready" | "syncing" | "error";
 
 export interface SourceInfoDTO {

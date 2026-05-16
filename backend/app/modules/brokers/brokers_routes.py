@@ -10,7 +10,6 @@ from app.core.deps import get_current_user
 
 from app.core.logging import get_logger
 from app.modules.brokers.aggregator import HoldingsAggregator
-from app.modules.brokers.base import SourceKind
 from app.modules.brokers.registry import SOURCES, get_source
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
@@ -35,8 +34,6 @@ async def sync_source(slug: str):
         src = get_source(slug)
     except KeyError as e:
         raise HTTPException(status.HTTP_404_NOT_FOUND, str(e)) from e
-    if src.kind != SourceKind.API:
-        raise HTTPException(400, f"{slug} is a CSV source — only API sources support sync.")
     try:
         holdings = await src.sync()
     except Exception as e:  # noqa: BLE001
@@ -55,8 +52,6 @@ async def sync_all_sources():
     results: dict[str, dict] = {}
 
     async def _sync_one(slug: str, src) -> None:  # type: ignore[no-untyped-def]
-        if src.kind != SourceKind.API:
-            return
         try:
             h = await src.sync()
             results[slug] = {"ok": True, "count": len(h)}

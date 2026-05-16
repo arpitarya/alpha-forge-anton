@@ -1,16 +1,16 @@
-"""Groww holdings — BrokerSource impl over CDP browser fetch + CSV cache.
+"""Groww holdings — BrokerSource impl over CDP browser fetch + on-disk cache.
 
 Auth flow: user logs in to groww.in inside the AlphaForge Chrome instance
 started with --remote-debugging-port=9299. `fetch()` attaches over CDP,
 runs the holdings API call inside the authenticated page, and caches the
-result to CSV. Subsequent `fetch()` calls within GROWW_REFETCH_SECONDS
-return from the CSV cache without re-launching Chrome.
+result to disk. Subsequent `fetch()` calls within GROWW_REFETCH_SECONDS
+return from the on-disk cache without re-launching Chrome.
 """
 
 from __future__ import annotations
 
+import os
 from datetime import UTC, datetime
-from typing import IO
 
 from app.core.logging import get_logger
 from app.modules.brokers.base import (
@@ -21,7 +21,6 @@ from app.modules.brokers.base import (
     SourceStatus,
     WalletBalance,
 )
-from app.modules.brokers.groww.groww_csv import GrowwCSVSource as _GrowwCSV
 from app.modules.brokers.groww.groww_cash_helper import capture_groww_cash
 from app.modules.brokers.groww.groww_dump import (
     is_csv_fresh,
@@ -92,10 +91,7 @@ class GrowwSource(BrokerSource):
         super().__init__()
         if all(env(k) for k in REQUIRED_ENV):
             self._status = SourceStatus.READY
-
-    def parse(self, stream: IO[bytes], filename: str | None = None) -> list[Holding]:
-        holdings = _GrowwCSV().parse(stream, filename)
-        return [h.model_copy(update={"source": self.slug}) for h in holdings]
+        self.refetch_seconds = int(os.getenv("GROWW_REFETCH_SECONDS", "3600"))
 
     async def fetch(self) -> list[Holding]:
         if is_csv_fresh():

@@ -79,7 +79,7 @@ Plus one notebook under `backend/notebooks/`:
 
 | File | Purpose |
 |------|---------|
-| `{slug}_dev.ipynb` | End-to-end REPL: sync, holdings, allocation, treemap, rebalance, wallet, standalone dump, reset. Mirror an existing notebook (e.g. `wintwealth_dev.ipynb`). |
+| `{slug}_dev.ipynb` | End-to-end REPL: sync, holdings, allocation, treemap, rebalance, wallet, standalone dump, reset. Mirror an existing notebook (e.g. `zerodha_dev.ipynb`). |
 
 Then register in `registry.py` (one line) and add the notebook (see step 4 below).
 
@@ -298,8 +298,8 @@ def _build_sources() -> dict[str, BrokerSource]:
         ZerodhaKiteSource(),
         GrowwSource(),
         AngelOneSource(),
-        IndMoneyCSVSource(),
-        TickerTapeCSVSource(),
+        IndMoneySource(),
+        TickerTapeSource(),
         MyBrokerSource(),    # ← add here
     ]
     return {s.slug: s for s in instances}
@@ -309,7 +309,7 @@ def _build_sources() -> dict[str, BrokerSource]:
 
 **3. Add a CSV fixture + parser test** — drop a sample export at `backend/tests/fixtures/broker_csvs/{slug}_holdings.csv` and add a `Test{Broker}Parser` class in `backend/tests/test_brokers.py`. The shared `BrokerSource.parse()` contract is what the `/sources/{slug}/upload` endpoint relies on.
 
-**4. Add a dev notebook (required)** — copy `backend/notebooks/wintwealth_dev.ipynb` to `backend/notebooks/{slug}_dev.ipynb` and search-and-replace the slug + auth instructions. The notebook must exercise, in order:
+**4. Add a dev notebook (required)** — copy an existing notebook (e.g. `backend/notebooks/zerodha_dev.ipynb`) to `backend/notebooks/{slug}_dev.ipynb` and search-and-replace the slug + auth instructions. The notebook must exercise, in order:
 
 1. `GET /portfolio/sources/{slug}` — confirm `status` transitions on env var presence
 2. `POST /portfolio/sources/{slug}/sync` — trigger the live fetch
@@ -327,69 +327,59 @@ Both `MODE = "http"` (against a live server) and `MODE = "in_process"` (FastAPI 
 
 ## IndMoney (`indmoney`)
 
-Multi-asset wealth platform (Indian stocks, mutual funds, US stocks, gold via SGBs/gold funds). CSV upload only.
+US-stocks holdings from INDmoney's DriveWealth-backed brokerage account. CDP browser fetch with an on-disk cache — same pattern as Groww / Angel One. No CSV upload path.
 
 | Detail | Value |
 |--------|-------|
 | Slug | `indmoney` |
-| Auth | CSV upload — no API |
-| Asset classes | `EQUITY` (default), `MUTUAL_FUND` (NAV/Units present), `GOLD` (name contains gold/sgb) |
-| Kind | `SourceKind.CSV` |
+| Auth | Manual login at `indmoney.com` inside the AlphaForge Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
+| `REQUIRED_ENV` | `INDMONEY_USER_ID` |
+| Asset classes | `EQUITY` (US stocks — fractional shares via DriveWealth) |
+| Kind | `SourceKind.API` |
+| Cache TTL | `INDMONEY_REFETCH_SECONDS` (default `3600`) |
+| **Trigger page** | `www.indmoney.com/investments/us-stocks/my-us-stocks` |
+| **Holdings endpoint** | `apixt-fz.indmoney.com/us-stocks-ext/api/v1/stocks/dw/user/account/holdings/?page=1&limit=N` |
+| **Holdings key** | `data` — list of `{ticker, name, quantity, avg_price, live_price, invested_amount, current_value, total_profit_loss, total_percent_change, sector}` |
+| **Field mapping** | `ticker→symbol`, `avg_price→avg_price`, `live_price→last_price`, `invested_amount→invested`, `current_value→current_value`, `total_profit_loss→pnl`, `total_percent_change→pnl_pct` |
+| **Helpers** | [`indmoney_source_helper.py`](../backend/app/modules/brokers/indmoney/indmoney_source_helper.py), [`indmoney_dump.py`](../backend/app/modules/brokers/indmoney/indmoney_dump.py) |
 
-**CSV column aliases** (flexible pick — export format varies):
+**Setup**:
 
-| Holding field | CSV columns tried |
-|---------------|------------------|
-| symbol | Instrument Name, Fund Name, Company Name, Symbol, ISIN |
-| isin | ISIN |
-| quantity | Quantity, Units, Qty |
-| avg_price | Average Price, Avg Buy Price, Purchase NAV, Buy Price |
-| last_price | Current Price, Current NAV, LTP, CMP |
-| invested | Invested Amount, Invested, Purchase Value |
-| current_value | Current Value, Portfolio Value, Market Value |
-| pnl | P&L, Returns, Gain/Loss, Gain Loss |
-
-**Export**: indmoney.com → Portfolio → Download / Export
-
-**Fixture**: `backend/tests/fixtures/broker_csvs/indmoney_holdings.csv`
+1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-chrome`.
+2. Log in to [indmoney.com](https://indmoney.com) inside that Chrome window.
+3. Set `INDMONEY_USER_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
 
 ---
 
 ## Ticker Tape (`tickertape`)
 
-Portfolio tracker (tickertape.in by Smallcase). Used primarily for gold ETFs and SGBs.
+Digital gold (SafeGold) balance from Ticker Tape. Captures two XHRs on page load and combines them into a single `DIGITAL_GOLD` holding. CDP browser fetch with an on-disk cache — same pattern as Groww / Angel One. No CSV upload path.
 
 | Detail | Value |
 |--------|-------|
 | Slug | `tickertape` |
-| Auth | CSV upload — no API |
-| Asset classes | `GOLD` (default, when name/ticker matches gold keywords), `EQUITY` (otherwise) |
-| Kind | `SourceKind.CSV` |
+| Auth | Manual login at `tickertape.in` inside the AlphaForge Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
+| `REQUIRED_ENV` | `TICKERTAPE_USER_ID` |
+| Asset classes | `GOLD` (single DIGITAL_GOLD holding, quantity in grams) |
+| Kind | `SourceKind.API` |
+| Cache TTL | `TICKERTAPE_REFETCH_SECONDS` (default `3600`) |
+| **Trigger page** | `www.tickertape.in/portfolio/digital-gold` |
+| **Profile endpoint** | `gold.api.tickertape.in/profile/v2` → `{goldBalance, averageBuyPrice, goldExponent, priceExponent}` |
+| **Price endpoint** | `gold.api.tickertape.in/price?type=BUY` → `{currentPrice}` (₹/gram) |
+| **Normalization** | `qty = goldBalance × 10^goldExponent`, `avg = averageBuyPrice × 10^priceExponent`, `ltp = currentPrice` |
+| **Helpers** | [`tickertape_source_helper.py`](../backend/app/modules/brokers/tickertape/tickertape_source_helper.py), [`tickertape_dump.py`](../backend/app/modules/brokers/tickertape/tickertape_dump.py) |
 
-**CSV column aliases**:
+**Setup**:
 
-| Holding field | CSV columns tried |
-|---------------|------------------|
-| symbol | Ticker, Symbol, Name, ISIN |
-| name | Name |
-| isin | ISIN |
-| quantity | Quantity, Qty, Units |
-| avg_price | Buy Avg., Buy Avg, Avg Buy Price, Average Price |
-| last_price | CMP, LTP, Current Price, Current Value Per Unit |
-| invested | Invested, Invested Amount, Buy Value |
-| current_value | Current Value, Market Value, Portfolio Value |
-| pnl | P&L, Returns, Gain/Loss |
-| pnl_pct | P&L %, P&L%, Returns % |
-
-**Export**: tickertape.in → Portfolio → Export CSV
-
-**Fixture**: `backend/tests/fixtures/broker_csvs/tickertape_gold.csv`
+1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-chrome`.
+2. Log in to [tickertape.in](https://tickertape.in) inside that Chrome window.
+3. Set `TICKERTAPE_USER_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
 
 ---
 
 ## Angel One (`angelone`)
 
-SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, 401s on long-lived JWTs). AlphaForge now attaches to the running Chrome over CDP and captures the XHR Angel One's own web app makes — same pattern as Groww and Wint Wealth.
+SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, 401s on long-lived JWTs). AlphaForge now attaches to the running Chrome over CDP and captures the XHR Angel One's own web app makes — same pattern as Groww.
 
 | Detail | Value |
 |--------|-------|
@@ -448,8 +438,8 @@ One notebook per broker lives in `backend/notebooks/`. Each exercises all
 | Zerodha | [zerodha_dev.ipynb](../backend/notebooks/zerodha_dev.ipynb) | CDP enctoken (`kite.zerodha.com`) |
 | Groww | [groww_dev.ipynb](../backend/notebooks/groww_dev.ipynb) | CDP browser fetch (`groww.in`) |
 | Angel One | [angelone_dev.ipynb](../backend/notebooks/angelone_dev.ipynb) | CDP browser fetch (`angelone.in`) |
-| IndMoney | TBD | CSV upload |
-| Ticker Tape | TBD | CSV upload |
+| IndMoney | [`indmoney_dev.ipynb`](../backend/notebooks/indmoney_dev.ipynb) | CDP browser fetch (`indmoney.com/investments/us-stocks/my-us-stocks`) |
+| Ticker Tape | [`tickertape_dev.ipynb`](../backend/notebooks/tickertape_dev.ipynb) | CDP browser fetch (`tickertape.in/portfolio/digital-gold`) |
 
 Every new broker must ship a notebook in this list — see step 4 of [Register the new source](#register-the-new-source).
 
@@ -464,11 +454,15 @@ discover the real endpoint URL and response key names.
 | Zerodha | [zerodha_probe.py](../probes/zerodha_probe.py) | Reads `enctoken` cookie → direct Kite OMS REST calls |
 | Groww | [groww_probe.py](../probes/groww_probe.py) | XHR interception on page reload |
 | Angel One | [angelone_probe.py](../probes/angelone_probe.py) | XHR interception across holdings + funds pages |
+| IndMoney | [indmoney_probe.py](../probes/indmoney_probe.py) | XHR interception on dashboard reload |
+| Ticker Tape | [tickertape_probe.py](../probes/tickertape_probe.py) | XHR interception on portfolio reload |
 
 ```bash
 uv run python probes/zerodha_probe.py
 uv run python probes/groww_probe.py
 uv run python probes/angelone_probe.py
+uv run python probes/indmoney_probe.py
+uv run python probes/tickertape_probe.py
 ```
 
 Zerodha's probe is different: rather than intercepting XHRs, it reads the

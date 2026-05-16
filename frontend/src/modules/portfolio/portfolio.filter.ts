@@ -16,7 +16,7 @@ export type SortDir = "asc" | "desc";
 
 export interface FilterState {
   query: string;
-  sector: string;
+  assetClass: string;
   pnl: PnLMode;
   sortBy: SortKey;
   sortDir: SortDir;
@@ -56,7 +56,7 @@ function matchQuery(h: HoldingDTO, q: string): boolean {
 
 export function applyFilter(rows: HoldingDTO[], f: FilterState): HoldingDTO[] {
   const filtered = rows.filter((h) => {
-    if (f.sector !== "All" && (h.sector ?? "Other") !== f.sector) return false;
+    if (f.assetClass !== "All" && h.asset_class !== f.assetClass) return false;
     if (f.pnl === "up" && h.pnl <= 0) return false;
     if (f.pnl === "dn" && h.pnl >= 0) return false;
     return matchQuery(h, f.query.trim());
@@ -72,11 +72,10 @@ export function applyFilter(rows: HoldingDTO[], f: FilterState): HoldingDTO[] {
   });
 }
 
-export function sectorCounts(rows: HoldingDTO[]): Record<string, number> {
+export function assetClassCounts(rows: HoldingDTO[]): Record<string, number> {
   const out: Record<string, number> = { All: rows.length };
   for (const r of rows) {
-    const k = r.sector ?? "Other";
-    out[k] = (out[k] ?? 0) + 1;
+    out[r.asset_class] = (out[r.asset_class] ?? 0) + 1;
   }
   return out;
 }

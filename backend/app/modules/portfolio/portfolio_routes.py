@@ -12,8 +12,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.core.deps import get_current_user
 from app.core.logging import get_logger
 from app.modules.brokers import SOURCES, HoldingsAggregator
-from app.modules.brokers.base import SourceKind
 from app.modules.brokers.brokers_routes import router as sources_router
+from app.modules.brokers.cash_routes import router as cash_router
 from app.modules.brokers.wallet_aggregator import list_wallets, sync_all, sync_one
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
@@ -24,12 +24,10 @@ _STALE_SECONDS = 3600
 
 
 async def _maybe_sync(source: str | None) -> None:
-    """Sync any API source whose cached data is missing or older than _STALE_SECONDS."""
+    """Sync any source whose cached data is missing or older than _STALE_SECONDS."""
     now = datetime.now(UTC)
     targets = [SOURCES[source]] if source else list(SOURCES.values())
     for src in targets:
-        if src.kind != SourceKind.API:
-            continue
         age = (
             (now - src._last_synced_at).total_seconds()
             if src._last_synced_at else float("inf")
@@ -106,3 +104,4 @@ async def post_sync_one_wallet(slug: str):
 
 
 router.include_router(sources_router, prefix="/sources")
+router.include_router(cash_router, prefix="/cash")

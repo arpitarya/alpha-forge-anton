@@ -2,10 +2,6 @@
 
 Holds one BrokerSource instance per slug. State (cached holdings + last
 sync timestamp) is in-memory; persistence to disk/DB is a layer above.
-
-Each slug has a single primary source — preferring API where free, falling
-back to CSV upload (the new API sources also implement `parse()` so the
-`/sources/{slug}/upload` endpoint still works as a manual fallback).
 """
 
 from __future__ import annotations
@@ -13,18 +9,18 @@ from __future__ import annotations
 from app.modules.brokers.angelone import AngelOneSource
 from app.modules.brokers.base import BrokerSource
 from app.modules.brokers.groww import GrowwSource
-from app.modules.brokers.indmoney import IndMoneyCSVSource
-from app.modules.brokers.tickertape import TickerTapeCSVSource
+from app.modules.brokers.indmoney import IndMoneySource
+from app.modules.brokers.tickertape import TickerTapeSource
 from app.modules.brokers.zerodha import ZerodhaKiteSource
 
 
 def _build_sources() -> dict[str, BrokerSource]:
     instances: list[BrokerSource] = [
-        ZerodhaKiteSource(),    # slug: zerodha
-        GrowwSource(),          # slug: groww      (CDP browser fetch)
-        AngelOneSource(),       # slug: angelone   (CDP browser fetch)
-        IndMoneyCSVSource(),    # slug: indmoney   (CSV upload)
-        TickerTapeCSVSource(),  # slug: tickertape (CSV upload; gold)
+        ZerodhaKiteSource(),   # slug: zerodha
+        GrowwSource(),         # slug: groww      (CDP browser fetch)
+        AngelOneSource(),      # slug: angelone   (CDP browser fetch)
+        IndMoneySource(),      # slug: indmoney   (CDP browser fetch)
+        TickerTapeSource(),    # slug: tickertape (CDP browser fetch; gold)
     ]
     return {s.slug: s for s in instances}
 

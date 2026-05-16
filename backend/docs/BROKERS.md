@@ -2,7 +2,7 @@
 
 > Where to download each broker's CSV, where credentials go, and how to exercise the API end-to-end.
 
-The portfolio module aggregates holdings from six sources. Each source is one of two kinds:
+The portfolio module aggregates holdings from five sources. Each source is one of two kinds:
 
 - **CSV** — user uploads an export. The broker offers no free API; this is the only legal path.
 - **API** — pulled programmatically. AlphaForge attaches over CDP to an authenticated Chrome session.
@@ -10,10 +10,10 @@ The portfolio module aggregates holdings from six sources. Each source is one of
 | Source | Slug | Kind | Where to get the data |
 |---|---|---|---|
 | Zerodha (equity + ETF + COIN MF) | `zerodha` | API | CDP session — log in to [kite.zerodha.com](https://kite.zerodha.com) in the AlphaForge Chrome (see below) |
-| Groww | `groww` | CSV | [groww.in](https://groww.in) → **Reports** → Holdings → Export (stocks **or** MF) |
-| Dezerv | `dezerv` | CSV | Dezerv app → **Statements** → Holdings export |
-| Wint Wealth | `wint-wealth` | CSV | Wint Wealth app → **Investments** → Export |
-| Angel One | `angel-one` | API | CDP web-app fetch — log in to [angelone.in](https://angelone.in) in the AlphaForge Chrome (see below) |
+| Groww | `groww` | API | CDP web-app fetch — log in to [groww.in](https://groww.in) in the AlphaForge Chrome |
+| Angel One | `angelone` | API | CDP web-app fetch — log in to [angelone.in](https://angelone.in) in the AlphaForge Chrome (see below) |
+| INDmoney (Indian equity, MF, US stocks, gold) | `indmoney` | API | CDP web-app fetch — log in to [indmoney.com](https://indmoney.com) in the AlphaForge Chrome |
+| Ticker Tape (SGBs, Gold ETFs, gold funds) | `tickertape` | API | CDP web-app fetch — log in to [tickertape.in](https://tickertape.in) in the AlphaForge Chrome |
 
 > Disclaimer: Not SEBI registered investment advice. This module reads holdings only — no orders are placed.
 
@@ -24,10 +24,10 @@ The portfolio module aggregates holdings from six sources. Each source is one of
 | Broker | Free public API? | Notes |
 |---|---|---|
 | Zerodha (Kite Connect) | **No** — ₹2000/mo per app | We fetch equity/ETF from `/oms/portfolio/holdings` and COIN MF from `/api/mf/holdings` via the enctoken captured over CDP. |
-| Groww | **No** | Reverse-engineered endpoints exist; we don't ship them (ToS). |
-| Dezerv | **No** public API. |
-| Wint Wealth | **No** public API. |
-| Angel One | **No** stable free API for personal use — we fetch via the authenticated web app over CDP. |
+| Groww | **No** | We attach to the authenticated web app over CDP and capture the holdings XHR. |
+| Angel One | **No** stable free API for personal use | We attach to the authenticated web app over CDP and capture the `/family/v2/superportfolio` XHR. |
+| INDmoney | **No** public API | CDP web-app fetch (XHR endpoint pending probe). |
+| Ticker Tape | **No** public API | CDP web-app fetch (XHR endpoint pending probe). |
 
 We chose the honest path: free + official + reproducible. As paid integrations get added (Kite Connect later, etc.), they slot into the same `BrokerSource` ABC without rewriting routes or the frontend.
 
@@ -35,7 +35,7 @@ We chose the honest path: free + official + reproducible. As paid integrations g
 
 ## Angel One — CDP setup
 
-SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, frequent 401s), so AlphaForge attaches to the running Chrome over CDP and captures the XHR the Angel One web app itself makes — same pattern as Groww and Wint Wealth.
+SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, frequent 401s), so AlphaForge attaches to the running Chrome over CDP and captures the XHR the Angel One web app itself makes — same pattern as Groww.
 
 1. Start Chrome with the debugging port (one-time):
 
@@ -75,7 +75,7 @@ All paths are prefixed with `/api/v1`.
 | `GET` | `/portfolio/rebalance` | Drift vs target allocation + suggestions. |
 | `GET` | `/portfolio/sources` | List all sources + status + last sync time. |
 | `GET` | `/portfolio/sources/{slug}` | Single source info. |
-| `GET` | `/portfolio/summary` | Legacy short shape (kept for backward compat). |
+| `GET` | `/portfolio/cash` | Cached free-cash snapshot for all cash-capable brokers (instant). |
 
 ### Write
 
@@ -84,6 +84,8 @@ All paths are prefixed with `/api/v1`.
 | `POST` | `/portfolio/sources/{slug}/upload` | multipart `file` | CSV ingest. Errors with 400 on API sources. |
 | `POST` | `/portfolio/sources/{slug}/sync`   | — | Pull from upstream. Errors with 400 on CSV sources. |
 | `POST` | `/portfolio/sources/{slug}/reset`  | — | Clear cached holdings (lets you re-upload). |
+| `POST` | `/portfolio/cash/sync` | — | Sync free-cash for all cash-capable brokers concurrently (Zerodha ~1 s, Groww/Angel One ~15–25 s each via CDP). |
+| `POST` | `/portfolio/cash/{slug}/sync` | — | Sync free-cash for one broker. Returns 422 if the slug does not support cash. |
 
 ### Unified `Holding` shape
 
@@ -105,6 +107,26 @@ All paths are prefixed with `/api/v1`.
   "as_of": "2026-04-26T17:31:00+00:00"
 }
 ```
+
+---
+
+## Auto-refetch
+
+On startup, the server launches a background task (`brokers/refetch.py`) that polls every 60 seconds and calls `sync()` on any source whose data is older than its TTL. TTL is controlled per-broker in `.env`:
+
+```ini
+ZERODHA_REFETCH_SECONDS=3600
+GROWW_REFETCH_SECONDS=3600
+ANGELONE_REFETCH_SECONDS=3600
+INDMONEY_REFETCH_SECONDS=3600
+TICKERTAPE_REFETCH_SECONDS=3600
+```
+
+**Key behaviour:**
+- The first sync is always manual (`POST /portfolio/sources/{slug}/sync`). Auto-refetch only kicks in after a source has been synced at least once.
+- Sources with status `UNCONFIGURED` or actively `SYNCING` are skipped.
+- Set `*_REFETCH_SECONDS=0` to disable auto-refetch for a specific broker.
+- `GET /portfolio/sources` returns `refetch_seconds` per source so the frontend can display when the next auto-sync is due.
 
 ---
 
@@ -175,7 +197,7 @@ See [docs/broker-source-integration.md](../../docs/broker-source-integration.md)
 1. Create the broker package under `backend/app/modules/brokers/<slug>/` — `{slug}_source.py`, `{slug}_source_helper.py`, `{slug}_dump.py`, `{slug}_csv.py`, and `__init__.py`. The source extends `BrokerSource`; set `slug`, `label`, `kind`, and override **either** `parse(stream, filename)` (CSV) **or** `async fetch()` (API).
 2. Register it in `backend/app/modules/brokers/registry.py` (one line in `_build_sources()`).
 3. Add a fixture CSV at `backend/tests/fixtures/broker_csvs/<slug>_holdings.csv` and a `Test<YourSource>Parser` class in `tests/test_brokers.py`.
-4. **Add a dev notebook** at `backend/notebooks/<slug>_dev.ipynb` — copy `wintwealth_dev.ipynb` and replace the slug. Required: this is how the source is verified end-to-end without booting the frontend.
+4. **Add a dev notebook** at `backend/notebooks/<slug>_dev.ipynb` — copy an existing notebook (e.g. `zerodha_dev.ipynb`) and replace the slug. Required: this is how the source is verified end-to-end without booting the frontend.
 5. Add an entry to the matrix at the top of this file.
 
 That's it — the routes, aggregator, treemap layout, frontend `<SourcesPanel/>`, and CLI tester all pick it up automatically.

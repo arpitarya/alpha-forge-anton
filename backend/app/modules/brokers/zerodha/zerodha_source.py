@@ -5,6 +5,7 @@ Disclaimer: Not SEBI registered investment advice.
 
 from __future__ import annotations
 
+import os
 from datetime import UTC, datetime
 
 import httpx
@@ -19,7 +20,6 @@ from app.modules.brokers.base import (
     SourceStatus,
     WalletBalance,
 )
-from app.modules.brokers.zerodha.zerodha_csv import ZerodhaCSVSource as _ZerodhaCSV
 from app.modules.brokers.zerodha.zerodha_dump import (
     is_csv_fresh,
     live_csv_path,
@@ -124,10 +124,7 @@ class ZerodhaKiteSource(BrokerSource):
         super().__init__()
         if all(env(k) for k in REQUIRED_ENV):
             self._status = SourceStatus.READY
-
-    def parse(self, stream, filename=None):  # type: ignore[override]
-        holdings = _ZerodhaCSV().parse(stream, filename)
-        return [h.model_copy(update={"source": self.slug}) for h in holdings]
+        self.refetch_seconds = int(os.getenv("ZERODHA_REFETCH_SECONDS", "3600"))
 
     async def fetch(self) -> list[Holding]:
         if is_csv_fresh():

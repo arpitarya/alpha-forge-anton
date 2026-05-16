@@ -25,7 +25,7 @@ export function SummaryBar({
   onReset,
 }: SummaryBarProps) {
   const pct = grandValue > 0 ? (shownValue / grandValue) * 100 : 0;
-  const hasFilter = filter.query.trim() || filter.sector !== "All" || filter.pnl !== "all";
+  const hasFilter = filter.query.trim() || filter.assetClass !== "All" || filter.pnl !== "all";
   return (
     <div className="flex flex-shrink-0 items-center gap-3.5 px-1 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--fg-3)]">
       <span>
@@ -37,10 +37,10 @@ export function SummaryBar({
             · source <b className="font-normal text-[color:var(--accent)]">{sourceLabel}</b>
           </>
         )}
-        {filter.sector !== "All" && (
+        {filter.assetClass !== "All" && (
           <>
             {" "}
-            · sector <b className="font-normal text-[color:var(--accent)]">{filter.sector}</b>
+            · class <b className="font-normal text-[color:var(--accent)]">{filter.assetClass}</b>
           </>
         )}
         {filter.pnl === "up" && (

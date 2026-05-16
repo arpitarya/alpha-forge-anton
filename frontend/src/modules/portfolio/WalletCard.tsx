@@ -13,11 +13,7 @@ export interface WalletCardProps {
 export function WalletCard({ wallet, active, onClick }: WalletCardProps) {
   const brand = walletBrand(wallet.slug);
   const pnlCls = wallet.pnl >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]";
-  const cashTxt = wallet.cash_available
-    ? fmtINRShort(wallet.cash)
-    : wallet.supports_cash
-      ? "—"
-      : "N/A";
+  const cashTxt = wallet.cash_available ? fmtINRShort(wallet.cash) : "—";
   const sub =
     wallet.slug === "all" ? `${wallet.holdings_count} POSITIONS` : wallet.label.toUpperCase();
   return (

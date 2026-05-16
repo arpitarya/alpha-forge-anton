@@ -6,6 +6,7 @@ import { TerminalTicker, TerminalTopBar, TerminalVoice } from "@/modules/dashboa
 import type { FilterState } from "@/modules/portfolio";
 import {
   applyFilter,
+  assetClassCounts,
   FilterBar,
   Ledger,
   PortfolioCompactBar,
@@ -13,7 +14,6 @@ import {
   RebalanceRail,
   SourceSpotlight,
   SummaryBar,
-  sectorCounts,
   Treemap,
   useHoldings,
   useWallets,
@@ -23,7 +23,7 @@ import { aggregateAll } from "@/modules/portfolio/wallet.utils";
 
 const DEFAULT_FILTER: FilterState = {
   query: "",
-  sector: "All",
+  assetClass: "All",
   pnl: "all",
   sortBy: "value",
   sortDir: "desc",
@@ -40,16 +40,16 @@ export default function PortfolioPage() {
   const { data: walletsData } = useWallets();
   const allHoldings = holdingsData?.holdings ?? [];
 
-  const sectors = useMemo(() => {
-    const set = new Set<string>(["All"]);
-    for (const h of allHoldings) set.add(h.sector ?? "Other");
-    return ["All", ...[...set].filter((s) => s !== "All").sort()];
+  const assetClasses = useMemo(() => {
+    const set = new Set<string>();
+    for (const h of allHoldings) set.add(h.asset_class);
+    return ["All", ...[...set].sort()];
   }, [allHoldings]);
 
-  // Sector counts respect search + pnl (so chips show what's left).
+  // Asset class counts respect search + pnl (so chips show what's left).
   const counts = useMemo(() => {
-    const base = applyFilter(allHoldings, { ...filter, sector: "All" });
-    return sectorCounts(base);
+    const base = applyFilter(allHoldings, { ...filter, assetClass: "All" });
+    return assetClassCounts(base);
   }, [allHoldings, filter]);
 
   const filtered = useMemo(() => applyFilter(allHoldings, filter), [allHoldings, filter]);
@@ -87,7 +87,7 @@ export default function PortfolioPage() {
             <FilterBar
               filter={filter}
               setFilter={setFilter}
-              sectors={sectors}
+              assetClasses={assetClasses}
               counts={counts}
               view={view}
               onViewChange={setView}

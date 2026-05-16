@@ -21,15 +21,17 @@ from typing import Any
 
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome, find_or_open_page
+from app.modules.brokers.broker_urls import (
+    ANGELONE_HOLDINGS_PAGE as HOLDINGS_PAGE,
+    ANGELONE_HOLDINGS_URL_NEEDLE as _HOLDINGS_URL_NEEDLE,
+    ANGELONE_LOGIN_URL as LOGIN_URL,
+)
 
 logger = get_logger("brokers.angelone_helper")
 
-HOLDINGS_PAGE = "https://www.angelone.in/trade/portfolio/equity"
-LOGIN_URL = "https://www.angelone.in/login"
 REQUIRED_ENV: tuple[str, ...] = ("ANGELONE_CLIENT_ID",)
 
 _CDP_WAIT_SECONDS = int(os.getenv("ANGELONE_LOGIN_CDP_WAIT", "180"))
-_HOLDINGS_URL_NEEDLE = "/family/v2/superportfolio"
 
 
 def env(key: str) -> str:

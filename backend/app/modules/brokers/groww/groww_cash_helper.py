@@ -14,22 +14,12 @@ from typing import Any
 
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome
+from app.modules.brokers.broker_urls import (
+    GROWW_BALANCE_PAGE as BALANCE_PAGE,
+    GROWW_BALANCE_URL_NEEDLES as _BALANCE_URL_NEEDLES,
+)
 
 logger = get_logger("brokers.groww_cash")
-
-BALANCE_PAGE = "https://groww.in/v2/balance"
-
-# Substrings that mark a balance/wallet API response. Groww doesn't keep a
-# single canonical endpoint — the dashboard hits several, any one of which
-# carries the available-cash figure.
-_BALANCE_URL_NEEDLES = (
-    "/api/user/v1/balance",
-    "/api/users/v1/balance",
-    "/api/user/v2/balance",
-    "/v1/api/user/balance",
-    "/userbalance/v1",
-    "/wallet/v1",
-)
 _CASH_KEYS = (
     "availableMargin", "availableBalance", "availableCash", "cashAvailable",
     "freeCash", "totalAvailableBalance", "withdrawableCash", "walletBalance",

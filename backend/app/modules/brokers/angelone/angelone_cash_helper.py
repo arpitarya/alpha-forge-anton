@@ -15,12 +15,12 @@ from typing import Any
 
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome
+from app.modules.brokers.broker_urls import (
+    ANGELONE_FUNDS_PAGE as FUNDS_PAGE,
+    ANGELONE_RMS_URL_NEEDLE as _RMS_URL_NEEDLE,
+)
 
 logger = get_logger("brokers.angelone_cash")
-
-FUNDS_PAGE = "https://www.angelone.in/trade/funds"
-
-_RMS_URL_NEEDLE = "/funds/v2/getRMSLimit"
 # Priority order: netAvailableFunds is the canonical "what you can actually
 # withdraw / use to place a new order". fundsForTrading and fundsAvailable are
 # fallbacks for older API shapes.

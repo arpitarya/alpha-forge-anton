@@ -1,7 +1,6 @@
 "use client";
 
 import { Badge, Text } from "@alphaforge/solar-orb-ui";
-import { useRef } from "react";
 import type { SourceInfoDTO } from "./portfolio.types";
 import { SourceActions } from "./SourceActions";
 import { SourceOtpDialog } from "./SourceOtpDialog";
@@ -9,7 +8,6 @@ import { formatTime, statusVariant } from "./sources.utils";
 import { useSourceRow } from "./useSourceRow.hook";
 
 export function SourceRow({ src, onAfter }: { src: SourceInfoDTO; onAfter: () => void }) {
-  const fileRef = useRef<HTMLInputElement>(null);
   const r = useSourceRow(src.slug, onAfter);
 
   return (
@@ -31,7 +29,7 @@ export function SourceRow({ src, onAfter }: { src: SourceInfoDTO; onAfter: () =>
         </Text>
       )}
 
-      <SourceActions src={src} fileRef={fileRef} r={r} />
+      <SourceActions src={src} r={r} />
 
       {r.otpVisible && (
         <SourceOtpDialog

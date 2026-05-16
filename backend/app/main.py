@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
+import asyncio
+from contextlib import asynccontextmanager, suppress
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,6 +15,8 @@ from app.core.config import settings
 from app.core.limiter import limiter
 from app.core.logging import get_logger, setup_logging
 from app.modules import api_router
+from app.modules.brokers.refetch import start_refetch_loop
+from app.modules.brokers.registry import SOURCES
 
 logger = get_logger("app")
 
@@ -22,7 +25,11 @@ logger = get_logger("app")
 async def lifespan(app: FastAPI):
     setup_logging()
     logger.info("AlphaForge starting up (env=%s)", settings.app_env)
+    refetch_task = await start_refetch_loop(SOURCES)
     yield
+    refetch_task.cancel()
+    with suppress(asyncio.CancelledError):
+        await refetch_task
     logger.info("AlphaForge shutting down")
 
 

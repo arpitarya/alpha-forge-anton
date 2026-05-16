@@ -12,7 +12,7 @@ export type PortfolioView = "tree" | "ledger";
 export interface FilterBarProps {
   filter: FilterState;
   setFilter: (next: Partial<FilterState>) => void;
-  sectors: string[];
+  assetClasses: string[];
   counts: Record<string, number>;
   view: PortfolioView;
   onViewChange: (v: PortfolioView) => void;
@@ -21,7 +21,7 @@ export interface FilterBarProps {
 export function FilterBar({
   filter,
   setFilter,
-  sectors,
+  assetClasses,
   counts,
   view,
   onViewChange,
@@ -31,10 +31,10 @@ export function FilterBar({
       <SearchBox value={filter.query} onChange={(q) => setFilter({ query: q })} />
       <div className="mx-[2px] self-stretch w-px bg-[color:var(--line)] my-[3px]" />
       <SectorChips
-        sectors={sectors}
-        value={filter.sector}
+        sectors={assetClasses}
+        value={filter.assetClass}
         counts={counts}
-        onChange={(s) => setFilter({ sector: s })}
+        onChange={(s) => setFilter({ assetClass: s })}
       />
       <div className="mx-[2px] self-stretch w-px bg-[color:var(--line)] my-[3px]" />
       <PnLToggle value={filter.pnl} onChange={(m) => setFilter({ pnl: m })} />

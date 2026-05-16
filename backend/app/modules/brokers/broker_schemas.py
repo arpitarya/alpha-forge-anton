@@ -21,7 +21,6 @@ class AssetClass(str, Enum):
 
 class SourceKind(str, Enum):
     API = "api"
-    CSV = "csv"
 
 
 class SourceStatus(str, Enum):
@@ -56,6 +55,7 @@ class SourceInfo(BaseModel):
     status: SourceStatus
     holdings_count: int = 0
     last_synced_at: datetime | None = None
+    refetch_seconds: int = 0
     error_message: str | None = None
     notes: str | None = None
 

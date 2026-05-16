@@ -56,7 +56,7 @@ Create exactly these files:
 
 - Use `_csv_helper.pick()` with 3-5 column name aliases per field (import, purchase price, avg buy, etc.) — CSVs vary between export versions.
 - Detect `asset_class` from a "Type" or "Category" column when the source holds multiple asset classes; default to the primary one.
-- Mirror the pattern in `indmoney_csv.py` or `groww_csv.py`.
+- Mirror the pattern in `groww_csv.py` or `angelone_csv.py`.
 
 **`__init__.py`** — barrel export only:
 ```python

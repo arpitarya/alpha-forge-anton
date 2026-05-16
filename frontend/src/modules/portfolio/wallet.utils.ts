@@ -6,7 +6,8 @@ export const WALLET_BRAND: Record<string, { grad: [string, string]; short: strin
   zerodha: { grad: ["#f17545", "#d24316"], short: "KT" },
   angelone: { grad: ["#3b6eea", "#0a3d8f"], short: "AO" },
   groww: { grad: ["#00d09c", "#00735c"], short: "GW" },
-  wintwealth: { grad: ["#b94aff", "#5a1080"], short: "WW" },
+  indmoney: { grad: ["#6366F1", "#3730A3"], short: "IN" },
+  tickertape: { grad: ["#F97316", "#C2410C"], short: "TT" },
   all: { grad: ["#FFB454", "#D45A1A"], short: "ALL" },
 };
 

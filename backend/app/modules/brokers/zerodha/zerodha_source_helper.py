@@ -18,16 +18,23 @@ import httpx
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome, cookie_value, find_or_open_page
 from app.modules.brokers._http import load_session, make_client, save_session
+from app.modules.brokers.broker_urls import (
+    ZERODHA_COIN_HOLDINGS_PATH,
+    ZERODHA_HOLDINGS_PATH,
+    ZERODHA_KITE_BASE,
+    ZERODHA_LOGIN_URL,
+    ZERODHA_MARGINS_PATH,
+)
 
 logger = get_logger("brokers.zerodha_kite_helper")
 
-KITE_BASE = "https://kite.zerodha.com"
-HOLDINGS_PATH = "/oms/portfolio/holdings"
-MARGINS_PATH = "/oms/user/margins"
-COIN_HOLDINGS_PATH = "/api/mf/holdings"
+KITE_BASE = ZERODHA_KITE_BASE
+HOLDINGS_PATH = ZERODHA_HOLDINGS_PATH
+MARGINS_PATH = ZERODHA_MARGINS_PATH
+COIN_HOLDINGS_PATH = ZERODHA_COIN_HOLDINGS_PATH
 REQUIRED_ENV: tuple[str, ...] = ("ZERODHA_USER_ID",)
 
-_LOGIN_URL = "https://kite.zerodha.com/"
+_LOGIN_URL = ZERODHA_LOGIN_URL
 _CDP_WAIT_SECONDS = int(os.getenv("ZERODHA_LOGIN_CDP_WAIT", "180"))
 
 

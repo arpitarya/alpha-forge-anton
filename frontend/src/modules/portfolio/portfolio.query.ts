@@ -41,13 +41,6 @@ export function useSources() {
   });
 }
 
-export function useUploadCsv() {
-  return useMutation({
-    mutationFn: (params: { slug: string; file: File }) =>
-      portfolioApi.uploadCsv(params.slug, params.file).then((r) => r.data),
-  });
-}
-
 export function useSyncSource() {
   return useMutation({
     mutationFn: (slug: string) => portfolioApi.syncSource(slug).then((r) => r.data),

@@ -19,11 +19,12 @@ from typing import Any
 
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome, find_or_open_page
+from app.modules.brokers.broker_urls import GROWW_HOLDINGS_PAGE, GROWW_LOGIN_URL
 
 logger = get_logger("brokers.groww_helper")
 
-HOLDINGS_PAGE = "https://groww.in/stocks/user/holdings"
-LOGIN_URL = "https://groww.in/login"
+HOLDINGS_PAGE = GROWW_HOLDINGS_PAGE
+LOGIN_URL = GROWW_LOGIN_URL
 REQUIRED_ENV: tuple[str, ...] = ("GROWW_USER_ID",)
 
 _CDP_WAIT_SECONDS = int(os.getenv("GROWW_LOGIN_CDP_WAIT", "180"))
@@ -187,8 +188,10 @@ def _to_float(value: Any) -> float:
         return 0.0
 
 
-_HOLDINGS_URL_NEEDLES = ("/v2/api/stocks/holdings/all", "/user/holdings")
-_LTP_URL_NEEDLE = "/tr_live/segment/CASH/latest_aggregated"
+from app.modules.brokers.broker_urls import (
+    GROWW_HOLDINGS_URL_NEEDLES as _HOLDINGS_URL_NEEDLES,
+    GROWW_LTP_URL_NEEDLE as _LTP_URL_NEEDLE,
+)
 
 
 async def _capture_holdings_via_reload(

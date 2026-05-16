@@ -4,12 +4,10 @@ import {
   useStartLogin,
   useSubmitOtp,
   useSyncSource,
-  useUploadCsv,
 } from "./portfolio.query";
 import { readErr } from "./sources.utils";
 
 export function useSourceRow(slug: string, onAfter: () => void) {
-  const upload = useUploadCsv();
   const sync = useSyncSource();
   const reset = useResetSource();
   const startLogin = useStartLogin();
@@ -19,16 +17,6 @@ export function useSourceRow(slug: string, onAfter: () => void) {
   const [otpVisible, setOtpVisible] = useState(false);
   const [otpCode, setOtpCode] = useState("");
   const [otpStatus, setOtpStatus] = useState<string | null>(null);
-
-  async function handleUpload(file: File) {
-    setError(null);
-    try {
-      await upload.mutateAsync({ slug, file });
-      onAfter();
-    } catch (e) {
-      setError(readErr(e));
-    }
-  }
 
   async function handleSync() {
     setError(null);
@@ -73,7 +61,6 @@ export function useSourceRow(slug: string, onAfter: () => void) {
   }
 
   return {
-    upload,
     sync,
     reset,
     startLogin,
@@ -85,7 +72,6 @@ export function useSourceRow(slug: string, onAfter: () => void) {
     setOtpCode,
     setOtpVisible,
     setOtpStatus,
-    handleUpload,
     handleSync,
     handleStartLogin,
     handleSubmitOtp,

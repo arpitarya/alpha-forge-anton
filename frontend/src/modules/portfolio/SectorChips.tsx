@@ -2,6 +2,21 @@
 
 import { clsx } from "clsx";
 
+const ASSET_CLASS_LABEL: Record<string, string> = {
+  equity: "Equity",
+  mutual_fund: "MF",
+  etf: "ETF",
+  bond: "Bond",
+  gold: "Gold",
+  crypto: "Crypto",
+  cash: "Cash",
+  other: "Other",
+};
+
+function fmtLabel(s: string): string {
+  return s === "All" ? "All" : (ASSET_CLASS_LABEL[s] ?? s);
+}
+
 export interface SectorChipsProps {
   sectors: string[];
   value: string;
@@ -37,7 +52,7 @@ export function SectorChips({ sectors, value, counts, onChange }: SectorChipsPro
                 : "border-[color:var(--line)] text-[color:var(--fg-3)] hover:border-[color:var(--line-hi)] hover:bg-[color:color-mix(in_srgb,var(--accent)_4%,transparent)] hover:text-[color:var(--fg)]",
             )}
           >
-            <span>{s}</span>
+            <span>{fmtLabel(s)}</span>
             <span
               className={clsx(
                 "rounded-[3px] px-1.5 py-[1px] text-[9px] tracking-normal tabular-nums",

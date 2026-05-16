@@ -1,16 +1,16 @@
-"""Angel One holdings — BrokerSource impl over CDP browser fetch + CSV cache.
+"""Angel One holdings — BrokerSource impl over CDP browser fetch + on-disk cache.
 
 Auth flow: user logs in to angelone.in inside the AlphaForge Chrome instance
 started with --remote-debugging-port=9299. `fetch()` attaches over CDP, runs
 the holdings API call inside the authenticated page, and caches the result to
-CSV. Subsequent `fetch()` calls within ANGELONE_REFETCH_SECONDS return from
-the CSV cache without re-launching Chrome.
+disk. Subsequent `fetch()` calls within ANGELONE_REFETCH_SECONDS return from
+the on-disk cache without re-launching Chrome.
 """
 
 from __future__ import annotations
 
+import os
 from datetime import UTC, datetime
-from typing import IO
 
 from app.core.logging import get_logger
 from app.modules.brokers.angelone.angelone_cash_helper import capture_angelone_cash
@@ -25,7 +25,6 @@ from app.modules.brokers.angelone.angelone_source_helper import (
     env,
     fetch_holdings_via_browser,
 )
-from app.modules.brokers.angelone.angelone_csv import AngelOneCSVSource as _AngelOneCSV
 from app.modules.brokers.base import (
     AssetClass,
     BrokerSource,
@@ -87,10 +86,7 @@ class AngelOneSource(BrokerSource):
         super().__init__()
         if all(env(k) for k in REQUIRED_ENV):
             self._status = SourceStatus.READY
-
-    def parse(self, stream: IO[bytes], filename: str | None = None) -> list[Holding]:
-        holdings = _AngelOneCSV().parse(stream, filename)
-        return [h.model_copy(update={"source": self.slug}) for h in holdings]
+        self.refetch_seconds = int(os.getenv("ANGELONE_REFETCH_SECONDS", "3600"))
 
     async def fetch(self) -> list[Holding]:
         if is_csv_fresh():
