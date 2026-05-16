@@ -20,11 +20,6 @@ from app.modules.brokers.broker_urls import (
 )
 
 logger = get_logger("brokers.groww_cash")
-_CASH_KEYS = (
-    "availableMargin", "availableBalance", "availableCash", "cashAvailable",
-    "freeCash", "totalAvailableBalance", "withdrawableCash", "walletBalance",
-    "currentBalance",
-)
 
 
 def _to_float(v: Any) -> float:
@@ -35,19 +30,11 @@ def _to_float(v: Any) -> float:
 
 
 def _scan_for_cash(node: Any) -> float | None:
-    """DFS through arbitrary JSON, returning the first cash-shaped value found."""
-    stack: list[Any] = [node]
-    while stack:
-        cur = stack.pop()
-        if isinstance(cur, dict):
-            for k in _CASH_KEYS:
-                if k in cur and isinstance(cur[k], (int, float, str)):
-                    val = _to_float(cur[k])
-                    if val:
-                        return val
-            stack.extend(cur.values())
-        elif isinstance(cur, list):
-            stack.extend(cur)
+    """Pluck CASH.value from /margin/user_margin_details — label 'Cash'."""
+    if isinstance(node, dict):
+        cash = node.get("CASH")
+        if isinstance(cash, dict) and "value" in cash:
+            return _to_float(cash["value"])
     return None
 
 

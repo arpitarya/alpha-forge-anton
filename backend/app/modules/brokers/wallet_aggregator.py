@@ -48,6 +48,11 @@ def _aggregate_holdings(slug: str) -> tuple[float, float, float, int]:
 def _build_one(slug: str) -> WalletInfo:
     src = SOURCES[slug]
     bal: WalletBalance | None = src.cash
+    if bal is None and getattr(src, "supports_cash", False):
+        from app.modules.brokers.cash_dump import read_cached_cash
+        bal = read_cached_cash(slug)
+        if bal:
+            src._cash = bal
     cv, inv, pnl, count = _aggregate_holdings(slug)
     pnl_pct = round((pnl / inv * 100) if inv else 0.0, 2)
     return WalletInfo(

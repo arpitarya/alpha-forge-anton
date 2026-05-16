@@ -16,14 +16,9 @@ GROWW_HOLDINGS_PAGE = "https://groww.in/stocks/user/holdings"
 GROWW_LOGIN_URL = "https://groww.in/login"
 GROWW_HOLDINGS_URL_NEEDLES = ("/v2/api/stocks/holdings/all", "/user/holdings")
 GROWW_LTP_URL_NEEDLE = "/tr_live/segment/CASH/latest_aggregated"
-GROWW_BALANCE_PAGE = "https://groww.in/v2/balance"
+GROWW_BALANCE_PAGE = "https://groww.in/user/balance/inr"
 GROWW_BALANCE_URL_NEEDLES = (
-    "/api/user/v1/balance",
-    "/api/users/v1/balance",
-    "/api/user/v2/balance",
-    "/v1/api/user/balance",
-    "/userbalance/v1",
-    "/wallet/v1",
+    "/margin/user_margin_details",
 )
 
 # ── Angel One ─────────────────────────────────────────────────────────────────
@@ -37,6 +32,8 @@ ANGELONE_RMS_URL_NEEDLE = "/funds/v2/getRMSLimit"
 INDMONEY_HOLDINGS_PAGE = "https://www.indmoney.com/investments/us-stocks/my-us-stocks"
 INDMONEY_LOGIN_URL = "https://www.indmoney.com/login"
 INDMONEY_HOLDINGS_URL_NEEDLE = "/stocks/dw/user/account/holdings"
+INDMONEY_BALANCE_PAGE = INDMONEY_HOLDINGS_PAGE
+INDMONEY_BALANCE_URL_NEEDLE = "/stocks/dw/user/account/basic"
 
 # ── Ticker Tape ───────────────────────────────────────────────────────────────
 TICKERTAPE_GOLD_PAGE = "https://www.tickertape.in/portfolio/digital-gold"

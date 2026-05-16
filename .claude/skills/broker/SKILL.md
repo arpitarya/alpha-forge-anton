@@ -72,8 +72,16 @@ Create all six files listed in `docs/broker-source-integration.md`:
 - `{slug}_dump.py` — TTL wrappers (copy template from docs, replace slug)
 - `{slug}_source.py` — BrokerSource subclass (kind=API), `fetch()` + `parse()` delegation
 - `{slug}_csv.py` — CSV-upload parser fallback
+- `{slug}_cash_helper.py` — ONLY if `supports_cash = True`; CDP capture of the broker's balance XHR (mirror `groww_cash_helper.py` or `angelone_cash_helper.py`)
 
 Use the templates verbatim from `docs/broker-source-integration.md` — replace `mybroker`/`MyBroker` with the actual slug/class name.
+
+**Cash support (only if the broker exposes free cash):**
+1. Set `supports_cash = True` on the source class.
+2. Set `self.refetch_seconds = int(os.getenv("{SLUG}_REFETCH_SECONDS", "3600"))` in `__init__`.
+3. Implement `async def fetch_cash(self) -> WalletBalance` — returns `WalletBalance(source=self.slug, cash=…, currency="INR", as_of=datetime.now(UTC), available=True)`.
+4. Add the balance page URL + XHR needle to `broker_urls.py` (e.g. `{SLUG}_BALANCE_PAGE`, `{SLUG}_BALANCE_URL_NEEDLES`).
+5. Cache + freshness is handled automatically by `cash_dump.py` — do **not** write your own on-disk cache.
 
 **Step 3 — Wire into registry**
 
@@ -89,14 +97,32 @@ Add `"{slug}": "{slug}_holdings.csv"` to `FIXTURE_MAP` in `backend/scripts/dev_b
 
 Create `backend/tests/fixtures/broker_csvs/{slug}_holdings.csv` with 3-5 representative rows using the column headers the user described. Cover at least two asset classes if the source holds multiple.
 
-**Step 6 — Docs update**
+**Step 6 — Add XHR probes (API kind only)**
+
+Create `probes/{slug}_probe.py` for the holdings XHR. If `supports_cash = True`, also create `probes/{slug}_cash_probe.py` mirroring `probes/groww_cash_probe.py` (CDP) or `probes/zerodha_cash_probe.py` (HTTP). The cash probe must print the exact field path so future code changes are auditable.
+
+**Step 7 — Add a dev notebook**
+
+Copy an existing notebook (e.g. `backend/notebooks/zerodha_dev.ipynb`) to `backend/notebooks/{slug}_dev.ipynb`. The notebook must exercise — in order:
+1. `GET /portfolio/sources/{slug}`
+2. `POST /portfolio/sources/{slug}/sync`
+3. `POST /portfolio/sources/{slug}/upload` (CSV fallback)
+4. `GET /portfolio/holdings?source={slug}` + allocation
+5. `GET /portfolio/treemap?source={slug}`
+6. `GET /portfolio/rebalance?source={slug}`
+7. `GET /portfolio/cash` (cached snapshot) + `POST /portfolio/cash/{slug}/sync` (live sync) — only if `supports_cash = True`. If not supported, include a section that asserts `POST /portfolio/cash/{slug}/sync` returns 422.
+8. Standalone `dump_{slug}()` call
+9. Cache reset
+
+**Step 8 — Docs update**
 
 In `docs/broker-source-integration.md`:
 - Add a `## {Label} ({slug})` section after Angel One with the slug, auth kind, REQUIRED_ENV (if API), asset classes, and field mapping.
-- Add the broker to the Dev notebooks table (even if the notebook doesn't exist yet — mark it TBD).
+- Add the broker to the Dev notebooks table.
 - If API kind, add a probe script entry to the XHR Probes table.
+- If `supports_cash = True`, add a row to the cash-endpoints table (balance page URL + XHR needle + field path).
 
-**Step 7 — Confirm**
+**Step 9 — Confirm**
 
 Print the list of files created/modified and the new registry line. Tell the user what to do next (upload a CSV, or set env vars and log in to Chrome).
 
@@ -144,7 +170,10 @@ After confirmation:
 2. Remove the import and instance line from `backend/app/modules/brokers/registry.py`.
 3. Remove the entry from `FIXTURE_MAP` in `backend/scripts/dev_brokers.py`.
 4. Delete `backend/tests/fixtures/broker_csvs/{slug}_holdings.csv` if it exists.
-5. Delete `probes/{slug}_probe.py` if it exists.
+5. Delete `probes/{slug}_probe.py` and `probes/{slug}_cash_probe.py` if they exist.
+6. Delete `backend/notebooks/{slug}_dev.ipynb` if it exists.
+7. Remove `{SLUG}_BALANCE_PAGE` / `{SLUG}_BALANCE_URL_NEEDLES` / `{SLUG}_REFETCH_SECONDS` references from `broker_urls.py` and `.env.cred.example`.
+8. Remove the broker's row from `.alpha-forge/portfolio-dumps/broker-cash-live.csv` if it has one.
 
 **Step 3 — Docs**
 

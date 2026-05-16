@@ -9,9 +9,18 @@ Subsequent `fetch()` calls within INDMONEY_REFETCH_SECONDS return from cache.
 from __future__ import annotations
 
 import os
+from datetime import UTC, datetime
 
 from app.core.logging import get_logger
-from app.modules.brokers.base import AssetClass, BrokerSource, Holding, SourceKind, SourceStatus
+from app.modules.brokers.base import (
+    AssetClass,
+    BrokerSource,
+    Holding,
+    SourceKind,
+    SourceStatus,
+    WalletBalance,
+)
+from app.modules.brokers.indmoney.indmoney_cash_helper import capture_indmoney_cash
 from app.modules.brokers.indmoney.indmoney_dump import (
     is_csv_fresh,
     live_csv_path,
@@ -46,6 +55,7 @@ def _holding_from_row(r: dict, slug: str) -> Holding:
         quantity=qty, avg_price=avg, last_price=ltp,
         invested=inv, current_value=cur, pnl=pnl,
         pnl_pct=pnl_pct,
+        currency="USD",
         exchange=r.get("exchange") or "NYSE",
         sector=r.get("sector") or None,
     )
@@ -55,6 +65,7 @@ class IndMoneySource(BrokerSource):
     slug = "indmoney"
     label = "INDmoney"
     kind = SourceKind.API
+    supports_cash = True
     notes = (
         "Manual login: log in to indmoney.com inside the AlphaForge Chrome "
         "(started with --remote-debugging-port=9299). AlphaForge never stores "
@@ -85,3 +96,10 @@ class IndMoneySource(BrokerSource):
         out = [_holding_from_row(r, self.slug) for r in rows]
         logger.info("INDmoney: fetched %d holdings → cached to disk", len(out))
         return out
+
+    async def fetch_cash(self) -> WalletBalance:
+        cash = await capture_indmoney_cash()
+        return WalletBalance(
+            source=self.slug, currency="USD", cash=round(cash, 2),
+            as_of=datetime.now(UTC), available=True,
+        )

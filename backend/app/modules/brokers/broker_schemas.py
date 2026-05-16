@@ -43,6 +43,7 @@ class Holding(BaseModel):
     current_value: float
     pnl: float
     pnl_pct: float
+    currency: str = "INR"
     sector: str | None = None
     exchange: str | None = None
     as_of: datetime = Field(default_factory=lambda: datetime.now(UTC))

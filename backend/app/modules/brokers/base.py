@@ -54,12 +54,9 @@ class BrokerSource(ABC):
         return self._cash
 
     async def sync_cash(self) -> WalletBalance:
-        try:
-            bal = await self.fetch_cash()
-        except Exception as e:
-            bal = WalletBalance(source=self.slug, available=False, error=str(e))
-        self._cash = bal
-        return bal
+        from app.modules.brokers.cash_dump import cached_sync_cash
+        self._cash = await cached_sync_cash(self)
+        return self._cash
 
     async def sync(self) -> list[Holding]:
         self._status = SourceStatus.SYNCING

@@ -20,10 +20,16 @@ logger = get_logger("routes.cash")
 _DISCLAIMER = "Not SEBI registered investment advice."
 
 
+def _as_cash(w) -> dict:  # type: ignore[no-untyped-def]
+    d = w.model_dump(mode="json")
+    d["source"] = d.pop("slug")
+    return d
+
+
 @router.get("")
 async def get_cash():
     """Cached free-cash state — no sync triggered, always instant."""
-    cash = [w.model_dump(mode="json") for w in list_wallets() if w.supports_cash]
+    cash = [_as_cash(w) for w in list_wallets() if w.supports_cash]
     return {"cash": cash, "disclaimer": _DISCLAIMER}
 
 
@@ -36,7 +42,7 @@ async def sync_all_cash():
     """
     refreshed = await sync_all()
     cash = [
-        w.model_dump(mode="json")
+        _as_cash(w)
         for slug, w in refreshed.items()
         if getattr(SOURCES.get(slug), "supports_cash", False)
     ]
@@ -58,4 +64,4 @@ async def sync_one_cash(slug: str):
     except Exception as e:
         logger.exception("Cash sync failed for %s", slug)
         raise HTTPException(400, f"Cash sync failed: {e}") from e
-    return {"cash": wallet.model_dump(mode="json"), "disclaimer": _DISCLAIMER}
+    return {"cash": _as_cash(wallet), "disclaimer": _DISCLAIMER}

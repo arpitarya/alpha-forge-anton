@@ -64,24 +64,28 @@ BrokerSource.sync()          (base.py — sets status SYNCING → READY / ERROR)
 
 ## File checklist for a new broker
 
-Create these six files under `backend/app/modules/brokers/{slug}/`:
+Create these files under `backend/app/modules/brokers/{slug}/`:
 
-| File | Purpose | Line budget |
-|------|---------|------------|
-| `__init__.py` | barrel export of public classes | ≤ 10 |
-| `{slug}_source_helper.py` | REQUIRED_ENV, auth, raw data fetch | ≤ 100 |
-| `{slug}_dump.py` | TTL wrappers + standalone CLI | ≤ 70 |
-| `{slug}_source.py` | `BrokerSource` subclass | ≤ 100 |
-| `{slug}_csv.py` | CSV-upload parser (may delegate to `_GrowwCSV` pattern) | ≤ 60 |
-| `{slug}_routes.py` | (optional) broker-specific extra endpoints | ≤ 50 |
+| File | Purpose | Line budget | Required? |
+|------|---------|------------|-----------|
+| `__init__.py` | barrel export of public classes | ≤ 10 | yes |
+| `{slug}_source_helper.py` | REQUIRED_ENV, auth, raw data fetch | ≤ 100 | yes |
+| `{slug}_dump.py` | TTL wrappers + standalone CLI | ≤ 70 | yes |
+| `{slug}_source.py` | `BrokerSource` subclass | ≤ 100 | yes |
+| `{slug}_csv.py` | CSV-upload parser (may delegate to `_GrowwCSV` pattern) | ≤ 60 | yes |
+| `{slug}_cash_helper.py` | CDP/HTTP capture of free-cash XHR | ≤ 100 | only if `supports_cash = True` |
+| `{slug}_routes.py` | broker-specific extra endpoints | ≤ 50 | optional |
 
-Plus one notebook under `backend/notebooks/`:
+Plus these outside the module dir:
 
-| File | Purpose |
-|------|---------|
-| `{slug}_dev.ipynb` | End-to-end REPL: sync, holdings, allocation, treemap, rebalance, wallet, standalone dump, reset. Mirror an existing notebook (e.g. `zerodha_dev.ipynb`). |
+| File | Purpose | Required? |
+|------|---------|-----------|
+| `backend/notebooks/{slug}_dev.ipynb` | End-to-end REPL — see step 4 below | yes |
+| `backend/tests/fixtures/broker_csvs/{slug}_holdings.csv` | 3-5 representative rows | yes |
+| `probes/{slug}_probe.py` | XHR probe for holdings | API kinds only |
+| `probes/{slug}_cash_probe.py` | XHR/HTTP probe for free cash | only if `supports_cash = True` |
 
-Then register in `registry.py` (one line) and add the notebook (see step 4 below).
+Then register in `registry.py` (one line), add the env var(s) to `.env.cred.example`, and add URL/needle constants to `broker_urls.py` (cash brokers also add `{SLUG}_BALANCE_PAGE`, `{SLUG}_BALANCE_URL_NEEDLES`).
 
 ---
 
@@ -262,27 +266,27 @@ A source can optionally expose its free-cash figure to power the Portfolio
 wallet strip. To opt in:
 
 1. Set the class attribute `supports_cash = True`.
-2. Override `async def fetch_cash(self) -> WalletBalance` — return a
-   `WalletBalance(source=self.slug, cash=…, currency="INR", as_of=now)`.
-3. The base class wraps it in `sync_cash()` which catches exceptions and
-   stores an "unavailable" balance so a Kite/SmartAPI hiccup never breaks
-   the wallets endpoint.
+2. Set `self.refetch_seconds = int(os.getenv("{SLUG}_REFETCH_SECONDS", "3600"))` in `__init__` — TTL for the on-disk cache.
+3. Override `async def fetch_cash(self) -> WalletBalance` — return a `WalletBalance(source=self.slug, cash=…, currency="INR", as_of=now, available=True)`.
+4. The base class wraps it in `sync_cash()` which goes through `cash_dump.cached_sync_cash` — that consults the per-broker CSV cache (TTL-gated) before hitting the network, and persists fresh results to `<dump_dir>/broker-cash-live.csv`.
 
 Patterns in use:
 
-| Source | Endpoint / mechanism |
-|--------|----------------------|
-| Zerodha | `GET /oms/user/margins` — reuses the Kite enctoken; reads `data.equity.available.cash`. Force-relogin on 401/403 |
-| Angel One | `angelone/angelone_cash_helper.py` — opens a fresh tab at `trade.angelone.in/funds/funds` over CDP, listens for the funds/RMS XHR, DFS-scans the JSON for `availablecash` / `availableMargin` / `net` / `availablelimitmargin` |
-| Groww | `groww/groww_cash_helper.py` — opens a fresh tab at `groww.in/v2/balance` over CDP, registers a response listener on the dashboard's own XHR (`/api/user/v*/balance`, `/userbalance/v1`, etc.), DFS-scans the JSON for any `availableMargin` / `availableBalance` / `walletBalance` field, then closes the tab |
-| IndMoney | not supported (`supports_cash = False`; wallet card shows "Cash N/A") |
-| Ticker Tape | not supported (`supports_cash = False`; wallet card shows "Cash N/A") |
+| Source | Balance page | XHR needle | Field path |
+|--------|--------------|------------|-----------|
+| Zerodha | n/a (direct HTTP) | `GET /oms/user/margins` (enctoken) | `data.equity.available.cash` |
+| Angel One | `angelone.in/trade/funds` | `/funds/v2/getRMSLimit` (CDP) | `data.netAvailableFunds` |
+| Groww | `groww.in/user/balance/inr` | `/margin/user_margin_details` (CDP) | `CASH.value` (string → float) |
+| IndMoney | not supported (`supports_cash = False`; wallet card shows "Cash N/A") | | |
+| Ticker Tape | not supported (`supports_cash = False`; wallet card shows "Cash N/A") | | |
 
-Routes:
+Routes (mounted under `/portfolio/cash`):
 
-- `GET /portfolio/wallets` — list of `WalletInfo` (slug, label, cash, currency, holdings_value, holdings_count, pnl, pnl_pct, last_synced_at)
-- `POST /portfolio/wallets/sync` — refresh cash on every source that opts in (parallel)
-- `POST /portfolio/wallets/{slug}/sync` — refresh one broker (used by the "⟳ Refresh" button in the source spotlight)
+- `GET /portfolio/cash` — cached snapshot of every cash-capable broker (no network); hydrates `src._cash` from `broker-cash-live.csv` on cold start.
+- `POST /portfolio/cash/sync` — refresh all cash-capable brokers in parallel.
+- `POST /portfolio/cash/{slug}/sync` — refresh one broker. Returns 422 if `supports_cash = False`.
+
+Persistence: `cash_dump.py` writes one CSV file (`broker-cash-live.csv`) with one row per slug — TTL is per-row via the stored `as_of`, so each broker has its own freshness window. Never bypass this layer with a custom on-disk cache.
 
 ## Register the new source
 
@@ -317,7 +321,7 @@ def _build_sources() -> dict[str, BrokerSource]:
 4. `GET /portfolio/holdings?source={slug}` + allocation
 5. `GET /portfolio/treemap?source={slug}`
 6. `GET /portfolio/rebalance?source={slug}`
-7. `POST /portfolio/wallets/{slug}/sync` — only if `supports_cash = True`
+7. `GET /portfolio/cash` + `POST /portfolio/cash/{slug}/sync` — only if `supports_cash = True` (otherwise assert 422)
 8. Standalone `dump_{slug}()` call — bypasses FastAPI, proves the helper works alone
 9. Cache reset
 

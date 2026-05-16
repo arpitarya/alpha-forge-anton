@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { ASSET_LABEL, primaryLabel } from "./ledger.utils";
 import type { HoldingDTO } from "./portfolio.types";
+import { currencySymbol } from "./wallet.utils";
 
 function highlight(text: string | null | undefined, q?: string): ReactNode {
   if (!text || !q) return text ?? "";
@@ -24,6 +25,8 @@ export function LedgerRow({ h, query }: { h: HoldingDTO; query?: string }) {
   const tone = h.pnl >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]";
   const primary = primaryLabel(h);
   const secondary = primary === h.symbol ? h.name : h.symbol;
+  const sym = currencySymbol(h.currency);
+  const locale = h.currency === "USD" ? "en-US" : "en-IN";
   return (
     <tr
       key={`${h.source}-${h.symbol}-${h.isin ?? ""}`}
@@ -46,15 +49,15 @@ export function LedgerRow({ h, query }: { h: HoldingDTO; query?: string }) {
         {ASSET_LABEL[h.asset_class] ?? h.asset_class}
       </td>
       <td className="px-4 py-3 text-right tabular-nums">
-        {h.quantity.toLocaleString("en-IN", { maximumFractionDigits: 4 })}
+        {h.quantity.toLocaleString(locale, { maximumFractionDigits: 4 })}
       </td>
-      <td className="px-4 py-3 text-right tabular-nums">₹{h.avg_price.toFixed(2)}</td>
-      <td className="px-4 py-3 text-right tabular-nums">₹{h.last_price.toFixed(2)}</td>
+      <td className="px-4 py-3 text-right tabular-nums">{sym}{h.avg_price.toFixed(2)}</td>
+      <td className="px-4 py-3 text-right tabular-nums">{sym}{h.last_price.toFixed(2)}</td>
       <td className="px-4 py-3 text-right tabular-nums">
-        ₹{Math.round(h.current_value).toLocaleString("en-IN")}
+        {sym}{Math.round(h.current_value).toLocaleString(locale)}
       </td>
       <td className={`px-6 py-3 text-right tabular-nums ${tone}`}>
-        {h.pnl >= 0 ? "+" : ""}₹{Math.round(h.pnl).toLocaleString("en-IN")}{" "}
+        {h.pnl >= 0 ? "+" : ""}{sym}{Math.round(h.pnl).toLocaleString(locale)}{" "}
         <span className="opacity-70 text-[11px]">({h.pnl_pct.toFixed(2)}%)</span>
       </td>
     </tr>

@@ -27,6 +27,19 @@ export function fmtINRShort(v: number): string {
   return `₹${Math.round(v).toLocaleString("en-IN")}`;
 }
 
+export function currencySymbol(code: string | undefined | null): string {
+  return code === "USD" ? "$" : "₹";
+}
+
+export function fmtMoneyShort(v: number, currency: string | undefined | null): string {
+  const sym = currencySymbol(currency);
+  if (!Number.isFinite(v)) return `${sym}0`;
+  if (currency === "USD") return `${sym}${v.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+  if (Math.abs(v) >= 1_00_00_000) return `${sym}${(v / 1_00_00_000).toFixed(2)}Cr`;
+  if (Math.abs(v) >= 1_00_000) return `${sym}${(v / 1_00_000).toFixed(2)}L`;
+  return `${sym}${Math.round(v).toLocaleString("en-IN")}`;
+}
+
 export function relTime(iso: string | null): string {
   if (!iso) return "never";
   const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60_000);

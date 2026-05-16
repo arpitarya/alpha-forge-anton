@@ -21,6 +21,7 @@ export interface HoldingDTO {
   current_value: number;
   pnl: number;
   pnl_pct: number;
+  currency: string;
   exchange: string | null;
   sector: string | null;
   as_of: string;
