@@ -4,7 +4,7 @@ Personal AI research layer for AlphaForge. Answers portfolio-aware investment qu
 free LLMs, real news feeds, and live market data. Claude (via Agent SDK) is the optional
 escalation tier requiring explicit user confirmation.
 
-Related plan: [backend/app/modules/news/PLAN.md](../backend/app/modules/news/PLAN.md)
+Related plan: [news/PLAN.md](../news/PLAN.md)
 
 ## Goals
 

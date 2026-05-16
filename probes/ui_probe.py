@@ -131,7 +131,7 @@ async def run(base: str, cdp_port: int) -> bool:
                     _record("Current value > 0", totals.get("current_value", 0) > 0, f"₹{totals.get('current_value', 0):,.0f}")
 
                     # Per-broker data checks
-                    for slug in ("zerodha", "groww", "wintwealth"):
+                    for slug in ("zerodha", "groww", "angelone", "indmoney", "tickertape"):
                         broker_holdings = [h for h in holdings if h.get("source") == slug]
                         if broker_holdings:
                             bad_pnl_pct = [

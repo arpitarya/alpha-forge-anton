@@ -13,21 +13,24 @@ dependencies = []
 members = [
     "backend",
     "packages/logger-py",
+    "news",
 ]
 
 # Local workspace deps resolve to the in-tree member, not PyPI.
 [tool.uv.sources]
 alphaforge-backend = { workspace = true }
 alphaforge-logger  = { workspace = true }
+alphaforge-news    = { workspace = true }
 
 # Pull every workspace member into `.venv` on `uv sync`.
 [tool.uv]
-default-groups = ["all"]
+default-groups = ["all", "dev"]
 
 [dependency-groups]
 all = [
     "alphaforge-backend",
     "alphaforge-logger",
+    "alphaforge-news",
 ]
 dev = [
     "ruff>=0.6.0",

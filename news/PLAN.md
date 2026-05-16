@@ -1,67 +1,85 @@
 # News Module — Plan
 
-Standalone, reusable news aggregation module for AlphaForge. Provides real-time Indian
-market news from multiple free sources via a single unified interface.
+Standalone root-level workspace package (`alphaforge-news`). Aggregates Indian market
+news and social signals from multiple free sources behind a single unified interface.
 
-Related plan: [llm/PLAN.md](../../../../llm/PLAN.md)
+Consumed by: research agent, screener signals, trade signals, dashboard widgets, price
+alerts — any module that needs news, without depending on the LLM layer.
+
+Related plan: [llm/PLAN.md](../llm/PLAN.md)
+Backend facade: [backend/app/modules/news/](../backend/app/modules/news/)
+
+---
+
+## Design priority: Indian markets first
+
+This module is built for trading Indian equities on NSE/BSE. Source selection, coverage,
+and defaults all reflect that. International sources are secondary and are only included
+when they add India-relevant signal (e.g. US Fed decisions, FII flows).
+
+Primary coverage tier — always-on, no API key:
+- NSE and BSE corporate announcements (corporate actions, results, filings)
+- SEBI and RBI policy notifications (regulatory events move markets)
+- 12 Indian financial news outlets via RSS (Moneycontrol, ET Markets, BusinessLine, etc.)
+- Reddit Indian market subreddits (retail sentiment, early signal)
+- Yahoo Finance per-symbol news (symbol-level filtering)
+
+Secondary coverage tier — API-keyed, optional:
+- NewsData.io, gnews (both support India/NSE symbol filtering)
+- Tavily / Brave (web search fallback for obscure queries)
 
 ## Goals
 
-1. Single `NewsService.search()` call aggregates all enabled sources in parallel
-2. **Any new news source can be added in one file with no changes elsewhere**
-3. **Each source can be tested in complete isolation** — no database, no other modules
-4. Fully independent of the LLM module — usable by research agent, screener, alerts, trade
-5. All sources are free-tier; API-keyed sources are optional and individually toggleable
-6. Deduplication by URL-canonical + title-hash so the same story never appears twice
+1. Single `NewsAggregator.search()` returns deduplicated, ranked results from all sources
+2. **Indian market coverage is the default** — every RSS feed is an Indian outlet
+3. **Adding a new source is one file, one registry line, zero changes elsewhere**
+4. **Adding a new RSS feed is one entry in `rss_feeds.py` — no other code changes**
+5. **Every source is testable in complete isolation** — no database, no app, just an API key
+6. API keys for all paid/auth sources are viewable and editable from app Preferences
+7. Fully independent of `llm/` — importable standalone, zero cross-module imports
 
 ## Non-goals
 
-- Paid news APIs (Bloomberg, Refinitiv)
+- International news (no Reuters, AP, BBC — not relevant for NSE/BSE trading)
 - Full-text article scraping (headlines + summaries only)
-- Storing news in the database (in-memory cache only, Redis for rate-throttling)
+- Storing articles in the database (in-memory cache only)
+- Paid APIs (Bloomberg, Refinitiv)
+- Sentiment scoring (belongs in the LLM/research layer)
 
 ---
 
 ## Architecture
 
 ```
-caller (research agent, screener, dashboard, future: trade signals)
+caller (research agent tool, screener, dashboard, trade signals)
         │
-        ▼  await news_service.search(query, symbols, since, limit)
-[NewsService]
-  ├── SourceRegistry     ← name → NewsSource; auto-populated at import
-  ├── fan-out            ← asyncio.gather across all enabled sources
-  ├── Deduplicator       ← URL-canonical + title-hash, keeps newest
-  ├── Ranker             ← sort by recency; future: relevance score
-  └── List[NewsItem]     ← uniform schema returned to caller
-        │
-        ▼
-[NewsSource ABC — each source is one self-contained file]
-  ├── RssSource          (Moneycontrol, ET Markets, Mint, BS, Google News)
-  ├── YFinanceSource     (per-symbol news via yfinance)
-  ├── NseAnnouncementsSource  (corporate filings scraper + daily cache)
-  ├── NewsdataSource     (NewsData.io JSON API — free 200 req/day)
-  ├── GnewsSource        (gnews JSON API — free 100 req/day)
-  ├── TavilySource       (Tavily search API — free 1k/month)
-  └── BraveSource        (Brave Search API — free 2k/month)
+        ▼  await aggregator.search(query, symbols, since, limit)
+[NewsAggregator]
+  ├── SourceRegistry      ← name → NewsSource; auto-populated at import
+  ├── asyncio.gather      ← all enabled sources run in parallel
+  ├── Deduplicator        ← URL-canonical + title-hash; keeps newest copy
+  ├── Ranker              ← sort by recency; relevance scoring in future
+  └── List[NewsItem]
 ```
 
 ---
 
 ## NewsSource Extensibility Contract
 
-The core extensibility design. Every source is a self-contained file implementing
-`NewsSource`. The registry is populated at import — no manual wiring needed anywhere else.
+Every source is a self-contained file implementing `NewsSource`. The registry is
+populated at import — no changes needed in the aggregator, routes, or any caller.
 
 ### NewsSource ABC
 
 ```python
-# backend/app/modules/news/news_base.py
+# news/src/alphaforge_news/base.py
 
 class NewsSource(ABC):
-    name: str           # unique slug, e.g. "moneycontrol-rss", "newsdata"
-    env_key: str | None # env var that enables this source; None = always-on (RSS)
+    name: str             # unique slug — e.g. "moneycontrol-rss", "reddit-india"
+    display_name: str     # shown in Preferences UI
+    env_key: str | None   # env var that enables this source; None = always-on
     requires_api_key: bool
+    category: str         # "rss" | "api" | "scraper" | "social"
 
     @abstractmethod
     async def search(
@@ -74,216 +92,390 @@ class NewsSource(ABC):
 
     @abstractmethod
     async def health(self) -> SourceHealth: ...
-    # Returns: available=bool, quota_used=int|None, quota_limit=int|None, last_error=str|None
+    # available: bool, quota_used: int|None, quota_limit: int|None, last_error: str|None
 ```
 
 ### NewsItem schema
 
 ```python
-# backend/app/modules/news/news_schemas.py
+# news/src/alphaforge_news/types.py
 
 class NewsItem(BaseModel):
     headline: str
-    url: str                     # canonical (query-string stripped)
-    source_name: str             # e.g. "Moneycontrol", "ET Markets"
+    url: str                      # canonical — query-string stripped
+    source_name: str              # "Moneycontrol", "r/IndiaInvestments"
+    source_slug: str              # matches NewsSource.name
     published_at: datetime
     summary: str | None = None
-    symbols: list[str] = []      # NSE tickers extracted or provided by source
+    symbols: list[str] = []       # NSE tickers mentioned or provided by source
     image_url: str | None = None
-    title_hash: str              # sha256(headline.lower().strip())[:16]
+    author: str | None = None     # populated for Reddit posts
+    score: int | None = None      # Reddit upvotes; None for news articles
+    title_hash: str               # sha256(headline.lower().strip())[:16] — for dedup
 ```
 
-### Adding a new source — full checklist
+### Adding a new source — complete checklist
 
-1. Create `backend/app/modules/news/sources/<name>.py`
+1. Create `news/src/alphaforge_news/sources/<name>.py`
 2. Implement `NewsSource` — self-contained, ≤100 lines
 3. Add one line to `sources/__init__.py`:
    ```python
    from .myname import MyNameSource
    REGISTRY["myname"] = MyNameSource
    ```
-4. If API-keyed, add `MYNEWS_API_KEY=` to `.env.example`
-5. Add standalone tests: `tests/news/test_myname.py`
-6. Add a smoke-test section in `backend/notebooks/news_playground.py`
+4. Add `MYNEWS_API_KEY=` to `backend/.env.example` (if API-keyed)
+5. Add `news/tests/sources/test_myname.py`
+6. Add a notebook section in `news/notebooks/news_playground.py`
 
-No changes to `NewsService`, `Deduplicator`, routes, or any other source.
+Nothing else changes.
 
-### Standalone source testing
+### Adding a new RSS feed — zero Python needed
 
-Each test file requires only its own API key (or nothing for RSS sources).
-No database, no FastAPI app, no other modules needed.
+All RSS outlets share one `RssSource` adapter. Adding a feed is a YAML entry:
 
-```python
-# tests/news/test_newsdata.py
-
-@pytest.mark.asyncio
-async def test_keyword_search():
-    source = NewsdataSource()
-    items = await source.search("Reliance Industries", since=datetime.now() - timedelta(days=7))
-    assert len(items) > 0
-    assert all(isinstance(i, NewsItem) for i in items)
-
-@pytest.mark.asyncio
-async def test_symbol_filter():
-    source = NewsdataSource()
-    items = await source.search("earnings", symbols=["INFY"])
-    assert all("INFY" in i.symbols for i in items)
-
-@pytest.mark.asyncio
-async def test_health():
-    source = NewsdataSource()
-    h = await source.health()
-    assert h.available
-    assert h.quota_limit == 200   # free tier daily limit
+```yaml
+# news/config/rss_feeds.yaml
+feeds:
+  - name: my-new-outlet-rss
+    display_name: My New Outlet
+    url: https://example.com/rss.xml
+    category: markets          # general | markets | economy | policy | regional
+    always_on: true
 ```
 
-Run one source in isolation: `uv run pytest tests/news/test_newsdata.py -v`
+Re-start the server and the feed is live. No code change, no registry edit.
 
 ---
 
-## Sources Reference
+## Sources
 
-| Source | Type | India coverage | Quota | API key env var | Always-on |
-|---|---|---|---|---|---|
-| Moneycontrol RSS | RSS XML | Excellent | None | — | Yes |
-| ET Markets RSS | RSS XML | Excellent | None | — | Yes |
-| Mint / LiveMint RSS | RSS XML | Good | None | — | Yes |
-| Business Standard RSS | RSS XML | Good | None | — | Yes |
-| Google News query | RSS XML | Broad | None | — | Yes |
-| Yahoo Finance (yfinance) | Python lib | Symbol-level | None | — | Yes |
-| NSE Announcements | Scraper + daily cache | Corporate filings | None | — | Yes |
-| NewsData.io | JSON API | Good | 200 req/day | `NEWSDATA_API_KEY` | No |
-| gnews | JSON API | Good | 100 req/day | `GNEWS_API_KEY` | No |
-| Tavily Search | JSON API | Broad | 1k req/month | `TAVILY_API_KEY` | No |
-| Brave Search | JSON API | Broad | 2k req/month | `BRAVE_SEARCH_API_KEY` | No |
+### Always-on RSS (no API key, no quota — backbone of the news layer)
 
-RSS and yfinance sources are always-on (no API key, no quota). API-keyed sources are
-skipped gracefully when their env var is absent — the aggregator continues with remaining
-sources and does not raise an error.
+One `RssSource` adapter reads `rss_feeds.yaml`. All feeds below are pre-configured.
 
-### NSE Announcements scraper
+| Display name | Focus | Category |
+|---|---|---|
+| Moneycontrol | General markets | markets |
+| ET Markets | Markets & economy | markets |
+| Mint / LiveMint | Business & markets | markets |
+| Business Standard | Markets & corporate | markets |
+| Hindu BusinessLine | Business & commodities | markets |
+| Financial Express | Markets | markets |
+| NDTV Profit | Markets (TV outlet) | markets |
+| CNBC TV18 | Markets (TV outlet) | markets |
+| Zee Business | Markets (Hindi + English) | markets |
+| BQ Prime (BloombergQuint) | In-depth market analysis | markets |
+| Moneylife | Retail investor focus | markets |
+| Outlook Money | Personal finance & markets | general |
+| Google News — Markets | Broad aggregator query | general |
+| SEBI Announcements | Regulatory & circular | policy |
+| RBI Notifications | Monetary policy & banking | policy |
 
-NSE has no public API for corporate announcements. Strategy:
-- Scrape `nseindia.com/companies-listing/corporate-filings/announcements` daily at midnight
-- Cache results to Redis with 24h TTL
-- Each announcement is a `NewsItem` with `symbols` populated from the company identifier
-- Exponential backoff on HTTP errors; source marks itself `available=False` on repeated failure
-- Falls back gracefully — if cache is empty and scrape fails, returns empty list (no crash)
+### Always-on scrapers / libraries (no API key)
+
+| Source | Slug | Notes |
+|---|---|---|
+| Yahoo Finance news | `yfinance` | Per-symbol via yfinance Python lib |
+| NSE Corporate Announcements | `nse-announcements` | Scraper + 24h Redis cache |
+| BSE Corporate Announcements | `bse-announcements` | Public JSON API; refreshed every 4h |
+
+### Social — Reddit
+
+| Source | Slug | Subreddits covered |
+|---|---|---|
+| Reddit Indian Markets | `reddit-india` | r/IndiaInvestments · r/IndianStockMarket · r/DalalStreetTalks · r/mutualfunds · r/personalfinanceindia |
+
+See Reddit section below for credentials and implementation detail.
+
+### API-keyed (optional, free tier — skipped gracefully if key absent)
+
+| Source | Slug | Free quota | Key env var |
+|---|---|---|---|
+| NewsData.io | `newsdata` | 200 req/day | `NEWSDATA_API_KEY` |
+| gnews | `gnews` | 100 req/day | `GNEWS_API_KEY` |
+| Tavily Search | `tavily` | 1k req/month | `TAVILY_API_KEY` |
+| Brave Search | `brave` | 2k req/month | `BRAVE_SEARCH_API_KEY` |
+
+---
+
+## Reddit Integration
+
+Reddit is the social signal layer — useful for retail sentiment, early discussion of
+corporate events, and information not yet in traditional media.
+
+### Credentials
+
+Register a free personal-use app at `reddit.com/prefs/apps`:
+- `REDDIT_CLIENT_ID`
+- `REDDIT_CLIENT_SECRET`
+- `REDDIT_USER_AGENT` — e.g. `alphaforge:v1 (by u/your-reddit-username)`
+
+Personal apps: 100 requests/minute free. No payment required.
+
+### Implementation
+
+Library: `asyncpraw` (async Python Reddit API Wrapper).
+
+```python
+# news/src/alphaforge_news/sources/reddit.py
+
+class RedditSource(NewsSource):
+    name = "reddit-india"
+    display_name = "Reddit (Indian Markets)"
+    env_key = "REDDIT_CLIENT_ID"
+    requires_api_key = True
+    category = "social"
+    SUBREDDITS = [
+        "IndiaInvestments",      # best-moderated; quality long-form discussion
+        "IndianStockMarket",     # NSE/BSE stocks; active
+        "DalalStreetTalks",      # market talk and news
+        "mutualfunds",           # SIPs, fund performance, AMC news
+        "personalfinanceindia",  # tax, personal finance context
+    ]
+    MIN_SCORE = 5                # filter out very low-engagement posts
+```
+
+Posts are mapped to `NewsItem`: `headline` = post title, `url` = post permalink,
+`summary` = selftext preview (first 300 chars), `score` = upvotes, `author` = u/username.
+Symbol extraction: simple regex scan of post title for known NSE ticker patterns.
+
+---
+
+## API Key Management in Preferences
+
+All API-keyed sources are visible and editable from **Preferences → Alpha AI → News Sources**.
+No terminal editing of `.env` files needed after initial setup.
+
+### Backend — `NewsSourceSettings` ORM
+
+```python
+class NewsSourceSettings(Base):
+    source_slug: str        # primary key — "newsdata", "reddit-india", etc.
+    encrypted_key: bytes    # Fernet-encrypted (reuses existing FERNET_KEY)
+    last_tested_at: datetime | None
+    test_status: str        # "ok" | "invalid" | "untested"
+    updated_at: datetime
+```
+
+Key resolution order:
+1. `NewsSourceSettings` table (if row exists)
+2. Environment variable fallback
+3. Source skipped — aggregator continues without it
+
+Routes:
+```
+GET    /api/v1/news/settings              → List[SourceKeyStatus]
+PUT    /api/v1/news/settings/{slug}       → SourceKeyStatus  # validates before saving
+POST   /api/v1/news/settings/{slug}/test  → SourceKeyStatus  # re-validates stored key
+DELETE /api/v1/news/settings/{slug}       → 204
+```
+
+`PUT` validates the key by calling `source.health()` before persisting — you cannot
+accidentally save a broken key.
+
+### Frontend — Preferences → Alpha AI → News Sources
+
+```
+ALWAYS ON (no key needed)
+[ Moneycontrol RSS ]      ✓ Active — last fetch 4 min ago
+[ ET Markets RSS ]        ✓ Active — last fetch 4 min ago
+[ Hindu BusinessLine ]    ✓ Active — last fetch 12 min ago
+[ NDTV Profit RSS ]       ✓ Active — last fetch 4 min ago
+[ CNBC TV18 RSS ]         ✓ Active — last fetch 7 min ago
+[ ... 10 more RSS feeds ] ✓ Active
+[ NSE Announcements ]     ✓ Active — last sync 2h ago        [Sync now]
+[ BSE Announcements ]     ✓ Active — last sync 45 min ago    [Sync now]
+[ Yahoo Finance ]         ✓ Active
+
+API-KEYED (optional)
+[ Reddit ]    CLIENT_ID set  [Test]  ✓ Working — 98 req/min remaining  [Edit]  [Remove]
+              r/IndiaInvestments · r/IndianStockMarket · r/DalalStreetTalks
+[ NewsData ]  ••••••••4f2a   [Test]  ✓ Working — 187/200 req remaining [Edit]  [Remove]
+[ gnews ]     Not configured                                             [Add key]
+[ Tavily ]    ••••••••8c1d   [Test]  ✓ Working — 823/1000 req remaining [Edit]  [Remove]
+[ Brave ]     Not configured                                             [Add key]
+```
+
+- RSS sources show last-fetch time (polled from Redis cache metadata)
+- NSE/BSE show last sync time + "Sync now" button
+- API-keyed sources show remaining quota from last `health()` call
+- "Test" fires health check inline without navigating away
 
 ---
 
 ## Deduplication
 
-Two stories are considered duplicates if either:
+Two items are duplicates if either:
 - Same URL canonical (scheme + host + path, query-string stripped), OR
 - Same `title_hash` (sha256 of headline lowercased and stripped)
 
-When duplicates are detected, the item with the more recent `published_at` is kept.
-Deduplication runs after fan-out, before ranking — happens in memory, no persistence.
+When duplicates are found, keep the item with the most recent `published_at`.
+Dedup runs post-fan-out, in memory, before returning to the caller.
+
+---
+
+## NSE / BSE Implementation Notes
+
+**NSE** — no public API for announcements:
+- Scrape `nseindia.com/companies-listing/corporate-filings/announcements`
+- Cache to Redis with `NEWS_NSE_CACHE_TTL_S` (default 24h)
+- Exponential backoff on failure; marks `available=False` after 3 consecutive failures
+- Falls back to empty list on cold cache — never crashes the aggregator
+
+**BSE** — has a public JSON API (no key needed):
+- `https://api.bseindia.com/BseIndiaAPI/api/AnnSubCategoryGetData/w`
+- Refreshed every `NEWS_BSE_REFRESH_INTERVAL_S` (default 4h)
+- More reliable than NSE scraper; used as supplement
 
 ---
 
 ## Notebook Playground
 
-`backend/notebooks/news_playground.py` (Jupytext `.py` ↔ `.ipynb`)
+`news/notebooks/news_playground.py` (Jupytext `.py` ↔ `.ipynb`)
 
 Used during Phase 2 to validate each source before wiring the aggregator.
 
-Covers:
-- Call each source directly: `await MoneycontrolRssSource().search("Nifty")`
-- Check health of all sources: `await source.health()` for each
-- Full aggregator call: `await news_service.search("Reliance", symbols=["RELIANCE"])`
-- Dedup verification: run two sources that cover the same story, confirm single result
-- Quota tracking: call an API-keyed source multiple times, watch `quota_used` increment
-- Timing: measure per-source latency to identify slow sources
+- Call each source directly: `await MoneycontrolRssSource().search("Nifty 50")`
+- Add a new RSS feed: edit `rss_feeds.yaml`, run notebook cell, confirm it works
+- Test Reddit: `await RedditSource().search("TCS results", symbols=["TCS"])`
+- Full aggregator: `await aggregator.search("Reliance Industries", symbols=["RELIANCE"])`
+- Dedup check: two overlapping sources → single result returned
+- Health check all sources: show `quota_used / quota_limit` per source
+- Latency timing: identify slow sources to inform timeout setting
 
 ---
 
-## API Routes
+## Standalone Source Testing
 
+Pattern for each source test file — requires only that source's key:
+
+```python
+# news/tests/sources/test_reddit.py
+
+@pytest.mark.asyncio
+async def test_keyword_search():
+    source = RedditSource()
+    items = await source.search("Reliance Q4 results")
+    assert len(items) > 0
+    assert all(isinstance(i, NewsItem) for i in items)
+
+@pytest.mark.asyncio
+async def test_symbol_filter():
+    items = await RedditSource().search("earnings", symbols=["INFY"])
+    assert all(i.source_slug == "reddit-india" for i in items)
+
+@pytest.mark.asyncio
+async def test_min_score_filter():
+    items = await RedditSource().search("market open")
+    assert all((i.score or 0) >= RedditSource.MIN_SCORE for i in items)
+
+@pytest.mark.asyncio
+async def test_health():
+    h = await RedditSource().health()
+    assert h.available
 ```
-GET  /api/v1/news/search
-     ?q=<query>
-     &symbols=RELIANCE,INFY       (optional, comma-separated NSE tickers)
-     &since=2026-05-09            (optional, ISO date)
-     &limit=20                    (default 20, max 50)
-     → List[NewsItem]
 
-GET  /api/v1/news/sources
-     → List[SourceHealth]         (name, available, quota_used, quota_limit)
-```
-
-Both routes are public within the authenticated session (same `Depends(get_current_user)`
-as all other routes). No write endpoints — this module is read-only.
-
----
-
-## Dependency Direction
-
-```
-news  →  (nothing in this repo)
-```
-
-`news/` is pure Python + HTTP clients. No imports from `llm/`, `research/`, `market/`,
-or any other AlphaForge module. Callers import from `news/`, never the reverse.
-
-Allowed consumers: `research/agent_tools.py`, screener signals (future), trade signals
-(future), a dashboard news widget (future), price alert rules (future).
+Run one source in isolation: `uv run pytest news/tests/sources/test_reddit.py -v`
 
 ---
 
 ## File Layout
 
 ```
-backend/app/modules/news/
+news/                                 ← root-level workspace (like llm/)
 ├── PLAN.md
-├── news_service.py          # NewsService: fan-out, dedup, rank
-├── news_base.py             # NewsSource ABC + SourceHealth
-├── news_schemas.py          # NewsItem, NewsSearchRequest, NewsSearchResponse
-├── news_routes.py           # GET /news/search, GET /news/sources
-├── news_dedup.py            # Deduplicator (url-canonical + title-hash)
-└── sources/
-    ├── __init__.py          # REGISTRY dict + auto-registration on import
-    ├── rss.py               # RssSource — all RSS feeds in one file (feed URLs configurable)
-    ├── yfinance_news.py     # YFinanceSource
-    ├── nse_announcements.py # NseAnnouncementsSource (scraper + Redis cache)
-    ├── newsdata.py          # NewsdataSource
-    ├── gnews.py             # GnewsSource
-    ├── tavily.py            # TavilySource
-    └── brave.py             # BraveSource
+├── pyproject.toml                    ← uv workspace member (alphaforge-news)
+├── config/
+│   └── rss_feeds.yaml                ← data-driven RSS config; adding a feed = YAML entry
+├── src/
+│   └── alphaforge_news/
+│       ├── __init__.py
+│       ├── types.py                  # NewsItem, SourceHealth
+│       ├── base.py                   # NewsSource ABC
+│       ├── aggregator.py             # fan-out + dedup + rank
+│       ├── dedup.py                  # URL-canonical + title-hash dedup
+│       └── sources/
+│           ├── __init__.py           # REGISTRY dict + auto-registration on import
+│           ├── rss.py                # RssSource — reads rss_feeds.yaml; one class, all feeds
+│           ├── reddit.py             # RedditSource via asyncpraw
+│           ├── yfinance_news.py      # YFinanceSource
+│           ├── nse_announcements.py  # NseAnnouncementsSource — scraper + Redis cache
+│           ├── bse_announcements.py  # BseAnnouncementsSource — public JSON API
+│           ├── newsdata.py
+│           ├── gnews.py
+│           ├── tavily.py
+│           └── brave.py
+├── notebooks/
+│   ├── news_playground.py            # Jupytext source — commit this
+│   └── news_playground.ipynb         # generated — gitignored
+└── tests/
+    ├── test_aggregator.py            # mocks all sources; tests fan-out + dedup
+    ├── test_dedup.py
+    └── sources/
+        ├── test_rss.py               # no key needed; reads rss_feeds.yaml
+        ├── test_reddit.py            # needs REDDIT_CLIENT_ID + SECRET
+        ├── test_yfinance.py          # no key needed
+        ├── test_nse.py               # no key needed
+        ├── test_bse.py               # no key needed
+        ├── test_newsdata.py          # needs NEWSDATA_API_KEY
+        ├── test_gnews.py
+        ├── test_tavily.py
+        └── test_brave.py
 ```
 
-Tests:
+Backend thin facade (adds FastAPI + ORM layer on top of `alphaforge_news`):
 
 ```
-backend/tests/news/
-├── test_news_service.py     # aggregator integration (mocks all sources)
-├── test_news_dedup.py       # dedup logic unit tests
-└── sources/
-    ├── test_rss.py          # standalone — no API key needed
-    ├── test_yfinance.py     # standalone — no API key needed
-    ├── test_nse.py          # standalone — no API key needed
-    ├── test_newsdata.py     # standalone — needs NEWSDATA_API_KEY
-    ├── test_gnews.py
-    ├── test_tavily.py
-    └── test_brave.py
+backend/app/modules/news/
+├── news_service.py           # wraps NewsAggregator; injects keys resolved from DB
+├── news_routes.py            # GET /news/search, GET /news/sources
+├── news_schemas.py           # FastAPI request/response models
+├── news_settings_service.py  # NewsSourceSettings ORM + key resolution
+└── news_settings_routes.py   # GET/PUT/POST/DELETE /news/settings/{slug}
 ```
+
+Frontend:
+
+```
+frontend/src/modules/preferences/
+├── NewsSourcesPanel.tsx      # always-on status rows + API-keyed key management rows
+└── news-settings.api.ts      # calls /news/settings routes
+```
+
+---
+
+## Dependency Direction
+
+```
+news/                  →  (nothing in this repo — pure Python + HTTP clients)
+backend/modules/news/  →  alphaforge_news   (import from root package)
+research/              →  backend/modules/news/  (via search_news agent tool)
+```
+
+`news/` is importable standalone with no AlphaForge dependencies.
 
 ---
 
 ## Environment Variables (add to `backend/.env.example`)
 
 ```
-# News Sources — each key enables its source; absent = source skipped gracefully
+# News — API-keyed sources (absent = source skipped gracefully, no error)
 NEWSDATA_API_KEY=
 GNEWS_API_KEY=
 TAVILY_API_KEY=
 BRAVE_SEARCH_API_KEY=
 
-# Feature flags
-NEWS_MAX_RESULTS_PER_SOURCE=15    # cap per-source to avoid one source dominating
-NEWS_AGGREGATOR_TIMEOUT_S=8       # max wait before returning partial results
-NEWS_NSE_CACHE_TTL_S=86400        # NSE announcements cache TTL (24h)
+# Reddit — all three required to activate the Reddit source
+REDDIT_CLIENT_ID=
+REDDIT_CLIENT_SECRET=
+REDDIT_USER_AGENT=alphaforge:v1 (by u/your-reddit-username)
+
+# Aggregator tuning
+NEWS_MAX_RESULTS_PER_SOURCE=15      # cap per source so no single source dominates
+NEWS_AGGREGATOR_TIMEOUT_S=8         # return partial results rather than waiting longer
+NEWS_NSE_CACHE_TTL_S=86400          # NSE announcements cache — 24h
+NEWS_BSE_REFRESH_INTERVAL_S=14400   # BSE API refresh cadence — 4h
+REDDIT_MIN_SCORE=5                  # filter out posts below this upvote count
 ```
 
 ---
@@ -292,12 +484,16 @@ NEWS_NSE_CACHE_TTL_S=86400        # NSE announcements cache TTL (24h)
 
 | Phase | Deliverable | Notes |
 |---|---|---|
-| 1 | `news_base.py`, `news_schemas.py`, `NewsItem`, `NewsSource` ABC, `SourceRegistry` | Foundation; no sources yet |
-| 2 | Always-on sources: `rss.py`, `yfinance_news.py`, `nse_announcements.py` | Validate each standalone in notebook |
-| 3 | `news_dedup.py`, `news_service.py` — aggregator wired with always-on sources | End-to-end smoke test in notebook |
-| 4 | API-keyed sources: `newsdata.py`, `gnews.py`, `tavily.py`, `brave.py` | Each validated standalone; add to registry |
-| 5 | `news_routes.py` — `GET /news/search`, `GET /news/sources` | Register in `backend/app/modules/__init__.py` |
-| 6 | Wire `search_news` tool in `research/agent_tools.py` | Agent can now call the news service |
+| 1 | `news/` scaffold: `pyproject.toml`, `types.py`, `base.py` ABC, `REGISTRY`, `rss_feeds.yaml` | Foundation; no sources yet |
+| 2 | Always-on RSS: `rss.py` reads YAML (15 Indian feeds pre-configured) | Test adding a new feed via YAML only — confirm zero Python needed |
+| 3 | Always-on scrapers/libs: `yfinance_news.py`, `nse_announcements.py`, `bse_announcements.py` | Validate each standalone in notebook |
+| 4 | `dedup.py` + `aggregator.py` wired with all always-on sources | Smoke test in notebook; confirm dedup across overlapping RSS feeds |
+| 5 | `reddit.py` — `RedditSource` via asyncpraw | Standalone test; symbol extraction from post titles |
+| 6 | API-keyed sources: `newsdata.py`, `gnews.py`, `tavily.py`, `brave.py` | Each validated standalone; added to registry |
+| 7 | Backend facade: `news_service.py`, `news_routes.py`, `news_schemas.py` | Register in `backend/app/modules/__init__.py` |
+| 8 | `NewsSourceSettings` ORM + settings routes | Encrypted key storage; key resolution wired |
+| 9 | Frontend: `NewsSourcesPanel.tsx` in Preferences → Alpha AI | Status rows, masked keys, Test/Edit/Remove, quota display |
+| 10 | Wire `search_news` tool in `research/agent_tools.py` | Research agent can now call the news aggregator |
 
 ---
 
@@ -305,8 +501,10 @@ NEWS_NSE_CACHE_TTL_S=86400        # NSE announcements cache TTL (24h)
 
 | Risk | Mitigation |
 |---|---|
-| NSE scraper gets blocked | Daily cache, exponential backoff, source marks itself unavailable |
-| API quota exhausted mid-day | Per-source `SourceHealth.quota_used` tracking; RSS always-on as baseline |
-| RSS feeds change structure | Feedparser handles most variations; per-feed field mapping in `rss.py` |
-| Slow source delays all results | `NEWS_AGGREGATOR_TIMEOUT_S` returns partial results rather than waiting |
-| Duplicate stories dominate | Dedup runs post-fan-out; capped per-source with `NEWS_MAX_RESULTS_PER_SOURCE` |
+| NSE scraper gets blocked | Daily Redis cache; exponential backoff; RSS always-on as fallback |
+| RSS feed URLs change | One-line fix in `rss_feeds.yaml`; notebook health check detects 404s |
+| Reddit API rate limit | asyncpraw handles throttling automatically; `SourceHealth` exposes quota |
+| Reddit posts are noisy | `REDDIT_MIN_SCORE` filter; `since` param limits recency |
+| Slow source delays results | `NEWS_AGGREGATOR_TIMEOUT_S` returns partial results from fast sources |
+| Duplicate stories | Dedup post-fan-out; `NEWS_MAX_RESULTS_PER_SOURCE` prevents one source dominating |
+| BSE API schema changes | `test_bse.py` catches it; BSE is more stable than NSE scraper |
