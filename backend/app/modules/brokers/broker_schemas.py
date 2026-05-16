@@ -43,6 +43,9 @@ class Holding(BaseModel):
     current_value: float
     pnl: float
     pnl_pct: float
+    # Today's percentage move (close-vs-prev-close). 0 when the broker doesn't
+    # expose it — aggregator's today-P&L just skips those holdings.
+    day_change_pct: float = 0.0
     currency: str = "INR"
     sector: str | None = None
     exchange: str | None = None

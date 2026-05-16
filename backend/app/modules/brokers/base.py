@@ -35,6 +35,10 @@ class BrokerSource(ABC):
     # wallet card shows "Cash N/A" instead of fabricating zero.
     supports_cash: bool = False
 
+    # Native currency for holdings + cash. Indian brokers default to INR;
+    # IndMoney (US stocks) overrides this to "USD".
+    currency: str = "INR"
+
     def __init__(self) -> None:
         self._cached: list[Holding] | None = None
         self._last_synced_at: datetime | None = None

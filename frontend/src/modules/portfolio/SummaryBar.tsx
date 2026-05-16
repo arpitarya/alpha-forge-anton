@@ -1,6 +1,6 @@
 "use client";
 
-import type { FilterState } from "./portfolio.filter";
+import { ASSET_BUCKETS, EQUITY_SUBS, type FilterState } from "./portfolio.filter";
 import { fmtINRShort } from "./wallet.utils";
 
 export interface SummaryBarProps {
@@ -25,7 +25,12 @@ export function SummaryBar({
   onReset,
 }: SummaryBarProps) {
   const pct = grandValue > 0 ? (shownValue / grandValue) * 100 : 0;
-  const hasFilter = filter.query.trim() || filter.assetClass !== "All" || filter.pnl !== "all";
+  const hasFilter = filter.query.trim() || filter.assetClass !== "all" || filter.pnl !== "all";
+  const bucketLabel = ASSET_BUCKETS.find((b) => b.id === filter.assetClass)?.label ?? filter.assetClass;
+  const subLabel =
+    filter.assetClass === "equity" && filter.equitySub !== "all"
+      ? EQUITY_SUBS.find((s) => s.id === filter.equitySub)?.label
+      : null;
   return (
     <div className="flex flex-shrink-0 items-center gap-3.5 px-1 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--fg-3)]">
       <span>
@@ -37,10 +42,14 @@ export function SummaryBar({
             · source <b className="font-normal text-[color:var(--accent)]">{sourceLabel}</b>
           </>
         )}
-        {filter.assetClass !== "All" && (
+        {filter.assetClass !== "all" && (
           <>
             {" "}
-            · class <b className="font-normal text-[color:var(--accent)]">{filter.assetClass}</b>
+            · class{" "}
+            <b className="font-normal text-[color:var(--accent)]">
+              {bucketLabel}
+              {subLabel ? ` · ${subLabel}` : ""}
+            </b>
           </>
         )}
         {filter.pnl === "up" && (

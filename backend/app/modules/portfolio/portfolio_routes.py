@@ -14,6 +14,8 @@ from app.core.logging import get_logger
 from app.modules.brokers import SOURCES, HoldingsAggregator
 from app.modules.brokers.brokers_routes import router as sources_router
 from app.modules.brokers.cash_routes import router as cash_router
+from app.modules.brokers.fx import _TTL_SECONDS as _FX_TTL_SECONDS
+from app.modules.brokers.fx import get_inr_per_usd
 from app.modules.brokers.wallet_aggregator import list_wallets, sync_all, sync_one
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
@@ -71,6 +73,15 @@ async def get_rebalance():
         "suggestions": [s.__dict__ for s in suggestions],
         "targets": {k.value: v for k, v in aggregator.targets.items()},
         "disclaimer": "Not SEBI registered investment advice.",
+    }
+
+
+@router.get("/fx")
+async def get_fx():
+    """Current FX rates used to roll up cross-currency totals (1-hour CSV cache)."""
+    return {
+        "inr_per_usd": get_inr_per_usd(),
+        "ttl_seconds": _FX_TTL_SECONDS,
     }
 
 

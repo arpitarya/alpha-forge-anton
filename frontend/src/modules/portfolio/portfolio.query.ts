@@ -72,6 +72,20 @@ export function useResetSource() {
   });
 }
 
+export interface FxResponseDTO {
+  inr_per_usd: number;
+  ttl_seconds: number;
+}
+
+export function useFx() {
+  return useQuery<FxResponseDTO>({
+    queryKey: ["portfolio", "fx"],
+    queryFn: () => portfolioApi.getFx().then((r) => r.data),
+    // Refetch alongside the backend's 1-hour CSV TTL.
+    staleTime: 60 * 60 * 1000,
+  });
+}
+
 export function useWallets() {
   return useQuery<WalletsResponseDTO>({
     queryKey: ["portfolio", "wallets"],

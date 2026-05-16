@@ -66,6 +66,7 @@ class IndMoneySource(BrokerSource):
     label = "INDmoney"
     kind = SourceKind.API
     supports_cash = True
+    currency = "USD"
     notes = (
         "Manual login: log in to indmoney.com inside the AlphaForge Chrome "
         "(started with --remote-debugging-port=9299). AlphaForge never stores "

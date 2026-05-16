@@ -32,7 +32,10 @@ export function PortfolioCompactBar({
   const pnl = totals?.pnl ?? 0;
   const pnlPct = totals?.pnl_pct ?? 0;
   const pnlCls = pnl >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]";
-  const dayCls = all.pnl_pct >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]";
+  // XIRR is not yet computed end-to-end; reuse pnl_pct as a placeholder
+  // (consistent with PortfolioHeader's xirrPlaceholder).
+  const xirr = pnlPct;
+  const xirrCls = xirr >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]";
 
   return (
     <div
@@ -59,22 +62,30 @@ export function PortfolioCompactBar({
         <span>{expanded ? "Less" : "More"}</span>
       </button>
 
-      <div className="flex flex-1 flex-wrap items-center gap-[18px] px-1 py-0.5 tabular-nums">
-        <span className="inline-flex items-baseline gap-1.5">
+      <div
+        className="flex min-w-0 flex-1 items-center gap-[18px] overflow-x-auto overflow-y-hidden px-1 py-0.5 tabular-nums [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        style={{
+          maskImage:
+            "linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 14px),transparent 100%)",
+        }}
+      >
+        <span className="inline-flex flex-shrink-0 items-baseline gap-1.5 whitespace-nowrap">
           <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[color:var(--fg-3)]">TOTAL</span>
           <span className="text-[15px] font-medium tracking-[-0.005em] text-[color:var(--fg)]">
             {fmtINRShort(totals?.current_value ?? 0)}
           </span>
         </span>
-        <span className="h-5 w-px self-center bg-[color:var(--line)]" />
-        <span className="inline-flex items-baseline gap-1.5">
+        <span className="h-5 w-px flex-shrink-0 self-center bg-[color:var(--line)]" />
+        <span className="inline-flex flex-shrink-0 items-baseline gap-1.5 whitespace-nowrap">
           <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[color:var(--fg-3)]">INVESTED</span>
           <span className="text-[15px] font-medium tracking-[-0.005em] text-[color:var(--fg)]">
             {fmtINRShort(totals?.invested ?? 0)}
           </span>
         </span>
-        <span className="h-5 w-px self-center bg-[color:var(--line)]" />
-        <span className="inline-flex items-baseline gap-1.5">
+        <span className="h-5 w-px flex-shrink-0 self-center bg-[color:var(--line)]" />
+        <span className="inline-flex flex-shrink-0 items-baseline gap-1.5 whitespace-nowrap">
           <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[color:var(--fg-3)]">P&amp;L</span>
           <span className={clsx("text-[15px] font-medium tracking-[-0.005em]", pnlCls)}>
             {pnl >= 0 ? "+" : "−"}
@@ -85,12 +96,12 @@ export function PortfolioCompactBar({
             {pnlPct.toFixed(1)}%
           </span>
         </span>
-        <span className="h-5 w-px self-center bg-[color:var(--line)]" />
-        <span className="inline-flex items-baseline gap-1.5">
-          <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[color:var(--fg-3)]">DAY</span>
-          <span className={clsx("text-[15px] font-medium tracking-[-0.005em]", dayCls)}>
-            {all.pnl_pct >= 0 ? "+" : ""}
-            {all.pnl_pct.toFixed(2)}%
+        <span className="h-5 w-px flex-shrink-0 self-center bg-[color:var(--line)]" />
+        <span className="inline-flex flex-shrink-0 items-baseline gap-1.5 whitespace-nowrap">
+          <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[color:var(--fg-3)]">XIRR</span>
+          <span className={clsx("text-[15px] font-medium tracking-[-0.005em]", xirrCls)}>
+            {xirr >= 0 ? "+" : ""}
+            {xirr.toFixed(1)}%
           </span>
         </span>
       </div>

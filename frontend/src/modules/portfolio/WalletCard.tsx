@@ -2,7 +2,7 @@
 
 import { clsx } from "clsx";
 import type { WalletInfoDTO } from "./portfolio.types";
-import { fmtINRShort, relTime, walletBrand } from "./wallet.utils";
+import { fmtMoneyShort, relTime, walletBrand } from "./wallet.utils";
 
 export interface WalletCardProps {
   wallet: WalletInfoDTO;
@@ -13,7 +13,7 @@ export interface WalletCardProps {
 export function WalletCard({ wallet, active, onClick }: WalletCardProps) {
   const brand = walletBrand(wallet.slug);
   const pnlCls = wallet.pnl >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]";
-  const cashTxt = wallet.cash_available ? fmtINRShort(wallet.cash) : "—";
+  const cashTxt = wallet.cash_available ? fmtMoneyShort(wallet.cash, wallet.currency) : "—";
   const sub =
     wallet.slug === "all" ? `${wallet.holdings_count} POSITIONS` : wallet.label.toUpperCase();
   return (
@@ -69,7 +69,7 @@ export function WalletCard({ wallet, active, onClick }: WalletCardProps) {
       <div className="mt-0.5 flex items-center justify-between border-t border-[color:var(--line)] pt-2 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--fg-3)] tabular-nums">
         <span>
           <span className="font-medium text-[color:var(--fg)]">
-            {fmtINRShort(wallet.holdings_value)}
+            {fmtMoneyShort(wallet.holdings_value, wallet.currency)}
           </span>
           <span className="text-[color:var(--fg-3)]"> · {wallet.holdings_count} POS</span>
         </span>

@@ -14,6 +14,7 @@ from pydantic import BaseModel
 
 from app.core.logging import get_logger
 from app.modules.brokers.base import WalletBalance
+from app.modules.brokers.fx import to_inr
 from app.modules.brokers.registry import SOURCES
 
 logger = get_logger("brokers.wallets")
@@ -36,12 +37,16 @@ class WalletInfo(BaseModel):
 
 
 def _aggregate_holdings(slug: str) -> tuple[float, float, float, int]:
-    """Return (current_value, invested, pnl, count) across this broker's holdings."""
+    """Return (current_value, invested, pnl, count) in INR across this broker's holdings.
+
+    USD-priced holdings (IndMoney US) are converted before summing so wallet
+    `holdings_value` is comparable with INR wallets in the global compact bar.
+    """
     src = SOURCES.get(slug)
     if not src:
         return 0.0, 0.0, 0.0, 0
-    cv = sum(h.current_value for h in src.cached)
-    inv = sum(h.invested for h in src.cached)
+    cv = sum(to_inr(h.current_value, h.currency) for h in src.cached)
+    inv = sum(to_inr(h.invested, h.currency) for h in src.cached)
     return round(cv, 2), round(inv, 2), round(cv - inv, 2), len(src.cached)
 
 
@@ -60,7 +65,7 @@ def _build_one(slug: str) -> WalletInfo:
         label=src.label,
         supports_cash=bool(getattr(src, "supports_cash", False)),
         cash=bal.cash if bal else 0.0,
-        currency=bal.currency if bal else "INR",
+        currency=bal.currency if bal else getattr(src, "currency", "INR"),
         cash_available=bool(bal and bal.available),
         cash_error=bal.error if bal else None,
         cash_as_of=bal.as_of if bal else None,

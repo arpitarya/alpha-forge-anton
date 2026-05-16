@@ -2,6 +2,33 @@ import { primaryLabel } from "./ledger.utils";
 import type { HoldingDTO } from "./portfolio.types";
 
 export type PnLMode = "all" | "up" | "dn";
+
+/**
+ * Top-level asset class bucket shown in the filter chips.
+ * Maps to one or more {@link HoldingDTO.asset_class} values.
+ *   - `equity`  → equity (incl. INVIT/REIT, split further by EquitySub)
+ *   - `mfetf`   → mutual_fund + etf
+ *   - `gold`    → gold
+ *   - `all`     → no filter (crypto/bond/etc. show only here)
+ */
+export type AssetClassBucket = "all" | "equity" | "mfetf" | "gold";
+
+/** Sub-filter applied when {@link FilterState.assetClass} === "equity". */
+export type EquitySub = "all" | "in" | "us" | "invitreit";
+
+export const ASSET_BUCKETS: { id: AssetClassBucket; label: string; hasSub?: boolean }[] = [
+  { id: "all", label: "All" },
+  { id: "equity", label: "Equity", hasSub: true },
+  { id: "mfetf", label: "MF/ETF" },
+  { id: "gold", label: "Gold" },
+];
+
+export const EQUITY_SUBS: { id: EquitySub; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "in", label: "India" },
+  { id: "us", label: "US" },
+  { id: "invitreit", label: "INVIT/REIT" },
+];
 export type SortKey =
   | "value"
   | "pnl"
@@ -16,10 +43,37 @@ export type SortDir = "asc" | "desc";
 
 export interface FilterState {
   query: string;
-  assetClass: string;
+  assetClass: AssetClassBucket;
+  equitySub: EquitySub;
   pnl: PnLMode;
   sortBy: SortKey;
   sortDir: SortDir;
+}
+
+function isInvitReit(h: HoldingDTO): boolean {
+  const sector = (h.sector ?? "").toUpperCase();
+  return sector.includes("REIT") || sector.includes("INVIT");
+}
+
+function isUSEquity(h: HoldingDTO): boolean {
+  if ((h.currency ?? "").toUpperCase() === "USD") return true;
+  const ex = (h.exchange ?? "").toUpperCase();
+  return ex === "NYSE" || ex === "NASDAQ" || ex === "ARCA" || ex === "AMEX";
+}
+
+/** Map a holding to its top-level filter bucket. */
+function bucketOf(h: HoldingDTO): AssetClassBucket | null {
+  if (h.asset_class === "equity") return "equity";
+  if (h.asset_class === "mutual_fund" || h.asset_class === "etf") return "mfetf";
+  if (h.asset_class === "gold") return "gold";
+  return null; // crypto, bond, cash, other → only visible under "all"
+}
+
+function equitySubOf(h: HoldingDTO): EquitySub | null {
+  if (h.asset_class !== "equity") return null;
+  if (isInvitReit(h)) return "invitreit";
+  if (isUSEquity(h)) return "us";
+  return "in";
 }
 
 export const SORT_LABEL: Record<SortKey, string> = {
@@ -56,7 +110,11 @@ function matchQuery(h: HoldingDTO, q: string): boolean {
 
 export function applyFilter(rows: HoldingDTO[], f: FilterState): HoldingDTO[] {
   const filtered = rows.filter((h) => {
-    if (f.assetClass !== "All" && h.asset_class !== f.assetClass) return false;
+    if (f.assetClass !== "all") {
+      if (bucketOf(h) !== f.assetClass) return false;
+      if (f.assetClass === "equity" && f.equitySub !== "all" && equitySubOf(h) !== f.equitySub)
+        return false;
+    }
     if (f.pnl === "up" && h.pnl <= 0) return false;
     if (f.pnl === "dn" && h.pnl >= 0) return false;
     return matchQuery(h, f.query.trim());
@@ -72,10 +130,22 @@ export function applyFilter(rows: HoldingDTO[], f: FilterState): HoldingDTO[] {
   });
 }
 
-export function assetClassCounts(rows: HoldingDTO[]): Record<string, number> {
-  const out: Record<string, number> = { All: rows.length };
+export interface AssetClassCounts {
+  cls: Record<AssetClassBucket, number>;
+  sub: Record<EquitySub, number>;
+}
+
+export function assetClassCounts(rows: HoldingDTO[]): AssetClassCounts {
+  const cls: Record<AssetClassBucket, number> = { all: rows.length, equity: 0, mfetf: 0, gold: 0 };
+  const sub: Record<EquitySub, number> = { all: 0, in: 0, us: 0, invitreit: 0 };
   for (const r of rows) {
-    out[r.asset_class] = (out[r.asset_class] ?? 0) + 1;
+    const b = bucketOf(r);
+    if (b && b !== "all") cls[b] += 1;
+    if (b === "equity") {
+      sub.all += 1;
+      const s = equitySubOf(r);
+      if (s && s !== "all") sub[s] += 1;
+    }
   }
-  return out;
+  return { cls, sub };
 }

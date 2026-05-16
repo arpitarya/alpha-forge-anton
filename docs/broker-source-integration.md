@@ -274,11 +274,15 @@ Patterns in use:
 
 | Source | Balance page | XHR needle | Field path |
 |--------|--------------|------------|-----------|
-| Zerodha | n/a (direct HTTP) | `GET /oms/user/margins` (enctoken) | `data.equity.available.cash` |
-| Angel One | `angelone.in/trade/funds` | `/funds/v2/getRMSLimit` (CDP) | `data.netAvailableFunds` |
-| Groww | `groww.in/user/balance/inr` | `/margin/user_margin_details` (CDP) | `CASH.value` (string → float) |
-| IndMoney | not supported (`supports_cash = False`; wallet card shows "Cash N/A") | | |
+| Zerodha (INR) | n/a (direct HTTP) | `GET /oms/user/margins` (enctoken) | `data.equity.available.cash` |
+| Angel One (INR) | `angelone.in/trade/funds` | `/funds/v2/getRMSLimit` (CDP) | `data.netAvailableFunds` |
+| Groww (INR) | `groww.in/user/balance/inr` | `/margin/user_margin_details` (CDP) | `CASH.value` (string → float) |
+| IndMoney (USD) | `indmoney.com/investments/us-stocks/my-us-stocks` | `/stocks/dw/user/account/basic` (CDP) | `cash_available_for_trade` |
 | Ticker Tape | not supported (`supports_cash = False`; wallet card shows "Cash N/A") | | |
+
+Non-INR brokers: set `currency = "USD"` (or other) as a class attribute on the `BrokerSource` subclass. The shared `_build_one` reads it so `WalletInfo.currency` is correct even before the first `fetch_cash()` call, and each `Holding` returned by the source must also set `currency="USD"` so the frontend renders `$` instead of `₹`.
+
+Cross-currency totals are normalised to INR by `app.modules.brokers.fx.to_inr`. The USD→INR rate is fetched live from `https://open.er-api.com/v6/latest/USD` and cached on disk at `<dump_dir>/fx-rates-live.csv` with a 1-hour TTL (`_TTL_SECONDS = 3600`); on live-fetch failure it falls back to the last cached row, then to `FALLBACK_INR_PER_USD = 83.41`. The conversion is applied in `HoldingsAggregator.totals/allocation/treemap` and `wallet_aggregator._aggregate_holdings`, so `WalletInfo.holdings_value` / `pnl` and the global compact-bar totals are all in INR. Free cash is still reported in the broker's native `currency`; the frontend reads the current rate via `GET /portfolio/fx` (TanStack `useFx`, `staleTime` = TTL) and threads it into `aggregateAll` / `toInr` for the "All" wallet cash sum.
 
 Routes (mounted under `/portfolio/cash`):
 
@@ -339,13 +343,15 @@ US-stocks holdings from INDmoney's DriveWealth-backed brokerage account. CDP bro
 | Auth | Manual login at `indmoney.com` inside the AlphaForge Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
 | `REQUIRED_ENV` | `INDMONEY_USER_ID` |
 | Asset classes | `EQUITY` (US stocks — fractional shares via DriveWealth) |
+| Currency | **USD** (`currency = "USD"` on the source; every `Holding` is emitted with `currency="USD"`) |
 | Kind | `SourceKind.API` |
 | Cache TTL | `INDMONEY_REFETCH_SECONDS` (default `3600`) |
 | **Trigger page** | `www.indmoney.com/investments/us-stocks/my-us-stocks` |
 | **Holdings endpoint** | `apixt-fz.indmoney.com/us-stocks-ext/api/v1/stocks/dw/user/account/holdings/?page=1&limit=N` |
 | **Holdings key** | `data` — list of `{ticker, name, quantity, avg_price, live_price, invested_amount, current_value, total_profit_loss, total_percent_change, sector}` |
 | **Field mapping** | `ticker→symbol`, `avg_price→avg_price`, `live_price→last_price`, `invested_amount→invested`, `current_value→current_value`, `total_profit_loss→pnl`, `total_percent_change→pnl_pct` |
-| **Helpers** | [`indmoney_source_helper.py`](../backend/app/modules/brokers/indmoney/indmoney_source_helper.py), [`indmoney_dump.py`](../backend/app/modules/brokers/indmoney/indmoney_dump.py) |
+| **Cash endpoint** | `apixt-fz.indmoney.com/us-stocks-ext/api/v3/stocks/dw/user/account/basic` — field `cash_available_for_trade` (USD). Probe-confirmed 2026-05-16. |
+| **Helpers** | [`indmoney_source_helper.py`](../backend/app/modules/brokers/indmoney/indmoney_source_helper.py), [`indmoney_dump.py`](../backend/app/modules/brokers/indmoney/indmoney_dump.py), [`indmoney_cash_helper.py`](../backend/app/modules/brokers/indmoney/indmoney_cash_helper.py) |
 
 **Setup**:
 

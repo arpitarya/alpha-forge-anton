@@ -50,8 +50,34 @@ export function relTime(iso: string | null): string {
   return `${Math.floor(h / 24)}d`;
 }
 
-export function aggregateAll(wallets: WalletInfoDTO[]): WalletInfoDTO {
-  const cash = wallets.reduce((s, w) => s + (w.cash_available ? w.cash : 0), 0);
+/**
+ * Static fallback rate, used when the live `/portfolio/fx` query has not yet
+ * resolved. Mirrors backend `fx.FALLBACK_INR_PER_USD`.
+ */
+export const INR_PER_USD = 83.41;
+
+export function toInr(
+  value: number,
+  currency: string | null | undefined,
+  rate: number = INR_PER_USD,
+): number {
+  if (!currency || currency.toUpperCase() === "INR") return value;
+  if (currency.toUpperCase() === "USD") return value * rate;
+  return value;
+}
+
+export function aggregateAll(
+  wallets: WalletInfoDTO[],
+  rate: number = INR_PER_USD,
+): WalletInfoDTO {
+  // Backend returns `holdings_value` / `pnl` already normalised to INR
+  // (see brokers/fx.py), so every wallet rolls into the All total. Cash is
+  // still reported in its native currency, so convert it here using the
+  // live rate from /portfolio/fx (caller passes it in).
+  const cash = wallets.reduce(
+    (s, w) => s + (w.cash_available ? toInr(w.cash, w.currency, rate) : 0),
+    0,
+  );
   const holdings = wallets.reduce((s, w) => s + w.holdings_value, 0);
   const count = wallets.reduce((s, w) => s + w.holdings_count, 0);
   const pnl = wallets.reduce((s, w) => s + w.pnl, 0);

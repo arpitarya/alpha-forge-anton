@@ -14,14 +14,70 @@ const CLASS_LABEL: Record<string, string> = {
   other: "Other",
 };
 
-export function RebalanceRail() {
+export interface RebalanceRailProps {
+  collapsed: boolean;
+  onToggle: () => void;
+}
+
+/**
+ * Hi-Fi `.rail` — drift / target allocation panel. Collapsible: when
+ * `collapsed`, renders the vertical strip (orb + vertical label + action badge)
+ * from the design; otherwise the full card with toggle in the corner.
+ */
+export function RebalanceRail({ collapsed, onToggle }: RebalanceRailProps) {
   const { data } = useRebalance();
   const drift = data?.drift ?? [];
   const suggestions = data?.suggestions ?? [];
 
+  if (collapsed) {
+    return (
+      <button
+        type="button"
+        onClick={onToggle}
+        title="Expand Alpha rebalance"
+        aria-label="Expand Alpha rebalance panel"
+        className="group relative flex h-full w-9 flex-col items-center justify-between gap-3.5 self-stretch rounded-[10px] border border-[color:var(--line)] bg-[color:color-mix(in_srgb,var(--surface)_80%,transparent)] px-0 py-3.5 transition-colors hover:border-[color:color-mix(in_srgb,var(--accent)_45%,transparent)] hover:bg-[color:color-mix(in_srgb,var(--accent)_6%,transparent)]"
+      >
+        <span className="font-mono text-[14px] leading-none text-[color:var(--fg-3)] transition-transform group-hover:-translate-x-0.5 group-hover:text-[color:var(--accent)]">
+          ‹
+        </span>
+        <span
+          aria-hidden
+          className="h-3.5 w-3.5 rounded-full"
+          style={{
+            background:
+              "radial-gradient(circle at 36% 34%, #fff, var(--accent-soft) 25%, var(--accent) 65%, transparent)",
+            boxShadow: "0 0 14px var(--glow)",
+          }}
+        />
+        <span
+          className="flex flex-1 items-center font-mono text-[9.5px] tracking-[0.28em] text-[color:var(--fg-2)] group-hover:text-[color:var(--fg)]"
+          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+        >
+          ALPHA · REBALANCE
+        </span>
+        {suggestions.length > 0 && (
+          <span className="min-w-[14px] rounded-[4px] border border-[color:color-mix(in_srgb,var(--accent)_35%,transparent)] bg-[color:color-mix(in_srgb,var(--accent)_14%,transparent)] px-1.5 py-0.5 text-center font-mono text-[9px] text-[color:var(--accent)]">
+            {suggestions.length}
+          </span>
+        )}
+      </button>
+    );
+  }
+
   return (
-    <Card glow className="flex h-full flex-col gap-4 overflow-auto">
-      <div className="flex items-center gap-3">
+    <Card glow className="relative flex h-full flex-col gap-4 overflow-auto">
+      <button
+        type="button"
+        onClick={onToggle}
+        title="Collapse panel"
+        aria-label="Collapse panel"
+        className="absolute right-2.5 top-2.5 z-10 grid h-[22px] w-[22px] place-items-center rounded-[5px] border border-[color:var(--line)] bg-[color:color-mix(in_srgb,var(--surface-lo)_80%,transparent)] font-mono text-[13px] leading-none text-[color:var(--fg-3)] transition-all hover:border-[color:color-mix(in_srgb,var(--accent)_55%,transparent)] hover:bg-[color:color-mix(in_srgb,var(--accent)_10%,transparent)] hover:text-[color:var(--accent)]"
+      >
+        ›
+      </button>
+
+      <div className="flex items-center gap-3 pr-7">
         <div
           className="h-8 w-8 rounded-full"
           style={{
@@ -48,8 +104,8 @@ export function RebalanceRail() {
 
       {suggestions.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {suggestions.map((s, i) => (
-            <Chip key={`${s.action}-${i}`} variant="bordered">
+          {suggestions.map((s) => (
+            <Chip key={s.action} variant="bordered">
               {s.action}
             </Chip>
           ))}
@@ -61,7 +117,7 @@ export function RebalanceRail() {
           <ProgressBar
             key={d.asset_class}
             bidirectional
-            value={d.drift_pct * 4} // amplify for visibility
+            value={d.drift_pct * 4}
             label={CLASS_LABEL[d.asset_class] ?? d.asset_class}
             showPercentage
           />

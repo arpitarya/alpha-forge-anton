@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { clsx } from "clsx";
 import { useSyncWallet } from "./portfolio.query";
 import type { WalletInfoDTO } from "./portfolio.types";
-import { fmtINRShort, relTime, walletBrand } from "./wallet.utils";
+import { fmtMoneyShort, relTime, walletBrand } from "./wallet.utils";
 
 export interface SourceSpotlightProps {
   wallet: WalletInfoDTO;
@@ -41,13 +41,13 @@ export function SourceSpotlight({ wallet, onClear }: SourceSpotlightProps) {
         </div>
       </div>
       <SpotStat label="POSITIONS" value={wallet.holdings_count.toString()} />
-      <SpotStat label="HOLDINGS" value={fmtINRShort(wallet.holdings_value)} />
+      <SpotStat label="HOLDINGS" value={fmtMoneyShort(wallet.holdings_value, wallet.currency)} />
       <SpotStat
         label="P&L"
         value={`${wallet.pnl >= 0 ? "+" : ""}${wallet.pnl_pct.toFixed(2)}%`}
         valueClass={pnlCls}
       />
-      <SpotStat label="CASH" value={wallet.cash_available ? fmtINRShort(wallet.cash) : "—"} />
+      <SpotStat label="CASH" value={wallet.cash_available ? fmtMoneyShort(wallet.cash, wallet.currency) : "—"} />
       <div className="ml-auto flex flex-shrink-0 gap-2">
         <button
           type="button"

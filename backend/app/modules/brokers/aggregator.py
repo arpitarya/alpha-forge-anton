@@ -13,8 +13,17 @@ from app.modules.brokers.aggregator_types import (
     TreemapCell,
 )
 from app.modules.brokers.base import AssetClass, Holding
+from app.modules.brokers.fx import to_inr
 from app.modules.brokers.registry import SOURCES
 from app.modules.brokers.treemap_helper import squarify
+
+
+def _inr_value(h: Holding) -> float:
+    return to_inr(h.current_value, h.currency)
+
+
+def _inr_invested(h: Holding) -> float:
+    return to_inr(h.invested, h.currency)
 
 
 class HoldingsAggregator:
@@ -31,8 +40,8 @@ class HoldingsAggregator:
 
     def totals(self, source: str | None = None) -> dict[str, float]:
         h = self.all_holdings(source)
-        invested = sum(x.invested for x in h)
-        current = sum(x.current_value for x in h)
+        invested = sum(_inr_invested(x) for x in h)
+        current = sum(_inr_value(x) for x in h)
         pnl = current - invested
         return {
             "invested": round(invested, 2),
@@ -44,10 +53,10 @@ class HoldingsAggregator:
 
     def allocation(self, source: str | None = None) -> list[AllocationSlice]:
         h = self.all_holdings(source)
-        total = sum(x.current_value for x in h) or 1.0
+        total = sum(_inr_value(x) for x in h) or 1.0
         buckets: dict[AssetClass, float] = {}
         for x in h:
-            buckets[x.asset_class] = buckets.get(x.asset_class, 0.0) + x.current_value
+            buckets[x.asset_class] = buckets.get(x.asset_class, 0.0) + _inr_value(x)
         return [
             AllocationSlice(
                 asset_class=c, value=round(v, 2), pct=round(v / total * 100, 2)
@@ -56,15 +65,18 @@ class HoldingsAggregator:
         ]
 
     def treemap(self, source: str | None = None, max_cells: int = 24) -> list[TreemapCell]:
-        h = sorted(self.all_holdings(source), key=lambda x: -x.current_value)[:max_cells]
-        total = sum(x.current_value for x in h) or 1.0
-        rects = squarify([x.current_value / total for x in h], 0, 0, 1, 1)
+        # Sort and proportion the treemap in INR-normalised values so USD-priced
+        # holdings (e.g. NVDA from IndMoney) sit alongside INR holdings correctly.
+        h = sorted(self.all_holdings(source), key=lambda x: -_inr_value(x))[:max_cells]
+        inr_values = [_inr_value(x) for x in h]
+        total = sum(inr_values) or 1.0
+        rects = squarify([v / total for v in inr_values], 0, 0, 1, 1)
         cells: list[TreemapCell] = []
         named_classes = (AssetClass.BOND, AssetClass.GOLD)
-        for hold, (lx, ly, lw, lh) in zip(h, rects, strict=False):
+        for hold, v_inr, (lx, ly, lw, lh) in zip(h, inr_values, rects, strict=False):
             sub = (
-                f"{hold.asset_class.value} · ₹{round(hold.current_value):,}"
-                if hold.current_value
+                f"{hold.asset_class.value} · ₹{round(v_inr):,}"
+                if v_inr
                 else hold.asset_class.value
             )
             # Bonds/gold have cryptic scripCodes — prefer the human name when available.
@@ -72,9 +84,9 @@ class HoldingsAggregator:
             cells.append(
                 TreemapCell(
                     symbol=label, sublabel=sub,
-                    value=hold.current_value,
-                    pct=round(hold.current_value / total * 100, 2),
-                    pnl=hold.pnl, pnl_pct=hold.pnl_pct,
+                    value=v_inr,
+                    pct=round(v_inr / total * 100, 2),
+                    pnl=to_inr(hold.pnl, hold.currency), pnl_pct=hold.pnl_pct,
                     asset_class=hold.asset_class,
                     left_pct=round(lx * 100, 4), top_pct=round(ly * 100, 4),
                     width_pct=round(lw * 100, 4), height_pct=round(lh * 100, 4),
