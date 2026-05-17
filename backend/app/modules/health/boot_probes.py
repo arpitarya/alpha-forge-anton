@@ -13,6 +13,8 @@ from app.modules.brokers.broker_schemas import SourceStatus
 from app.modules.brokers.registry import SOURCES
 from app.modules.health.boot_schemas import BootService, BootStatus
 
+_LLM_PRIORITY = ["gemini", "cerebras", "groq", "claude-sdk", "mistral", "openrouter", "huggingface"]
+
 
 async def probe_backend() -> BootService:
     return BootService(
@@ -40,18 +42,44 @@ async def probe_database() -> BootService:
         )
 
 
+async def probe_llm() -> BootService:
+    try:
+        from alphaforge_llm.gateway import create_gateway
+        healths = await create_gateway().health()
+        available = {name for name, h in healths.items() if h.available}
+        if not available:
+            return BootService(
+                key="llm", label="AI Gateway · LLM routing",
+                status=BootStatus.ERROR, detail="no providers available",
+            )
+        primary = next((p for p in _LLM_PRIORITY if p in available), next(iter(available)))
+        return BootService(
+            key="llm", label="AI Gateway · LLM routing",
+            status=BootStatus.OK, detail=f"{len(available)} providers · via {primary}",
+        )
+    except Exception as e:  # noqa: BLE001
+        return BootService(
+            key="llm", label="AI Gateway · LLM routing",
+            status=BootStatus.ERROR, detail=str(e)[:48],
+        )
+
+
 _BROKER_STATUS_MAP = {
     SourceStatus.READY: BootStatus.OK,
     SourceStatus.SYNCING: BootStatus.OK,
     SourceStatus.UNCONFIGURED: BootStatus.WARN,
     SourceStatus.ERROR: BootStatus.ERROR,
 }
-_BROKER_DETAIL_MAP = {
-    SourceStatus.READY: "linked",
-    SourceStatus.SYNCING: "syncing…",
-    SourceStatus.UNCONFIGURED: "not linked",
-    SourceStatus.ERROR: "error",
-}
+
+
+def _broker_detail(status: SourceStatus, holdings_count: int) -> str:
+    if status == SourceStatus.READY:
+        return f"{holdings_count} holdings" if holdings_count else "linked · not synced"
+    if status == SourceStatus.SYNCING:
+        return "syncing…"
+    if status == SourceStatus.UNCONFIGURED:
+        return "not linked"
+    return "error"
 
 
 async def probe_brokers() -> list[BootService]:
@@ -62,6 +90,6 @@ async def probe_brokers() -> list[BootService]:
             key=slug,
             label=f"{info.label} · holdings source",
             status=_BROKER_STATUS_MAP.get(info.status, BootStatus.WARN),
-            detail=_BROKER_DETAIL_MAP.get(info.status, info.status.value),
+            detail=_broker_detail(info.status, info.holdings_count),
         ))
     return rows

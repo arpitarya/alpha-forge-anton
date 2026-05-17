@@ -16,25 +16,30 @@ export interface BootStep {
 /** Static fallback used only if the live probe call fails. Real boot rows
  * come from `GET /api/v1/health/boot` via `BootGate`. */
 export const BOOT_STEPS: BootStep[] = [
-  { key: "backend",  label: "Backend · FastAPI gateway",   status: "ok",   doneStatus: "online"     },
-  { key: "database", label: "Database · Postgres ready",   status: "ok",   doneStatus: "ready"      },
-  { key: "zerodha",  label: "Zerodha (Kite) · holdings source",   status: "warn", doneStatus: "not linked" },
-  { key: "groww",    label: "Groww · holdings source",     status: "warn", doneStatus: "not linked" },
+  { key: "backend",   label: "Backend · FastAPI gateway",      status: "ok",   doneStatus: "online"     },
+  { key: "database",  label: "Database · Postgres ready",      status: "ok",   doneStatus: "ready"      },
+  { key: "llm",       label: "AI Gateway · LLM routing",       status: "warn", doneStatus: "no key"     },
+  { key: "zerodha",   label: "Zerodha (Kite) · holdings source", status: "warn", doneStatus: "not linked" },
+  { key: "groww",     label: "Groww · holdings source",        status: "warn", doneStatus: "not linked" },
   { key: "wintwealth", label: "Wint Wealth · holdings source", status: "warn", doneStatus: "not linked" },
-  { key: "angelone", label: "Angel One · holdings source", status: "warn", doneStatus: "not linked" },
+  { key: "angelone",  label: "Angel One · holdings source",    status: "warn", doneStatus: "not linked" },
 ];
 
 const NOW_STATUS: Record<string, string> = {
   database:    "querying postgres…",
-  zerodha:     "resuming kite session…",
-  groww:       "reading cached holdings…",
-  wintwealth:  "loading bonds & SGBs…",
-  angelone:    "attaching to Angel One session…",
+  llm:         "connecting to AI providers…",
+  zerodha:     "syncing Zerodha positions…",
+  groww:       "syncing Groww holdings…",
+  wintwealth:  "syncing bonds & SGBs…",
+  angelone:    "syncing Angel One snapshot…",
+  indmoney:    "syncing IndMoney holdings…",
+  tickertape:  "syncing Tickertape data…",
 };
 
 const HEADLINES: Record<string, string> = {
   backend:    "Give me a second — I'm spinning up your terminal.",
   database:   "Connecting to your data.",
+  llm:        "Wiring up your AI analyst…",
   zerodha:    "Pulling your Zerodha positions…",
   groww:      "Loading your Groww book…",
   wintwealth: "Reading Wint Wealth bonds & SGBs…",
@@ -47,12 +52,20 @@ export interface BootScreenProps {
   steps?: BootStep[];
   onDone: () => void;
   exiting?: boolean;
+  /** Gate: navigation is held until sync resolves. Animation still plays immediately. */
+  syncReady?: boolean;
 }
 
-export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false }: BootScreenProps) {
+export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncReady = false }: BootScreenProps) {
   const [done, setDone] = useState(3);
+  const [animDone, setAnimDone] = useState(false);
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
+
+  // Fire onDone only when both animation and sync have settled.
+  useEffect(() => {
+    if (animDone && syncReady) onDoneRef.current();
+  }, [animDone, syncReady]);
 
   useEffect(() => {
     let step = 3;
@@ -64,7 +77,7 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false }: Boot
       if (step < steps.length) {
         t = setTimeout(next, 700 + Math.random() * 500);
       } else {
-        t = setTimeout(() => onDoneRef.current(), 650);
+        t = setTimeout(() => setAnimDone(true), 650);
       }
     }
 
@@ -303,7 +316,7 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false }: Boot
           </div>
 
           <div className="mt-2 flex justify-between font-mono text-[10px] tracking-[0.2em] uppercase text-[color:var(--fg-3)]">
-            <span>{done} of {steps.length} services online</span>
+            <span>{done} of {steps.length} systems ready</span>
             <span
               style={{
                 color: allDone ? "var(--green)" : "var(--accent)",

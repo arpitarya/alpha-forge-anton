@@ -11,3 +11,14 @@ export interface BootService {
 export interface BootReport {
   services: BootService[];
 }
+
+/** Mirrors `POST /health/boot/sync` response. */
+export interface SyncResult {
+  ok: boolean;
+  holdings_count: number;
+  detail: string;
+}
+
+export interface BootSyncReport {
+  results: Record<string, SyncResult>;
+}

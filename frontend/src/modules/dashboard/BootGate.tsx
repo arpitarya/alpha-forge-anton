@@ -2,9 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import { type ReactNode, useCallback, useEffect, useState } from "react";
-import { fetchBootReport } from "./boot.api";
+import { BOOT_STEPS, BootScreen, type BootStep } from "./BootScreen";
+import { fetchBootReport, triggerBootSync } from "./boot.api";
 import type { BootService } from "./boot.types";
-import { BOOT_STEPS, type BootStep, BootScreen } from "./BootScreen";
 
 type Phase = "boot" | "exiting" | "done";
 
@@ -22,6 +22,7 @@ export function BootGate({ children }: { children: ReactNode }) {
   const [phase, setPhase] = useState<Phase>("done");
   const [hydrated, setHydrated] = useState(false);
   const [steps, setSteps] = useState<BootStep[]>(BOOT_STEPS);
+  const [syncReady, setSyncReady] = useState(false);
 
   useEffect(() => {
     if (skip) {
@@ -35,15 +36,31 @@ export function BootGate({ children }: { children: ReactNode }) {
       setHydrated(true);
       return;
     }
-    // Real probe: fetch live system snapshot. If it fails the static fallback
-    // in BOOT_STEPS still produces a usable splash.
+
+    // 1. Fetch static boot report to populate the row list.
+    // 2. Concurrently fire broker sync — resolves when all syncs settle.
+    // Navigation is held until both the animation AND sync are done.
     fetchBootReport()
       .then((r) => setSteps(r.services.map(toStep)))
-      .catch(() => { /* fallback already in state */ })
+      .catch(() => { /* fallback BOOT_STEPS already in state */ })
       .finally(() => {
         setPhase("boot");
         setHydrated(true);
       });
+
+    triggerBootSync()
+      .then((report) => {
+        // Patch broker step doneStatus values with live sync results.
+        setSteps((prev) =>
+          prev.map((s) => {
+            const result = report.results[s.key];
+            if (!result) return s;
+            return { ...s, doneStatus: result.detail, status: result.ok ? "ok" : "error" };
+          })
+        );
+      })
+      .catch(() => { /* leave steps as-is; sync failed silently */ })
+      .finally(() => setSyncReady(true));
   }, [skip]);
 
   const handleDone = useCallback(() => {
@@ -72,5 +89,12 @@ export function BootGate({ children }: { children: ReactNode }) {
     );
   }
 
-  return <BootScreen steps={steps} onDone={handleDone} exiting={phase === "exiting"} />;
+  return (
+    <BootScreen
+      steps={steps}
+      onDone={handleDone}
+      exiting={phase === "exiting"}
+      syncReady={syncReady}
+    />
+  );
 }
