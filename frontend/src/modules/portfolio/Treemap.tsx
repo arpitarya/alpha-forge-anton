@@ -29,9 +29,12 @@ export function Treemap({ holdings }: { holdings: HoldingDTO[] }) {
   const cells = useMemo(() => {
     if (!size.w || !size.h || !holdings.length) return [];
     const sorted = [...holdings].sort((a, b) => b.current_value - a.current_value);
-    // Square-root scale dampens the dominance of outsized positions so every
-    // tile stays readable. Raw values make the top holding eat 50%+ of canvas.
-    const scaled = sorted.map((h) => Math.max(0, Math.sqrt(h.current_value)));
+    // Log scale + max-share cap: prevents any single tile from eating the canvas.
+    // Raw values make the top holding take 50%+ of area; log brings it to ~15%.
+    const rawScaled = sorted.map((h) => Math.max(1, Math.log(Math.max(1, h.current_value) + 1)));
+    const rawTotal = rawScaled.reduce((a, b) => a + b, 0);
+    const MAX_SHARE = 0.18; // no tile > 18% of total area
+    const scaled = rawScaled.map((v) => Math.min(v, rawTotal * MAX_SHARE));
     const rects = squarify(scaled, 0, 0, size.w, size.h);
     return sorted.map((h, i) => ({ ...rects[i], h }));
   }, [holdings, size.w, size.h]);
@@ -56,7 +59,7 @@ export function Treemap({ holdings }: { holdings: HoldingDTO[] }) {
         cells.map(({ left, top, width, height, h }) => {
           const w = Math.max(0, width - GAP);
           const ch = Math.max(0, height - GAP);
-          const big = w * ch > 28000;
+          const big = w * ch > 40000;
           return (
             <TreemapCell
               key={`${h.source}-${h.symbol}-${h.isin ?? ""}`}
