@@ -1,6 +1,6 @@
 """Angel One holdings — BrokerSource impl over CDP browser fetch + on-disk cache.
 
-Auth flow: user logs in to angelone.in inside the AlphaForge Chrome instance
+Auth flow: user logs in to angelone.in inside the AlphaForge Anton Chrome instance
 started with --remote-debugging-port=9299. `fetch()` attaches over CDP, runs
 the holdings API call inside the authenticated page, and caches the result to
 disk. Subsequent `fetch()` calls within ANGELONE_REFETCH_SECONDS return from
@@ -77,8 +77,8 @@ class AngelOneSource(BrokerSource):
     kind = SourceKind.API
     supports_cash = True
     notes = (
-        "Manual login: log in to angelone.in inside the AlphaForge Chrome "
-        "(started with --remote-debugging-port=9299). AlphaForge never "
+        "Manual login: log in to angelone.in inside the AlphaForge Anton Chrome "
+        "(started with --remote-debugging-port=9299). AlphaForge Anton never "
         "stores your password or TOTP. Set ANGELONE_CLIENT_ID in .env.cred.local."
     )
 

@@ -9,7 +9,7 @@ from app.core.env_loader import get_env_files, load_env_files
 
 _LOADED_ENV_FILES = load_env_files()
 
-# bcrypt(rounds=10) of "alphaforge-dev" — only valid in APP_ENV=development
+# bcrypt(rounds=10) of "alphaforge-anton-dev" — only valid in APP_ENV=development
 _DEV_PASSWORD_HASH = "$2b$10$A0KihioA2iYqL64yVkz8beVxCnryP.4CkYPQUUgyJF7HW8GFwf8Zu"  # noqa: S105
 
 
@@ -22,20 +22,20 @@ class Settings(BaseSettings):
     )
 
     # ── App ──────────────────────────────────────
-    app_name: str = "AlphaForge"
+    app_name: str = "AlphaForge Anton"
     app_env: str = "development"
     debug: bool = False
     api_v1_prefix: str = "/api/v1"
 
     # ── Database ─────────────────────────────────
-    database_url: str = "postgresql+asyncpg://alphaforge:alphaforge@localhost:5432/alphaforge"
+    database_url: str = "postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge"
 
     # ── Auth / JWT ───────────────────────────────
     jwt_secret_key: str = "change-me-in-production"  # noqa: S105
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
     admin_username: str = "admin"
-    # Defaults to bcrypt("alphaforge-dev") in dev; must be set explicitly in production.
+    # Defaults to bcrypt("alphaforge-anton-dev") in dev; must be set explicitly in production.
     admin_password_hash: str = _DEV_PASSWORD_HASH
 
     # ── CORS ─────────────────────────────────────
@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     # ── Logging ──────────────────────────────────
     log_level: str = "INFO"
     log_dir: str = "logs"
-    log_file: str = "alphaforge.log"
+    log_file: str = "alphaforge-anton.log"
     log_max_bytes: int = 10_485_760  # 10 MB
     log_backup_count: int = 5
 

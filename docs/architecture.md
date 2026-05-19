@@ -1,14 +1,14 @@
-# AlphaForge — Architecture & Key Files
+# AlphaForge Anton — Architecture & Key Files
 
 ## Project
 
-**AlphaForge** — Personal AI-powered portfolio management & investment terminal for Indian markets.
+**AlphaForge Anton** — Personal AI-powered portfolio management & investment terminal for Indian markets.
 Built for personal use — not a SaaS product. Self-hosted, open-source, MIT licensed.
 
 ## Repository Structure
 
 ```
-alpha-forge/
+alpha-forge-anton/
 ├── backend/          Python 3.14 + FastAPI + SQLAlchemy async
 │   ├── app/core/     Config (pydantic-settings), DB engine, JWT/bcrypt, env_loader
 │   ├── app/modules/  Feature modules — each owns its routes/service/models
@@ -26,7 +26,7 @@ alpha-forge/
 │   │   └── src/alphaforge_logger/  setup_logging(), get_logger()
 │   ├── logger-node/  Publishable Node/TS logger package (@alphaforge/logger)
 │   │   └── src/      createLogger(), getLogger() — pino-based
-│   └── solar-orb-ui/ Publishable UI component library (@alphaforge/solar-orb-ui)
+│   └── ravel-ui/ Publishable UI component library (@alphaforge-anton/ravel-ui)
 │       ├── src/components/  Button, Input, Card, Badge, Icon, Text
 │       └── src/styles/      fonts.css, theme.css, base.css (design tokens + base styles)
 ├── frontend/         Next.js 15 (App Router) + React 19 + TypeScript + Tailwind v4
@@ -41,7 +41,7 @@ alpha-forge/
 │       └── auth/        auth.api.ts
 ├── infra/            Infrastructure configs (docker-compose for services, devcontainer)
 ├── repo-context-mcp/ Tool-agnostic MCP server — gives Claude/Copilot/Cursor/any MCP client semantic + structural context over this repo
-│   └── src/alphaforge_repo_context/  server, indexer, chunker, embeddings, watcher, tools/
+│   └── src/alphaforge_anton_repo_context/  server, indexer, chunker, embeddings, watcher, tools/
 ├── docs/             WHY.md, WHAT.md, HOW.md, GETTING_STARTED.md + canonical shared docs for AI agents
 └── design/           Design system & Gemini Stitch tokens
 ```
@@ -55,13 +55,13 @@ alpha-forge/
 | Node pkg mgr | pnpm | Lockfile: `pnpm-lock.yaml`; config in `.npmrc` |
 | Node version | nvm | Pinned in `.nvmrc` |
 | Monorepo | pnpm workspaces | `pnpm-workspace.yaml` at root; `packages/*` + `frontend` |
-| UI library | @alphaforge/solar-orb-ui | Publishable package built with tsup (ESM + CJS + DTS) |
+| UI library | @alphaforge-anton/ravel-ui | Publishable package built with tsup (ESM + CJS + DTS) |
 | Logging (Python) | alphaforge-logger | Rotating file + console, env-configurable |
 | Logging (Node) | @alphaforge/logger | Pino-based, file + console, publishable tsup pkg |
 | DB | PostgreSQL 16 | Async via asyncpg + SQLAlchemy |
 | Cache | Redis 7 | Quotes cache, pub/sub, Celery broker |
 | AI | OpenAI + LangChain | RAG with market data context |
-| Repo Context MCP | alphaforge-repo-context-mcp | Local stdio MCP server; pgvector-backed semantic + structural repo context for Claude/Copilot/Cursor/any MCP client |
+| Repo Context MCP | alphaforge-anton-repo-context-mcp | Local stdio MCP server; pgvector-backed semantic + structural repo context for Claude/Copilot/Cursor/any MCP client |
 | Brokers | Abstract BrokerSource interface | Zerodha first, then Groww, Angel One, Upstox |
 | Local infra | brew services (Postgres, Redis) | Containers optional via OrbStack |
 | CI infra | devcontainer.json | GitHub Codespaces compatible |
@@ -100,12 +100,12 @@ alpha-forge/
   - `AccountSection.tsx` — Profile (avatar, name, status), connected brokers list, hotkey reference
   - `PrivacySection.tsx` — Telemetry / crash / training toggles, retention select, danger actions
   - `AboutSection.tsx` — Build / backend / license info, reset action
-- `frontend/src/app/globals.css` — Theme variables (Solar Terminal design tokens); `@source` directives extend Tailwind v4 content scanning into the workspace packages so arbitrary classes in `solar-orb-ui` resolve; restores the default `cursor: pointer` on `button` / `[role="button"]` that Tailwind v4's Preflight dropped
+- `frontend/src/app/globals.css` — Theme variables (Solar Terminal design tokens); `@source` directives extend Tailwind v4 content scanning into the workspace packages so arbitrary classes in `ravel-ui` resolve; restores the default `cursor: pointer` on `button` / `[role="button"]` that Tailwind v4's Preflight dropped
 - `frontend/next.config.mjs` — Next.js config: CSP headers (allows `fonts.googleapis.com` + `fonts.gstatic.com` for Material Symbols icons), API rewrites
 - `frontend/src/modules/dashboard/TerminalTopBar.tsx` — Slim global top bar per Hi-Fi spec (≈32px min-height, 4px×14px padding, 8px radius). SVG logo mark + ALPHA/FORGE wordmark; Terminal + Portfolio nav buttons; gear icon-button on the right routes to `/preferences`; no icon sidebar
 - `frontend/src/modules/chat/` — Alpha chat module: `AlphaBar.tsx` (global bottom bar — Voice/Chat segmented toggle + model picker + Deploy), `ChatRail.tsx` (fixed right-side slide-over conversation thread; `ResponseBody` renders **markdown as safe React nodes** — bold/italic/inline-code/fenced-code/h2-h3/ul/ol/hr — no `dangerouslySetInnerHTML`), `ModelPicker.tsx` (model dropdown: Auto / Forge Pro / Forge Fast / Forge Local), `useChatStream.ts` (SSE fetch hook, multi-turn history up to 6 turns, streaming; forwards JWT from `localStorage["af_token"]` in the `Authorization` header), `ChatContext.tsx` (React context provider rendering AlphaBar + ChatRail globally), `chat.types.ts` (ModelId, ChatTurn, MODELS, `resolveAutoModel`). Mounted in `layout.tsx` as `<ChatProvider>` so it appears on every screen. **Security:** backend endpoint is JWT-gated (`Depends(get_current_user)`); frontend proxy (`/api/v1/chat` → `route.ts`) keeps provider API keys server-side only.
 - `frontend/src/modules/dashboard/TerminalVoice.tsx` — Legacy static voice dock (no longer rendered — replaced by `AlphaBar` from the chat module)
-- `packages/solar-orb-ui/src/components/TopBar.tsx` / `VoiceDock.tsx` — Reusable chrome containers carrying `data-af-top` / `data-af-voice` plus `.af-top` / `.af-voice` classes. Paired with `body.chrome-autohide` / `body.no-voice` rules in `frontend/src/app/globals.css` to enable Preferences → Display → Chrome behavior (collapses bars to an accent strip; hover/focus expands) and the voice-bar disable toggle
+- `packages/ravel-ui/src/components/TopBar.tsx` / `VoiceDock.tsx` — Reusable chrome containers carrying `data-af-top` / `data-af-voice` plus `.af-top` / `.af-voice` classes. Paired with `body.chrome-autohide` / `body.no-voice` rules in `frontend/src/app/globals.css` to enable Preferences → Display → Chrome behavior (collapses bars to an accent strip; hover/focus expands) and the voice-bar disable toggle
 - `frontend/src/modules/dashboard/BootScreen.tsx` — Full-screen animated boot checklist. Renders one row per real backend system (gateway, Postgres, every broker source); each row's glyph and detail are driven by the `status: BootStatus` field (`ok` ✓ green / `warn` ! amber / `error` ✗ red). `BOOT_STEPS` is the static fallback used only when the live probe fails
 - `frontend/src/modules/dashboard/boot.api.ts` + `boot.types.ts` — Frontend client and TS mirror of `BootReport` / `BootService` from the backend
 - `frontend/src/modules/dashboard/BootGate.tsx` — Sits inside `AuthGuard` in the root layout. On first paint of a tab it hits `GET /api/v1/health/boot`, maps each service to a `BootStep`, then plays the boot screen exactly once per browser tab (gated by `sessionStorage['af-booted']`). Skips entirely on `/login` and survives navigations between Terminal / Portfolio / Preferences. If the probe call fails the static `BOOT_STEPS` fallback still produces a usable splash
@@ -121,19 +121,19 @@ alpha-forge/
 ### Packages & Infra
 - `packages/logger-py/src/alphaforge_logger/logger.py` — Python logger package core
 - `packages/logger-node/src/logger.ts` — Node/TS logger package core
-- `packages/solar-orb-ui/src/index.ts` — UI library barrel export (Button, Input, Card, Badge, Icon, Text)
-- `packages/solar-orb-ui/src/styles/theme.css` — Tailwind v4 design tokens (CSS)
-- `packages/solar-orb-ui/src/tokens/index.ts` — Design tokens (TypeScript)
-- `packages/solar-orb-ui/src/tokens/tokens.json` — Design tokens (JSON, machine-readable)
-- `packages/solar-orb-ui/tsup.config.ts` — Package build config
-- `repo-context-mcp/src/alphaforge_repo_context/server.py` — MCP server entry (stdio); exposes `search_code`, `get_symbol`, `module_overview`, `recent_changes`, `read_file_range`
-- `repo-context-mcp/src/alphaforge_repo_context/indexer.py` — Walk → chunk → embed → pgvector
-- `repo-context-mcp/src/alphaforge_repo_context/chunker.py` — AST (Python), regex (TS/TSX), section (Markdown), sliding-window fallback
-- `repo-context-mcp/src/alphaforge_repo_context/db.py` — `repo_chunks` ORM model + `init_schema()`
+- `packages/ravel-ui/src/index.ts` — UI library barrel export (Button, Input, Card, Badge, Icon, Text)
+- `packages/ravel-ui/src/styles/theme.css` — Tailwind v4 design tokens (CSS)
+- `packages/ravel-ui/src/tokens/index.ts` — Design tokens (TypeScript)
+- `packages/ravel-ui/src/tokens/tokens.json` — Design tokens (JSON, machine-readable)
+- `packages/ravel-ui/tsup.config.ts` — Package build config
+- `repo-context-mcp/src/alphaforge_anton_repo_context/server.py` — MCP server entry (stdio); exposes `search_code`, `get_symbol`, `module_overview`, `recent_changes`, `read_file_range`
+- `repo-context-mcp/src/alphaforge_anton_repo_context/indexer.py` — Walk → chunk → embed → pgvector
+- `repo-context-mcp/src/alphaforge_anton_repo_context/chunker.py` — AST (Python), regex (TS/TSX), section (Markdown), sliding-window fallback
+- `repo-context-mcp/src/alphaforge_anton_repo_context/db.py` — `repo_chunks` ORM model + `init_schema()`
 - `repo-context-mcp/README.md` — Wire-up snippets for Claude Code, VS Code/Copilot, Cursor, Cline, Zed, Windsurf
 
 ### Probes & Design
-- `probes/ui_probe.py` — End-to-end UI smoke test via CDP (port 9299). Attaches to existing Chrome session; exercises auth, dashboard, portfolio, and console-error checks. Writes PNGs to `/tmp/alphaforge-probe/`
+- `probes/ui_probe.py` — End-to-end UI smoke test via CDP (port 9299). Attaches to existing Chrome session; exercises auth, dashboard, portfolio, and console-error checks. Writes PNGs to `/tmp/alphaforge-anton-probe/`
 - `probes/ui_screens.py` — Lightweight screenshot helper. Auths via `POST /api/v1/auth/token`, stashes the JWT in localStorage, then snapshots `/`, `/portfolio`, `/preferences` at 1440×900
 - `probes/ui_pref_tabs.py` — Walks every Preferences sidebar tab and captures `preferences-<tab>.png` for design review
 - `screenshots/` — Probe output. Tracked dir; PNGs are overwritten on each run

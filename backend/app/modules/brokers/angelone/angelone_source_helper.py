@@ -67,7 +67,7 @@ def _extract_equity_holdings(payload: Any) -> list[dict[str, Any]]:
     if not isinstance(data, dict):
         return []
     out: list[dict[str, Any]] = []
-    # Equity is the only segment AlphaForge surfaces from Angel One today.
+    # Equity is the only segment AlphaForge Anton surfaces from Angel One today.
     # Bonds/SGBs/MFs live under their own keys with identical shape if needed
     # later: BondsPortfolio.HoldingDetail / SGBPortfolio.HoldingDetail.
     equity = data.get("EquityPortfolio") or {}

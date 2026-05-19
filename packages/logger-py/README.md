@@ -33,6 +33,6 @@ All parameters can be set via kwargs or environment variables:
 |-------|---------|---------|-------------|
 | `level` | `LOG_LEVEL` | `INFO` | Minimum log level |
 | `log_dir` | `LOG_DIR` | `logs` | Directory for log files |
-| `log_file` | `LOG_FILE` | `alphaforge.log` | Log filename |
+| `log_file` | `LOG_FILE` | `alphaforge-anton.log` | Log filename |
 | `max_bytes` | `LOG_MAX_BYTES` | `10485760` (10 MB) | Max file size before rotation |
 | `backup_count` | `LOG_BACKUP_COUNT` | `5` | Rotated backup files to keep |

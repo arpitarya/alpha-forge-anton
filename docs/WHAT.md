@@ -1,4 +1,4 @@
-# What AlphaForge Is
+# What AlphaForge Anton Is
 
 ## One-liner
 
@@ -96,7 +96,7 @@
 | Interactive Brokers integration | 🔜 Phase 3 |
 
 ### Out of Scope (for now)
-- Fully automated trading bots (AlphaForge assists, user decides)
+- Fully automated trading bots (AlphaForge Anton assists, user decides)
 - Financial advisory services
 - Proprietary brokerage / order routing
 - Mobile app (web-first; responsive PWA later)
@@ -149,7 +149,7 @@ H2 2027  ───────────────────────�
 ### Primary Flow: AI-Assisted Stock Analysis → Trade
 
 ```
-User opens AlphaForge
+User opens AlphaForge Anton
   → Sees dashboard with market overview
   → Types "Analyze TCS" in AI chat
   → AI returns comprehensive analysis with recommendation

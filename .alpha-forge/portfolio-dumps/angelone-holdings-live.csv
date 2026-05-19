@@ -1,0 +1,4 @@
+# source=angelone  dumped_at_utc=2026-05-18T20:11:17.116531+00:00  holdings_count=2
+tradingsymbol,name,isin,exchange,quantity,average_price,last_price,invested,current_value,pnl,pnl_pct
+PGINVIT-IV,Powergrid Infra.,INE0GGX23010,NSE,99.0,93.47873232,93.83,9254.39,9289.17,34.78,0.38
+IRBINVIT-IV,IRB InvIT Fund,INE183W23014,NSE,150.0,62.511498,61.04,9376.72,9156.0,-220.72,-2.35

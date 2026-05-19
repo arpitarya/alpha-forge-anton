@@ -1,4 +1,4 @@
-"""Centralized logging configuration for AlphaForge backend.
+"""Centralized logging configuration for AlphaForge Anton backend.
 
 Thin wrapper around the ``alphaforge-logger`` package that reads
 configuration from pydantic settings and passes it through.
@@ -27,5 +27,5 @@ def setup_logging() -> logging.Logger:
 
 
 def get_logger(name: str) -> logging.Logger:
-    """Return a child logger under the ``alphaforge`` namespace."""
+    """Return a child logger under the ``alphaforge_anton`` namespace."""
     return _get_logger(name)

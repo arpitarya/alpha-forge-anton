@@ -1,6 +1,6 @@
 # LLM Research Agent — Plan
 
-Personal AI research layer for AlphaForge. Answers portfolio-aware investment questions using
+Personal AI research layer for AlphaForge Anton. Answers portfolio-aware investment questions using
 free LLMs, real news feeds, and live market data. Claude (via Agent SDK) is the optional
 escalation tier requiring explicit user confirmation.
 
@@ -15,7 +15,7 @@ Related plan: [news/PLAN.md](../news/PLAN.md)
 5. Evaluation question bank that benchmarks providers and feeds the router
 6. **Any new LLM provider can be added in one file with no changes elsewhere**
 7. **Each provider can be tested in complete isolation before being wired into the system**
-8. **Full token usage tracking — summary and per-call detail — visible in the AlphaForge UI**
+8. **Full token usage tracking — summary and per-call detail — visible in the AlphaForge Anton UI**
 9. **All LLM management (provider keys, usage, health) accessible from the app — no terminal needed**
 
 ## Non-goals
@@ -199,7 +199,7 @@ One row per registered provider:
 
 ---
 
-## AlphaForge UI Surfaces
+## AlphaForge Anton UI Surfaces
 
 All LLM-related management is accessible from within the app.
 No terminal commands needed for day-to-day use after initial setup.
@@ -231,7 +231,7 @@ else in the system.
 ### ProviderAdapter ABC
 
 ```python
-# llm/src/alphaforge_llm/providers/base.py
+# llm/src/alphaforge_anton_llm/providers/base.py
 
 class ProviderAdapter(ABC):
     name: str                    # unique slug, e.g. "groq", "gemini-flash"
@@ -258,7 +258,7 @@ class ProviderAdapter(ABC):
 
 ### Adding a new provider — full checklist
 
-1. Create `llm/src/alphaforge_llm/providers/<name>.py`
+1. Create `llm/src/alphaforge_anton_llm/providers/<name>.py`
 2. Implement `ProviderAdapter` — self-contained, ≤100 lines
 3. Add one line to `providers/__init__.py`:
    ```python
@@ -423,7 +423,7 @@ ledger persists the invocation (query, tokens, timestamp) for quota auditing.
 Eval runner: runs all questions × all enabled providers; scores heuristically + LLM judge;
 writes `results/latest.json` → `QueryRouter` reads for chain ranking.
 When to run: manually after adding providers or questions; scheduled weekly.
-CLI: `uv run python -m alphaforge_llm.eval.eval_runner`
+CLI: `uv run python -m alphaforge_anton_llm.eval.eval_runner`
 
 ---
 
@@ -478,7 +478,7 @@ never the reverse. This is enforced in CI via `import-linter` rules.
 llm/
 ├── PLAN.md
 ├── pyproject.toml
-├── src/alphaforge_llm/
+├── src/alphaforge_anton_llm/
 │   ├── __init__.py
 │   ├── types.py                     # QueryType, ProviderResponse, EscalationRequest, Message
 │   ├── cost_guard.py

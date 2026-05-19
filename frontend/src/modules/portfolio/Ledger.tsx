@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Text } from "@alphaforge/solar-orb-ui";
+import { Card, Text } from "@alphaforge-anton/ravel-ui";
 import { clsx } from "clsx";
 import { LedgerRow } from "./LedgerRow";
 import type { SortDir, SortKey } from "./portfolio.filter";

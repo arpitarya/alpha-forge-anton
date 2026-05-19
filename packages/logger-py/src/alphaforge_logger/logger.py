@@ -1,4 +1,4 @@
-"""Centralized logging configuration for AlphaForge Python services.
+"""Centralized logging configuration for AlphaForge Anton Python services.
 
 Usage::
 
@@ -25,7 +25,7 @@ from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 
-_DEFAULT_NAMESPACE = "alphaforge"
+_DEFAULT_NAMESPACE = "alphaforge_anton"
 
 # ── Defaults (overridden by kwargs or env vars) ─────────────
 _ENV_LOG_LEVEL = "LOG_LEVEL"
@@ -76,7 +76,7 @@ def setup_logging(
 
     resolved_level = (level or os.getenv(_ENV_LOG_LEVEL, "INFO")).upper()
     resolved_dir = log_dir or os.getenv(_ENV_LOG_DIR, "logs")
-    resolved_file = log_file or os.getenv(_ENV_LOG_FILE, "alphaforge.log")
+    resolved_file = log_file or os.getenv(_ENV_LOG_FILE, "alphaforge-anton.log")
     resolved_max = max_bytes or int(os.getenv(_ENV_LOG_MAX_BYTES, "10485760"))
     resolved_backup = backup_count or int(os.getenv(_ENV_LOG_BACKUP_COUNT, "5"))
 
@@ -127,6 +127,6 @@ def get_logger(name: str, *, namespace: str = _DEFAULT_NAMESPACE) -> logging.Log
     Example::
 
         logger = get_logger("routes.market")
-        # → logging.getLogger("alphaforge.routes.market")
+        # → logging.getLogger("alphaforge_anton_anton.routes.market")
     """
     return logging.getLogger(f"{namespace}.{name}")

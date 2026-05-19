@@ -1,6 +1,6 @@
 """Print Zerodha free cash via /oms/user/margins (HTTP, enctoken-based).
 
-Uses the cached enctoken from .alpha-forge/sessions. No CDP needed.
+Uses the cached enctoken from .alpha-forge-anton/sessions. No CDP needed.
 
 Run:
     uv run python probes/zerodha_cash_probe.py

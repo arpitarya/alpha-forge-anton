@@ -1,6 +1,6 @@
 """INDmoney holdings — BrokerSource impl over CDP browser fetch + on-disk cache.
 
-Auth flow: user logs in to indmoney.com inside the AlphaForge Chrome instance
+Auth flow: user logs in to indmoney.com inside the AlphaForge Anton Chrome instance
 started with --remote-debugging-port=9299. `fetch()` attaches over CDP, navigates
 to the US stocks portfolio page, intercepts the holdings XHR, and caches to disk.
 Subsequent `fetch()` calls within INDMONEY_REFETCH_SECONDS return from cache.
@@ -68,8 +68,8 @@ class IndMoneySource(BrokerSource):
     supports_cash = True
     currency = "USD"
     notes = (
-        "Manual login: log in to indmoney.com inside the AlphaForge Chrome "
-        "(started with --remote-debugging-port=9299). AlphaForge never stores "
+        "Manual login: log in to indmoney.com inside the AlphaForge Anton Chrome "
+        "(started with --remote-debugging-port=9299). AlphaForge Anton never stores "
         "your password or OTP. Set INDMONEY_USER_ID in .env.cred.local."
     )
 

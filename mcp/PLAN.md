@@ -1,6 +1,6 @@
 # repo-context-mcp — Plan
 
-Tool-agnostic MCP server that gives coding agents (Claude Code, GitHub Copilot, Cursor, Cline, Zed, Windsurf, or any future MCP-capable client) rich semantic and structural context over the AlphaForge monorepo.
+Tool-agnostic MCP server that gives coding agents (Claude Code, GitHub Copilot, Cursor, Cline, Zed, Windsurf, or any future MCP-capable client) rich semantic and structural context over the AlphaForge Anton monorepo.
 
 ## Goal
 
@@ -17,7 +17,7 @@ One local process, many clients. Every coding agent you use — today or tomorro
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
-| Language | Python 3.14 | Match `llm-gateway/` sibling; reuse `alphaforge-llm-gateway` + embedding patterns |
+| Language | Python 3.14 | Match `llm-gateway/` sibling; reuse `alphaforge-anton-llm-gateway` + embedding patterns |
 | Transport | stdio (default) | Works universally across MCP clients |
 | Vector store | Postgres + pgvector | Already running; tables live alongside existing `screener_pick_embeddings` |
 | Embeddings | Gemini `text-embedding-004` (768d) | Free tier, already wired via Gemini API key in `.env` |
@@ -47,7 +47,7 @@ One local process, many clients. Every coding agent you use — today or tomorro
   - Other: 80-line sliding window, 20-line overlap
 - Skip unchanged chunks via `content_hash`
 - Batch embed (respect Gemini 1 RPM free tier or use higher-quota model)
-- CLI: `alphaforge-repo-context-index [--full|--changed]`
+- CLI: `alphaforge-anton-repo-context-index [--full|--changed]`
 
 ### Phase 4 — MCP server
 - Tools exposed:
@@ -72,7 +72,7 @@ One local process, many clients. Every coding agent you use — today or tomorro
 ## Non-Goals (for now)
 
 - Cloud hosting / multi-user — this is a personal tool
-- Cross-repo context — scoped to AlphaForge
+- Cross-repo context — scoped to AlphaForge Anton
 - Write operations (edits, commits) — read-only
 
 ## Risks & Mitigations

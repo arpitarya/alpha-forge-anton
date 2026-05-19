@@ -14,7 +14,7 @@ from app.modules.brokers._cdp import connect_existing_chrome
 BASE_URL = os.getenv("AF_FRONTEND", "http://localhost:3000")
 CDP_PORT = int(os.getenv("BROKER_CDP_PORT", "9299"))
 USERNAME = os.getenv("PROBE_USER", "admin")
-PASSWORD = os.getenv("PROBE_PASS", "alphaforge-dev")
+PASSWORD = os.getenv("PROBE_PASS", "alphaforge-anton-dev")
 SHOT_DIR = Path(__file__).resolve().parent.parent / "screenshots"
 
 TABS = ["Appearance", "Display", "Markets", "Alpha AI", "Notifications", "Account", "Privacy", "About"]

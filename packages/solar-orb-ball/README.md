@@ -6,7 +6,7 @@ A glowing, breathing AI presence indicator. Renders entirely from CSS gradients 
 
 ## Why a separate package?
 
-The orb is the visual hero of the AlphaForge terminal and gets iterated frequently — animations, glow shapes, color presets, motion timing. Pulling it out of `@alphaforge/solar-orb-ui` lets you:
+The orb is the visual hero of the AlphaForge terminal and gets iterated frequently — animations, glow shapes, color presets, motion timing. Pulling it out of `@alphaforge-anton/ravel-ui` lets you:
 
 - run a focused **dev playground** (sliders for size/pulse/stars, accent swatches, custom backgrounds) on its own Vite server
 - ship it independently to other apps that just want the orb without the full design system

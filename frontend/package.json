@@ -1,5 +1,5 @@
 {
-  "name": "alphaforge-frontend",
+  "name": "alphaforge-anton-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
   "dependencies": {
     "@alphaforge/logger": "workspace:*",
     "@alphaforge/solar-orb-ball": "workspace:*",
-    "@alphaforge/solar-orb-ui": "workspace:*",
+    "@alphaforge-anton/ravel-ui": "workspace:*",
     "@tanstack/react-query": "^5.96.2",
     "axios": "^1.7.0",
     "clsx": "^2.1.0",

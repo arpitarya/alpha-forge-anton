@@ -1,7 +1,7 @@
 [project]
-name = "alphaforge-llm"
+name = "alphaforge-anton-llm"
 version = "0.1.0"
-description = "AlphaForge — multi-provider LLM gateway (standalone package)"
+description = "AlphaForge Anton — multi-provider LLM gateway (standalone package)"
 requires-python = ">=3.14"
 license = { text = "MIT" }
 authors = [{ name = "Arpit Arya" }]
@@ -21,7 +21,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/alphaforge_llm"]
+packages = ["src/alphaforge_anton_llm"]
 
 [tool.ruff]
 target-version = "py314"

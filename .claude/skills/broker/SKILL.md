@@ -1,12 +1,12 @@
 ---
 name: broker
-description: "Add, edit, or remove a broker source in AlphaForge (registry, module files, fixtures, docs)"
+description: "Add, edit, or remove a broker source in AlphaForge Anton (registry, module files, fixtures, docs)"
 trigger: /broker
 ---
 
 # /broker
 
-Manage AlphaForge broker sources. Understands the full module layout, registry wiring, fixture CSVs, and docs.
+Manage AlphaForge Anton broker sources. Understands the full module layout, registry wiring, fixture CSVs, and docs.
 
 ## Usage
 
@@ -173,7 +173,7 @@ After confirmation:
 5. Delete `probes/{slug}_probe.py` and `probes/{slug}_cash_probe.py` if they exist.
 6. Delete `backend/notebooks/{slug}_dev.ipynb` if it exists.
 7. Remove `{SLUG}_BALANCE_PAGE` / `{SLUG}_BALANCE_URL_NEEDLES` / `{SLUG}_REFETCH_SECONDS` references from `broker_urls.py` and `.env.cred.example`.
-8. Remove the broker's row from `.alpha-forge/portfolio-dumps/broker-cash-live.csv` if it has one.
+8. Remove the broker's row from `.alpha-forge-anton/portfolio-dumps/broker-cash-live.csv` if it has one.
 
 **Step 3 — Docs**
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Icon } from "@alphaforge/solar-orb-ui";
+import { Button, Icon } from "@alphaforge-anton/ravel-ui";
 import type { SourceInfoDTO } from "./portfolio.types";
 import { OTP_SLUGS } from "./sources.utils";
 import type { useSourceRow } from "./useSourceRow.hook";

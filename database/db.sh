@@ -1,5 +1,5 @@
 #!/bin/bash
-# AlphaForge — Database Start/Stop Control Script
+# AlphaForge Anton — Database Start/Stop Control Script
 # Manages PostgreSQL 16 + Redis via Homebrew (macOS)
 
 set -e

@@ -1,4 +1,4 @@
-# AlphaForge Backend API
+# AlphaForge Anton Backend API
 
 Base URL: `http://localhost:8000/api/v1`
 
@@ -14,7 +14,7 @@ Interactive docs: `http://localhost:8000/docs` (Swagger) · `http://localhost:80
 
 **Response**
 ```json
-{ "status": "healthy", "service": "alphaforge-api" }
+{ "status": "healthy", "service": "alphaforge-anton-api" }
 ```
 
 ---
@@ -232,4 +232,4 @@ Common HTTP status codes:
 
 ---
 
-> AlphaForge is a personal research tool, not financial advice.
+> AlphaForge Anton is a personal research tool, not financial advice.

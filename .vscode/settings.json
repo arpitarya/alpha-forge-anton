@@ -9,9 +9,9 @@
       "port": 5432,
       "askForPassword": true,
       "driver": "PostgreSQL",
-      "name": "alphaforge",
-      "database": "alphaforge",
-      "username": "alphaforge"
+      "name": "alphaforge_anton",
+      "database": "alphaforge_anton",
+      "username": "alphaforge_anton"
     }
   ]
 }

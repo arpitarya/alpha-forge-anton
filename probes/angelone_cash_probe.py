@@ -1,6 +1,6 @@
 """Print Angel One free cash via CDP capture of /funds/v2/getRMSLimit.
 
-Attaches to the existing AlphaForge Chrome (port 9299), opens a fresh tab to
+Attaches to the existing AlphaForge Anton Chrome (port 9299), opens a fresh tab to
 `angelone.in/trade/funds`, captures the RMS limit XHR, and prints
 `data.netAvailableFunds`.
 

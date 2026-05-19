@@ -1,5 +1,5 @@
 {
-  "name": "AlphaForge",
+  "name": "AlphaForge Anton",
   "dockerComposeFile": "../infra/docker-compose.yml",
   "service": "backend",
   "workspaceFolder": "/app",

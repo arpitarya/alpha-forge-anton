@@ -1,4 +1,4 @@
-# AlphaForge — Commands
+# AlphaForge Anton — Commands
 
 ```bash
 # ── Full repo setup ───────────────────────────────────────────────────────────
@@ -9,7 +9,7 @@
 ./setup.sh --prereqs      # Check/install pyenv, nvm, pnpm, uv
 ./setup.sh --venv         # Create .venv via `uv venv` (reads .python-version)
 ./setup.sh --backend      # Sync the entire Python workspace (uv sync)
-./setup.sh --frontend     # Frontend + workspace deps (pnpm) + build solar-orb-ui
+./setup.sh --frontend     # Frontend + workspace deps (pnpm) + build ravel-ui
 ./setup.sh --env          # Scaffold .env files from examples
 ./setup.sh --dirs         # Create log/data/model directories
 ./setup.sh --db           # Setup local PostgreSQL + Redis (macOS Homebrew)
@@ -17,7 +17,7 @@
 # ── Python Workspace (uv) ────────────────────────────────────────────────────
 uv sync                              # Install/refresh every workspace member into .venv
 uv lock                              # Refresh uv.lock without installing
-uv add httpx --package alphaforge-backend   # Add a dep to a specific member
+uv add httpx --package alphaforge-anton-backend   # Add a dep to a specific member
 just sync                            # Same as `uv sync` (justfile shortcut)
 
 # ── Backend ──────────────────────────────────────────────────────────────────
@@ -38,8 +38,8 @@ cd frontend && pnpm lint             # Lint
 cd frontend && pnpm type-check       # TypeScript check
 
 # ── UI Package ───────────────────────────────────────────────────────────────
-cd packages/solar-orb-ui && pnpm build   # Build ESM + CJS + DTS
-cd packages/solar-orb-ui && pnpm dev     # Watch mode
+cd packages/ravel-ui && pnpm build   # Build ESM + CJS + DTS
+cd packages/ravel-ui && pnpm dev     # Watch mode
 
 # ── Infrastructure ───────────────────────────────────────────────────────────
 ./setup.sh --db                                                  # macOS native (Homebrew)
@@ -55,7 +55,7 @@ cd repo-context-mcp && pdm install                               # Install deps
 cd repo-context-mcp && pdm run index --full                      # Build initial vector index
 cd repo-context-mcp && pdm run index --watch                     # Watch + incremental reindex
 cd repo-context-mcp && pdm run serve                             # Run MCP server (stdio)
-alphaforge-repo-context-mcp                                      # Same server (after `pdm install`)
+alphaforge-anton-repo-context-mcp                                      # Same server (after `pdm install`)
 
 # ── Cleanup ──────────────────────────────────────────────────────────────────
 ./clean.sh                # Remove build artifacts and bytecode (keeps venv + node_modules)

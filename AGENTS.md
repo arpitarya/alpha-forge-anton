@@ -1,6 +1,6 @@
 # AGENTS.md — Context for OpenAI / Codex Agents
 
-**AlphaForge** — Personal AI-powered portfolio management & investment terminal for Indian markets.
+**AlphaForge Anton** — Personal AI-powered portfolio management & investment terminal for Indian markets.
 Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-hosted, MIT licensed.
 
 ## Docs Index

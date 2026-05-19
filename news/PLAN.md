@@ -1,6 +1,6 @@
 # News Module — Plan
 
-Standalone root-level workspace package (`alphaforge-news`). Aggregates Indian market
+Standalone root-level workspace package (`alphaforge-anton-news`). Aggregates Indian market
 news and social signals from multiple free sources behind a single unified interface.
 
 Consumed by: research agent, screener signals, trade signals, dashboard widgets, price
@@ -72,7 +72,7 @@ populated at import — no changes needed in the aggregator, routes, or any call
 ### NewsSource ABC
 
 ```python
-# news/src/alphaforge_news/base.py
+# news/src/alphaforge_anton_news/base.py
 
 class NewsSource(ABC):
     name: str             # unique slug — e.g. "moneycontrol-rss", "reddit-india"
@@ -98,7 +98,7 @@ class NewsSource(ABC):
 ### NewsItem schema
 
 ```python
-# news/src/alphaforge_news/types.py
+# news/src/alphaforge_anton_news/types.py
 
 class NewsItem(BaseModel):
     headline: str
@@ -116,7 +116,7 @@ class NewsItem(BaseModel):
 
 ### Adding a new source — complete checklist
 
-1. Create `news/src/alphaforge_news/sources/<name>.py`
+1. Create `news/src/alphaforge_anton_news/sources/<name>.py`
 2. Implement `NewsSource` — self-contained, ≤100 lines
 3. Add one line to `sources/__init__.py`:
    ```python
@@ -208,7 +208,7 @@ corporate events, and information not yet in traditional media.
 Register a free personal-use app at `reddit.com/prefs/apps`:
 - `REDDIT_CLIENT_ID`
 - `REDDIT_CLIENT_SECRET`
-- `REDDIT_USER_AGENT` — e.g. `alphaforge:v1 (by u/your-reddit-username)`
+- `REDDIT_USER_AGENT` — e.g. `alphaforge_anton:v1 (by u/your-reddit-username)`
 
 Personal apps: 100 requests/minute free. No payment required.
 
@@ -217,7 +217,7 @@ Personal apps: 100 requests/minute free. No payment required.
 Library: `asyncpraw` (async Python Reddit API Wrapper).
 
 ```python
-# news/src/alphaforge_news/sources/reddit.py
+# news/src/alphaforge_anton_news/sources/reddit.py
 
 class RedditSource(NewsSource):
     name = "reddit-india"
@@ -384,11 +384,11 @@ Run one source in isolation: `uv run pytest news/tests/sources/test_reddit.py -v
 ```
 news/                                 ← root-level workspace (like llm/)
 ├── PLAN.md
-├── pyproject.toml                    ← uv workspace member (alphaforge-news)
+├── pyproject.toml                    ← uv workspace member (alphaforge-anton-news)
 ├── config/
 │   └── rss_feeds.yaml                ← data-driven RSS config; adding a feed = YAML entry
 ├── src/
-│   └── alphaforge_news/
+│   └── alphaforge_anton_news/
 │       ├── __init__.py
 │       ├── types.py                  # NewsItem, SourceHealth
 │       ├── base.py                   # NewsSource ABC
@@ -423,7 +423,7 @@ news/                                 ← root-level workspace (like llm/)
         └── test_brave.py
 ```
 
-Backend thin facade (adds FastAPI + ORM layer on top of `alphaforge_news`):
+Backend thin facade (adds FastAPI + ORM layer on top of `alphaforge_anton_news`):
 
 ```
 backend/app/modules/news/
@@ -448,11 +448,11 @@ frontend/src/modules/preferences/
 
 ```
 news/                  →  (nothing in this repo — pure Python + HTTP clients)
-backend/modules/news/  →  alphaforge_news   (import from root package)
+backend/modules/news/  →  alphaforge_anton_news   (import from root package)
 research/              →  backend/modules/news/  (via search_news agent tool)
 ```
 
-`news/` is importable standalone with no AlphaForge dependencies.
+`news/` is importable standalone with no AlphaForge Anton dependencies.
 
 ---
 
@@ -468,7 +468,7 @@ BRAVE_SEARCH_API_KEY=
 # Reddit — all three required to activate the Reddit source
 REDDIT_CLIENT_ID=
 REDDIT_CLIENT_SECRET=
-REDDIT_USER_AGENT=alphaforge:v1 (by u/your-reddit-username)
+REDDIT_USER_AGENT=alphaforge_anton:v1 (by u/your-reddit-username)
 
 # Aggregator tuning
 NEWS_MAX_RESULTS_PER_SOURCE=15      # cap per source so no single source dominates

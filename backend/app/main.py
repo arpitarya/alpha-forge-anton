@@ -24,13 +24,13 @@ logger = get_logger("app")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     setup_logging()
-    logger.info("AlphaForge starting up (env=%s)", settings.app_env)
+    logger.info("AlphaForge Anton starting up (env=%s)", settings.app_env)
     refetch_task = await start_refetch_loop(SOURCES)
     yield
     refetch_task.cancel()
     with suppress(asyncio.CancelledError):
         await refetch_task
-    logger.info("AlphaForge shutting down")
+    logger.info("AlphaForge Anton shutting down")
 
 
 def create_app() -> FastAPI:

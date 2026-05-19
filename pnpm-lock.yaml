@@ -14,9 +14,9 @@ importers:
       '@alphaforge/solar-orb-ball':
         specifier: workspace:*
         version: link:../packages/solar-orb-ball
-      '@alphaforge/solar-orb-ui':
+      '@alphaforge-anton/ravel-ui':
         specifier: workspace:*
-        version: link:../packages/solar-orb-ui
+        version: link:../packages/ravel-ui
       '@tanstack/react-query':
         specifier: ^5.96.2
         version: 5.96.2(react@19.2.4)
@@ -138,7 +138,7 @@ importers:
         specifier: ^6.0.7
         version: 6.4.2(@types/node@22.19.17)(jiti@2.6.1)(lightningcss@1.32.0)
 
-  packages/solar-orb-ui:
+  packages/ravel-ui:
     dependencies:
       clsx:
         specifier: ^2.1.0

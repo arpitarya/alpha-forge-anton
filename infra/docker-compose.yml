@@ -37,15 +37,15 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: alphaforge
-      POSTGRES_PASSWORD: alphaforge
-      POSTGRES_DB: alphaforge
+      POSTGRES_USER: alphaforge_anton
+      POSTGRES_PASSWORD: alphaforge_anton
+      POSTGRES_DB: alphaforge_anton
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U alphaforge"]
+      test: ["CMD-SHELL", "pg_isready -U alphaforge_anton"]
       interval: 5s
       timeout: 5s
       retries: 5

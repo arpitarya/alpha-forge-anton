@@ -1,4 +1,4 @@
-# AlphaForge — Copilot Instructions
+# AlphaForge Anton — Copilot Instructions
 
 Personal AI-powered portfolio management & investment terminal for Indian markets.
 Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-hosted, MIT licensed.

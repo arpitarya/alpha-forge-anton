@@ -1,6 +1,6 @@
 # repo-context-mcp — Implementation Log
 
-Tool-agnostic MCP server giving any coding agent (Claude, Copilot, Cursor, future tools) semantic + structural context over the AlphaForge monorepo.
+Tool-agnostic MCP server giving any coding agent (Claude, Copilot, Cursor, future tools) semantic + structural context over the AlphaForge Anton monorepo.
 
 ## Phase 1 — Scaffolding (2026-04-22)
 
@@ -8,8 +8,8 @@ Status: Complete
 
 Built:
 - `pyproject.toml` (PDM, py3.14, deps: mcp, asyncpg, pgvector, sqlalchemy, watchfiles, pathspec, httpx, pydantic-settings)
-- Package layout: `src/alphaforge_repo_context/{server,indexer,watcher,config,chunker,embeddings,db}.py`
-- Tools subpackage: `src/alphaforge_repo_context/tools/`
+- Package layout: `src/alphaforge_anton_repo_context/{server,indexer,watcher,config,chunker,embeddings,db}.py`
+- Tools subpackage: `src/alphaforge_anton_repo_context/tools/`
 - `PLAN.md` with phases + design decisions
 - Root wiring: `PLAN.md` + `implement.txt` + `CLAUDE.md` updated
 

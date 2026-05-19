@@ -1,4 +1,4 @@
-# AlphaForge — Code Structure & Conventions
+# AlphaForge Anton — Code Structure & Conventions
 
 > Single index for "how do we organise files and name things" across every module.
 > When in doubt during a code review, point at one of these docs.

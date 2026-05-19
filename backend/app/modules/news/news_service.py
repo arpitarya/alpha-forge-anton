@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from alphaforge_news import NewsAggregator
-from alphaforge_news.sources import build_all_sources
+from alphaforge_anton_news import NewsAggregator
+from alphaforge_anton_news.sources import build_all_sources
 
 
 def _build() -> NewsAggregator:

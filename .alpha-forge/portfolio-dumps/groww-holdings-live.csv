@@ -1,0 +1,5 @@
+# source=groww  dumped_at_utc=2026-05-18T20:11:15.925535+00:00  holdings_count=3
+tradingsymbol,name,isin,exchange,quantity,average_price,last_price,invested,current_value,pnl,pnl_pct
+SUZLON-EQ,Suzlon Energy,INE040H01021,NSE,75.0,41.61,53.25,3120.75,3993.75,873.0,27.97
+IDFCFIRSTB-EQ,IDFC First Bank,INE092T01019,NSE,70.0,64.86,67.59,4540.2,4731.3,191.1,4.21
+MIDHANI-EQ,Mishra Dhatu Nigam,INE099Z01011,NSE,12.0,410.85,397.8,4930.2,4773.6,-156.6,-3.18

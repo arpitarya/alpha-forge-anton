@@ -1,6 +1,6 @@
 """Attach to existing CDP Chrome, intercept INDmoney portfolio XHRs.
 
-Run while logged in to indmoney.com in the AlphaForge Chrome:
+Run while logged in to indmoney.com in the AlphaForge Anton Chrome:
     uv run python probes/indmoney_probe.py
 
 Prints a shape summary of every matching XHR. Look for a response that lists

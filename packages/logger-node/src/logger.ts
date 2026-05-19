@@ -14,13 +14,13 @@ const isServer = typeof window === "undefined";
 // ── Types ───────────────────────────────────────────────────
 
 export interface LoggerOptions {
-  /** Root logger name (default: "alphaforge") */
+  /** Root logger name (default: "alphaforge_anton") */
   name?: string;
   /** Minimum log level (default: env LOG_LEVEL ?? "info") */
   level?: string;
   /** Directory for log files, relative to cwd (default: env LOG_DIR ?? "logs") */
   logDir?: string;
-  /** Log filename (default: env LOG_FILE ?? "alphaforge.log") */
+  /** Log filename (default: env LOG_FILE ?? "alphaforge-anton.log") */
   logFile?: string;
   /** Use pino-pretty for console in dev (default: NODE_ENV !== "production") */
   pretty?: boolean;
@@ -37,7 +37,7 @@ let _logger: pino.Logger | null = null;
  * return child loggers from this root.
  */
 export function createLogger(opts: LoggerOptions = {}): pino.Logger {
-  const name = opts.name ?? "alphaforge";
+  const name = opts.name ?? "alphaforge_anton";
   const level = opts.level ?? (isServer ? process.env.LOG_LEVEL : undefined) ?? "info";
 
   if (isServer) {
@@ -45,7 +45,7 @@ export function createLogger(opts: LoggerOptions = {}): pino.Logger {
     const path = require("node:path") as typeof import("node:path");
 
     const logDir = opts.logDir ?? process.env.LOG_DIR ?? "logs";
-    const logFile = opts.logFile ?? process.env.LOG_FILE ?? "alphaforge.log";
+    const logFile = opts.logFile ?? process.env.LOG_FILE ?? "alphaforge-anton.log";
     const logPath = path.resolve(process.cwd(), logDir, logFile);
 
     // Ensure log directory exists

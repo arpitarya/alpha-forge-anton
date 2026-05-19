@@ -116,7 +116,7 @@ Frontend portfolio tab — frontend/src/app/portfolio/page.tsx
 - TerminalTopBar + TerminalRail rewired to Next router (usePathname +
   push) so /terminal ↔ /portfolio nav works from header + sidebar.
 - New components in frontend/src/components/portfolio/:
-    PortfolioHeader, Treemap (uses TreemapCell from solar-orb-ui),
+    PortfolioHeader, Treemap (uses TreemapCell from ravel-ui),
     Ledger (sortable table, source/class columns, +/− tone), RebalanceRail
     (drift bidirectional bars + suggestion chips + Deploy CTA),
     SourcesPanel (per-source row with upload/sync/reset, toast errors).

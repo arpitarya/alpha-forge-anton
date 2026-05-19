@@ -24,11 +24,11 @@
 #
 # | Slug | Kind | Auth |
 # |---|---|---|
-# | `zerodha` | API | Browser CDP — log in to kite.zerodha.com inside the AlphaForge Chrome session. Set `ZERODHA_USER_ID` in `.env.cred.local`. |
-# | `groww` | API | Browser CDP — log in to groww.in inside the AlphaForge Chrome. Set `GROWW_USER_ID`. |
-# | `angelone` | API | Browser CDP — log in to angelone.in inside the AlphaForge Chrome. Set `ANGELONE_CLIENT_ID`. |
-# | `indmoney` | API | Browser CDP — log in to indmoney.com inside the AlphaForge Chrome. Set `INDMONEY_USER_ID`. |
-# | `tickertape` | API | Browser CDP — log in to tickertape.in inside the AlphaForge Chrome. Set `TICKERTAPE_USER_ID`. |
+# | `zerodha` | API | Browser CDP — log in to kite.zerodha.com inside the AlphaForge Anton Chrome session. Set `ZERODHA_USER_ID` in `.env.cred.local`. |
+# | `groww` | API | Browser CDP — log in to groww.in inside the AlphaForge Anton Chrome. Set `GROWW_USER_ID`. |
+# | `angelone` | API | Browser CDP — log in to angelone.in inside the AlphaForge Anton Chrome. Set `ANGELONE_CLIENT_ID`. |
+# | `indmoney` | API | Browser CDP — log in to indmoney.com inside the AlphaForge Anton Chrome. Set `INDMONEY_USER_ID`. |
+# | `tickertape` | API | Browser CDP — log in to tickertape.in inside the AlphaForge Anton Chrome. Set `TICKERTAPE_USER_ID`. |
 
 # %%
 import json

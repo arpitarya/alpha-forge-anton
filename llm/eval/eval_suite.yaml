@@ -1,5 +1,5 @@
 version: "1"
-description: "AlphaForge LLM eval suite — factoid + reasoning + edge-case questions"
+description: "AlphaForge Anton LLM eval suite — factoid + reasoning + edge-case questions"
 
 cases:
   - id: nifty_pe

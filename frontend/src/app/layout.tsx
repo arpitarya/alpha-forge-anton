@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@alphaforge/solar-orb-ui";
+import { ThemeProvider } from "@alphaforge-anton/ravel-ui";
 import type { Metadata } from "next";
 import "./globals.css";
 import { QueryProvider } from "@/lib/providers";
@@ -7,7 +7,7 @@ import { ChatProvider } from "@/modules/chat";
 import { BootGate } from "@/modules/dashboard/BootGate";
 
 export const metadata: Metadata = {
-  title: "AlphaForge | Personal Investment Terminal",
+  title: "AlphaForge Anton | Personal Investment Terminal",
   description:
     "Personal AI-powered portfolio management & investment terminal for Indian markets.",
 };

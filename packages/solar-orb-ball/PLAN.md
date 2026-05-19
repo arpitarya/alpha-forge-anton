@@ -1,6 +1,6 @@
 # solar-orb-ball — Plan
 
-> Standalone Solar Orb component, broken out of `@alphaforge/solar-orb-ui` so it can iterate on its own dev server.
+> Standalone Solar Orb component, broken out of `@alphaforge-anton/ravel-ui` so it can iterate on its own dev server.
 
 ## Why this exists
 

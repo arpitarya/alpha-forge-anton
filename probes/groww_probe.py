@@ -1,6 +1,6 @@
 """Attach to existing CDP Chrome, intercept Groww holdings-page XHRs.
 
-Run while the Groww holdings page is open in the AlphaForge Chrome:
+Run while the Groww holdings page is open in the AlphaForge Anton Chrome:
     just groww-probe
 """
 

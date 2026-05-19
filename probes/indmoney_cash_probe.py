@@ -1,6 +1,6 @@
 """Print INDmoney free USD cash via CDP capture of /account/basic.
 
-Attaches to the existing AlphaForge Chrome (port 9299), opens a fresh tab to
+Attaches to the existing AlphaForge Anton Chrome (port 9299), opens a fresh tab to
 the US-stocks holdings page, captures the account/basic XHR, and prints
 `cash_available_for_trade` (USD).
 

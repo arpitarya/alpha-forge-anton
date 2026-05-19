@@ -1,7 +1,7 @@
 [project]
-name = "alphaforge-repo-context-mcp"
+name = "alphaforge-anton-repo-context-mcp"
 version = "0.1.0"
-description = "Tool-agnostic MCP server that gives coding agents (Claude, Copilot, Cursor, etc.) semantic + structural context over the AlphaForge repo"
+description = "Tool-agnostic MCP server that gives coding agents (Claude, Copilot, Cursor, etc.) semantic + structural context over the AlphaForge Anton repo"
 requires-python = ">=3.14"
 license = { text = "MIT" }
 authors = [{ name = "Arpit Arya" }]
@@ -26,8 +26,8 @@ dev = [
 ]
 
 [project.scripts]
-alphaforge-repo-context-mcp = "alphaforge_repo_context.server:main"
-alphaforge-repo-context-index = "alphaforge_repo_context.indexer:cli_main"
+alphaforge-anton-repo-context-mcp = "alphaforge_anton_repo_context.server:main"
+alphaforge-anton-repo-context-index = "alphaforge_anton_repo_context.indexer:cli_main"
 
 [build-system]
 requires = ["pdm-backend"]
@@ -37,8 +37,8 @@ build-backend = "pdm.backend"
 distribution = true
 
 [tool.pdm.scripts]
-serve = "python -m alphaforge_repo_context.server"
-index = "python -m alphaforge_repo_context.indexer"
+serve = "python -m alphaforge_anton_repo_context.server"
+index = "python -m alphaforge_anton_repo_context.indexer"
 test = "pytest -v --tb=short"
 lint = { composite = ["ruff check .", "ruff format --check ."] }
 format = "ruff format ."

@@ -1,6 +1,6 @@
 # Broker Source Integration Guide
 
-How AlphaForge fetches, caches, and exposes holdings from a broker. Read this before adding a new source.
+How AlphaForge Anton fetches, caches, and exposes holdings from a broker. Read this before adding a new source.
 
 ---
 
@@ -221,7 +221,7 @@ class MyBrokerSource(BrokerSource):
     label = "My Broker"
     kind  = SourceKind.API
     notes = (
-        "Manual login: log in to mybroker.com inside the AlphaForge Chrome "
+        "Manual login: log in to mybroker.com inside the AlphaForge Anton Chrome "
         "(started with --remote-debugging-port=9299). "
         "Set MYBROKER_USER_ID in .env.cred.local."
     )
@@ -340,7 +340,7 @@ US-stocks holdings from INDmoney's DriveWealth-backed brokerage account. CDP bro
 | Detail | Value |
 |--------|-------|
 | Slug | `indmoney` |
-| Auth | Manual login at `indmoney.com` inside the AlphaForge Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
+| Auth | Manual login at `indmoney.com` inside the AlphaForge Anton Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
 | `REQUIRED_ENV` | `INDMONEY_USER_ID` |
 | Asset classes | `EQUITY` (US stocks — fractional shares via DriveWealth) |
 | Currency | **USD** (`currency = "USD"` on the source; every `Holding` is emitted with `currency="USD"`) |
@@ -355,7 +355,7 @@ US-stocks holdings from INDmoney's DriveWealth-backed brokerage account. CDP bro
 
 **Setup**:
 
-1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-chrome`.
+1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-anton-chrome`.
 2. Log in to [indmoney.com](https://indmoney.com) inside that Chrome window.
 3. Set `INDMONEY_USER_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
 
@@ -368,7 +368,7 @@ Digital gold (SafeGold) balance from Ticker Tape. Captures two XHRs on page load
 | Detail | Value |
 |--------|-------|
 | Slug | `tickertape` |
-| Auth | Manual login at `tickertape.in` inside the AlphaForge Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
+| Auth | Manual login at `tickertape.in` inside the AlphaForge Anton Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
 | `REQUIRED_ENV` | `TICKERTAPE_USER_ID` |
 | Asset classes | `GOLD` (single DIGITAL_GOLD holding, quantity in grams) |
 | Kind | `SourceKind.API` |
@@ -381,7 +381,7 @@ Digital gold (SafeGold) balance from Ticker Tape. Captures two XHRs on page load
 
 **Setup**:
 
-1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-chrome`.
+1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-anton-chrome`.
 2. Log in to [tickertape.in](https://tickertape.in) inside that Chrome window.
 3. Set `TICKERTAPE_USER_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
 
@@ -389,12 +389,12 @@ Digital gold (SafeGold) balance from Ticker Tape. Captures two XHRs on page load
 
 ## Angel One (`angelone`)
 
-SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, 401s on long-lived JWTs). AlphaForge now attaches to the running Chrome over CDP and captures the XHR Angel One's own web app makes — same pattern as Groww.
+SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, 401s on long-lived JWTs). AlphaForge Anton now attaches to the running Chrome over CDP and captures the XHR Angel One's own web app makes — same pattern as Groww.
 
 | Detail | Value |
 |--------|-------|
 | Slug | `angelone` |
-| Auth | Manual login at `angelone.in` inside the AlphaForge Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
+| Auth | Manual login at `angelone.in` inside the AlphaForge Anton Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
 | `REQUIRED_ENV` | `ANGELONE_CLIENT_ID` |
 | Asset classes | `AssetClass.EQUITY` (Bonds/SGBs/MFs come back in the same response but aren't surfaced yet) |
 | CSV TTL | `ANGELONE_REFETCH_SECONDS` (default `3600`) |
@@ -419,11 +419,11 @@ SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP fric
 
 **Setup**:
 
-1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-chrome`.
+1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-anton-chrome`.
 2. Log in to [angelone.in](https://angelone.in) inside that Chrome window.
 3. Set `ANGELONE_CLIENT_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
 
-AlphaForge never sees your password or TOTP — login + 2FA happen in your own Chrome; the backend just reads the authenticated XHR off the wire.
+AlphaForge Anton never sees your password or TOTP — login + 2FA happen in your own Chrome; the backend just reads the authenticated XHR off the wire.
 
 **Mutual funds**: not exposed by the equity holdings page. For MF, use the CSV upload fallback (`/sources/angelone/upload`) with an Angel One MF export.
 
@@ -432,7 +432,7 @@ AlphaForge never sees your password or TOTP — login + 2FA happen in your own C
 ```bash
 python -m app.modules.brokers.angelone.angelone_dump
 python -m app.modules.brokers.angelone.angelone_dump --force-login
-ls ~/.alphaforge/portfolio-dumps/angelone-*
+ls ~/.alphaforge-anton/portfolio-dumps/angelone-*
 ```
 
 ---
@@ -509,7 +509,7 @@ Key helper: `fetch_holdings_via_browser` from `groww_source_helper.py`.
 
 ### Session caching
 
-Both patterns use `_http.load_session` / `save_session` to persist the acquired credential across process restarts. The session file lives under `~/.alphaforge/sessions/{slug}.json` with `chmod 600`.
+Both patterns use `_http.load_session` / `save_session` to persist the acquired credential across process restarts. The session file lives under `~/.alphaforge-anton/sessions/{slug}.json` with `chmod 600`.
 
 ---
 
@@ -527,7 +527,7 @@ from app.modules.brokers.dump_utils import (
 )
 ```
 
-CSV output directory: `$PORTFOLIO_DUMP_DIR` env var or `~/.alphaforge/portfolio-dumps/` (see [broker-csv-dumps.md](broker-csv-dumps.md)).
+CSV output directory: `$PORTFOLIO_DUMP_DIR` env var or `~/.alphaforge-anton/portfolio-dumps/` (see [broker-csv-dumps.md](broker-csv-dumps.md)).
 
 ---
 
@@ -576,5 +576,5 @@ python -m app.modules.brokers.mybroker.mybroker_dump
 python -m app.modules.brokers.mybroker.mybroker_dump --force-login
 
 # Check the output
-ls ~/.alphaforge/portfolio-dumps/mybroker-*
+ls ~/.alphaforge-anton/portfolio-dumps/mybroker-*
 ```

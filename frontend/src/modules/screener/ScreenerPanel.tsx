@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Icon, ProgressBar, Text } from "@alphaforge/solar-orb-ui";
+import { Card, Icon, ProgressBar, Text } from "@alphaforge-anton/ravel-ui";
 
 const STUB_PICKS = [
   { symbol: "RELIANCE.NS", probability: 0.91, rank: 1, rsi_14: 62 },

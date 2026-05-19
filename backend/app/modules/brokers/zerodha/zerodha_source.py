@@ -117,8 +117,8 @@ class ZerodhaKiteSource(BrokerSource):
     kind = SourceKind.API
     supports_cash = True
     notes = (
-        "Manual login: log in to kite.zerodha.com inside the AlphaForge "
-        "Chrome (started with --remote-debugging-port=9299). AlphaForge never "
+        "Manual login: log in to kite.zerodha.com inside the AlphaForge Anton "
+        "Chrome (started with --remote-debugging-port=9299). AlphaForge Anton never "
         "stores your password or TOTP. Set ZERODHA_USER_ID in .env.cred.local."
     )
 

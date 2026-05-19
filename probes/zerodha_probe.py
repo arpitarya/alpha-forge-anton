@@ -1,6 +1,6 @@
 """Attach to existing CDP Chrome, read Zerodha enctoken, probe Kite OMS API.
 
-Run while logged in to kite.zerodha.com in the AlphaForge Chrome:
+Run while logged in to kite.zerodha.com in the AlphaForge Anton Chrome:
     just zerodha-probe
 
 Unlike the Groww/Wint Wealth probes (XHR interception), Zerodha has a

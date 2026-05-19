@@ -7,7 +7,7 @@ without re-doing 2FA. Shared by every broker helper that scrapes the web app.
 Start Chrome (one-time) with the debugging port:
     /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome \\
         --remote-debugging-port=9299 \\
-        --user-data-dir="$HOME/.cache/alphaforge-chrome"
+        --user-data-dir="$HOME/.cache/alphaforge-anton-chrome"
 """
 
 from __future__ import annotations

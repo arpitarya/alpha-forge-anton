@@ -1,6 +1,6 @@
 """Capture screenshots of the terminal, portfolio, and preferences pages.
 
-Attaches to the existing AlphaForge Chrome via CDP (same session as the broker
+Attaches to the existing AlphaForge Anton Chrome via CDP (same session as the broker
 probes) and writes PNGs to <repo-root>/screenshots/. Requires:
 
     just zerodha-chrome          # CDP on :9299
@@ -24,7 +24,7 @@ from app.modules.brokers._cdp import connect_existing_chrome
 BASE_URL = os.getenv("AF_FRONTEND", "http://localhost:3000")
 CDP_PORT = int(os.getenv("BROKER_CDP_PORT", "9299"))
 USERNAME = os.getenv("PROBE_USER", "admin")
-PASSWORD = os.getenv("PROBE_PASS", "alphaforge-dev")
+PASSWORD = os.getenv("PROBE_PASS", "alphaforge-anton-dev")
 SHOT_DIR = Path(__file__).resolve().parent.parent / "screenshots"
 
 PAGES: list[tuple[str, str]] = [
@@ -77,7 +77,7 @@ async def run(base: str, cdp_port: int) -> None:
 
 
 def main() -> None:
-    print(f"AlphaForge UI screens → {BASE_URL}  [CDP :{CDP_PORT}]")
+    print(f"AlphaForge Anton UI screens → {BASE_URL}  [CDP :{CDP_PORT}]")
     print(f"Output                → {SHOT_DIR}")
     asyncio.run(run(BASE_URL, CDP_PORT))
 

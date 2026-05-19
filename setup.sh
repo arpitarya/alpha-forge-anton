@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# AlphaForge — Full Repository Setup
+# AlphaForge Anton — Full Repository Setup
 # ==============================================================================
 # Usage:
 #   ./setup.sh                  # Full repo setup (prereqs + venv + deps + env + dirs)
@@ -42,7 +42,7 @@ section() { echo -e "\n${BOLD}── $* ──${NC}"; }
 
 usage() {
     cat <<EOF
-AlphaForge — Full Repository Setup
+AlphaForge Anton — Full Repository Setup
 
 Usage: $(basename "$0") [OPTION]
 
@@ -316,10 +316,10 @@ install_frontend() {
     ok "Workspace Node packages installed"
 
     # Build the UI package so the frontend can consume it
-    info "Building @alphaforge/solar-orb-ui package..."
-    cd "$REPO_ROOT/packages/solar-orb-ui" && pnpm build
+    info "Building @alphaforge-anton/ravel-ui package..."
+    cd "$REPO_ROOT/packages/ravel-ui" && pnpm build
     cd "$REPO_ROOT"
-    ok "solar-orb-ui built"
+    ok "ravel-ui built"
 }
 
 # ── Headless Browser Dependencies ─────────────────────────────────────────────
@@ -356,7 +356,7 @@ setup_db() {
 full_setup() {
     echo ""
     echo "╔══════════════════════════════════════════════╗"
-    echo "║   AlphaForge — Full Repository Setup         ║"
+    echo "║   AlphaForge Anton — Full Repository Setup         ║"
     echo "╚══════════════════════════════════════════════╝"
     echo ""
 

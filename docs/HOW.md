@@ -1,4 +1,4 @@
-# How AlphaForge Works
+# How AlphaForge Anton Works
 
 ## Architecture Overview
 
@@ -233,7 +233,7 @@ This makes adding new brokers (Angel One, Upstox, Groww) a matter of implementin
 - **HTTPS mandatory** in production
 
 ### Regulatory Awareness
-- AlphaForge is a **tool**, not a financial advisor
+- AlphaForge Anton is a **tool**, not a financial advisor
 - No guaranteed return claims
 - User data privacy — minimal data collection, no selling
 - Compliance with RBI's LRS guidelines for international investing features
@@ -321,11 +321,11 @@ Both backend and frontend use structured, file-based logging via **publishable l
 **Backend** — wraps `alphaforge-logger` via `backend/app/core/logging.py`:
 - Initialised at app startup in `backend/app/main.py` (lifespan)
 - Get a scoped logger anywhere: `from app.core.logging import get_logger; logger = get_logger("routes.market")`
-- File output: `backend/logs/alphaforge.log` (10 MB per file, 5 backups)
+- File output: `backend/logs/alphaforge-anton.log` (10 MB per file, 5 backups)
 
 **Frontend** — wraps `@alphaforge/logger` via `frontend/src/lib/logger.ts`:
 - Get a scoped logger: `import { getLogger } from "@/lib/logger"; const log = getLogger("MyComponent")`
-- Server-side logs to `frontend/logs/alphaforge-frontend.log` + console (pretty in dev)
+- Server-side logs to `frontend/logs/alphaforge-anton-frontend.log` + console (pretty in dev)
 - Client-side errors can be forwarded via `POST /api/log` (warn/error/fatal only)
 
 **Environment variables** (both stacks):
@@ -333,7 +333,7 @@ Both backend and frontend use structured, file-based logging via **publishable l
 |----------|----------------|-----------------|-------------|
 | `LOG_LEVEL` | `INFO` | `info` | Minimum log level |
 | `LOG_DIR` | `logs` | `logs` | Directory for log files |
-| `LOG_FILE` | `alphaforge.log` | `alphaforge-frontend.log` | Log filename |
+| `LOG_FILE` | `alphaforge-anton.log` | `alphaforge-anton-frontend.log` | Log filename |
 | `LOG_MAX_BYTES` | `10485760` | — | Max file size before rotation (backend only) |
 | `LOG_BACKUP_COUNT` | `5` | — | Rotated file copies to keep (backend only) |
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# AlphaForge — Config & Secrets Bootstrap / Sync
+# AlphaForge Anton — Config & Secrets Bootstrap / Sync
 # ==============================================================================
 # Idempotent script that:
 #   1. Creates real .env files from .env.example templates if missing.
@@ -316,7 +316,7 @@ report_manual_keys() {
 }
 
 # ── Run ────────────────────────────────────────────────────────────────────────
-hdr "AlphaForge — config sync"
+hdr "AlphaForge Anton — config sync"
 info "Python: $PY"
 (( DRY_RUN )) && warn "DRY RUN — no files will be modified"
 

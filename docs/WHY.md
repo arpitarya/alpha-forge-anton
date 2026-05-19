@@ -1,4 +1,4 @@
-# Why AlphaForge Exists
+# Why AlphaForge Anton Exists
 
 ## The Problem
 
@@ -30,14 +30,14 @@ As an Indian investor, managing a personal portfolio is **fragmented and frustra
 
 ## The Vision
 
-**AlphaForge is a personal AI-powered investment terminal for managing your own portfolio in Indian markets.**
+**AlphaForge Anton is a personal AI-powered investment terminal for managing your own portfolio in Indian markets.**
 
 Imagine a tool where you can:
 
 ```
 You: "Analyze RELIANCE — should I buy at current levels?"
 
-AlphaForge AI: Based on my analysis:
+AlphaForge Anton AI: Based on my analysis:
 
 📊 Technical: RSI at 42 (neutral), MACD bearish crossover 2 days ago,
    trading below 50-DMA. Support at ₹2,380, resistance at ₹2,520.
@@ -61,7 +61,7 @@ Then with one click, place that trade through your connected Zerodha/Angel accou
 
 ## Who This Is For
 
-AlphaForge is built for **personal use** — a self-hosted investment terminal for managing your own portfolio. It's ideal if you are:
+AlphaForge Anton is built for **personal use** — a self-hosted investment terminal for managing your own portfolio. It's ideal if you are:
 
 - An **active investor** tired of switching between 5+ tools for analysis
 - Someone who wants **AI-powered analysis** on your own holdings
@@ -84,7 +84,7 @@ AlphaForge is built for **personal use** — a self-hosted investment terminal f
                     Depth of Analysis
                          ▲
                          │
-          Bloomberg ●    │    ● AlphaForge (target)
+          Bloomberg ●    │    ● AlphaForge Anton (target)
           Refinitiv ●    │
                          │
                          │         ● TradingView
@@ -97,7 +97,7 @@ AlphaForge is built for **personal use** — a self-hosted investment terminal f
                                                    & Ease of Use
 ```
 
-AlphaForge aims to sit in the **top-right quadrant** — deep analysis capabilities with AI-first ease of use, at a price point accessible to retail investors.
+AlphaForge Anton aims to sit in the **top-right quadrant** — deep analysis capabilities with AI-first ease of use, at a price point accessible to retail investors.
 
 ---
 

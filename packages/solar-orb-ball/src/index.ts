@@ -3,7 +3,7 @@
  *
  * The central animated Solar Orb — extracted as a standalone, self-contained
  * React component so it can iterate on its own dev server independent of the
- * larger solar-orb-ui design system.
+ * larger ravel-ui design system.
  *
  * Usage:
  *   import { SolarOrb } from "@alphaforge/solar-orb-ball";

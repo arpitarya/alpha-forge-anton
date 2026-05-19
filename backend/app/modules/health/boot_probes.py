@@ -44,7 +44,7 @@ async def probe_database() -> BootService:
 
 async def probe_llm() -> BootService:
     try:
-        from alphaforge_llm.gateway import create_gateway
+        from alphaforge_anton_llm.gateway import create_gateway
         healths = await create_gateway().health()
         available = {name for name, h in healths.items() if h.available}
         if not available:

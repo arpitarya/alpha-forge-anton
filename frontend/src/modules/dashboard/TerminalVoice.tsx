@@ -6,7 +6,7 @@ import {
   Text,
   VoiceDock,
   Waveform,
-} from "@alphaforge/solar-orb-ui";
+} from "@alphaforge-anton/ravel-ui";
 import { useEffect, useState } from "react";
 
 const PROMPTS = [

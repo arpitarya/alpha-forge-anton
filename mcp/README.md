@@ -1,6 +1,6 @@
 # repo-context-mcp
 
-Tool-agnostic MCP server that gives **any coding agent** (Claude Code, GitHub Copilot, Cursor, Cline, Zed, Windsurf — or anything that speaks MCP tomorrow) rich semantic + structural context over the AlphaForge monorepo.
+Tool-agnostic MCP server that gives **any coding agent** (Claude Code, GitHub Copilot, Cursor, Cline, Zed, Windsurf — or anything that speaks MCP tomorrow) rich semantic + structural context over the AlphaForge Anton monorepo.
 
 One local process. Many clients. Same view.
 
@@ -21,7 +21,7 @@ One local process. Many clients. Same view.
 ## How it works
 
 ```
-[your editor]──MCP stdio──▶[alphaforge-repo-context-mcp]
+[your editor]──MCP stdio──▶[alphaforge-anton-repo-context-mcp]
                                  │
                                  ├── tools/ (search_code, get_symbol, …)
                                  ├── pgvector (repo_chunks table)
@@ -49,7 +49,7 @@ The server reads from the repo-root `.env` / `.env.cred.example` / `.env.cred.lo
 
 ```
 GEMINI_API_KEY=...
-DATABASE_URL=postgresql+asyncpg://alphaforge:alphaforge@localhost:5432/alphaforge
+DATABASE_URL=postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge
 ```
 
 ### 3. Build the index (one-time)
@@ -79,8 +79,8 @@ Add to `.claude/settings.json` (or `~/.claude/settings.json`):
 ```json
 {
   "mcpServers": {
-    "alpha-forge-context": {
-      "command": "alphaforge-repo-context-mcp"
+    "alpha-forge-anton-context": {
+      "command": "alphaforge-anton-repo-context-mcp"
     }
   }
 }
@@ -91,10 +91,10 @@ Or, without installing the console script:
 ```json
 {
   "mcpServers": {
-    "alpha-forge-context": {
+    "alpha-forge-anton-context": {
       "command": "python",
-      "args": ["-m", "alphaforge_repo_context.server"],
-      "cwd": "/absolute/path/to/alpha-forge/repo-context-mcp"
+      "args": ["-m", "alphaforge_anton_repo_context.server"],
+      "cwd": "/absolute/path/to/alpha-forge-anton/repo-context-mcp"
     }
   }
 }
@@ -107,8 +107,8 @@ Add to `.vscode/mcp.json`:
 ```json
 {
   "servers": {
-    "alpha-forge-context": {
-      "command": "alphaforge-repo-context-mcp"
+    "alpha-forge-anton-context": {
+      "command": "alphaforge-anton-repo-context-mcp"
     }
   }
 }
@@ -121,8 +121,8 @@ Add to `~/.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
-    "alpha-forge-context": {
-      "command": "alphaforge-repo-context-mcp"
+    "alpha-forge-anton-context": {
+      "command": "alphaforge-anton-repo-context-mcp"
     }
   }
 }
@@ -137,9 +137,9 @@ All use the same JSON shape under their respective `mcpServers` / `mcp.servers` 
 ## CLI
 
 ```bash
-alphaforge-repo-context-index --full     # full reindex
-alphaforge-repo-context-index --watch    # watch + incremental
-alphaforge-repo-context-mcp              # run MCP server (stdio)
+alphaforge-anton-repo-context-index --full     # full reindex
+alphaforge-anton-repo-context-index --watch    # watch + incremental
+alphaforge-anton-repo-context-mcp              # run MCP server (stdio)
 ```
 
 ---

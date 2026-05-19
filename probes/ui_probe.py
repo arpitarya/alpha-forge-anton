@@ -1,6 +1,6 @@
-"""Playwright UI probe — exercises the AlphaForge frontend auth + navigation flow.
+"""Playwright UI probe — exercises the AlphaForge Anton frontend auth + navigation flow.
 
-Attaches to the existing AlphaForge Chrome via CDP — the same session used by
+Attaches to the existing AlphaForge Anton Chrome via CDP — the same session used by
 the broker probes (Zerodha, Groww, Wint Wealth). Start Chrome once with:
 
     just zerodha-chrome          # opens CDP on port 9299
@@ -14,7 +14,7 @@ Then run this probe (backend + frontend must be running):
 Environment overrides:
     AF_FRONTEND=http://localhost:3000
     PROBE_USER=admin
-    PROBE_PASS=alphaforge-dev
+    PROBE_PASS=alphaforge-anton-dev
     BROKER_CDP_PORT=9299
 
 Screenshots are saved to <repo-root>/screenshots/.
@@ -35,7 +35,7 @@ from app.modules.brokers._cdp import connect_existing_chrome
 BASE_URL = os.getenv("AF_FRONTEND", "http://localhost:3000")
 CDP_PORT = int(os.getenv("BROKER_CDP_PORT", "9299"))
 USERNAME = os.getenv("PROBE_USER", "admin")
-PASSWORD = os.getenv("PROBE_PASS", "alphaforge-dev")
+PASSWORD = os.getenv("PROBE_PASS", "alphaforge-anton-dev")
 SHOT_DIR = Path(__file__).resolve().parent.parent / "screenshots"
 
 _results: list[tuple[str, bool, str]] = []
@@ -183,11 +183,11 @@ def main() -> None:
     parser.add_argument("--base", default=BASE_URL, help=f"Frontend URL (default: {BASE_URL})")
     parser.add_argument(
         "--cdp-port", type=int, default=CDP_PORT,
-        help=f"CDP port of the existing AlphaForge Chrome (default: {CDP_PORT})",
+        help=f"CDP port of the existing AlphaForge Anton Chrome (default: {CDP_PORT})",
     )
     args = parser.parse_args()
 
-    print(f"AlphaForge UI Probe  →  {args.base}  [CDP :{args.cdp_port}]")
+    print(f"AlphaForge Anton UI Probe  →  {args.base}  [CDP :{args.cdp_port}]")
     print(f"Screenshots          →  {SHOT_DIR}")
 
     ok = asyncio.run(run(args.base, args.cdp_port))

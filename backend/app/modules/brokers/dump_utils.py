@@ -8,8 +8,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-_REPO_ROOT = Path(__file__).resolve().parents[4]  # backend/app/modules/brokers/ → alpha-forge/
-DEFAULT_DUMP_DIR = Path.home() / ".alphaforge" / "portfolio-dumps"
+_REPO_ROOT = Path(__file__).resolve().parents[4]  # backend/app/modules/brokers/ → alpha-forge-anton/
+DEFAULT_DUMP_DIR = Path.home() / ".alphaforge-anton" / "portfolio-dumps"
 CSV_HEADERS = (
     "tradingsymbol", "name", "isin", "exchange",
     "quantity", "average_price", "last_price",

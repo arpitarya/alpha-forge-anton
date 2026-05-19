@@ -26,7 +26,7 @@ const nextConfig = {
   output: "standalone",
   // Transpile workspace packages
   transpilePackages: [
-    "@alphaforge/solar-orb-ui",
+    "@alphaforge-anton/ravel-ui",
     "@alphaforge/solar-orb-ball",
     "@alphaforge/logger",
   ],

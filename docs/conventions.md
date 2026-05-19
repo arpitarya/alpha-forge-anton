@@ -1,4 +1,4 @@
-# AlphaForge — Coding Conventions
+# AlphaForge Anton — Coding Conventions
 
 Full role suffix lists: [convention/python.md](../convention/python.md) · [convention/typescript.md](../convention/typescript.md)
 Legacy violations: [convention/violations.md](../convention/violations.md)
@@ -29,7 +29,7 @@ Legacy violations: [convention/violations.md](../convention/violations.md)
 - All API calls through the typed axios client in `src/lib/api.ts`
 - Tailwind utility classes; CSS variables for dark Solar Terminal theme
 - Tailwind v4: workspace packages must be listed in `globals.css` with `@source` so arbitrary-value classes (e.g. `grid-cols-[28px_1fr_auto_auto]`) used inside `packages/*/src` actually compile. Tailwind v4's Preflight no longer sets `cursor: pointer` on `button` — `globals.css` re-applies it; don't add `cursor-pointer` per-button
-- `@alphaforge/solar-orb-ui` — import components, fonts, and theme tokens from here
+- `@alphaforge-anton/ravel-ui` — import components, fonts, and theme tokens from here
 - Biome v2 for formatting + linting; ESLint v9 flat config for Next.js rules
 - TanStack React Query v5 for data fetching (hooks in per-domain `*.query.ts`)
 - Package manager: pnpm (NOT npm or yarn)
@@ -43,9 +43,9 @@ Legacy violations: [convention/violations.md](../convention/violations.md)
 | Backend service | `{domain}_service.py` — business logic lives here, never in routes |
 | Backend utils | `{domain}_utils.py` — max 50 lines |
 | New broker | Implement `BrokerSource` ABC from `base.py`; register in `registry.py`; CSV dumps → use `dump_utils.py` ([broker-csv-dumps.md](broker-csv-dumps.md)). CSV parsers must use `AssetClass.MUTUAL_FUND` (not `AssetClass.MF`). |
-| New UI component | Add to `packages/solar-orb-ui/src/components/`, export from `src/index.ts`, rebuild with `pnpm build` |
+| New UI component | Add to `packages/ravel-ui/src/components/`, export from `src/index.ts`, rebuild with `pnpm build` |
 | Frontend module file | `{domain}.{api\|query\|types\|utils}.ts` under `src/modules/{domain}/` |
-| Design tokens | Source of truth is `packages/solar-orb-ui/src/tokens/` (JSON + TS). Keep `theme.css` in sync |
+| Design tokens | Source of truth is `packages/ravel-ui/src/tokens/` (JSON + TS). Keep `theme.css` in sync |
 
 ## Portfolio Display Conventions
 

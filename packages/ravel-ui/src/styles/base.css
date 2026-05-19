@@ -1,0 +1,140 @@
+/*
+ * Solar Orb UI — Base Styles
+ *
+ * Core CSS utilities, animations, and component classes used by the
+ * Solar Terminal design system. Import after fonts + theme.
+ *
+ * Usage:
+ *   @import "@alphaforge-anton/ravel-ui/styles";
+ */
+
+/* ── Material Symbols defaults ───────────────────────
+ * We declare every relevant property here so the icon class works even if
+ * the consuming app forgets to ship the Google Fonts <link> for the icon
+ * variable font. The font-family must match the literal Google emits; if
+ * the font hasn't loaded the slot is empty (display=block) rather than
+ * rendering the icon NAME as plain text.
+ */
+
+.material-symbols-outlined {
+  /* No generic fallback on purpose — for icon fonts a fallback would render
+     the icon NAME as plain text (e.g. "balance_wallet"). display=block on the
+     <link> holds the slot blank until the icon font loads. */
+  /* biome-ignore lint: icon font has no generic family peer; fallback would render names as text */
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
+}
+
+/* ── Solar Orb Glow ───────────────────────────────── */
+
+.solar-orb {
+  background: radial-gradient(
+    circle at 36% 32%,
+    #fff 0%,
+    #ffe8b0 8%,
+    var(--accent-soft) 26%,
+    var(--accent) 60%,
+    color-mix(in srgb, var(--accent) 35%, transparent) 88%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 80px var(--glow),
+    0 0 220px var(--glow),
+    inset -16px -20px 36px color-mix(in srgb, var(--accent-dim) 50%, transparent),
+    inset 12px 14px 30px rgba(255, 255, 255, 0.45);
+  animation: pulse-glow 3.4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50%      { transform: scale(1.035); filter: brightness(1.05); }
+}
+
+/* ── Floating Glass Shard ─────────────────────────── */
+
+.floating-shard {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ── Card Glow Border ─────────────────────────────── *
+ * Recreates Hi-Fi `.card::after` — a 1px gradient hairline rim around the
+ * card. Drawn with mask-composite so it doesn't paint over content.
+ */
+
+.card-glow::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 60%, transparent),
+    transparent 30%,
+    transparent 70%,
+    color-mix(in srgb, var(--accent) 30%, transparent)
+  );
+  -webkit-mask:
+    linear-gradient(#000, #000) content-box,
+    linear-gradient(#000, #000);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* ── HUD Corners ──────────────────────────────────── *
+ * Used by <HudCorners /> to bracket a region with 4 corner ticks.
+ */
+
+.hud-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--accent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.hud-corner.tl { top: 14px; left: 14px;  border-right: none; border-bottom: none; }
+.hud-corner.tr { top: 14px; right: 14px; border-left: none;  border-bottom: none; }
+.hud-corner.bl { bottom: 14px; left: 14px;  border-right: none; border-top: none; }
+.hud-corner.br { bottom: 14px; right: 14px; border-left: none;  border-top: none; }
+
+/* ── Live Dot Pulse ───────────────────────────────── */
+
+@keyframes live-dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+/* ── Mic Ping (voice footer) ──────────────────────── */
+
+@keyframes mic-ping {
+  0%   { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* ── Scrollbar ────────────────────────────────────── */
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.solar-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.solar-scrollbar::-webkit-scrollbar-track { background: var(--surface-lo); }
+.solar-scrollbar::-webkit-scrollbar-thumb { background: var(--line-hi); }
+.solar-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--fg-3); }

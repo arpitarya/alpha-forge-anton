@@ -6,13 +6,13 @@ import json
 import re
 import time
 
-from alphaforge_llm.gateway import create_gateway
-from alphaforge_llm.types import Message, QueryType
+from alphaforge_anton_llm.gateway import create_gateway
+from alphaforge_anton_llm.types import Message, QueryType
 
 from app.modules.chat.chat_schemas import ChatMessage, PROVIDER_TO_QUERY_TYPE
 
 _SYSTEM = (
-    "You are Alpha, the AI financial analyst inside AlphaForge — a personal investment terminal "
+    "You are Alpha, the AI financial analyst inside AlphaForge Anton — a personal investment terminal "
     "for Indian markets. Be concise, data-driven, and actionable. Format numbers in Indian locale "
     "(₹, L, Cr). When you recommend a trade, include the rationale and expected impact on the "
     "portfolio. Keep responses under 400 words unless a detailed breakdown is explicitly requested."

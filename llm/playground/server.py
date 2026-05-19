@@ -20,11 +20,11 @@ for f in (".env", ".env.local", ".env.cred.local"):
     if p.exists():
         load_dotenv(p, override=True)
 
-from alphaforge_llm import REGISTRY, Message  # noqa: E402
+from alphaforge_anton_llm import REGISTRY, Message  # noqa: E402
 
 HTML = (Path(__file__).parent / "index.html").read_text()
 
-app = FastAPI(title="alphaforge-llm playground")
+app = FastAPI(title="alphaforge-anton-llm playground")
 
 
 class CompleteIn(BaseModel):

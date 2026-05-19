@@ -1,5 +1,5 @@
 /**
- * AlphaForge Frontend — Logger (thin wrapper around @alphaforge/logger).
+ * AlphaForge Anton Frontend — Logger (thin wrapper around @alphaforge/logger).
  *
  * Initialises the shared logger package with frontend-specific defaults.
  * Server-side: logs to stdout + file.  Client-side: logs to console.
@@ -10,8 +10,8 @@
 import { createLogger, getLogger as _getLogger } from "../../../packages/logger-node/dist";
 
 const logger = createLogger({
-  name: "alphaforge-frontend",
-  logFile: process.env.LOG_FILE ?? "alphaforge-frontend.log",
+  name: "alphaforge-anton-frontend",
+  logFile: process.env.LOG_FILE ?? "alphaforge-anton-frontend.log",
 });
 
 /**

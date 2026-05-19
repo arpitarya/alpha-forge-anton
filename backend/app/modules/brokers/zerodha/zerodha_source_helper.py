@@ -5,7 +5,7 @@ started with `--remote-debugging-port=9299` (loopback only, see _cdp.py).
 This helper attaches over CDP, reuses the enctoken cookie if already
 authenticated, otherwise waits up to ZERODHA_LOGIN_CDP_WAIT seconds for
 the user to complete login manually. No password / TOTP secret is ever
-stored or read by AlphaForge.
+stored or read by AlphaForge Anton.
 """
 
 from __future__ import annotations

@@ -13,12 +13,12 @@
  */
 
 @import "tailwindcss";
-@import "@alphaforge/solar-orb-ui/src/styles/fonts.css";
-@import "@alphaforge/solar-orb-ui/src/styles/theme.css";
-@import "@alphaforge/solar-orb-ui/src/styles/base.css";
+@import "@alphaforge-anton/ravel-ui/src/styles/fonts.css";
+@import "@alphaforge-anton/ravel-ui/src/styles/theme.css";
+@import "@alphaforge-anton/ravel-ui/src/styles/base.css";
 @import "@alphaforge/solar-orb-ball/styles";
 
-@source "../../../packages/solar-orb-ui/src";
+@source "../../../packages/ravel-ui/src";
 @source "../../../packages/solar-orb-ball/src";
 
 html,

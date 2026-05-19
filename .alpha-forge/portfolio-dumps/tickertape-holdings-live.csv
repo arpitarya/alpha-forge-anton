@@ -1,0 +1,3 @@
+# source=tickertape  dumped_at_utc=2026-05-18T20:11:18.108260+00:00  holdings_count=1
+tradingsymbol,name,isin,exchange,quantity,average_price,last_price,invested,current_value,pnl,pnl_pct
+DIGITAL_GOLD,Digital Gold (SafeGold via Ticker Tape),,,0.6714,15896.86,16347.22,10673.15,10975.52,302.37,2.83

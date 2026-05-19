@@ -1,4 +1,4 @@
-# AlphaForge — Graphify
+# AlphaForge Anton — Graphify
 
 This project maintains a knowledge graph at `graphify-out/`.
 

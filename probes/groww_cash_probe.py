@@ -1,6 +1,6 @@
 """Print Groww free cash via CDP capture of /margin/user_margin_details.
 
-Attaches to the existing AlphaForge Chrome (port 9299), opens a fresh tab to
+Attaches to the existing AlphaForge Anton Chrome (port 9299), opens a fresh tab to
 `groww.in/user/balance/inr`, captures the margin XHR, and prints `CASH.value`.
 
 Run while Groww is logged in:

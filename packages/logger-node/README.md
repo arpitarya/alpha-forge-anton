@@ -37,8 +37,8 @@ All options can be set via `createLogger()` opts or environment variables:
 |--------|---------|---------|-------------|
 | `level` | `LOG_LEVEL` | `info` | Minimum log level |
 | `logDir` | `LOG_DIR` | `logs` | Directory for log files |
-| `logFile` | `LOG_FILE` | `alphaforge.log` | Log filename |
-| `name` | — | `alphaforge` | Root logger name |
+| `logFile` | `LOG_FILE` | `alphaforge-anton.log` | Log filename |
+| `name` | — | `alphaforge_anton` | Root logger name |
 | `pretty` | — | `NODE_ENV !== "production"` | Pretty-print console output |
 
 ## Environments

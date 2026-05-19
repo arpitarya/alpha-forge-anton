@@ -1,0 +1,5 @@
+# source=indmoney  dumped_at_utc=2026-05-16T10:23:25.285575+00:00  holdings_count=3
+tradingsymbol,name,isin,exchange,quantity,average_price,last_price,invested,current_value,pnl,pnl_pct
+AAPL,"Apple, Inc.",,NYSE,0.3659894,163.75,300.23,59.93,109.88,49.95,83.35
+AMD,"Advanced Micro Devices, Inc.",,NYSE,0.04590659,216.96,424.1,9.96,19.47,9.51,95.47
+NVDA,NVIDIA Corporation,,NYSE,0.00569723,186.06,225.32,1.06,1.28,0.22,21.1

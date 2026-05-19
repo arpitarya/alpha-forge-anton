@@ -1,4 +1,4 @@
-# AlphaForge — Code Conventions
+# AlphaForge Anton — Code Conventions
 
 The point of this folder is **predictability**. When you open any file in this repo, the filename should already tell you what's inside; when you open any directory, the layout should already tell you what each file does.
 

@@ -24,7 +24,7 @@ logger = get_logger("routes.health")
 @router.get("/health")
 async def health_check():
     logger.debug("Health check hit")
-    return {"status": "healthy", "service": "alphaforge-api"}
+    return {"status": "healthy", "service": "alphaforge-anton-api"}
 
 
 @router.get("/health/boot", response_model=BootReport)

@@ -1,6 +1,6 @@
 "use client";
 
-import { SegmentedControl } from "@alphaforge/solar-orb-ui";
+import { SegmentedControl } from "@alphaforge-anton/ravel-ui";
 import { AssetClassFilter } from "./AssetClassFilter";
 import { PnLToggle } from "./PnLToggle";
 import type { AssetClassCounts, FilterState } from "./portfolio.filter";

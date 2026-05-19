@@ -1,11 +1,11 @@
 #!/bin/bash
-# AlphaForge — Local setup script for macOS (Apple Silicon)
+# AlphaForge Anton — Local setup script for macOS (Apple Silicon)
 # Installs and starts PostgreSQL + Redis natively via Homebrew.
 # No Docker required.
 
 set -e
 
-echo "🔧 AlphaForge — Local Infrastructure Setup"
+echo "🔧 AlphaForge Anton — Local Infrastructure Setup"
 echo "============================================"
 
 # ── Check Homebrew ───────────────────────────────
@@ -47,21 +47,21 @@ for i in {1..10}; do
 done
 
 # ── Create database and user ─────────────────────
-if psql -lqt 2>/dev/null | cut -d \| -f 1 | grep -qw alphaforge; then
-    echo "✅ Database 'alphaforge' already exists"
+if psql -lqt 2>/dev/null | cut -d \| -f 1 | grep -qw alphaforge_anton; then
+    echo "✅ Database 'alphaforge_anton' already exists"
 else
     echo "📦 Creating database and user..."
-    createuser alphaforge 2>/dev/null || true
-    createdb alphaforge -O alphaforge 2>/dev/null || true
-    psql -c "ALTER USER alphaforge WITH PASSWORD 'alphaforge';" 2>/dev/null || true
-    echo "✅ Database 'alphaforge' created"
+    createuser alphaforge_anton 2>/dev/null || true
+    createdb alphaforge_anton -O alphaforge_anton 2>/dev/null || true
+    psql -c "ALTER USER alphaforge_anton WITH PASSWORD 'alphaforge_anton';" 2>/dev/null || true
+    echo "✅ Database 'alphaforge_anton' created"
 fi
 
 echo ""
 echo "============================================"
 echo "✅ Infrastructure ready!"
 echo ""
-echo "  PostgreSQL: localhost:5432 (user: alphaforge, db: alphaforge)"
+echo "  PostgreSQL: localhost:5432 (user: alphaforge_anton, db: alphaforge_anton)"
 echo "  Redis:      localhost:6379"
 echo ""
 echo "Next steps:"

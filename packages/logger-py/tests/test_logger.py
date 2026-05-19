@@ -22,7 +22,7 @@ def test_setup_logging_creates_dir(tmp_path: Path) -> None:
 
 def test_get_logger_returns_child() -> None:
     logger = get_logger("routes.market")
-    assert logger.name == "alphaforge.routes.market"
+    assert logger.name == "alphaforge_anton.routes.market"
 
 
 def test_get_logger_custom_namespace() -> None:

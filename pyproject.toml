@@ -1,7 +1,7 @@
 [project]
-name = "alphaforge-monorepo"
+name = "alphaforge-anton-monorepo"
 version = "0.0.0"
-description = "AlphaForge — workspace root (uv). Not a published package."
+description = "AlphaForge Anton — workspace root (uv). Not a published package."
 requires-python = ">=3.14"
 license = { text = "MIT" }
 authors = [{ name = "Arpit Arya" }]
@@ -19,10 +19,10 @@ members = [
 
 # Local workspace deps resolve to the in-tree member, not PyPI.
 [tool.uv.sources]
-alphaforge-backend = { workspace = true }
+alphaforge-anton-backend = { workspace = true }
 alphaforge-logger  = { workspace = true }
-alphaforge-news    = { workspace = true }
-alphaforge-llm     = { workspace = true }
+alphaforge-anton-news    = { workspace = true }
+alphaforge-anton-llm     = { workspace = true }
 
 # Pull every workspace member into `.venv` on `uv sync`.
 [tool.uv]
@@ -30,10 +30,10 @@ default-groups = ["all", "dev"]
 
 [dependency-groups]
 all = [
-    "alphaforge-backend",
+    "alphaforge-anton-backend",
     "alphaforge-logger",
-    "alphaforge-news",
-    "alphaforge-llm",
+    "alphaforge-anton-news",
+    "alphaforge-anton-llm",
 ]
 dev = [
     "ruff>=0.6.0",

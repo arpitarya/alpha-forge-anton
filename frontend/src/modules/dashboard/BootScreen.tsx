@@ -1,6 +1,6 @@
 "use client";
 
-import { Logo } from "@alphaforge/solar-orb-ui";
+import { Logo } from "@alphaforge-anton/ravel-ui";
 import { useEffect, useRef, useState } from "react";
 import type { BootStatus } from "./boot.types";
 

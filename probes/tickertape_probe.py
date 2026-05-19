@@ -1,6 +1,6 @@
 """Attach to existing CDP Chrome, intercept Ticker Tape portfolio XHRs.
 
-Run while logged in to tickertape.in in the AlphaForge Chrome:
+Run while logged in to tickertape.in in the AlphaForge Anton Chrome:
     uv run python probes/tickertape_probe.py
 
 Prints a shape summary of every matching XHR. Look for a response that lists

@@ -5,15 +5,15 @@
 The portfolio module aggregates holdings from five sources. Each source is one of two kinds:
 
 - **CSV** — user uploads an export. The broker offers no free API; this is the only legal path.
-- **API** — pulled programmatically. AlphaForge attaches over CDP to an authenticated Chrome session.
+- **API** — pulled programmatically. AlphaForge Anton attaches over CDP to an authenticated Chrome session.
 
 | Source | Slug | Kind | Where to get the data |
 |---|---|---|---|
-| Zerodha (equity + ETF + COIN MF) | `zerodha` | API | CDP session — log in to [kite.zerodha.com](https://kite.zerodha.com) in the AlphaForge Chrome (see below) |
-| Groww | `groww` | API | CDP web-app fetch — log in to [groww.in](https://groww.in) in the AlphaForge Chrome |
-| Angel One | `angelone` | API | CDP web-app fetch — log in to [angelone.in](https://angelone.in) in the AlphaForge Chrome (see below) |
-| INDmoney (Indian equity, MF, US stocks, gold) | `indmoney` | API | CDP web-app fetch — log in to [indmoney.com](https://indmoney.com) in the AlphaForge Chrome |
-| Ticker Tape (SGBs, Gold ETFs, gold funds) | `tickertape` | API | CDP web-app fetch — log in to [tickertape.in](https://tickertape.in) in the AlphaForge Chrome |
+| Zerodha (equity + ETF + COIN MF) | `zerodha` | API | CDP session — log in to [kite.zerodha.com](https://kite.zerodha.com) in the AlphaForge Anton Chrome (see below) |
+| Groww | `groww` | API | CDP web-app fetch — log in to [groww.in](https://groww.in) in the AlphaForge Anton Chrome |
+| Angel One | `angelone` | API | CDP web-app fetch — log in to [angelone.in](https://angelone.in) in the AlphaForge Anton Chrome (see below) |
+| INDmoney (Indian equity, MF, US stocks, gold) | `indmoney` | API | CDP web-app fetch — log in to [indmoney.com](https://indmoney.com) in the AlphaForge Anton Chrome |
+| Ticker Tape (SGBs, Gold ETFs, gold funds) | `tickertape` | API | CDP web-app fetch — log in to [tickertape.in](https://tickertape.in) in the AlphaForge Anton Chrome |
 
 > This module reads holdings only — no orders are placed.
 
@@ -35,14 +35,14 @@ We chose the honest path: free + official + reproducible. As paid integrations g
 
 ## Angel One — CDP setup
 
-SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, frequent 401s), so AlphaForge attaches to the running Chrome over CDP and captures the XHR the Angel One web app itself makes — same pattern as Groww.
+SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, frequent 401s), so AlphaForge Anton attaches to the running Chrome over CDP and captures the XHR the Angel One web app itself makes — same pattern as Groww.
 
 1. Start Chrome with the debugging port (one-time):
 
    ```bash
    /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
        --remote-debugging-port=9299 \
-       --user-data-dir="$HOME/.cache/alphaforge-chrome"
+       --user-data-dir="$HOME/.cache/alphaforge-anton-chrome"
    ```
 
 2. Log in to [angelone.in](https://angelone.in) inside that Chrome window.
@@ -58,7 +58,7 @@ SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP fric
    curl -X POST http://localhost:8000/api/v1/portfolio/sources/angelone/sync
    ```
 
-If the session has expired the first attempt fails fast and the next call re-opens the login page (you finish 2FA in your own browser — AlphaForge never sees your password or OTP).
+If the session has expired the first attempt fails fast and the next call re-opens the login page (you finish 2FA in your own browser — AlphaForge Anton never sees your password or OTP).
 
 ---
 

@@ -1,6 +1,6 @@
 """Attach to existing CDP Chrome, intercept Gullak dashboard XHRs.
 
-Run while logged in to web.gullak.money in the AlphaForge Chrome:
+Run while logged in to web.gullak.money in the AlphaForge Anton Chrome:
     just gullak-probe
 
 Prints a shape summary of every matching XHR. Look for responses with

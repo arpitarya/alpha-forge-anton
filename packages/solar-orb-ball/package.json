@@ -52,14 +52,14 @@
   "keywords": [
     "react",
     "ui",
-    "alphaforge",
+    "alphaforge_anton",
     "solar-orb",
     "design-system",
     "ai"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/alphaforge/alpha-forge",
+    "url": "https://github.com/alphaforge-anton/alpha-forge-anton",
     "directory": "packages/solar-orb-ball"
   }
 }

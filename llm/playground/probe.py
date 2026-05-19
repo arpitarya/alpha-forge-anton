@@ -16,7 +16,7 @@ for _f in (".env", ".env.local", ".env.cred.local"):
     if _p.exists():
         load_dotenv(_p, override=True)
 
-from alphaforge_llm import REGISTRY, Message  # noqa: E402
+from alphaforge_anton_llm import REGISTRY, Message  # noqa: E402
 
 PROMPT = [Message(role="user", content="Reply with exactly: pong")]
 

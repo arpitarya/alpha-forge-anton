@@ -4,7 +4,7 @@ solar-orb-ball — Implementation Log
 Phase 1 — Standalone component + Vite playground  (2026-04-26, complete)
 ------------------------------------------------------------------------
 
-Goal: extract the central Solar Orb from solar-orb-ui into a publishable
+Goal: extract the central Solar Orb from ravel-ui into a publishable
 package with its own dev server, so motion / glow / color iterations don't
 require a frontend rebuild.
 
@@ -63,7 +63,7 @@ Verification
     dist/solar-orb-ball.css 3.11 KB, dist/solar-orb-ball.cjs 3.19 KB,
     sourcemaps emitted, tsc declarations clean.
 - `pnpm type-check`                      → no errors.
-- solar-orb-ui re-built clean after the parallel Phase 2-4 work; CJS
+- ravel-ui re-built clean after the parallel Phase 2-4 work; CJS
   52.8 KB / ESM 49.7 KB / DTS 26.6 KB.
 
 Next

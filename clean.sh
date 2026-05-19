@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# AlphaForge — Cleanup Script
+# AlphaForge Anton — Cleanup Script
 # ==============================================================================
 #
 # Usage:
@@ -36,7 +36,7 @@ section() { echo -e "\n${BOLD}── $* ──${NC}"; }
 
 usage() {
     cat <<EOF
-AlphaForge — Cleanup Script
+AlphaForge Anton — Cleanup Script
 
 Usage: $(basename "$0") [OPTION]
 
@@ -110,7 +110,7 @@ clean_frontend() {
 clean_all() {
     echo ""
     echo "╔══════════════════════════════════════════════╗"
-    echo "║   AlphaForge — Nuclear Clean                 ║"
+    echo "║   AlphaForge Anton — Nuclear Clean                 ║"
     echo "╚══════════════════════════════════════════════╝"
     echo ""
     warn "This removes the venv, all node_modules, and all build artifacts."

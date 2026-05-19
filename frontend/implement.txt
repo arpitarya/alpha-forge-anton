@@ -5,17 +5,17 @@ frontend — Implementation Log
 ---------------------------------------------------
 
 Goal: rebuild the home page from the Solar Terminal Hi-Fi mock using the
-new @alphaforge/solar-orb-ui primitives and the standalone Solar Orb from
+new @alphaforge-anton/ravel-ui primitives and the standalone Solar Orb from
 @alphaforge/solar-orb-ball. All copy/data sourced from new backend
 /dashboard/* endpoints.
 
 Frontend changes
 ----------------
-- src/app/layout.tsx: wrapped <ThemeProvider/> from solar-orb-ui;
+- src/app/layout.tsx: wrapped <ThemeProvider/> from ravel-ui;
   inlined a tiny pre-hydration script that reads localStorage and sets
   data-theme/data-accent on <html> before React hydrates (no theme
   flash). biome-ignore noted on dangerouslySetInnerHTML.
-- src/app/globals.css: imports solar-orb-ui (fonts → theme → base) and
+- src/app/globals.css: imports ravel-ui (fonts → theme → base) and
   solar-orb-ball/styles, then tailwindcss. Uses semantic --bg / --fg vars
   for body so the page re-skins when the theme flips.
 - src/app/page.tsx: composes <AppShell/> + <TerminalTopBar/> +
@@ -26,7 +26,7 @@ Frontend changes
 - src/components/terminal/* (rebuilt):
     AlphaBriefCard, OrbStage, ScreenerPanel, TerminalRail, TerminalStats,
     TerminalTicker, TerminalTopBar, TerminalVoice, WatchlistCard.
-  All compose only solar-orb-ui + solar-orb-ball primitives, no inline
+  All compose only ravel-ui + solar-orb-ball primitives, no inline
   ad-hoc styling beyond layout.
 - src/components/layout/{Header,Sidebar}.tsx removed; that role is now
   played by <TopBar/> and <IconRail/> in the library.
@@ -104,7 +104,7 @@ Next
   the left → RebalanceRail on the right → SourcesPanel below.
 - New components in frontend/src/components/portfolio/:
     PortfolioHeader (4 stat cards + SegmentedControl Treemap/Ledger),
-    Treemap (TreemapCell from solar-orb-ui, absolute-positioned by %
+    Treemap (TreemapCell from ravel-ui, absolute-positioned by %
              from the backend's pre-computed layout),
     Ledger (sortable table; per-row tone for +/− P&L),
     RebalanceRail (drift bidirectional bars + suggestion chips +

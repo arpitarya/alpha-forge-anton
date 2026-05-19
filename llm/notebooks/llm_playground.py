@@ -30,16 +30,16 @@ for _f in [".env", ".env.local", ".env.cred.local"]:
     if _p.exists():
         load_dotenv(_p, override=True)
 
-from alphaforge_llm import (
+from alphaforge_anton_llm import (
     REGISTRY, Message, QueryType, create_gateway, CostGuardError,
 )
-from alphaforge_llm.router import QueryRouter
+from alphaforge_anton_llm.router import QueryRouter
 
 def msg(role: str, content: str) -> Message:
     return Message(role=role, content=content)
 
 QUERY = [msg("user", "What is the current trend for Nifty 50?")]
-print("alphaforge_llm loaded OK")
+print("alphaforge_anton_llm loaded OK")
 print(f"Providers registered: {list(REGISTRY)}")
 
 # %% [markdown]
@@ -59,7 +59,7 @@ for name, h in healths.items():
 # ## 2. Groq — direct call
 
 # %%
-from alphaforge_llm.providers.groq import GroqAdapter
+from alphaforge_anton_llm.providers.groq import GroqAdapter
 
 groq = GroqAdapter()
 h = await groq.health()
@@ -73,7 +73,7 @@ if h.available:
 # ## 3. Cerebras — direct call
 
 # %%
-from alphaforge_llm.providers.cerebras import CerebrasAdapter
+from alphaforge_anton_llm.providers.cerebras import CerebrasAdapter
 
 cer = CerebrasAdapter()
 h = await cer.health()
@@ -87,7 +87,7 @@ if h.available:
 # ## 4. Gemini — direct call
 
 # %%
-from alphaforge_llm.providers.gemini import GeminiAdapter
+from alphaforge_anton_llm.providers.gemini import GeminiAdapter
 
 gem = GeminiAdapter()
 h = await gem.health()
@@ -101,7 +101,7 @@ if h.available:
 # ## 5. Mistral — direct call
 
 # %%
-from alphaforge_llm.providers.mistral import MistralAdapter
+from alphaforge_anton_llm.providers.mistral import MistralAdapter
 
 mis = MistralAdapter()
 h = await mis.health()
@@ -114,7 +114,7 @@ if h.available:
 # ## 6. DeepSeek — direct call
 
 # %%
-from alphaforge_llm.providers.deepseek import DeepSeekAdapter
+from alphaforge_anton_llm.providers.deepseek import DeepSeekAdapter
 
 ds = DeepSeekAdapter()
 h = await ds.health()
@@ -139,7 +139,7 @@ for qt in [QueryType.FACTOID, QueryType.NEWS_LOOKUP, QueryType.STOCK_PICK]:
 # ## 8. CostGuard — Claude blocked without confirmation
 
 # %%
-from alphaforge_llm.providers.claude_sdk import ClaudeSdkAdapter
+from alphaforge_anton_llm.providers.claude_sdk import ClaudeSdkAdapter
 
 claude = ClaudeSdkAdapter()
 try:
@@ -162,7 +162,7 @@ for qt in QueryType:
 # ## 10. Rate limiter state
 
 # %%
-from alphaforge_llm.rate_limiter import RateLimiter
+from alphaforge_anton_llm.rate_limiter import RateLimiter
 
 rl = RateLimiter()
 for name in REGISTRY:

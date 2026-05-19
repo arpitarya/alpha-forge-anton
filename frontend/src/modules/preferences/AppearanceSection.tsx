@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "@alphaforge/solar-orb-ui";
+import { useTheme } from "@alphaforge-anton/ravel-ui";
 import { clsx } from "clsx";
 import { PrefGroup } from "./PrefGroup";
 import { PrefRow } from "./PrefRow";

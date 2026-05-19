@@ -9,7 +9,7 @@ file may duplicate path resolution, permission-setting, or P&L calculation.
 | Priority | Source | Value |
 |----------|--------|-------|
 | 1 | `$PORTFOLIO_DUMP_DIR` env var | Absolute path, or repo-relative path resolved from repo root |
-| 2 | Default | `~/.alphaforge/portfolio-dumps/` |
+| 2 | Default | `~/.alphaforge-anton/portfolio-dumps/` |
 
 Directory is created automatically with `chmod 700`. Each CSV file is written
 with `chmod 600`.

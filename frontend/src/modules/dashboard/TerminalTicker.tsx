@@ -1,6 +1,6 @@
 "use client";
 
-import { Ticker } from "@alphaforge/solar-orb-ui";
+import { Ticker } from "@alphaforge-anton/ravel-ui";
 import { useState } from "react";
 import {
   useAddTickerItem,

@@ -1,7 +1,7 @@
 [project]
-name = "alphaforge-backend"
+name = "alphaforge-anton-backend"
 version = "0.1.0"
-description = "AlphaForge — AI-powered financial analysis and trading platform"
+description = "AlphaForge Anton — AI-powered financial analysis and trading platform"
 requires-python = ">=3.14"
 license = { text = "MIT" }
 authors = [{ name = "Arpit Arya" }]
@@ -24,8 +24,8 @@ dependencies = [
     "python-multipart>=0.0.12",
     # Internal packages (resolved via [tool.uv.sources] in the workspace root)
     "alphaforge-logger",
-    "alphaforge-news",
-    "alphaforge-llm",
+    "alphaforge-anton-news",
+    "alphaforge-anton-llm",
     # News aggregator deps
     "feedparser>=6.0.0",
     "asyncpraw>=7.7.0",

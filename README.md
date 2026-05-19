@@ -1,14 +1,14 @@
-# AlphaForge
+# AlphaForge Anton
 
 <p align="center">
-  <img src="logo.png" alt="AlphaForge Logo" width="400" />
+  <img src="logo.png" alt="AlphaForge Anton Logo" width="400" />
 </p>
 
 **Personal AI-powered Portfolio Management and Investment Terminal for Indian Markets**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-AlphaForge is an open-source personal investment terminal for Indian markets (NSE/BSE). It combines a FastAPI backend, a Next.js frontend, an ML screener pipeline, and a multi-provider LLM gateway.
+AlphaForge Anton is an open-source personal investment terminal for Indian markets (NSE/BSE). It combines a FastAPI backend, a Next.js frontend, an ML screener pipeline, and a multi-provider LLM gateway.
 
 This project is built for personal use and research.
 
@@ -24,7 +24,7 @@ This project is built for personal use and research.
 - Added workspace packages:
   - `packages/logger-py` (`alphaforge-logger`)
   - `packages/logger-node` (`@alphaforge/logger`)
-  - `packages/solar-orb-ui` (`@alphaforge/solar-orb-ui`)
+  - `packages/ravel-ui` (`@alphaforge-anton/ravel-ui`)
 
 ---
 
@@ -34,7 +34,7 @@ This project is built for personal use and research.
 |--------|------|---------|
 | Backend | `backend/` | FastAPI API, auth, market, portfolio, broker integration, LLM routes |
 | Frontend | `frontend/` | Next.js terminal UI, dashboard, AI surfaces |
-| UI Library | `packages/solar-orb-ui/` | Shared design tokens and UI components |
+| UI Library | `packages/ravel-ui/` | Shared design tokens and UI components |
 | Logging Packages | `packages/logger-py/`, `packages/logger-node/` | Shared logging for Python and Node |
 | LLM Gateway | `llm-gateway/` | Provider routing, cost guardrails, CLI, benchmarks |
 | Screener | `screener/` | Data pipeline, feature engineering, model training, backtests |
@@ -46,8 +46,8 @@ This project is built for personal use and research.
 
 ```bash
 # Clone
-git clone https://github.com/your-username/alpha-forge.git
-cd alpha-forge
+git clone https://github.com/your-username/alpha-forge-anton.git
+cd alpha-forge-anton
 
 # Recommended: full setup
 ./setup.sh
@@ -107,7 +107,7 @@ just screener-scan
 just llm-gateway-install
 just llm-providers
 just llm-benchmark
-python -m alphaforge_llm_gateway chat
+python -m alphaforge_anton_llm_gateway chat
 
 # Copilot browser integration
 just setup-mcp
@@ -119,8 +119,8 @@ just setup-mcp
 
 | Document | Description |
 |----------|-------------|
-| [docs/WHY.md](docs/WHY.md) | Why AlphaForge exists — the problem & vision |
-| [docs/WHAT.md](docs/WHAT.md) | What AlphaForge is — features, scope, roadmap |
+| [docs/WHY.md](docs/WHY.md) | Why AlphaForge Anton exists — the problem & vision |
+| [docs/WHAT.md](docs/WHAT.md) | What AlphaForge Anton is — features, scope, roadmap |
 | [docs/HOW.md](docs/HOW.md) | How it works — architecture, tech stack, design |
 | [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) | Setup guide for developers |
 | [screener/PLAN.md](screener/PLAN.md) | Screener planning phases |
@@ -133,7 +133,7 @@ just setup-mcp
 ## Project Structure
 
 ```
-alpha-forge/
+alpha-forge-anton/
 ├── backend/                 # Python/FastAPI API server (PDM + uv)
 │   ├── app/
 │   │   ├── core/            # Config, DB, security
@@ -152,7 +152,7 @@ alpha-forge/
 ├── packages/                # Workspace packages
 │   ├── logger-py/           # alphaforge-logger
 │   ├── logger-node/         # @alphaforge/logger
-│   └── solar-orb-ui/        # @alphaforge/solar-orb-ui
+│   └── ravel-ui/        # @alphaforge-anton/ravel-ui
 ├── llm-gateway/             # Multi-provider LLM package + CLI
 ├── screener/                # ML screener pipeline and backtests
 ├── infra/                   # Infrastructure configs
@@ -180,7 +180,7 @@ alpha-forge/
 | Node Tooling | pnpm | Fast, disk-efficient, strict |
 | Database | PostgreSQL 16 | Reliable, battle-tested |
 | Cache / Pub-Sub | Redis 7 | Real-time data, WebSocket backing |
-| AI / LLM | OpenAI + LangChain + `alphaforge-llm-gateway` | Conversational AI, RAG, provider routing |
+| AI / LLM | OpenAI + LangChain + `alphaforge-anton-llm-gateway` | Conversational AI, RAG, provider routing |
 | Charts | Lightweight Charts (TradingView) | Professional-grade charts |
 | Broker API | Zerodha Kite Connect | Most popular Indian broker API |
 | Task Queue | Celery | Background jobs (screeners, alerts) |

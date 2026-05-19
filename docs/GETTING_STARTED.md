@@ -30,8 +30,8 @@ The fastest, lightest setup — no Docker at all:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/alpha-forge.git
-cd alpha-forge
+git clone https://github.com/your-username/alpha-forge-anton.git
+cd alpha-forge-anton
 
 # 2. Full automated setup (prereqs check, venv, deps, env files, dirs)
 ./setup.sh
@@ -82,8 +82,8 @@ If you prefer containers, or are on Linux/Windows:
 # Docker:   brew install --cask docker
 
 # 2. Clone and configure
-git clone https://github.com/your-username/alpha-forge.git
-cd alpha-forge
+git clone https://github.com/your-username/alpha-forge-anton.git
+cd alpha-forge-anton
 cp backend/.env.example backend/.env
 
 # 3. Start everything
@@ -128,13 +128,13 @@ The only **required** variables for basic operation:
 
 ```bash
 SECRET_KEY=<a-random-string-for-JWT>
-DATABASE_URL=postgresql+asyncpg://alphaforge:alphaforge@localhost:5432/alphaforge
+DATABASE_URL=postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge
 REDIS_URL=redis://localhost:6379/0
 ```
 
 ### Optional — AI Features (Alpha Chat)
 
-Alpha chat routes through the `alphaforge-llm` gateway. Set **at least one** provider key:
+Alpha chat routes through the `alphaforge-anton-llm` gateway. Set **at least one** provider key:
 
 ```bash
 # Gemini (default auto-route target for most queries)
@@ -250,7 +250,7 @@ backend/
 └── .env.example
 
 packages/
-└── solar-orb-ui/            # @alphaforge/solar-orb-ui publishable package
+└── ravel-ui/            # @alphaforge-anton/ravel-ui publishable package
     ├── src/
     │   ├── index.ts         # Barrel export (components + tokens)
     │   ├── components/      # Button, Input, Card, Badge, Icon, Text

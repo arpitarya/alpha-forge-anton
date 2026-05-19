@@ -76,7 +76,7 @@ def _load_cached(pair: str) -> tuple[float, datetime] | None:
 
 def _fetch_live_usd_inr() -> float:
     """Hit open.er-api.com once. Raises on network/parse failure."""
-    req = urllib.request.Request(_LIVE_URL, headers={"User-Agent": "alphaforge-fx/1.0"})
+    req = urllib.request.Request(_LIVE_URL, headers={"User-Agent": "alphaforge-anton-fx/1.0"})
     with urllib.request.urlopen(req, timeout=_HTTP_TIMEOUT) as resp:  # noqa: S310 — trusted https URL
         payload = json.loads(resp.read().decode("utf-8"))
     rate = payload.get("rates", {}).get("INR")

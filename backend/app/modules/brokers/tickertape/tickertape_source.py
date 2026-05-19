@@ -1,6 +1,6 @@
 """Ticker Tape holdings — BrokerSource impl over CDP browser fetch + on-disk cache.
 
-Auth flow: user logs in to tickertape.in inside the AlphaForge Chrome instance
+Auth flow: user logs in to tickertape.in inside the AlphaForge Anton Chrome instance
 started with --remote-debugging-port=9299. `fetch()` attaches over CDP, navigates
 to the digital-gold portfolio page, intercepts two XHRs (profile + price), and
 caches the combined result to disk. Subsequent `fetch()` calls within
@@ -55,8 +55,8 @@ class TickerTapeSource(BrokerSource):
     label = "Ticker Tape"
     kind = SourceKind.API
     notes = (
-        "Manual login: log in to tickertape.in inside the AlphaForge Chrome "
-        "(started with --remote-debugging-port=9299). AlphaForge never stores "
+        "Manual login: log in to tickertape.in inside the AlphaForge Anton Chrome "
+        "(started with --remote-debugging-port=9299). AlphaForge Anton never stores "
         "your password or OTP. Set TICKERTAPE_USER_ID in .env.cred.local. "
         "Used for digital gold (SafeGold balance via Ticker Tape)."
     )
