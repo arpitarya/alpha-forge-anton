@@ -69,9 +69,16 @@ def load_env_files(env: str | None = None, *, root: Path | None = None, override
 
     Pydantic-settings only populates `Settings` fields; modules that read via
     `os.getenv` need this. Call once at process start.
+
+    After dotenv files are loaded, attempts to pull secrets from the afbach
+    vault (no-op when AFBACH_TOKEN is unset). Vault values take final priority.
     """
     files = get_env_files(env, root=root, existing_only=True)
     for path in files:
         load_dotenv(path, override=override)
         override = True
+
+    from app.core.vault_client import load_from_vault
+    load_from_vault(override=True)
+
     return files

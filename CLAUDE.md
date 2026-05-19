@@ -13,6 +13,7 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 | Guardrails & project rules | [docs/guardrails.md](docs/guardrails.md) |
 | Broker CSV dumps (shared dump_utils contract) | [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md) |
 | Graphify knowledge graph | [docs/graphify.md](docs/graphify.md) |
+| Vault-backed secrets (alpha-forge-bach) | [docs/vault.md](docs/vault.md) |
 | Live-prices design plan (not yet built) | [docs/live-prices-plan.md](docs/live-prices-plan.md) |
 
 ## Must-Know Rules
