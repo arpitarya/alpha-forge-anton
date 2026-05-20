@@ -1,7 +1,7 @@
 # Graph Report - alpha-forge  (2026-05-20)
 
 ## Corpus Check
-- 286 files · ~825,812 words
+- 286 files · ~825,921 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -2251,7 +2251,7 @@ Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `get()` connect `Community 3` to `Community 0`, `Community 1`, `Community 2`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 13`, `Community 16`, `Community 18`, `Community 19`?**
-  _High betweenness centrality (0.114) - this node is a cross-community bridge._
+  _High betweenness centrality (0.116) - this node is a cross-community bridge._
 - **Why does `alphaforge-logger — Structured rotating-file + console logger.` connect `Community 1` to `Community 0`, `Community 2`, `Community 4`, `Community 5`, `Community 7`, `Community 8`, `Community 9`?**
   _High betweenness centrality (0.049) - this node is a cross-community bridge._
 - **Why does `BrokerSource` connect `Community 9` to `Community 0`, `Community 1`?**
