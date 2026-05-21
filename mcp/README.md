@@ -49,7 +49,7 @@ The server reads from the repo-root `.env` / `.env.cred.example` / `.env.cred.lo
 
 ```
 GEMINI_API_KEY=...
-DATABASE_URL=postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge
+DATABASE_URL=postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge_anton
 ```
 
 ### 3. Build the index (one-time)

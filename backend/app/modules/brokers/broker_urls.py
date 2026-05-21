@@ -35,6 +35,18 @@ INDMONEY_HOLDINGS_URL_NEEDLE = "/stocks/dw/user/account/holdings"
 INDMONEY_BALANCE_PAGE = INDMONEY_HOLDINGS_PAGE
 INDMONEY_BALANCE_URL_NEEDLE = "/stocks/dw/user/account/basic"
 
+# ── Binance ───────────────────────────────────────────────────────────────────
+BINANCE_HOLDINGS_PAGE = "https://www.binance.com/en/my/wallet/account/main"
+BINANCE_LOGIN_URL = "https://accounts.binance.com/en/login"
+BINANCE_HOLDINGS_URL_NEEDLES = (
+    "/bapi/asset/v3/private/asset-service/asset/get-user-asset",
+)
+BINANCE_BALANCE_PAGE = BINANCE_HOLDINGS_PAGE
+BINANCE_BALANCE_URL_NEEDLES = (
+    "/bapi/accounts/v1/private/account/user/base-detail",
+    "/bapi/asset/v2/private/asset-service/wallet/balance",
+)
+
 # ── Ticker Tape ───────────────────────────────────────────────────────────────
 TICKERTAPE_GOLD_PAGE = "https://www.tickertape.in/portfolio/digital-gold"
 TICKERTAPE_LOGIN_URL = "https://www.tickertape.in/login"

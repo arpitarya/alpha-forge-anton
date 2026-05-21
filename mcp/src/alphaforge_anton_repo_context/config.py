@@ -39,7 +39,7 @@ class Settings(BaseSettings):
 
     repo_root: Path = REPO_ROOT
 
-    database_url: str = "postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge"
+    database_url: str = "postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge_anton"
 
     gemini_api_key: str = ""
     embedding_model: str = "text-embedding-004"

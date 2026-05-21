@@ -97,6 +97,10 @@ Add `"{slug}": "{slug}_holdings.csv"` to `FIXTURE_MAP` in `backend/scripts/dev_b
 
 Create `backend/tests/fixtures/broker_csvs/{slug}_holdings.csv` with 3-5 representative rows using the column headers the user described. Cover at least two asset classes if the source holds multiple.
 
+**Step 5.5 — Register credentials (API kind only)**
+
+Write it to the alpha-forge-bach vault 
+
 **Step 6 — Add XHR probes (API kind only)**
 
 Create `probes/{slug}_probe.py` for the holdings XHR. If `supports_cash = True`, also create `probes/{slug}_cash_probe.py` mirroring `probes/groww_cash_probe.py` (CDP) or `probes/zerodha_cash_probe.py` (HTTP). The cash probe must print the exact field path so future code changes are auditable.

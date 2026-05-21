@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     api_v1_prefix: str = "/api/v1"
 
     # ── Database ─────────────────────────────────
-    database_url: str = "postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge"
+    database_url: str = "postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge_anton"
 
     # ── Auth / JWT ───────────────────────────────
     jwt_secret_key: str = "change-me-in-production"  # noqa: S105

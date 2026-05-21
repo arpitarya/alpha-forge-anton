@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from app.modules.brokers.angelone import AngelOneSource
 from app.modules.brokers.base import BrokerSource
+from app.modules.brokers.binance import BinanceSource
 from app.modules.brokers.groww import GrowwSource
 from app.modules.brokers.indmoney import IndMoneySource
 from app.modules.brokers.tickertape import TickerTapeSource
@@ -21,6 +22,7 @@ def _build_sources() -> dict[str, BrokerSource]:
         AngelOneSource(),      # slug: angelone   (CDP browser fetch)
         IndMoneySource(),      # slug: indmoney   (CDP browser fetch)
         TickerTapeSource(),    # slug: tickertape (CDP browser fetch; gold)
+        BinanceSource(),       # slug: binance    (CDP browser fetch; crypto, USD)
     ]
     return {s.slug: s for s in instances}
 

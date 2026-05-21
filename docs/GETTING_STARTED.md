@@ -128,7 +128,7 @@ The only **required** variables for basic operation:
 
 ```bash
 SECRET_KEY=<a-random-string-for-JWT>
-DATABASE_URL=postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge
+DATABASE_URL=postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge_anton
 REDIS_URL=redis://localhost:6379/0
 ```
 

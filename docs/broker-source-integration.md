@@ -278,6 +278,7 @@ Patterns in use:
 | Angel One (INR) | `angelone.in/trade/funds` | `/funds/v2/getRMSLimit` (CDP) | `data.netAvailableFunds` |
 | Groww (INR) | `groww.in/user/balance/inr` | `/margin/user_margin_details` (CDP) | `CASH.value` (string → float) |
 | IndMoney (USD) | `indmoney.com/investments/us-stocks/my-us-stocks` | `/stocks/dw/user/account/basic` (CDP) | `cash_available_for_trade` |
+| Binance (USD/USDT) | `binance.com/en/my/wallet/account/main` | `/bapi/asset/v2/private/asset-service/wallet/balance` (CDP) | sum of `data[].free` where `asset ∈ {USDT,USDC,BUSD,FDUSD}` |
 | Ticker Tape | not supported (`supports_cash = False`; wallet card shows "Cash N/A") | | |
 
 Non-INR brokers: set `currency = "USD"` (or other) as a class attribute on the `BrokerSource` subclass. The shared `_build_one` reads it so `WalletInfo.currency` is correct even before the first `fetch_cash()` call, and each `Holding` returned by the source must also set `currency="USD"` so the frontend renders `$` instead of `₹`.
@@ -387,6 +388,47 @@ Digital gold (SafeGold) balance from Ticker Tape. Captures two XHRs on page load
 
 ---
 
+## Binance (`binance`)
+
+Spot wallet holdings from a personal Binance account. Crypto assets, values
+treated as USDT (≡ USD) — `fx.to_inr` converts to INR for portfolio totals.
+CDP browser fetch with an on-disk cache — same pattern as Groww / IndMoney.
+
+| Detail | Value |
+|--------|-------|
+| Slug | `binance` |
+| Auth | Manual login at `binance.com` inside the AlphaForge Anton Chrome (`--remote-debugging-port=9299`); backend attaches over CDP. |
+| `REQUIRED_ENV` | `BINANCE_USER_ID` |
+| Asset classes | `CRYPTO` |
+| Currency | **USD** (`currency = "USD"`; every `Holding` emitted with `currency="USD"`. USDT/USDC/BUSD/FDUSD are treated 1:1 with USD) |
+| Kind | `SourceKind.API` |
+| Cache TTL | `BINANCE_REFETCH_SECONDS` (default `3600`) |
+| **Trigger page** | `www.binance.com/en/my/wallet/account/main` |
+| **Holdings endpoint** | `/bapi/asset/v2/private/asset-service/wallet/balance` (probe-confirm before trusting) |
+| **Holdings key** | `data` — list of `{asset, free, locked, fiatValuation, ...}` |
+| **Field mapping** | `asset→symbol`, `free+locked→quantity`, `fiatValuation→current_value`, `last_price = fiatValuation/quantity` |
+| **Cash endpoint** | same `wallet/balance` payload — sum of `data[].free` where `asset ∈ {USDT, USDC, BUSD, FDUSD}` |
+| **Helpers** | [`binance_source_helper.py`](../backend/app/modules/brokers/binance/binance_source_helper.py), [`binance_dump.py`](../backend/app/modules/brokers/binance/binance_dump.py), [`binance_cash_helper.py`](../backend/app/modules/brokers/binance/binance_cash_helper.py) |
+
+**Setup**:
+
+1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-anton-chrome`.
+2. Log in to [binance.com](https://binance.com) inside that Chrome window.
+3. Set `BINANCE_USER_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
+4. Run `uv run python probes/binance_probe.py` once to confirm the holdings XHR URL still matches `BINANCE_HOLDINGS_URL_NEEDLES`. Crypto exchanges rotate endpoints more aggressively than equity brokers.
+
+AlphaForge Anton never sees your password or 2FA — login happens in your own Chrome; the backend just reads the authenticated XHR off the wire.
+
+**Standalone dump**:
+
+```bash
+python -m app.modules.brokers.binance.binance_dump
+python -m app.modules.brokers.binance.binance_dump --force-login
+ls ~/.alphaforge-anton/portfolio-dumps/binance-*
+```
+
+---
+
 ## Angel One (`angelone`)
 
 SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, 401s on long-lived JWTs). AlphaForge Anton now attaches to the running Chrome over CDP and captures the XHR Angel One's own web app makes — same pattern as Groww.
@@ -450,6 +492,7 @@ One notebook per broker lives in `backend/notebooks/`. Each exercises all
 | Angel One | [angelone_dev.ipynb](../backend/notebooks/angelone_dev.ipynb) | CDP browser fetch (`angelone.in`) |
 | IndMoney | [`indmoney_dev.ipynb`](../backend/notebooks/indmoney_dev.ipynb) | CDP browser fetch (`indmoney.com/investments/us-stocks/my-us-stocks`) |
 | Ticker Tape | [`tickertape_dev.ipynb`](../backend/notebooks/tickertape_dev.ipynb) | CDP browser fetch (`tickertape.in/portfolio/digital-gold`) |
+| Binance | [`binance_dev.ipynb`](../backend/notebooks/binance_dev.ipynb) | CDP browser fetch (`binance.com/en/my/wallet/account/main`) |
 
 Every new broker must ship a notebook in this list — see step 4 of [Register the new source](#register-the-new-source).
 
@@ -466,6 +509,7 @@ discover the real endpoint URL and response key names.
 | Angel One | [angelone_probe.py](../probes/angelone_probe.py) | XHR interception across holdings + funds pages |
 | IndMoney | [indmoney_probe.py](../probes/indmoney_probe.py) | XHR interception on dashboard reload |
 | Ticker Tape | [tickertape_probe.py](../probes/tickertape_probe.py) | XHR interception on portfolio reload |
+| Binance | [binance_probe.py](../probes/binance_probe.py) | XHR interception on spot-wallet reload |
 
 ```bash
 uv run python probes/zerodha_probe.py
@@ -473,6 +517,7 @@ uv run python probes/groww_probe.py
 uv run python probes/angelone_probe.py
 uv run python probes/indmoney_probe.py
 uv run python probes/tickertape_probe.py
+uv run python probes/binance_probe.py
 ```
 
 Zerodha's probe is different: rather than intercepting XHRs, it reads the
@@ -564,6 +609,9 @@ MYBROKER_REFETCH_SECONDS=3600  # optional TTL, default 1h
 
 The `REQUIRED_ENV` tuple in `{slug}_source_helper.py` must list every variable that must be non-empty before the source is usable.
 
+### Storing the value
+
+Real values live in the **alpha-forge-bach vault** — never in `.env.cred.local`.
 ---
 
 ## Quick sanity check after wiring up
