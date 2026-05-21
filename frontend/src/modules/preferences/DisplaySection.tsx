@@ -1,8 +1,8 @@
 "use client";
 
+import { PrefSeg, PrefSlider, PrefTog } from "./PrefControls";
 import { PrefGroup } from "./PrefGroup";
 import { PrefRow } from "./PrefRow";
-import { PrefSeg, PrefSlider, PrefTog } from "./PrefControls";
 import type { PrefDraft } from "./usePrefStore";
 
 export interface DisplaySectionProps {
@@ -27,7 +27,11 @@ export function DisplaySection({ t, setTweak }: DisplaySectionProps) {
               onChange={(v) => setTweak("chromeMode", v)}
             />
           }
-          tail={<b className="font-normal text-[color:var(--accent)]">{t.chromeMode === "autohide" ? "Hidden" : "Visible"}</b>}
+          tail={
+            <b className="font-normal text-[color:var(--accent)]">
+              {t.chromeMode === "autohide" ? "Hidden" : "Visible"}
+            </b>
+          }
         />
         <PrefRow
           name="Show voice bar"
@@ -41,13 +45,29 @@ export function DisplaySection({ t, setTweak }: DisplaySectionProps) {
         <PrefRow
           name="Orb size"
           desc="Diameter of the central plasma sphere on the terminal."
-          control={<PrefSlider value={t.orbSize} min={180} max={340} step={10} onChange={(v) => setTweak("orbSize", v)} />}
+          control={
+            <PrefSlider
+              value={t.orbSize}
+              min={180}
+              max={340}
+              step={10}
+              onChange={(v) => setTweak("orbSize", v)}
+            />
+          }
           tail={<b className="font-normal text-[color:var(--accent)]">{t.orbSize}px</b>}
         />
         <PrefRow
           name="Pulse speed"
           desc="Lower is calmer. Speed scales with system confidence on real data."
-          control={<PrefSlider value={t.orbSpeed} min={1.5} max={6} step={0.1} onChange={(v) => setTweak("orbSpeed", Number(v.toFixed(1)))} />}
+          control={
+            <PrefSlider
+              value={t.orbSpeed}
+              min={1.5}
+              max={6}
+              step={0.1}
+              onChange={(v) => setTweak("orbSpeed", Number(v.toFixed(1)))}
+            />
+          }
           tail={<b className="font-normal text-[color:var(--accent)]">{t.orbSpeed.toFixed(1)}s</b>}
         />
         <PrefRow
@@ -62,7 +82,15 @@ export function DisplaySection({ t, setTweak }: DisplaySectionProps) {
         <PrefRow
           name="Ticker speed"
           desc="Time for one full loop across the index ribbon."
-          control={<PrefSlider value={t.tickerSpeed} min={15} max={90} step={1} onChange={(v) => setTweak("tickerSpeed", v)} />}
+          control={
+            <PrefSlider
+              value={t.tickerSpeed}
+              min={15}
+              max={90}
+              step={1}
+              onChange={(v) => setTweak("tickerSpeed", v)}
+            />
+          }
           tail={<b className="font-normal text-[color:var(--accent)]">{t.tickerSpeed}s</b>}
         />
         <PrefRow

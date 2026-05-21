@@ -9,7 +9,7 @@
 - All financial amounts use `float` for now (will migrate to `Decimal` before production)
 - Password hashing uses `bcrypt` directly (passlib removed — incompatible with bcrypt 4.x)
 - Auth enforced via `Depends(get_current_user)` on all routes except `/health` and `/auth/token`
-- Dev login: `admin` / `alphaforge-anton-dev` — must set `ADMIN_PASSWORD_HASH` in production
+- Dev login credentials stored in afbach vault (`ADMIN_USERNAME` / `ADMIN_PASSWORD`) — never hardcode them; must set `ADMIN_PASSWORD_HASH` in production
 - Cloud LLM providers disabled in `APP_ENV=development` unless `ALLOW_CLOUD_LLM_IN_DEV=true`
 - Broker outbound HTTP guarded against unapproved hosts in dev mode via `BROKER_ALLOWED_HOSTS`
 - Run `just audit` to scan Python + Node dependencies for known CVEs

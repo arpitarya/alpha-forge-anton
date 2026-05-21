@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { createContext, type ReactNode, useContext, useRef, useState } from "react";
+import { createContext, type ReactNode, useCallback, useContext, useRef, useState } from "react";
 import { AlphaBar } from "./AlphaBar";
 import { ChatRail } from "./ChatRail";
 import type { ModelId } from "./chat.types";
@@ -25,28 +25,35 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [activeModel, setActiveModel] = useState<ModelId>("auto");
   const pathname = usePathname();
 
-  function handleSubmit(q: string, model: ModelId) {
-    setActiveModel(model);
-    submit(q, model);
-  }
+  const handleSubmit = useCallback(
+    (q: string, model: ModelId) => {
+      setActiveModel(model);
+      submit(q, model);
+    },
+    [submit],
+  );
 
-  // Don't render the bar/rail on login
+  // Open the rail when chat mode is selected on the bar
+  const handleChatModeOpen = useCallback(() => {
+    setOpen(true);
+  }, [setOpen]);
+
   if (pathname === "/login") {
     return <Ctx.Provider value={{ open, setOpen, submit: handleSubmit }}>{children}</Ctx.Provider>;
   }
 
   return (
     <Ctx.Provider value={{ open, setOpen, submit: handleSubmit }}>
-      {/*
-        Outer column owns the full viewport height.
-        AppShell (children) gets flex-1 + min-h-0 so it fills the space above the bar.
-        AlphaBar is flex-none at the bottom — no overlap.
-        ChatRail is absolute within this container so it overlays the content area.
-      */}
       <div className="relative flex h-screen flex-col overflow-hidden">
-        <div className="min-h-0 flex-1">{children}</div>
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">{children}</div>
         <div className="flex-none px-3.5 pb-3.5 pt-2">
-          <AlphaBar onSubmit={handleSubmit} footerModelRef={footerModelRef} />
+          {/* When rail is open, bar collapses to slim strip with no composer */}
+          <AlphaBar
+            onSubmit={handleSubmit}
+            footerModelRef={footerModelRef}
+            railOpen={open}
+            onChatModeOpen={handleChatModeOpen}
+          />
         </div>
         <ChatRail
           open={open}
@@ -56,6 +63,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           onClear={clear}
           onSeed={(q) => handleSubmit(q, activeModel)}
           footerModelRef={footerModelRef}
+          onModelChange={setActiveModel}
+          query=""
         />
       </div>
     </Ctx.Provider>

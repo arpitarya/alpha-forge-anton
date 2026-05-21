@@ -10,7 +10,7 @@ export interface PrefGroupProps {
 export function PrefGroup({ num, title, meta, children }: PrefGroupProps) {
   return (
     <section
-      className="relative overflow-hidden rounded-[10px] border border-[color:var(--line)] px-6 py-5"
+      className="relative rounded-[10px] border border-[color:var(--line)] px-6 py-5"
       style={{ background: "color-mix(in srgb, var(--surface) 88%, transparent)" }}
     >
       <span

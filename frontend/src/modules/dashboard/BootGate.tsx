@@ -82,7 +82,7 @@ export function BootGate({ children }: { children: ReactNode }) {
             to   { opacity: 1; transform: translateY(0); }
           }
         `}</style>
-        <div style={{ animation: "boot-app-in 0.5s cubic-bezier(0.2, 0, 0, 1) both" }}>
+        <div style={{ animation: "boot-app-in 0.5s cubic-bezier(0.2, 0, 0, 1) both", height: "100%" }}>
           {children}
         </div>
       </>

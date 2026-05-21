@@ -46,7 +46,7 @@ export function AppShell({
       {ticker}
       <div className="flex min-h-0 flex-1 gap-3">
         {rail}
-        <main className="min-h-0 flex-1 overflow-hidden">{children}</main>
+        <main className="flex min-h-0 flex-1 flex-col overflow-hidden">{children}</main>
       </div>
       {footer}
     </div>

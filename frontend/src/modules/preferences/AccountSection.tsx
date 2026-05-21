@@ -33,7 +33,7 @@ export function AccountSection({ t, setTweak }: AccountSectionProps) {
           style={{ gridTemplateColumns: "84px 1fr auto" }}
         >
           <div
-            className="relative grid h-[84px] w-[84px] place-items-center rounded-full text-[34px] font-semibold tracking-[-0.02em] text-[color:var(--on-accent)]"
+            className="acct-avatar relative grid h-[84px] w-[84px] place-items-center rounded-full text-[34px] font-semibold tracking-[-0.02em] text-[color:var(--on-accent)]"
             style={{
               background:
                 "radial-gradient(circle at 30% 30%, #fff, var(--accent-soft) 18%, var(--accent) 60%, var(--accent-dim))",

@@ -11,7 +11,9 @@ function StaticBox({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function AboutSection() {
+export interface AboutSectionProps { onResetAll?: () => void; }
+
+export function AboutSection({ onResetAll }: AboutSectionProps) {
   return (
     <PrefGroup num="01" title="Alpha Forge" meta="v0.9.4 · alpha">
       <PrefRow
@@ -49,6 +51,7 @@ export function AboutSection() {
         control={
           <button
             type="button"
+            onClick={onResetAll}
             className="rounded-[6px] border border-[color:color-mix(in_srgb,var(--red)_50%,transparent)] bg-[color:color-mix(in_srgb,var(--red)_8%,transparent)] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-[color:var(--red)] transition hover:bg-[color:color-mix(in_srgb,var(--red)_16%,transparent)]"
           >
             Reset preferences

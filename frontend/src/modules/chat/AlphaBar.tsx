@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { type ModelId, resolveAutoModel } from "./chat.types";
-import { ModelPicker } from "./ModelPicker";
+import { useEffect, useState } from "react";
+import type { ModelId } from "./chat.types";
 
 type Mode = "voice" | "chat";
 
@@ -16,9 +15,16 @@ const VOICE_PROMPTS = [
 interface Props {
   onSubmit: (query: string, model: ModelId) => void;
   footerModelRef: React.RefObject<HTMLSpanElement | null>;
+  railOpen: boolean;
+  onChatModeOpen: () => void;
 }
 
-export function AlphaBar({ onSubmit, footerModelRef }: Props) {
+export function AlphaBar({
+  onSubmit,
+  footerModelRef: _footerModelRef,
+  railOpen,
+  onChatModeOpen,
+}: Props) {
   const [mode, setMode] = useState<Mode>(() => {
     try {
       return (localStorage.getItem("af-mode") as Mode) ?? "voice";
@@ -26,16 +32,7 @@ export function AlphaBar({ onSubmit, footerModelRef }: Props) {
       return "voice";
     }
   });
-  const [model, setModel] = useState<ModelId>(() => {
-    try {
-      return (localStorage.getItem("af-model") as ModelId) ?? "auto";
-    } catch {
-      return "auto";
-    }
-  });
-  const [query, setQuery] = useState("");
   const [promptIdx, setPromptIdx] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const id = setInterval(() => setPromptIdx((i) => (i + 1) % VOICE_PROMPTS.length), 3800);
@@ -48,85 +45,63 @@ export function AlphaBar({ onSubmit, footerModelRef }: Props) {
     } catch {}
   }, [mode]);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem("af-model", model);
-    } catch {}
-  }, [model]);
-
   function handleModeChange(m: Mode) {
     setMode(m);
-    if (m === "chat") {
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
+    if (m === "chat") onChatModeOpen();
   }
 
-  function handleSubmit() {
-    const q = query.trim();
-    if (!q) return;
-    onSubmit(q, model);
-    setQuery("");
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  }
-
-  const resolved = model === "auto" ? resolveAutoModel(query) : model;
+  // When rail closes, reset mode to voice so bar shows voice center
+  useEffect(() => {
+    if (!railOpen) setMode("voice");
+  }, [railOpen]);
 
   return (
     <footer
+      className="af-voice"
       data-mode={mode}
-      className="relative flex flex-none items-center gap-4 rounded-[8px] border border-[color:var(--line)] px-3.5 py-1.5 min-h-[36px]"
       style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        borderRadius: 8,
+        border: "1px solid var(--line)",
+        padding: "7px 14px",
+        minHeight: 36,
         background: "color-mix(in srgb, var(--surface) 82%, transparent)",
         backdropFilter: "blur(18px)",
+        position: "relative",
+        zIndex: 45,
+        transition: "padding .2s",
       }}
     >
       {/* left accent stripe */}
       <div
-        className="pointer-events-none absolute left-0 top-0 h-full w-0.5"
         style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          height: "100%",
+          width: 2,
           background: "linear-gradient(180deg, transparent, var(--accent), transparent)",
           opacity: 0.5,
+          pointerEvents: "none",
         }}
       />
 
-      {/* Voice / Chat segmented toggle */}
-      <div
-        className="flex flex-shrink-0 overflow-hidden rounded-[5px] border border-[color:var(--line-hi)]"
-        role="tablist"
-        aria-label="Input mode"
-      >
-        <ModeBtn
-          active={mode === "voice"}
-          onClick={() => handleModeChange("voice")}
-          aria-label="Voice mode"
-        >
-          <MicIcon />
-          <span>Voice</span>
-        </ModeBtn>
-        <ModeBtn
-          active={mode === "chat"}
-          onClick={() => handleModeChange("chat")}
-          aria-label="Chat mode"
-          style={{ borderLeft: "1px solid var(--line-hi)" }}
-        >
-          <ChatIcon />
-          <span>Chat</span>
-        </ModeBtn>
-      </div>
+      <ModeSegment mode={railOpen ? "chat" : mode} onChange={handleModeChange} />
 
-      {/* Voice center */}
-      {mode === "voice" && (
-        <div className="flex min-w-0 flex-1 items-center gap-3.5">
-          <div className="flex flex-shrink-0 items-center gap-2">
+      {/* Voice center — hidden when rail is open */}
+      {!railOpen && mode === "voice" && (
+        <div style={{ display: "flex", minWidth: 0, flex: 1, alignItems: "center", gap: 14 }}>
+          <div style={{ display: "flex", flexShrink: 0, alignItems: "center", gap: 8 }}>
             <span
-              className="font-medium italic leading-none"
-              style={{ color: "var(--accent)", fontSize: 12, letterSpacing: "0.04em" }}
+              style={{
+                color: "var(--accent)",
+                fontSize: 12,
+                fontStyle: "italic",
+                fontWeight: 500,
+                letterSpacing: "0.04em",
+              }}
             >
               Listening…
             </span>
@@ -144,84 +119,81 @@ export function AlphaBar({ onSubmit, footerModelRef }: Props) {
           </div>
           <Waveform />
           <span
-            className="flex-1 truncate italic leading-none"
-            style={{ fontSize: 12, color: "var(--fg-2)", marginLeft: 4 }}
+            style={{
+              flex: 1,
+              minWidth: 0,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              fontSize: 12,
+              color: "var(--fg-2)",
+              fontStyle: "italic",
+            }}
           >
             {VOICE_PROMPTS[promptIdx]}
           </span>
         </div>
       )}
 
-      {/* Chat center */}
-      {mode === "chat" && (
-        <div className="flex min-w-0 flex-1 items-center gap-2.5">
-          <span
-            style={{
-              fontFamily: "Space Mono, monospace",
-              fontSize: 12,
-              color: "var(--accent)",
-              flexShrink: 0,
-            }}
-          >
-            ›_
-          </span>
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="min-w-0 flex-1 bg-transparent outline-none"
-            style={{
-              fontFamily: "Space Grotesk, sans-serif",
-              fontSize: 13,
-              color: "var(--fg)",
-              caretColor: "var(--accent)",
-            }}
-            placeholder="Ask Alpha — e.g. rebalance my equity sleeve toward defensives"
-            autoComplete="off"
-            spellCheck={false}
-          />
-          <ModelPicker
-            value={model}
-            query={query}
-            onChange={(id) => setModel(id)}
-            footerRef={footerModelRef}
-          />
-          <div className="flex flex-shrink-0 gap-1">
-            <Kbd>⌘</Kbd>
-            <Kbd>↵</Kbd>
-          </div>
-        </div>
+      {/* Slim hint when chat rail is open */}
+      {railOpen && (
+        <span
+          style={{
+            flex: 1,
+            fontFamily: "Space Mono, monospace",
+            fontSize: 10,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "var(--fg-4)",
+            paddingLeft: 4,
+          }}
+        >
+          chatting with Alpha · type in the panel ↑
+        </span>
       )}
 
       {/* Deploy button */}
-      <button
-        className="flex-shrink-0 rounded-[6px] font-mono font-bold uppercase"
-        style={{
-          background: "linear-gradient(45deg, var(--accent), var(--accent-soft))",
-          color: "var(--on-accent)",
-          padding: "6px 14px",
-          fontSize: 10,
-          letterSpacing: "0.22em",
-          boxShadow: "0 0 24px var(--glow)",
-          transition: "transform .2s, box-shadow .2s",
-        }}
-        onClick={() => {
-          if (mode === "chat") handleSubmit();
-          else onSubmit(VOICE_PROMPTS[promptIdx].replace(/^"|"$/g, ""), model);
-        }}
-        onMouseEnter={(e) => {
-          (e.target as HTMLElement).style.transform = "translateY(-1px)";
-          (e.target as HTMLElement).style.boxShadow = "0 0 40px var(--glow), 0 4px 12px rgba(0,0,0,.2)";
-        }}
-        onMouseLeave={(e) => {
-          (e.target as HTMLElement).style.transform = "";
-          (e.target as HTMLElement).style.boxShadow = "0 0 24px var(--glow)";
-        }}
-      >
-        Deploy ▸
-      </button>
+      <DeployButton
+        onClick={() => onSubmit(VOICE_PROMPTS[promptIdx].replace(/^"|"$/g, ""), "auto")}
+      />
     </footer>
+  );
+}
+
+function ModeSegment({
+  mode,
+  onChange,
+}: {
+  mode: "voice" | "chat";
+  onChange: (m: "voice" | "chat") => void;
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexShrink: 0,
+        overflow: "hidden",
+        borderRadius: 5,
+        border: "1px solid var(--line-hi)",
+        background: "color-mix(in srgb, var(--surface) 60%, transparent)",
+      }}
+      role="tablist"
+      aria-label="Input mode"
+    >
+      <ModeBtn active={mode === "voice"} onClick={() => onChange("voice")} ariaLabel="Voice mode">
+        <MicIcon />
+        <span>Voice</span>
+      </ModeBtn>
+      <ModeBtn
+        active={mode === "chat"}
+        onClick={() => onChange("chat")}
+        ariaLabel="Chat mode"
+        borderLeft
+      >
+        <ChatIcon />
+        <span>Chat</span>
+      </ModeBtn>
+    </div>
   );
 }
 
@@ -229,44 +201,86 @@ function ModeBtn({
   active,
   onClick,
   children,
-  style,
-  "aria-label": ariaLabel,
+  ariaLabel,
+  borderLeft,
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
-  style?: React.CSSProperties;
-  "aria-label": string;
+  ariaLabel: string;
+  borderLeft?: boolean;
 }) {
   return (
     <button
-      className="inline-flex items-center gap-1 px-2 py-1 transition-colors"
-      style={{
-        fontSize: 10,
-        letterSpacing: "0.06em",
-        color: active ? "var(--on-accent)" : "var(--fg-3)",
-        background: active
-          ? "var(--accent)"
-          : "transparent",
-        boxShadow: active ? "0 0 18px var(--glow)" : "none",
-        borderRight: "none",
-        cursor: "pointer",
-        ...style,
-      }}
+      type="button"
       role="tab"
       aria-selected={active}
       aria-label={ariaLabel}
       onClick={onClick}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        padding: "5px 9px",
+        fontFamily: "Space Mono, monospace",
+        fontSize: 9,
+        letterSpacing: "0.22em",
+        textTransform: "uppercase",
+        color: active ? "var(--on-accent)" : "var(--fg-3)",
+        background: active ? "var(--accent)" : "transparent",
+        boxShadow: active ? "0 0 18px var(--glow)" : "none",
+        borderRight: borderLeft ? undefined : "1px solid var(--line)",
+        borderLeft: borderLeft ? "1px solid var(--line)" : undefined,
+        border: "none",
+        cursor: "pointer",
+        transition: "color .15s, background .15s",
+      }}
     >
       {children}
     </button>
   );
 }
 
+function DeployButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      style={{
+        flexShrink: 0,
+        borderRadius: 6,
+        fontFamily: "Space Mono, monospace",
+        fontWeight: 700,
+        textTransform: "uppercase",
+        background: "linear-gradient(45deg, var(--accent), var(--accent-soft))",
+        color: "var(--on-accent)",
+        padding: "6px 14px",
+        fontSize: 10,
+        letterSpacing: "0.22em",
+        boxShadow: "0 0 24px var(--glow)",
+        border: "none",
+        cursor: "pointer",
+        transition: "transform .2s, box-shadow .2s",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+        (e.currentTarget as HTMLElement).style.boxShadow =
+          "0 0 40px var(--glow), 0 4px 12px rgba(0,0,0,.2)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "";
+        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 24px var(--glow)";
+      }}
+      onClick={onClick}
+    >
+      Deploy ▸
+    </button>
+  );
+}
+
 function Waveform() {
   return (
-    <div className="flex flex-shrink-0 items-center gap-0.5" style={{ height: 16 }}>
-      {Array.from({ length: 8 }, (_, i) => (
+    <div style={{ display: "flex", flexShrink: 0, alignItems: "center", gap: 2, height: 16 }}>
+      {([0, 1, 2, 3, 4, 5, 6, 7] as const).map((i) => (
         <div
           key={i}
           style={{
@@ -283,7 +297,17 @@ function Waveform() {
 
 function MicIcon() {
   return (
-    <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg
+      width={12}
+      height={12}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <rect x="9" y="3" width="6" height="12" rx="3" />
       <path d="M5 11a7 7 0 0 0 14 0" />
       <path d="M12 18v3M8 21h8" />
@@ -293,26 +317,19 @@ function MicIcon() {
 
 function ChatIcon() {
   return (
-    <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg
+      width={12}
+      height={12}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <path d="M4 5h16v11H8l-4 4z" />
       <path d="M8 10h8M8 13h5" />
     </svg>
-  );
-}
-
-function Kbd({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      className="rounded-[3px] border border-[color:var(--line-hi)] px-1 py-px leading-none"
-      style={{
-        fontFamily: "Space Mono, monospace",
-        fontSize: 9,
-        letterSpacing: "0.06em",
-        color: "var(--fg-3)",
-        background: "color-mix(in srgb, var(--surface) 50%, transparent)",
-      }}
-    >
-      {children}
-    </span>
   );
 }

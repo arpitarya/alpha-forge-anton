@@ -1,6 +1,6 @@
 "use client";
 
-import { PrefSeg, PrefSlider, PrefTog } from "./PrefControls";
+import { PrefSeg, PrefSelect, PrefSlider, PrefTog } from "./PrefControls";
 import { PrefGroup } from "./PrefGroup";
 import { PrefRow } from "./PrefRow";
 import type { PrefDraft } from "./usePrefStore";
@@ -35,6 +35,23 @@ export function AlphaSection({ t, setTweak }: AlphaSectionProps) {
             />
           }
         />
+        <PrefRow
+          prefKey="llm"
+          name="LLM provider"
+          desc="The gateway routes to your fastest provider — pin one if you want determinism."
+          control={
+            <PrefSelect
+              value={t.llm}
+              options={[
+                { value: "auto", label: "Auto · pick fastest" },
+                { value: "gemini", label: "Gemini 2.5 Pro" },
+                { value: "groq", label: "Groq Llama" },
+                { value: "local", label: "Local · Ollama" },
+              ]}
+              onChange={(v) => setTweak("llm", v)}
+            />
+          }
+        />
       </PrefGroup>
 
       <PrefGroup num="02" title="Signals & rebalance">
@@ -50,7 +67,11 @@ export function AlphaSection({ t, setTweak }: AlphaSectionProps) {
               onChange={(v) => setTweak("confidence", Number(v.toFixed(2)))}
             />
           }
-          tail={<b className="font-normal text-[color:var(--accent)]">{Math.round(t.confidence * 100)}%</b>}
+          tail={
+            <b className="font-normal text-[color:var(--accent)]">
+              {Math.round(t.confidence * 100)}%
+            </b>
+          }
         />
         <PrefRow
           name="Auto-rebalance"

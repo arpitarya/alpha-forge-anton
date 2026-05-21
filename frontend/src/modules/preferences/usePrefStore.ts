@@ -5,6 +5,11 @@ import { useEffect, useState } from "react";
 // Non-wired preference state — persisted to localStorage so the UI mockup
 // behaves consistently across reloads while backend wiring lands.
 export interface PrefDraft {
+  // Appearance / layout
+  density: "compact" | "regular" | "comfy";
+  defaultScreen: "terminal" | "portfolio" | "preferences";
+  showCmdK: boolean;
+  typePair: "grotesk-mono" | "ibm-mono" | "serif-mono";
   // Display / chrome
   chromeMode: "fixed" | "autohide";
   showVoice: boolean;
@@ -23,6 +28,7 @@ export interface PrefDraft {
   // Alpha AI
   voiceWake: boolean;
   aiPersonality: "concise" | "balanced" | "verbose";
+  llm: "auto" | "gemini" | "groq" | "local";
   confidence: number;
   autoRebalance: "off" | "weekly" | "monthly";
   showScreener: boolean;
@@ -44,6 +50,10 @@ export interface PrefDraft {
 }
 
 export const DEFAULTS: PrefDraft = {
+  density: "regular",
+  defaultScreen: "terminal",
+  showCmdK: true,
+  typePair: "grotesk-mono",
   chromeMode: "fixed",
   showVoice: true,
   orbSize: 260,
@@ -59,6 +69,7 @@ export const DEFAULTS: PrefDraft = {
   refresh: "5s",
   voiceWake: true,
   aiPersonality: "balanced",
+  llm: "auto",
   confidence: 0.8,
   autoRebalance: "off",
   showScreener: true,
@@ -91,12 +102,13 @@ export function usePrefStore() {
     }
   }, []);
 
-  // Apply body-level toggles when chrome / voice prefs change.
+  // Apply html/body data-attrs when relevant prefs change.
   useEffect(() => {
     if (typeof document === "undefined") return;
     document.body.classList.toggle("chrome-autohide", draft.chromeMode === "autohide");
     document.body.classList.toggle("no-voice", !draft.showVoice);
-  }, [draft.chromeMode, draft.showVoice]);
+    document.documentElement.dataset.density = draft.density;
+  }, [draft.chromeMode, draft.showVoice, draft.density]);
 
   function setTweak<K extends keyof PrefDraft>(key: K, value: PrefDraft[K]) {
     setDraft((prev) => {
@@ -110,5 +122,10 @@ export function usePrefStore() {
     });
   }
 
-  return { t: draft, setTweak };
+  function reset() {
+    setDraft(DEFAULTS);
+    try { localStorage.removeItem(KEY); } catch { /* ignore */ }
+  }
+
+  return { t: draft, setTweak, reset };
 }

@@ -13,8 +13,8 @@ Then run this probe (backend + frontend must be running):
 
 Environment overrides:
     AF_FRONTEND=http://localhost:3000
-    PROBE_USER=admin
-    PROBE_PASS=alphaforge-anton-dev
+    PROBE_USER=<username>   (falls back to afbach vault ADMIN_USERNAME)
+    PROBE_PASS=<password>   (falls back to afbach vault ADMIN_PASSWORD)
     BROKER_CDP_PORT=9299
 
 Screenshots are saved to <repo-root>/screenshots/.
@@ -31,11 +31,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 
 from app.modules.brokers._cdp import connect_existing_chrome
+from _probe_auth import probe_credentials
 
 BASE_URL = os.getenv("AF_FRONTEND", "http://localhost:3000")
 CDP_PORT = int(os.getenv("BROKER_CDP_PORT", "9299"))
-USERNAME = os.getenv("PROBE_USER", "admin")
-PASSWORD = os.getenv("PROBE_PASS", "alphaforge-anton-dev")
+USERNAME, PASSWORD = probe_credentials()
 SHOT_DIR = Path(__file__).resolve().parent.parent / "screenshots"
 
 _results: list[tuple[str, bool, str]] = []

@@ -3,7 +3,17 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export type AccentName = "amber" | "ion" | "signal" | "violet";
+export type AccentName =
+  | "amber"
+  | "ion"
+  | "signal"
+  | "violet"
+  | "cobalt"
+  | "acid"
+  | "plasma"
+  | "solar"
+  | "inferno"
+  | "holo";
 
 export interface SwatchesProps {
   value: AccentName;
@@ -12,10 +22,16 @@ export interface SwatchesProps {
 }
 
 const swatches: Array<{ name: AccentName; color: string; title: string }> = [
-  { name: "amber", color: "#ff8f00", title: "Amber" },
-  { name: "ion", color: "#2ee7c2", title: "Ion" },
-  { name: "signal", color: "#ff3d5c", title: "Signal" },
-  { name: "violet", color: "#a678ff", title: "Violet" },
+  { name: "amber",   color: "#ff8f00", title: "Amber"   },
+  { name: "ion",     color: "#2ee7c2", title: "Ion"     },
+  { name: "signal",  color: "#ff3d5c", title: "Signal"  },
+  { name: "violet",  color: "#a678ff", title: "Violet"  },
+  { name: "cobalt",  color: "#4d7cff", title: "Cobalt"  },
+  { name: "acid",    color: "#bef264", title: "Acid"    },
+  { name: "plasma",  color: "#ff4dcc", title: "Plasma"  },
+  { name: "solar",   color: "#ffcc33", title: "Solar"   },
+  { name: "inferno", color: "#ff5b1f", title: "Inferno" },
+  { name: "holo",    color: "#b1a0ff", title: "Holo"    },
 ];
 
 /**
