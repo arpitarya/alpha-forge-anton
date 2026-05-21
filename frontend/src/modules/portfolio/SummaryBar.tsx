@@ -32,7 +32,7 @@ export function SummaryBar({
       ? EQUITY_SUBS.find((s) => s.id === filter.equitySub)?.label
       : null;
   return (
-    <div className="flex flex-shrink-0 items-center gap-3.5 px-1 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--fg-3)]">
+    <div data-component="SummaryBar" className="flex flex-shrink-0 items-center gap-3.5 px-1 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--fg-3)]">
       <span>
         Showing <b className="font-normal text-[color:var(--accent)]">{shownCount}</b> of{" "}
         {totalCount} positions

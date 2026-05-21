@@ -66,29 +66,35 @@ export function toInr(
   return value;
 }
 
-export function aggregateAll(
+/**
+ * Aggregate a subset of wallets into a single synthetic "All / Selected" wallet.
+ * Pass `slugs` to restrict (used for multi-select); omit to aggregate every wallet.
+ */
+export function aggregateSelected(
   wallets: WalletInfoDTO[],
+  slugs: ReadonlySet<string> | null,
   rate: number = INR_PER_USD,
 ): WalletInfoDTO {
-  // Backend returns `holdings_value` / `pnl` already normalised to INR
-  // (see brokers/fx.py), so every wallet rolls into the All total. Cash is
-  // still reported in its native currency, so convert it here using the
-  // live rate from /portfolio/fx (caller passes it in).
-  const cash = wallets.reduce(
+  const subset = slugs && slugs.size > 0 ? wallets.filter((w) => slugs.has(w.slug)) : wallets;
+  const cash = subset.reduce(
     (s, w) => s + (w.cash_available ? toInr(w.cash, w.currency, rate) : 0),
     0,
   );
-  const holdings = wallets.reduce((s, w) => s + w.holdings_value, 0);
-  const count = wallets.reduce((s, w) => s + w.holdings_count, 0);
-  const pnl = wallets.reduce((s, w) => s + w.pnl, 0);
+  const holdings = subset.reduce((s, w) => s + w.holdings_value, 0);
+  const count = subset.reduce((s, w) => s + w.holdings_count, 0);
+  const pnl = subset.reduce((s, w) => s + w.pnl, 0);
   const inv = holdings - pnl;
+  const label =
+    slugs && slugs.size > 0 && slugs.size < wallets.length
+      ? `${subset.length} selected`
+      : "All wallets";
   return {
     slug: "all",
-    label: "All wallets",
+    label,
     supports_cash: true,
     cash,
     currency: "INR",
-    cash_available: wallets.some((w) => w.cash_available),
+    cash_available: subset.some((w) => w.cash_available),
     cash_error: null,
     cash_as_of: null,
     holdings_value: holdings,
@@ -97,4 +103,15 @@ export function aggregateAll(
     pnl_pct: inv ? (pnl / inv) * 100 : 0,
     last_synced_at: null,
   };
+}
+
+export function aggregateAll(
+  wallets: WalletInfoDTO[],
+  rate: number = INR_PER_USD,
+): WalletInfoDTO {
+  // Backend returns `holdings_value` / `pnl` already normalised to INR
+  // (see brokers/fx.py), so every wallet rolls into the All total. Cash is
+  // still reported in its native currency, so convert it here using the
+  // live rate from /portfolio/fx (caller passes it in).
+  return aggregateSelected(wallets, null, rate);
 }

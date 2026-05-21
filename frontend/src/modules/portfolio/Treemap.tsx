@@ -45,6 +45,7 @@ export function Treemap({ holdings }: { holdings: HoldingDTO[] }) {
   return (
     <div
       ref={ref}
+      data-component="Treemap"
       className="relative h-full overflow-hidden rounded-[10px] border border-[color:var(--line)]"
       style={{ background: "color-mix(in srgb, var(--surface) 88%, transparent)" }}
     >

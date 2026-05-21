@@ -4,17 +4,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useSyncAllWallets, useWallets } from "./portfolio.query";
 import { WalletCard } from "./WalletCard";
-import { aggregateAll } from "./wallet.utils";
+import { aggregateSelected } from "./wallet.utils";
 
 export interface WalletStripProps {
-  source: string;
-  onChange: (slug: string) => void;
+  selected: ReadonlySet<string>;
+  onToggleSource: (slug: string) => void;
+  onSelectAll: () => void;
 }
 
-export function WalletStrip({ source, onChange }: WalletStripProps) {
+export function WalletStrip({ selected, onToggleSource, onSelectAll }: WalletStripProps) {
   const { data, isLoading } = useWallets();
   const wallets = data?.wallets ?? [];
-  const allCard = useMemo(() => aggregateAll(wallets), [wallets]);
+  const allCard = useMemo(() => aggregateSelected(wallets, selected), [wallets, selected]);
+  const allActive = selected.size === 0;
   const syncAll = useSyncAllWallets();
   const qc = useQueryClient();
 
@@ -42,7 +44,7 @@ export function WalletStrip({ source, onChange }: WalletStripProps) {
   const cashSynced = wallets.some((w) => w.cash_available);
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div data-component="WalletStrip" className="flex flex-col gap-1.5">
       <div className="flex items-center justify-end">
         <button
           type="button"
@@ -64,13 +66,13 @@ export function WalletStrip({ source, onChange }: WalletStripProps) {
         className="grid gap-2.5"
         style={{ gridTemplateColumns: `1.05fr repeat(${wallets.length}, 1fr)` }}
       >
-        <WalletCard wallet={allCard} active={source === "all"} onClick={() => onChange("all")} />
+        <WalletCard wallet={allCard} active={allActive} onClick={onSelectAll} />
         {wallets.map((w) => (
           <WalletCard
             key={w.slug}
             wallet={w}
-            active={source === w.slug}
-            onClick={() => onChange(w.slug)}
+            active={selected.has(w.slug)}
+            onClick={() => onToggleSource(w.slug)}
           />
         ))}
       </div>

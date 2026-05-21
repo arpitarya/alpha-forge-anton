@@ -19,7 +19,7 @@ export interface FilterBarProps {
 
 export function FilterBar({ filter, setFilter, counts, view, onViewChange }: FilterBarProps) {
   return (
-    <div className="relative flex flex-shrink-0 items-center gap-2.5 rounded-[10px] border border-[color:var(--line)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] px-3 py-2">
+    <div data-component="FilterBar" className="relative flex flex-shrink-0 items-center gap-2.5 rounded-[10px] border border-[color:var(--line)] bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)] px-3 py-2">
       <SearchBox value={filter.query} onChange={(q) => setFilter({ query: q })} />
       <div className="mx-[2px] my-[3px] w-px self-stretch bg-[color:var(--line)]" />
       <AssetClassFilter

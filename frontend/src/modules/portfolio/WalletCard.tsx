@@ -19,6 +19,8 @@ export function WalletCard({ wallet, active, onClick }: WalletCardProps) {
   return (
     <button
       type="button"
+      data-component="WalletCard"
+      data-broker={wallet.slug}
       onClick={onClick}
       className={clsx(
         "relative flex flex-col gap-2 overflow-hidden rounded-[10px] border p-3 text-left transition",
@@ -73,9 +75,15 @@ export function WalletCard({ wallet, active, onClick }: WalletCardProps) {
           </span>
           <span className="text-[color:var(--fg-3)]"> · {wallet.holdings_count} POS</span>
         </span>
-        <span className={pnlCls}>
-          {wallet.pnl >= 0 ? "+" : ""}
-          {wallet.pnl_pct.toFixed(2)}%
+        <span className={clsx("inline-flex items-baseline gap-1.5", pnlCls)}>
+          <span>
+            {wallet.pnl >= 0 ? "+" : "−"}
+            {fmtMoneyShort(Math.abs(wallet.pnl), wallet.currency)}
+          </span>
+          <span className="opacity-80">
+            ({wallet.pnl >= 0 ? "+" : ""}
+            {wallet.pnl_pct.toFixed(2)}%)
+          </span>
         </span>
       </div>
     </button>

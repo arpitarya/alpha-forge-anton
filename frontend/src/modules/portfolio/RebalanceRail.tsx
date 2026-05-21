@@ -33,6 +33,8 @@ export function RebalanceRail({ collapsed, onToggle }: RebalanceRailProps) {
     return (
       <button
         type="button"
+        data-component="RebalanceRail"
+        data-state="collapsed"
         onClick={onToggle}
         title="Expand Alpha rebalance"
         aria-label="Expand Alpha rebalance panel"
@@ -66,7 +68,7 @@ export function RebalanceRail({ collapsed, onToggle }: RebalanceRailProps) {
   }
 
   return (
-    <Card glow className="relative flex h-full flex-col gap-4 overflow-auto">
+    <Card data-component="RebalanceRail" glow className="relative flex h-full flex-col gap-4 overflow-auto">
       <button
         type="button"
         onClick={onToggle}

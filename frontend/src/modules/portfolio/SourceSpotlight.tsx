@@ -26,7 +26,7 @@ export function SourceSpotlight({ wallet, onClear }: SourceSpotlightProps) {
   }
 
   return (
-    <div className="relative flex items-center gap-4 overflow-hidden rounded-[10px] border border-[color:color-mix(in_srgb,var(--accent)_40%,var(--line))] bg-[color:color-mix(in_srgb,var(--surface)_92%,transparent)] px-3.5 py-2.5 shadow-[inset_0_0_32px_color-mix(in_srgb,var(--accent)_6%,transparent)]">
+    <div data-component="SourceSpotlight" data-broker={wallet.slug} className="relative flex items-center gap-4 overflow-hidden rounded-[10px] border border-[color:color-mix(in_srgb,var(--accent)_40%,var(--line))] bg-[color:color-mix(in_srgb,var(--surface)_92%,transparent)] px-3.5 py-2.5 shadow-[inset_0_0_32px_color-mix(in_srgb,var(--accent)_6%,transparent)]">
       <span className="pointer-events-none absolute left-0 top-0 bottom-0 w-[3px] bg-[color:var(--accent)] shadow-[0_0_12px_var(--glow)]" />
       <div
         className="grid h-[42px] w-[42px] flex-shrink-0 place-items-center rounded-[9px] font-mono text-[13px] font-bold tracking-[0.04em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-6px_12px_rgba(0,0,0,0.2)]"
@@ -44,7 +44,7 @@ export function SourceSpotlight({ wallet, onClear }: SourceSpotlightProps) {
       <SpotStat label="HOLDINGS" value={fmtMoneyShort(wallet.holdings_value, wallet.currency)} />
       <SpotStat
         label="P&L"
-        value={`${wallet.pnl >= 0 ? "+" : ""}${wallet.pnl_pct.toFixed(2)}%`}
+        value={`${wallet.pnl >= 0 ? "+" : "−"}${fmtMoneyShort(Math.abs(wallet.pnl), wallet.currency)} (${wallet.pnl >= 0 ? "+" : ""}${wallet.pnl_pct.toFixed(2)}%)`}
         valueClass={pnlCls}
       />
       <SpotStat label="CASH" value={wallet.cash_available ? fmtMoneyShort(wallet.cash, wallet.currency) : "—"} />

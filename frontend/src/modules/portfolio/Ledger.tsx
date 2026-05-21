@@ -33,7 +33,7 @@ export interface LedgerProps {
 
 export function Ledger({ holdings, query, sortBy, sortDir, onSort }: LedgerProps) {
   return (
-    <Card className="h-full overflow-hidden !p-0">
+    <Card data-component="Ledger" className="h-full overflow-hidden !p-0">
       <div className="h-full overflow-auto">
         <table className="w-full border-collapse text-[13px]">
           <thead className="sticky top-0 z-10 bg-[color:var(--surface)]">
