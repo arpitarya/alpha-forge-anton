@@ -9,7 +9,7 @@ ZERODHA_KITE_BASE = "https://kite.zerodha.com"
 ZERODHA_LOGIN_URL = "https://kite.zerodha.com/"
 ZERODHA_HOLDINGS_PATH = "/oms/portfolio/holdings"
 ZERODHA_MARGINS_PATH = "/oms/user/margins"
-ZERODHA_COIN_HOLDINGS_PATH = "/api/mf/holdings"
+ZERODHA_COIN_HOLDINGS_PATH = "/oms/mf/holdings"
 
 # ── Groww ─────────────────────────────────────────────────────────────────────
 GROWW_HOLDINGS_PAGE = "https://groww.in/stocks/user/holdings"
@@ -46,6 +46,10 @@ BINANCE_BALANCE_URL_NEEDLES = (
     "/bapi/accounts/v1/private/account/user/base-detail",
     "/bapi/asset/v2/private/asset-service/wallet/balance",
 )
+
+# ── Zerodha Coin (MF) ────────────────────────────────────────────────────────
+ZERODHA_COIN_DASHBOARD = "https://coin.zerodha.com/dashboard"
+# ZERODHA_COIN_HOLDINGS_PATH is defined above under the Kite constants.
 
 # ── Ticker Tape ───────────────────────────────────────────────────────────────
 TICKERTAPE_GOLD_PAGE = "https://www.tickertape.in/portfolio/digital-gold"

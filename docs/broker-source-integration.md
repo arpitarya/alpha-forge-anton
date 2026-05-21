@@ -429,6 +429,42 @@ ls ~/.alphaforge-anton/portfolio-dumps/binance-*
 
 ---
 
+## Zerodha Coin (`zerodha_coin`)
+
+Mutual fund holdings from [Zerodha Coin](https://coin.zerodha.com/dashboard). Uses the same `enctoken` cookie as the Kite equity source — no separate Coin login is needed. All holdings are emitted as `asset_class: MUTUAL_FUND`.
+
+| Detail | Value |
+|--------|-------|
+| Slug | `zerodha_coin` |
+| Auth | Manual login at `kite.zerodha.com` inside the AlphaForge Anton Chrome (`--remote-debugging-port=9299`); `enctoken` re-used for the Coin endpoint. |
+| `REQUIRED_ENV` | `ZERODHA_USER_ID` (shared with the `zerodha` Kite source) |
+| Asset classes | `MUTUAL_FUND` |
+| Kind | `SourceKind.API` |
+| Cache TTL | `ZERODHA_COIN_REFETCH_SECONDS` (default `3600`) |
+| `supports_cash` | `False` — Coin is MF-only, not a trading account |
+| **Holdings endpoint** | `kite.zerodha.com/oms/mf/holdings` (enctoken auth, `X-Kite-Version: 3`) — probe-confirmed 2026-05-22 |
+| **Holdings key** | `data` — list of `{tradingsymbol, fund, folio, quantity, average_price, last_price, last_price_date, pnl, xirr, discrepancy, pledged_quantity, las_quantity}` |
+| **Field mapping** | `tradingsymbol→symbol`, `fund→name`, `quantity`, `average_price→avg_price`, `last_price`, computed `invested/current_value/pnl/pnl_pct` |
+| **Helpers** | [`zerodha_coin_source_helper.py`](../backend/app/modules/brokers/zerodha_coin/zerodha_coin_source_helper.py), [`zerodha_coin_dump.py`](../backend/app/modules/brokers/zerodha_coin/zerodha_coin_dump.py) |
+
+**Setup**:
+
+1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-anton-chrome`.
+2. Log in to [kite.zerodha.com](https://kite.zerodha.com) inside that Chrome window.
+3. Set `ZERODHA_USER_ID` in `.env.cred.local` (same variable as the Kite source). The source auto-upgrades to `READY`.
+
+AlphaForge Anton never sees your password or TOTP — login happens in your own Chrome; the backend reads the `enctoken` cookie from the running CDP session.
+
+**Standalone dump**:
+
+```bash
+python -m app.modules.brokers.zerodha_coin.zerodha_coin_dump
+python -m app.modules.brokers.zerodha_coin.zerodha_coin_dump --force-login
+ls ~/.alphaforge-anton/portfolio-dumps/zerodha_coin-*
+```
+
+---
+
 ## Angel One (`angelone`)
 
 SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP friction, 401s on long-lived JWTs). AlphaForge Anton now attaches to the running Chrome over CDP and captures the XHR Angel One's own web app makes — same pattern as Groww.
@@ -493,6 +529,7 @@ One notebook per broker lives in `backend/notebooks/`. Each exercises all
 | IndMoney | [`indmoney_dev.ipynb`](../backend/notebooks/indmoney_dev.ipynb) | CDP browser fetch (`indmoney.com/investments/us-stocks/my-us-stocks`) |
 | Ticker Tape | [`tickertape_dev.ipynb`](../backend/notebooks/tickertape_dev.ipynb) | CDP browser fetch (`tickertape.in/portfolio/digital-gold`) |
 | Binance | [`binance_dev.ipynb`](../backend/notebooks/binance_dev.ipynb) | CDP browser fetch (`binance.com/en/my/wallet/account/main`) |
+| Zerodha Coin | [`zerodha_coin_dev.ipynb`](../backend/notebooks/zerodha_coin_dev.ipynb) | Kite enctoken (`kite.zerodha.com` — shared with `zerodha`) |
 
 Every new broker must ship a notebook in this list — see step 4 of [Register the new source](#register-the-new-source).
 
@@ -510,6 +547,7 @@ discover the real endpoint URL and response key names.
 | IndMoney | [indmoney_probe.py](../probes/indmoney_probe.py) | XHR interception on dashboard reload |
 | Ticker Tape | [tickertape_probe.py](../probes/tickertape_probe.py) | XHR interception on portfolio reload |
 | Binance | [binance_probe.py](../probes/binance_probe.py) | XHR interception on spot-wallet reload |
+| Zerodha Coin | [zerodha_coin_probe.py](../probes/zerodha_coin_probe.py) | Reads `enctoken` cookie → direct Kite `/api/mf/holdings` REST call |
 
 ```bash
 uv run python probes/zerodha_probe.py

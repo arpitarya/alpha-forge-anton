@@ -13,6 +13,7 @@ from app.modules.brokers.groww import GrowwSource
 from app.modules.brokers.indmoney import IndMoneySource
 from app.modules.brokers.tickertape import TickerTapeSource
 from app.modules.brokers.zerodha import ZerodhaKiteSource
+from app.modules.brokers.zerodha_coin import ZerodhaCoinSource
 
 
 def _build_sources() -> dict[str, BrokerSource]:
@@ -22,7 +23,8 @@ def _build_sources() -> dict[str, BrokerSource]:
         AngelOneSource(),      # slug: angelone   (CDP browser fetch)
         IndMoneySource(),      # slug: indmoney   (CDP browser fetch)
         TickerTapeSource(),    # slug: tickertape (CDP browser fetch; gold)
-        BinanceSource(),       # slug: binance    (CDP browser fetch; crypto, USD)
+        BinanceSource(),       # slug: binance      (CDP browser fetch; crypto, USD)
+        ZerodhaCoinSource(),   # slug: zerodha_coin (Kite enctoken; MF via Coin)
     ]
     return {s.slug: s for s in instances}
 
