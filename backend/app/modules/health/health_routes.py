@@ -14,6 +14,7 @@ from app.modules.health.boot_probes import (
     probe_brokers,
     probe_database,
     probe_llm,
+    probe_vault,
 )
 from app.modules.health.boot_schemas import BootReport
 
@@ -34,7 +35,7 @@ async def boot_report() -> BootReport:
     Probes return rows in a stable, top-to-bottom order: gateway → database →
     LLM → each connected broker source. Each probe swallows its own errors so
     one failure can't take down the whole report."""
-    services = [await probe_backend(), await probe_database(), await probe_llm()]
+    services = [await probe_backend(), await probe_vault(), await probe_database(), await probe_llm()]
     services.extend(await probe_brokers())
     return BootReport(services=services)
 

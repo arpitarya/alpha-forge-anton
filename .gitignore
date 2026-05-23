@@ -35,8 +35,10 @@ out/
 *.key
 secrets/
 # dotenv environment variable files
-# Tracked: .env (config defaults only — NO secrets), .env.port (ports), .env.cred.example (template)
-# NEVER tracked — these may contain real credentials:
+# Tracked:   .env (app config + LLM key stubs), .env.port (ports)
+#            .env.cred.example (credentials template)
+#            .env.frontend.example (frontend template)
+# NEVER tracked — these contain real credentials or local overrides:
 .env.local
 .env.*.local
 

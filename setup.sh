@@ -211,15 +211,19 @@ scaffold_env_files() {
         "$REPO_ROOT/setup-config.sh"
     else
         warn "setup-config.sh missing — falling back to legacy copy"
-        for pair in "backend/.env.example:backend/.env" \
-                    "frontend/.env.example:frontend/.env.local" \
-                    ".env.cred.example:.env.cred.local"; do
+        for pair in ".env.cred.example:.env.cred.local" \
+                    ".env.frontend.example:.env.frontend.local"; do
             local src="${pair%%:*}" dst="${pair##*:}"
             if [[ -f "$REPO_ROOT/$src" && ! -f "$REPO_ROOT/$dst" ]]; then
                 cp "$REPO_ROOT/$src" "$REPO_ROOT/$dst"
                 ok "Created $dst from $src"
             fi
         done
+        # Ensure frontend symlink exists
+        if [[ ! -e "$REPO_ROOT/frontend/.env.local" ]]; then
+            ln -s "../.env.frontend.local" "$REPO_ROOT/frontend/.env.local"
+            ok "Created frontend/.env.local → ../.env.frontend.local"
+        fi
     fi
 }
 
@@ -375,9 +379,10 @@ full_setup() {
     echo ""
     echo "  Next steps:"
     echo ""
-    echo "  1. Review & update environment files:"
-    echo "     - backend/.env        (DB credentials, API keys)"
-    echo "     - frontend/.env.local (API URL, ports)"
+    echo "  1. Review & update environment files (all at repo root):"
+    echo "     - .env               (app config, LLM keys)"
+    echo "     - .env.cred.local    (DB password, JWT secret, broker cache key)"
+    echo "     - .env.frontend.local (API URL, ports — symlinked as frontend/.env.local)"
     echo ""
     echo "  2. Start local infrastructure (if not running):"
     echo "     just db-local          # PostgreSQL + Redis via Homebrew"

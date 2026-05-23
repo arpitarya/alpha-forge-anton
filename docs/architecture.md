@@ -146,6 +146,10 @@ alpha-forge-anton/
 - `pyproject.toml` (repo root) — uv workspace definition + `[tool.uv.sources]` for local deps
 - `uv.lock` (repo root) — single lockfile for all Python workspace members
 - `pnpm-workspace.yaml` — Workspace root definition
-- `.env.port` — All service ports in one file
+- `.env.port` — All service ports in one file (single source of truth for BACKEND_PORT, FRONTEND_PORT, POSTGRES_PORT, REDIS_PORT)
+- `.env` — App config defaults + LLM key stubs (tracked; no secrets)
+- `.env.cred.example` — Credentials template (AFBACH, BROKER_CACHE_KEY, JWT, POSTGRES_PASSWORD)
+- `.env.frontend.example` — Frontend env template (NEXT_PUBLIC_API_URL, ports, logging)
+- `.env.cred.local` / `.env.frontend.local` — Real secrets/overrides (gitignored; created by `./setup-config.sh`)
+- `frontend/.env.local` — Symlink → `../.env.frontend.local`; Next.js auto-loads it from its project root
 - `.vscode/mcp.json` — VS Code MCP server config
-- `.env.example` / `backend/.env.example` / `frontend/.env.example` — Environment templates

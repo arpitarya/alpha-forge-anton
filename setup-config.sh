@@ -33,10 +33,10 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ── Mappings (template → real file, both relative to repo root) ────────────────
 # Add new entries here when introducing a new .env tier.
+# All real files live at repo root; frontend/.env.local is a symlink → ../.env.frontend.local
 MAPPINGS=(
     ".env.cred.example:.env.cred.local"
-    "backend/.env.example:backend/.env"
-    "frontend/.env.example:frontend/.env.local"
+    ".env.frontend.example:.env.frontend.local"
 )
 
 # ── Secrets to auto-generate when blank ────────────────────────────────────────
@@ -44,10 +44,12 @@ FERNET_KEYS=("BROKER_CACHE_KEY")
 RANDOM_KEYS=("JWT_SECRET_KEY" "POSTGRES_PASSWORD")
 
 # ── Keys the user MUST fill in manually (only listed in the reminder) ──────────
+# LLM keys are vault-managed. Listed here so the report flags them if vault is not configured.
 MANUAL_KEYS=(
-    "GEMINI_API_KEY" "GROQ_API_KEY"
-    "HUGGINGFACE_API_KEY" "OPENROUTER_API_KEY"
     "ZERODHA_USER_ID" "GROWW_USER_ID"
+    # LLM keys are vault-managed (afbach). Listed here so the report flags them
+    # if the vault is not configured and they remain blank.
+    "GEMINI_API_KEY" "GROQ_API_KEY" "HF_API_KEY" "OPENROUTER_API_KEY" "CEREBRAS_API_KEY" "MISTRAL_API_KEY"
 )
 
 # ── Keys to prompt for interactively when blank ──────────────────────────────
@@ -324,6 +326,22 @@ hdr "Syncing template → real"
 for entry in "${MAPPINGS[@]}"; do
     sync_file "${entry%%:*}" "${entry##*:}"
 done
+
+# Create frontend/.env.local symlink → ../.env.frontend.local so Next.js finds it
+if (( ! DRY_RUN )); then
+    SYMLINK="$REPO_ROOT/frontend/.env.local"
+    TARGET="../.env.frontend.local"
+    if [[ -L "$SYMLINK" ]]; then
+        ok "frontend/.env.local symlink already exists"
+    elif [[ -f "$SYMLINK" ]]; then
+        warn "frontend/.env.local is a plain file (not a symlink) — leaving it alone"
+    else
+        ln -s "$TARGET" "$SYMLINK"
+        ok "Created frontend/.env.local → $TARGET"
+    fi
+else
+    info "[dry-run] would create frontend/.env.local → ../.env.frontend.local"
+fi
 
 if (( GEN_SECRETS )); then
     hdr "Auto-generating blank secrets"

@@ -4,6 +4,7 @@ the whole boot endpoint down."""
 
 from __future__ import annotations
 
+import os
 import time
 
 from sqlalchemy import text
@@ -14,6 +15,19 @@ from app.modules.brokers.registry import SOURCES
 from app.modules.health.boot_schemas import BootService, BootStatus
 
 _LLM_PRIORITY = ["gemini", "cerebras", "groq", "claude-sdk", "mistral", "openrouter", "huggingface"]
+
+
+_LLM_VAULT_KEYS = ("GEMINI_API_KEY", "GROQ_API_KEY", "HF_API_KEY", "OPENROUTER_API_KEY", "CEREBRAS_API_KEY", "MISTRAL_API_KEY")
+
+
+async def probe_vault() -> BootService:
+    if not os.getenv("AFBACH_TOKEN"):
+        return BootService(key="vault", label="Secrets · afbach vault",
+                           status=BootStatus.WARN, detail="AFBACH_TOKEN not set — file env only")
+    loaded = sum(1 for k in _LLM_VAULT_KEYS if os.getenv(k))
+    status = BootStatus.OK if loaded else BootStatus.ERROR
+    detail = f"{loaded}/{len(_LLM_VAULT_KEYS)} LLM keys loaded" if loaded else "vault connected but no LLM keys found"
+    return BootService(key="vault", label="Secrets · afbach vault", status=status, detail=detail)
 
 
 async def probe_backend() -> BootService:
