@@ -13,10 +13,16 @@ from alphaforge_logger import setup_logging as _setup_logging
 
 from app.core.config import settings
 
+try:
+    from redactor import install as _install_redactor
+    _HAS_REDACTOR = True
+except ImportError:
+    _HAS_REDACTOR = False
+
 
 def setup_logging() -> logging.Logger:
     """Configure and return the application root logger."""
-    return _setup_logging(
+    logger = _setup_logging(
         level=settings.log_level,
         log_dir=settings.log_dir,
         log_file=settings.log_file,
@@ -24,6 +30,9 @@ def setup_logging() -> logging.Logger:
         backup_count=settings.log_backup_count,
         quiet_loggers=["uvicorn.access", "httpx"],
     )
+    if _HAS_REDACTOR:
+        _install_redactor(logging.getLogger())
+    return logger
 
 
 def get_logger(name: str) -> logging.Logger:

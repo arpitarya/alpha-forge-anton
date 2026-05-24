@@ -18,6 +18,12 @@ from app.modules import api_router
 from app.modules.brokers.refetch import start_refetch_loop
 from app.modules.brokers.registry import SOURCES
 
+try:
+    import warden as _warden
+    _HAS_WARDEN = True
+except ImportError:
+    _HAS_WARDEN = False
+
 logger = get_logger("app")
 
 
@@ -55,6 +61,10 @@ def create_app() -> FastAPI:
         allow_methods=["GET", "POST", "PUT", "DELETE"],
         allow_headers=["Authorization", "Content-Type", "Accept"],
     )
+
+    # Dante warden — IP allowlist + future security middleware
+    if _HAS_WARDEN:
+        _warden.install(app)
 
     # Routes
     app.include_router(api_router, prefix=settings.api_v1_prefix)

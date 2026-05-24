@@ -60,6 +60,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: pre-hydration script must be inlined to run before React hydrates and prevent theme-flash */}
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
+        {/* Dante inferno honeypot — hidden from humans, traps automated scanners */}
+        {/* biome-ignore lint/a11y/useAnchorContent: aria-hidden removes this from the a11y tree; content is intentionally empty */}
+        <a
+          href="/.well-known/honeypot-af1337"
+          rel="nofollow noindex"
+          tabIndex={-1}
+          aria-hidden="true"
+          style={{ display: "none", position: "absolute", left: -9999 }}
+        />
       </head>
       <body className="h-screen overflow-hidden bg-black font-body text-on-surface antialiased selection:bg-primary/30">
         <ThemeProvider>

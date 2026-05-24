@@ -8,6 +8,18 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+try:
+    from curator import safe_resolve as _safe_resolve
+    _HAS_CURATOR = True
+except ImportError:
+    _HAS_CURATOR = False
+
+
+def _resolve(name: str, root: Path) -> Path:
+    if _HAS_CURATOR:
+        return _safe_resolve(name, root=root)
+    return root / name
+
 _REPO_ROOT = Path(__file__).resolve().parents[4]  # backend/app/modules/brokers/ → alpha-forge-anton/
 DEFAULT_DUMP_DIR = Path.home() / ".alphaforge-anton" / "portfolio-dumps"
 CSV_HEADERS = (
@@ -33,12 +45,12 @@ def dump_dir() -> Path:
 
 
 def live_csv_path(slug: str) -> Path:
-    return dump_dir() / f"{slug}-holdings-live.csv"
+    return _resolve(f"{slug}-holdings-live.csv", root=dump_dir())
 
 
 def dated_csv_path(slug: str) -> Path:
     today = datetime.now(UTC).strftime("%Y-%m-%d")
-    return dump_dir() / f"{slug}-holdings-{today}.csv"
+    return _resolve(f"{slug}-holdings-{today}.csv", root=dump_dir())
 
 
 def is_csv_fresh(slug: str, ttl_seconds: int) -> bool:

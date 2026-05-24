@@ -1,6 +1,10 @@
 # AlphaForge Anton — Commands
 
 ```bash
+# ── Local development (all services) ────────────────────────────────────────
+./start.sh                # Start PostgreSQL, Redis, Bach vault, backend, frontend
+./stop.sh                 # Stop all services started by start.sh
+
 # ── Full repo setup ───────────────────────────────────────────────────────────
 ./setup.sh                # One command to set up everything
 ./setup.sh --help         # Show all setup.sh options

@@ -23,6 +23,7 @@ alphaforge-anton-backend = { workspace = true }
 alphaforge-logger  = { workspace = true }
 alphaforge-anton-news    = { workspace = true }
 alphaforge-anton-llm     = { workspace = true }
+alphaforge-dante         = { path = "../dante" }
 
 # Pull every workspace member into `.venv` on `uv sync`.
 [tool.uv]

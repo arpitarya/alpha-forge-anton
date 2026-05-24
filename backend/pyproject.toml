@@ -26,6 +26,7 @@ dependencies = [
     "alphaforge-logger",
     "alphaforge-anton-news",
     "alphaforge-anton-llm",
+    "alphaforge-dante",
     # News aggregator deps
     "feedparser>=6.0.0",
     "asyncpraw>=7.7.0",

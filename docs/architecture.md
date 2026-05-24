@@ -13,7 +13,7 @@ alpha-forge-anton/
 │   ├── app/core/     Config (pydantic-settings), DB engine, JWT/bcrypt, env_loader
 │   ├── app/modules/  Feature modules — each owns its routes/service/models
 │   │   ├── health/      /api/v1/* health endpoint
-│   │   ├── auth/        routes + User ORM
+│   │   ├── iam/         Wagner IAM — users, refresh tokens, API keys, audit log (/api/v1/iam/*)
 │   │   ├── portfolio/   routes + Holding/Order/Watchlist ORM
 │   │   ├── brokers/     pluggable BrokerSource adapters (Zerodha Kite/Coin, Groww, Angel One, Wint, Dezerv) + aggregator + registry. Used by portfolio routes. All CSV portfolio dumps share `dump_utils.py` — see broker-csv-dumps.md
 │   │   ├── trade/       routes (paper/live trade endpoints)
@@ -38,7 +38,7 @@ alpha-forge-anton/
 │       ├── trade/       trade.{api,query}.ts
 │       ├── screener/    ScreenerPanel (hardcoded stub — no live API)
 │       ├── dashboard/   dashboard.{api,query,types}.ts + terminal-home components
-│       └── auth/        auth.api.ts
+│       └── auth/        auth.api.ts (IAM client), auth.types.ts, useAuthStore.ts, auth.guard.tsx
 ├── infra/            Infrastructure configs (docker-compose for services, devcontainer)
 ├── repo-context-mcp/ Tool-agnostic MCP server — gives Claude/Copilot/Cursor/any MCP client semantic + structural context over this repo
 │   └── src/alphaforge_anton_repo_context/  server, indexer, chunker, embeddings, watcher, tools/
@@ -63,16 +63,21 @@ alpha-forge-anton/
 | AI | OpenAI + LangChain | RAG with market data context |
 | Repo Context MCP | alphaforge-anton-repo-context-mcp | Local stdio MCP server; pgvector-backed semantic + structural repo context for Claude/Copilot/Cursor/any MCP client |
 | Brokers | Abstract BrokerSource interface | Zerodha first, then Groww, Angel One, Upstox |
+| Auth (IAM) | Wagner (embedded) | JWT + rotating refresh tokens + `wgr_` API keys; owner/viewer roles; audit log. Routes at `/api/v1/iam/*` |
+| Security | Dante (`alphaforge-dante`) | Log redaction (`redactor`), IP allowlist middleware (`warden`), path guard (`curator`), failed-login tracking (`watchman`), zero-trust egress (`gateway`), posture step-up (`posture`), honeypot (`inferno`). Run `just dante-audit` for SAST+CVE+license |
 | Local infra | brew services (Postgres, Redis) | Containers optional via OrbStack |
 | CI infra | devcontainer.json | GitHub Codespaces compatible |
 
 ## Key Files
 
 ### Backend
-- `backend/app/main.py` — FastAPI app factory
-- `backend/app/core/config.py` — All environment variables
-- `backend/app/core/logging.py` — Backend logging setup (wraps alphaforge-logger)
+- `backend/app/main.py` — FastAPI app factory; mounts Dante `warden` middleware after CORS
+- `backend/app/core/config.py` — All environment variables (incl. `IAM_*` settings for Wagner)
+- `backend/app/core/security.py` — bcrypt + JWT; `create_access_token(sub, role, email) → (token, expires_in)`; `decode_access_token → dict | None`
+- `backend/app/core/logging.py` — Backend logging setup (wraps alphaforge-logger + Dante `redactor` scrubs every log record)
+- `backend/app/core/deps.py` — `get_current_user` (JWT + `wgr_` API key); `require_owner`; optional Dante posture step-up
 - `backend/app/modules/__init__.py` — registers every feature router under `/api/v1/*`
+- `backend/app/modules/iam/` — Wagner IAM: users, refresh tokens, API keys, audit log. Routes at `/api/v1/iam/*`. Bootstrap: first `POST /iam/register` is open; subsequent ones require an owner JWT
 - `backend/app/modules/chat/` — Alpha chat module: `chat_routes.py` (`POST /api/v1/chat/` → SSE), `chat_service.py` (gateway dispatch + streaming), `chat_schemas.py` (request schema + model→QueryType mapping)
 - `backend/app/modules/brokers/base.py` — `BrokerSource` ABC; implement for new brokers
 - `backend/app/modules/brokers/registry.py` — broker source registry (slug → class)

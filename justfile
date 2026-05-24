@@ -60,6 +60,14 @@ graphify-check:
 
 # ── Full Stack ───────────────────────────────────
 
+# Start all local services: DB, Bach vault, backend, frontend
+start:
+    bash start.sh
+
+# Stop all local services started by start.sh
+stop:
+    bash stop.sh
+
 # Start backend + frontend via Procfile (requires DB running)
 dev-local:
     #!/usr/bin/env bash
@@ -166,6 +174,18 @@ test-frontend:
 audit:
     uv run pip-audit --desc
     cd frontend && pnpm audit --audit-level=high
+
+# Dante: SAST + CVE + license audit (fast, local)
+dante-audit:
+    uv run dante audit --repo .
+
+# Dante: full audit with JSON output (for CI / diff)
+dante-audit-deep:
+    uv run dante audit --repo . --json > .dante-audit.json
+
+# Dante: apply hardening (writes public/robots.txt, etc.)
+dante-harden:
+    uv run dante harden --apply
 
 # ── Quality ──────────────────────────────────────
 

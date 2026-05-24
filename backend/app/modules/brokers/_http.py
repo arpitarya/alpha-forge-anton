@@ -16,6 +16,17 @@ from urllib.parse import urlparse
 import httpx
 from cryptography.fernet import Fernet, InvalidToken
 
+try:
+    from gateway import wrap_httpx as _wrap_httpx
+    from gateway.policy import load as _load_policy
+    _GATEWAY_POLICY_PATH = Path(os.getenv(
+        "DANTE_GATEWAY_POLICY",
+        "~/.alphaforge-anton/dante/dante.yaml",
+    )).expanduser()
+    _HAS_GATEWAY = True
+except ImportError:
+    _HAS_GATEWAY = False
+
 SESSION_TTL_SECONDS = int(os.getenv("BROKER_SESSION_TTL", "82800"))  # 23h default
 
 DEFAULT_TIMEOUT = httpx.Timeout(20.0, connect=10.0)
@@ -71,13 +82,16 @@ def make_client(
 ) -> httpx.AsyncClient:
     _check_dev_host(base_url)
     merged_headers = {**DEFAULT_HEADERS, **(headers or {})}
-    return httpx.AsyncClient(
+    client = httpx.AsyncClient(
         base_url=base_url,
         headers=merged_headers,
         cookies=cookies or {},
         timeout=DEFAULT_TIMEOUT,
         follow_redirects=True,
     )
+    if _HAS_GATEWAY and _GATEWAY_POLICY_PATH.exists():
+        client = _wrap_httpx(client, _load_policy(_GATEWAY_POLICY_PATH))
+    return client
 
 
 # ── Token cache ───────────────────────────────────────────────────────────────

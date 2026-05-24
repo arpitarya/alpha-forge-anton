@@ -8,23 +8,23 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-AlphaForge Anton is an open-source personal investment terminal for Indian markets (NSE/BSE). It combines a FastAPI backend, a Next.js frontend, an ML screener pipeline, and a multi-provider LLM gateway.
+AlphaForge Anton is an open-source, self-hosted investment terminal for Indian markets (NSE/BSE + global crypto). It combines a FastAPI backend, a Next.js terminal-style frontend, a multi-broker portfolio aggregator, and an AI chat surface (Alpha).
 
-This project is built for personal use and research.
+Built for personal use and research.
 
 ---
 
 ## What Is New
 
-- Added `llm-gateway/` package with 5-provider routing: Gemini, Groq, HuggingFace, OpenRouter, Ollama
-- Added backend `/llm` endpoints for completion, screener analysis, explanation, provider health, and benchmark
-- Added frontend typed LLM API integration and React Query hooks
-- Expanded screener implementation across data, features, dataset, models, and backtesting phases
-- Standardized setup with `./setup.sh` full and granular workflows
-- Added workspace packages:
-  - `packages/logger-py` (`alphaforge-logger`)
-  - `packages/logger-node` (`@alphaforge/logger`)
-  - `packages/ravel-ui` (`@alphaforge-anton/ravel-ui`)
+- **Zerodha Coin broker** added (mutual funds via Coin CSV dumps)
+- **Binance broker** added (global crypto holdings)
+- **IndMoney & Tickertape** brokers added (US stocks, mutual funds, watchlist)
+- **News module** added (`/news` backend routes + frontend feed)
+- **Alpha Chat** — streaming AI assistant (AlphaBar + ChatRail, JWT-gated, SSE)
+- **Boot screen** — animated per-service readiness check on every tab open
+- **Preferences** — full 8-section settings UI (Appearance, Display, Markets, Alpha AI, Notifications, Account, Privacy, About)
+- **Vault-backed secrets** via `alpha-forge-bach` (AFBACH environment)
+- **Env file refactor** — `.env`, `.env.port`, `.env.cred.local`, `.env.frontend.local`
 
 ---
 
@@ -32,12 +32,12 @@ This project is built for personal use and research.
 
 | Module | Path | Purpose |
 |--------|------|---------|
-| Backend | `backend/` | FastAPI API, auth, market, portfolio, broker integration, LLM routes |
-| Frontend | `frontend/` | Next.js terminal UI, dashboard, AI surfaces |
-| UI Library | `packages/ravel-ui/` | Shared design tokens and UI components |
-| Logging Packages | `packages/logger-py/`, `packages/logger-node/` | Shared logging for Python and Node |
-| LLM Gateway | `llm-gateway/` | Provider routing, cost guardrails, CLI, benchmarks |
-| Screener | `screener/` | Data pipeline, feature engineering, model training, backtests |
+| Backend | `backend/` | FastAPI, auth, portfolio, brokers, chat, news, health, vault |
+| Frontend | `frontend/` | Next.js terminal UI — dashboard, portfolio, chat, preferences, news |
+| UI Library | `packages/ravel-ui/` | Shared design tokens and UI components (`@alphaforge-anton/ravel-ui`) |
+| Logger (Python) | `packages/logger-py/` | `alphaforge-logger` — rotating file + console |
+| Logger (Node) | `packages/logger-node/` | `@alphaforge/logger` — pino-based |
+| Repo Context MCP | `mcp/` | stdio MCP server for Claude/Copilot/Cursor — semantic + structural repo context |
 | Infra | `infra/` | Docker Compose and local setup scripts |
 
 ---
@@ -49,10 +49,10 @@ This project is built for personal use and research.
 git clone https://github.com/your-username/alpha-forge-anton.git
 cd alpha-forge-anton
 
-# Recommended: full setup
+# Full setup (prereqs + venv + env files)
 ./setup.sh
 
-# Start PostgreSQL + Redis locally (macOS)
+# Start PostgreSQL + Redis (macOS)
 ./setup.sh --db
 
 # Apply DB migrations
@@ -69,14 +69,11 @@ OpenAPI docs: http://localhost:8000/docs
 ### Alternate Setup Modes
 
 ```bash
-# Granular setup
-./setup.sh --prereqs
-./setup.sh --venv
-./setup.sh --backend
-./setup.sh --frontend
-./setup.sh --screener
-./setup.sh --env
-./setup.sh --dirs
+./setup.sh --prereqs    # Homebrew packages + pyenv + nvm
+./setup.sh --venv       # Python venv + uv install
+./setup.sh --backend    # Backend deps only
+./setup.sh --frontend   # Frontend deps only
+./setup.sh --env        # Scaffold .env.cred.local + .env.frontend.local
 
 # Containers (OrbStack or Docker)
 docker compose -f infra/docker-compose.yml up --build
@@ -88,30 +85,39 @@ docker compose -f infra/docker-compose.yml up --build
 
 ```bash
 # Development
-just dev-local
-just backend
-just frontend
+just dev-local      # backend + frontend together
+just backend        # FastAPI only
+just frontend       # Next.js only
 
 # Quality
 just test
 just lint
 just format
 
-# Screener
-./setup.sh --pipeline
-./setup.sh --scan
-just screener-pipeline
-just screener-scan
+# DB
+just db-migrate
+just db-shell
 
-# LLM Gateway
-just llm-gateway-install
-just llm-providers
-just llm-benchmark
-python -m alphaforge_anton_llm_gateway chat
-
-# Copilot browser integration
-just setup-mcp
+# MCP server (Repo Context)
+just mcp-install
+just mcp-start
 ```
+
+---
+
+## Brokers
+
+| Broker | Slug | Data Source | Assets |
+|--------|------|-------------|--------|
+| Zerodha Kite | `zerodha` | Kite Connect API / CSV | Equity, F&O |
+| Zerodha Coin | `zerodha_coin` | Coin CSV dump | Mutual funds |
+| Groww | `groww` | CSV dump | Equity, MF |
+| Angel One | `angelone` | CSV dump | Equity |
+| IndMoney | `indmoney` | CSV dump | US stocks, MF |
+| Tickertape | `tickertape` | CSV dump | Watchlist, MF |
+| Binance | `binance` | CSV dump | Crypto |
+
+All CSV-based brokers share `dump_utils.py` — see [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md).
 
 ---
 
@@ -119,14 +125,13 @@ just setup-mcp
 
 | Document | Description |
 |----------|-------------|
-| [docs/WHY.md](docs/WHY.md) | Why AlphaForge Anton exists — the problem & vision |
-| [docs/WHAT.md](docs/WHAT.md) | What AlphaForge Anton is — features, scope, roadmap |
-| [docs/HOW.md](docs/HOW.md) | How it works — architecture, tech stack, design |
-| [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) | Setup guide for developers |
-| [screener/PLAN.md](screener/PLAN.md) | Screener planning phases |
-| [screener/implement.txt](screener/implement.txt) | Screener implementation log |
-| [llm-gateway/PLAN.md](llm-gateway/PLAN.md) | LLM Gateway planning phases |
-| [llm-gateway/implement.txt](llm-gateway/implement.txt) | LLM Gateway implementation log |
+| [docs/architecture.md](docs/architecture.md) | Repo structure, tech decisions, key files |
+| [docs/conventions.md](docs/conventions.md) | Python + TypeScript coding conventions |
+| [docs/commands.md](docs/commands.md) | CLI commands (setup, run, build, migrate, clean) |
+| [docs/guardrails.md](docs/guardrails.md) | Project rules and guardrails |
+| [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md) | Broker CSV dump contract (shared `dump_utils`) |
+| [docs/vault.md](docs/vault.md) | Vault-backed secrets (`alpha-forge-bach`) |
+| [docs/live-prices-plan.md](docs/live-prices-plan.md) | Live prices design plan (not yet built) |
 
 ---
 
@@ -134,37 +139,46 @@ just setup-mcp
 
 ```
 alpha-forge-anton/
-├── backend/                 # Python/FastAPI API server (PDM + uv)
+├── backend/                  # Python 3.14 + FastAPI
 │   ├── app/
-│   │   ├── core/            # Config, DB, security
-│   │   ├── models/          # SQLAlchemy ORM models
-│   │   ├── routes/          # API endpoints
-│   │   └── services/        # Business logic & integrations
-│   ├── alembic/             # Database migrations
-│   ├── tests/               # Backend tests
-│   └── pyproject.toml
-├── frontend/                # Next.js / React / TypeScript UI (pnpm)
-│   ├── src/
-│   │   ├── app/             # Next.js app router pages
-│   │   ├── components/      # React components
-│   │   └── lib/             # API client, stores, utils
-│   └── package.json
-├── packages/                # Workspace packages
-│   ├── logger-py/           # alphaforge-logger
-│   ├── logger-node/         # @alphaforge/logger
-│   └── ravel-ui/        # @alphaforge-anton/ravel-ui
-├── llm-gateway/             # Multi-provider LLM package + CLI
-├── screener/                # ML screener pipeline and backtests
-├── infra/                   # Infrastructure configs
-│   ├── docker-compose.yml   # Container orchestration (optional)
-│   └── setup-local.sh       # Native macOS setup (Homebrew)
-├── design/                  # Design system & Gemini Stitch tokens
-├── .devcontainer/           # GitHub Codespaces config
-├── .github/                 # Copilot instructions
-├── CLAUDE.md                # Claude Code context
-├── docs/                    # Project documentation
-├── Procfile                 # Process manager (overmind/honcho)
-├── Makefile                 # Dev commands
+│   │   ├── core/             # Config, DB, security, env_loader
+│   │   └── modules/          # Feature modules (each owns routes + service + schemas)
+│   │       ├── auth/         # JWT auth + User ORM
+│   │       ├── brokers/      # BrokerSource adapters + aggregator + registry
+│   │       ├── portfolio/    # Holdings, orders, watchlist
+│   │       ├── chat/         # Alpha AI chat (SSE streaming)
+│   │       ├── news/         # News feed routes
+│   │       ├── dashboard/    # Cross-module aggregation
+│   │       ├── trade/        # Paper / live trade endpoints
+│   │       ├── health/       # /health + /health/boot (boot probes)
+│   │       └── vault/        # Vault-backed secret access
+│   ├── alembic/              # DB migrations
+│   └── tests/
+├── frontend/                 # Next.js 15 + React 19 + TypeScript + Tailwind v4
+│   └── src/
+│       ├── app/              # App Router pages (/, /portfolio, /preferences, /news)
+│       ├── lib/              # api.ts, logger.ts, store.ts, providers.tsx
+│       └── modules/
+│           ├── portfolio/    # Treemap, ledger, wallet strip, filter bar, compact bar
+│           ├── chat/         # AlphaBar, ChatRail, ModelPicker, useChatStream
+│           ├── dashboard/    # TerminalTopBar, BootScreen, BootGate
+│           ├── preferences/  # 8-section settings UI
+│           ├── news/         # News feed components
+│           ├── auth/         # Login + AuthGuard
+│           └── trade/        # Trade panel
+├── packages/
+│   ├── ravel-ui/             # @alphaforge-anton/ravel-ui (Button, Input, Card, Badge…)
+│   ├── logger-py/            # alphaforge-logger (Python)
+│   └── logger-node/          # @alphaforge/logger (Node/TS, pino)
+├── mcp/                      # Repo Context MCP server (Claude/Copilot/Cursor)
+├── infra/                    # docker-compose.yml + setup-local.sh
+├── probes/                   # UI smoke tests via CDP (ui_probe.py, ui_screens.py)
+├── design/                   # Hi-Fi HTML prototype + Claude Design transcripts
+├── docs/                     # Project documentation
+├── CLAUDE.md                 # Claude Code context
+├── pyproject.toml            # uv workspace root
+├── pnpm-workspace.yaml       # pnpm workspace root
+├── justfile                  # Dev commands
 └── LICENSE
 ```
 
@@ -172,20 +186,19 @@ alpha-forge-anton/
 
 ## Tech Stack
 
-| Layer | Technology | Why |
-|-------|-----------|-----|
-| Backend API | Python 3.14 + FastAPI | Async, fast, great ML ecosystem |
-| Python Tooling | PDM + uv | Fast resolver, lockfile, reproducible |
-| Frontend | Next.js 15 + React 19 + TypeScript | Modern, fast, SSR support |
-| Node Tooling | pnpm | Fast, disk-efficient, strict |
-| Database | PostgreSQL 16 | Reliable, battle-tested |
-| Cache / Pub-Sub | Redis 7 | Real-time data, WebSocket backing |
-| AI / LLM | OpenAI + LangChain + `alphaforge-anton-llm-gateway` | Conversational AI, RAG, provider routing |
-| Charts | Lightweight Charts (TradingView) | Professional-grade charts |
-| Broker API | Zerodha Kite Connect | Most popular Indian broker API |
-| Task Queue | Celery | Background jobs (screeners, alerts) |
-| Styling | Tailwind CSS v4 | Utility-first, terminal aesthetic |
-| Local Infra | Homebrew (native) or OrbStack | Lightweight, M-series optimized |
+| Layer | Technology |
+|-------|-----------|
+| Backend API | Python 3.14 + FastAPI (async) |
+| Python tooling | uv (workspace, single lockfile) |
+| Frontend | Next.js 15 + React 19 + TypeScript |
+| Node tooling | pnpm |
+| Database | PostgreSQL 16 (asyncpg + SQLAlchemy) |
+| Cache / Pub-Sub | Redis 7 |
+| AI Chat | OpenAI + LangChain (SSE streaming, JWT-gated) |
+| Charts | Lightweight Charts (TradingView) |
+| Styling | Tailwind CSS v4 + Solar Terminal design tokens |
+| Local infra | Homebrew (native) or OrbStack |
+| Secrets | Vault-backed via `alpha-forge-bach` |
 
 ---
 

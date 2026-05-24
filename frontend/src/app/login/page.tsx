@@ -2,25 +2,30 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { login } from "@/modules/auth/auth.api";
+
+import { getMe, loginUser } from "@/modules/auth/auth.api";
+import { useAuthStore } from "@/modules/auth/useAuthStore";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("admin");
+  const { accessToken, setTokens, setUser } = useAuthStore();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("af_token")) router.replace("/");
-  }, [router]);
+    if (accessToken) router.replace("/");
+  }, [accessToken, router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      await login(username, password);
+      const tokens = await loginUser({ email, password });
+      setTokens(tokens);
+      setUser(await getMe());
       router.replace("/");
     } catch {
       setError("Invalid credentials");
@@ -46,14 +51,15 @@ export default function LoginPage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="font-mono text-xs" style={{ color: "var(--fg-3)" }}>
-            USERNAME
+          <label htmlFor="email" className="font-mono text-xs" style={{ color: "var(--fg-3)" }}>
+            EMAIL
           </label>
           <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
             required
             className="rounded border px-3 py-2 font-mono text-sm outline-none"
             style={{
@@ -65,10 +71,11 @@ export default function LoginPage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="font-mono text-xs" style={{ color: "var(--fg-3)" }}>
+          <label htmlFor="password" className="font-mono text-xs" style={{ color: "var(--fg-3)" }}>
             PASSWORD
           </label>
           <input
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
