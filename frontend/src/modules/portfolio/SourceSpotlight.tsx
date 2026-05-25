@@ -2,7 +2,7 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { clsx } from "clsx";
-import { useSyncWallet } from "./portfolio.query";
+import { useSyncSource, useSyncWallet } from "./portfolio.query";
 import type { WalletInfoDTO } from "./portfolio.types";
 import { fmtMoneyShort, relTime, walletBrand } from "./wallet.utils";
 
@@ -14,14 +14,20 @@ export interface SourceSpotlightProps {
 export function SourceSpotlight({ wallet, onClear }: SourceSpotlightProps) {
   const brand = walletBrand(wallet.slug);
   const pnlCls = wallet.pnl >= 0 ? "text-[color:var(--green)]" : "text-[color:var(--red)]";
-  const sync = useSyncWallet();
+  const syncWallet = useSyncWallet();
+  const syncSource = useSyncSource();
   const qc = useQueryClient();
 
   async function onRefresh() {
     try {
-      await sync.mutateAsync(wallet.slug);
+      await Promise.all([
+        syncSource.mutateAsync(wallet.slug),
+        syncWallet.mutateAsync(wallet.slug),
+      ]);
     } finally {
       qc.invalidateQueries({ queryKey: ["portfolio", "wallets"] });
+      qc.invalidateQueries({ queryKey: ["portfolio", "holdings"] });
+      qc.invalidateQueries({ queryKey: ["portfolio", "treemap"] });
     }
   }
 
@@ -52,10 +58,10 @@ export function SourceSpotlight({ wallet, onClear }: SourceSpotlightProps) {
         <button
           type="button"
           onClick={onRefresh}
-          disabled={sync.isPending}
+          disabled={syncWallet.isPending || syncSource.isPending}
           className="rounded-[5px] border border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)] bg-[color:color-mix(in_srgb,var(--accent)_10%,transparent)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--accent)] transition hover:bg-[color:color-mix(in_srgb,var(--accent)_18%,transparent)] hover:shadow-[0_0_14px_var(--glow)] disabled:opacity-50"
         >
-          {sync.isPending ? "Refreshing…" : "⟳ Refresh"}
+          {syncWallet.isPending || syncSource.isPending ? "Refreshing…" : "⟳ Refresh"}
         </button>
         <button
           type="button"

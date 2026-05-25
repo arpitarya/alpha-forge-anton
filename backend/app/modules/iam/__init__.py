@@ -1,3 +1,3 @@
-from app.modules.iam.iam_routes import router
+from app.modules.iam.iam_proxy import router
 
 __all__ = ["router"]

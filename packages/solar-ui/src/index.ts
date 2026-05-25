@@ -1,23 +1,25 @@
 /**
- * @alphaforge-anton/ravel-ui
+ * @alphaforge-anton/solar-ui
  *
  * Solar Terminal design system — UI components, design tokens, and fonts.
  *
  * Components:
- *   import { Button, Input, Card, Badge, Icon, Text } from "@alphaforge-anton/ravel-ui";
+ *   import { Button, Input, Card, Badge, Icon, Text } from "@alphaforge-anton/solar-ui";
  *
  * Design tokens (JS/TS):
- *   import { tokens, color, font, spacing } from "@alphaforge-anton/ravel-ui/tokens";
+ *   import { tokens, color, font, spacing } from "@alphaforge-anton/solar-ui/tokens";
  *
  * Styles (import in your CSS):
- *   @import "@alphaforge-anton/ravel-ui/styles";
+ *   @import "@alphaforge-anton/solar-ui/styles";
  *
  * Theme tokens only (for Tailwind v4):
- *   @import "@alphaforge-anton/ravel-ui/theme";
+ *   @import "@alphaforge-anton/solar-ui/theme";
  */
 
 // Atoms
 export { Badge } from "./components/Badge";
+export { SearchBox } from "./components/SearchBox";
+export type { SearchBoxProps } from "./components/SearchBox";
 export { Button } from "./components/Button";
 export { Card } from "./components/Card";
 export { Chip } from "./components/Chip";
@@ -32,6 +34,27 @@ export { Logo } from "./components/Logo";
 export { ProgressBar } from "./components/ProgressBar";
 export { Sparkline } from "./components/Sparkline";
 export { Text } from "./components/Text";
+
+// Settings primitives
+export { PrefGroup } from "./components/PrefGroup";
+export { PrefRow } from "./components/PrefRow";
+export {
+  PrefInput,
+  PrefSelect,
+  PrefSeg,
+  PrefSlider,
+  PrefTog,
+} from "./components/PrefControls";
+export type { PrefGroupProps } from "./components/PrefGroup";
+export type { PrefRowProps } from "./components/PrefRow";
+export type {
+  PrefInputProps,
+  PrefOption,
+  PrefSegProps,
+  PrefSelectProps,
+  PrefSliderProps,
+  PrefTogProps,
+} from "./components/PrefControls";
 
 // Molecules
 export { BootStep } from "./components/BootStep";

@@ -13,9 +13,9 @@ alpha-forge-anton/
 │   ├── app/core/     Config (pydantic-settings), DB engine, JWT/bcrypt, env_loader
 │   ├── app/modules/  Feature modules — each owns its routes/service/models
 │   │   ├── health/      /api/v1/* health endpoint
-│   │   ├── iam/         Wagner IAM — users, refresh tokens, API keys, audit log (/api/v1/iam/*)
+│   │   ├── iam/         Wagner IAM proxy — forwards /api/v1/iam/* to Wagner service on :8001
 │   │   ├── portfolio/   routes + Holding/Order/Watchlist ORM
-│   │   ├── brokers/     pluggable BrokerSource adapters (Zerodha Kite/Coin, Groww, Angel One, Wint, Dezerv) + aggregator + registry. Used by portfolio routes. All CSV portfolio dumps share `dump_utils.py` — see broker-csv-dumps.md
+│   │   ├── brokers/     pluggable BrokerSource adapters (Zerodha Kite/Coin, Groww, Angel One, IndMoney, TickerTape, Binance) + aggregator + registry. Used by portfolio routes. All CSV portfolio dumps share `dump_utils.py` — see broker-csv-dumps.md
 │   │   ├── trade/       routes (paper/live trade endpoints)
 │   │   └── dashboard/   routes (cross-module aggregation)
 │   ├── app/main.py   FastAPI app factory; mounts api_router from app.modules
@@ -26,8 +26,8 @@ alpha-forge-anton/
 │   │   └── src/alphaforge_logger/  setup_logging(), get_logger()
 │   ├── logger-node/  Publishable Node/TS logger package (@alphaforge/logger)
 │   │   └── src/      createLogger(), getLogger() — pino-based
-│   └── ravel-ui/ Publishable UI component library (@alphaforge-anton/ravel-ui)
-│       ├── src/components/  Button, Input, Card, Badge, Icon, Text
+│   └── solar-ui/ Publishable UI component library (@alphaforge-anton/solar-ui)
+│       ├── src/components/  Button, Input, Card, Badge, Icon, Text, SearchBox, PrefRow, PrefGroup, PrefControls
 │       └── src/styles/      fonts.css, theme.css, base.css (design tokens + base styles)
 ├── frontend/         Next.js 15 (App Router) + React 19 + TypeScript + Tailwind v4
 │   ├── src/app/      Pages and layouts (Solar Terminal theme)
@@ -55,7 +55,7 @@ alpha-forge-anton/
 | Node pkg mgr | pnpm | Lockfile: `pnpm-lock.yaml`; config in `.npmrc` |
 | Node version | nvm | Pinned in `.nvmrc` |
 | Monorepo | pnpm workspaces | `pnpm-workspace.yaml` at root; `packages/*` + `frontend` |
-| UI library | @alphaforge-anton/ravel-ui | Publishable package built with tsup (ESM + CJS + DTS) |
+| UI library | @alphaforge-anton/solar-ui | Publishable package built with tsup (ESM + CJS + DTS) |
 | Logging (Python) | alphaforge-logger | Rotating file + console, env-configurable |
 | Logging (Node) | @alphaforge/logger | Pino-based, file + console, publishable tsup pkg |
 | DB | PostgreSQL 16 | Async via asyncpg + SQLAlchemy |
@@ -63,7 +63,7 @@ alpha-forge-anton/
 | AI | OpenAI + LangChain | RAG with market data context |
 | Repo Context MCP | alphaforge-anton-repo-context-mcp | Local stdio MCP server; pgvector-backed semantic + structural repo context for Claude/Copilot/Cursor/any MCP client |
 | Brokers | Abstract BrokerSource interface | Zerodha first, then Groww, Angel One, Upstox |
-| Auth (IAM) | Wagner (embedded) | JWT + rotating refresh tokens + `wgr_` API keys; owner/viewer roles; audit log. Routes at `/api/v1/iam/*` |
+| Auth (IAM) | Wagner (standalone service on `:8001`) | JWT + rotating refresh tokens + `wgr_` API keys; owner/viewer roles; audit log. Anton proxies `/api/v1/iam/*` → Wagner; validates JWTs locally from claims (no DB round-trip). Data lives in Wagner's SQLite (`wagner/backend/wagner.db`). |
 | Security | Dante (`alphaforge-dante`) | Log redaction (`redactor`), IP allowlist middleware (`warden`), path guard (`curator`), failed-login tracking (`watchman`), zero-trust egress (`gateway`), posture step-up (`posture`), honeypot (`inferno`). Run `just dante-audit` for SAST+CVE+license |
 | Local infra | brew services (Postgres, Redis) | Containers optional via OrbStack |
 | CI infra | devcontainer.json | GitHub Codespaces compatible |
@@ -72,12 +72,12 @@ alpha-forge-anton/
 
 ### Backend
 - `backend/app/main.py` — FastAPI app factory; mounts Dante `warden` middleware after CORS
-- `backend/app/core/config.py` — All environment variables (incl. `IAM_*` settings for Wagner)
-- `backend/app/core/security.py` — bcrypt + JWT; `create_access_token(sub, role, email) → (token, expires_in)`; `decode_access_token → dict | None`
+- `backend/app/core/config.py` — All environment variables; `wagner_url` points to the Wagner IAM service
+- `backend/app/core/security.py` — JWT decode only (`decode_access_token → dict | None`); no bcrypt (hashing lives in Wagner)
 - `backend/app/core/logging.py` — Backend logging setup (wraps alphaforge-logger + Dante `redactor` scrubs every log record)
-- `backend/app/core/deps.py` — `get_current_user` (JWT + `wgr_` API key); `require_owner`; optional Dante posture step-up
+- `backend/app/core/deps.py` — `get_current_user` stateless JWT validation → `UserClaims(id, role, email)`; `require_owner`; optional Dante posture step-up
 - `backend/app/modules/__init__.py` — registers every feature router under `/api/v1/*`
-- `backend/app/modules/iam/` — Wagner IAM: users, refresh tokens, API keys, audit log. Routes at `/api/v1/iam/*`. Bootstrap: first `POST /iam/register` is open; subsequent ones require an owner JWT
+- `backend/app/modules/iam/iam_proxy.py` — thin httpx reverse proxy; forwards all `/api/v1/iam/*` to Wagner `:8001/iam/*`
 - `backend/app/modules/chat/` — Alpha chat module: `chat_routes.py` (`POST /api/v1/chat/` → SSE), `chat_service.py` (gateway dispatch + streaming), `chat_schemas.py` (request schema + model→QueryType mapping)
 - `backend/app/modules/brokers/base.py` — `BrokerSource` ABC; implement for new brokers
 - `backend/app/modules/brokers/registry.py` — broker source registry (slug → class)
@@ -87,15 +87,14 @@ alpha-forge-anton/
 - `frontend/src/app/page.tsx` — Terminal landing page (no longer wraps `BootGate` — that's now in the root layout)
 - `frontend/src/app/portfolio/page.tsx` — Portfolio page. Slim `PortfolioCompactBar` on top (TOTAL · INVESTED · P&L · DAY inline + wallet pills + a "More/Less" expand toggle) so tree / ledger get the dominant vertical space; expanded state reveals the full `WalletStrip`. Source spotlight + filter bar + summary + body (treemap or ledger) on the left, rebalance rail on the right. Filter state (query, sector chip, gainers/losers, sort key + dir, view, expand) is owned here
 - `frontend/src/modules/portfolio/PortfolioCompactBar.tsx` — Hi-Fi `.pf-summary-bar`: always-visible row with totals + wallet pills + expand caret. Mirrors the design's "Less / More" pattern so a single click reveals stat cards beneath
-- `frontend/src/modules/portfolio/WalletStrip.tsx` + `WalletCard.tsx` — Per-broker wallet cards with brand-colored chip, free cash, holdings value, position count, weighted day move. Shown when the CompactBar is expanded; clicking filters the page to that source
-- `frontend/src/modules/portfolio/SourceSpotlight.tsx` — Detail banner shown when a specific wallet is active (positions / holdings / P&L / cash + a `⟳ Refresh` that hits `POST /portfolio/wallets/{slug}/sync`)
+- `frontend/src/modules/portfolio/WalletStrip.tsx` + `WalletCard.tsx` — Per-broker wallet cards with brand-colored chip, free cash, holdings value, position count, weighted day move. Shown when the CompactBar is expanded; clicking filters the page to that source. Strip has three action buttons: **⟳ Refresh cash** (`POST /portfolio/wallets/sync`), **⟳ Refresh holdings** (`POST /portfolio/sources/sync-all`), **⟳ Refresh** (hard refresh: busts all CSV caches then re-syncs sources + wallets via `POST /portfolio/refresh`)
+- `frontend/src/modules/portfolio/SourceSpotlight.tsx` — Detail banner shown when a specific wallet is active (positions / holdings / P&L / cash). The `⟳ Refresh` button syncs both cash (`POST /portfolio/wallets/{slug}/sync`) and holdings (`POST /portfolio/sources/{slug}/sync`) in parallel, then invalidates wallets + holdings + treemap queries
 - `frontend/src/modules/portfolio/FilterBar.tsx` (composes `SearchBox`, `SectorChips`, `PnLToggle`, `SortMenu`, `SegmentedControl` for the Tree/Ledger toggle) — Sector counts re-compute under search+pnl so the chips only show what's reachable; `/` and `⌘F` focus the search box
 - `frontend/src/modules/portfolio/portfolio.filter.ts` — `FilterState`, `applyFilter`, `sectorCounts` helpers (pure functions, no React)
 - `frontend/src/modules/portfolio/treemap.utils.ts` — Squarified-treemap layout in TS (mirrors `backend/app/modules/brokers/treemap_helper.py`); `Treemap.tsx` consumes filtered holdings + computes layout client-side so reflows are instant when filters change
 - `frontend/src/app/preferences/page.tsx` — Preferences page. 8-section sidebar (Appearance · Display · Markets · Alpha AI · Notifications · Account · Privacy · About); reached via gear icon in the top-right
 - `frontend/src/modules/preferences/` — Sidebar, section panels, and shared primitives:
-  - `PrefRow.tsx` / `PrefGroup.tsx` — Row + group shells (label · description · control · tail layout)
-  - `PrefControls.tsx` — Shared form atoms: `PrefSeg`, `PrefTog`, `PrefSlider`, `PrefSelect`, `PrefInput`
+  - `PrefRow` / `PrefGroup` / `PrefControls` (`PrefSeg`, `PrefTog`, `PrefSlider`, `PrefSelect`, `PrefInput`) — imported from `@alphaforge-anton/solar-ui`; no longer local files
   - `usePrefStore.ts` — Local-state hook for non-wired draft preferences. Persists to `localStorage["af-prefs-draft-v1"]`, mirrors `chromeMode`/`showVoice` to `body.chrome-autohide` / `body.no-voice` classes
   - `AppearanceSection.tsx` — Theme tiles + accent swatches (wired to `useTheme()`)
   - `DisplaySection.tsx` — Chrome behavior (always-visible vs auto-hide), voice bar toggle, orb size/speed/HUD, ticker speed, reduce motion, number jitter
@@ -105,12 +104,12 @@ alpha-forge-anton/
   - `AccountSection.tsx` — Profile (avatar, name, status), connected brokers list, hotkey reference
   - `PrivacySection.tsx` — Telemetry / crash / training toggles, retention select, danger actions
   - `AboutSection.tsx` — Build / backend / license info, reset action
-- `frontend/src/app/globals.css` — Theme variables (Solar Terminal design tokens); `@source` directives extend Tailwind v4 content scanning into the workspace packages so arbitrary classes in `ravel-ui` resolve; restores the default `cursor: pointer` on `button` / `[role="button"]` that Tailwind v4's Preflight dropped
+- `frontend/src/app/globals.css` — Theme variables (Solar Terminal design tokens); `@source` directives extend Tailwind v4 content scanning into `packages/solar-ui/src` so arbitrary classes in solar-ui resolve; restores the default `cursor: pointer` on `button` / `[role="button"]` that Tailwind v4's Preflight dropped
 - `frontend/next.config.mjs` — Next.js config: CSP headers (allows `fonts.googleapis.com` + `fonts.gstatic.com` for Material Symbols icons), API rewrites
 - `frontend/src/modules/dashboard/TerminalTopBar.tsx` — Slim global top bar per Hi-Fi spec (≈32px min-height, 4px×14px padding, 8px radius). SVG logo mark + ALPHA/FORGE wordmark; Terminal + Portfolio nav buttons; gear icon-button on the right routes to `/preferences`; no icon sidebar
 - `frontend/src/modules/chat/` — Alpha chat module: `AlphaBar.tsx` (global bottom bar — Voice/Chat segmented toggle + model picker + Deploy), `ChatRail.tsx` (fixed right-side slide-over conversation thread; `ResponseBody` renders **markdown as safe React nodes** — bold/italic/inline-code/fenced-code/h2-h3/ul/ol/hr — no `dangerouslySetInnerHTML`), `ModelPicker.tsx` (model dropdown: Auto / Forge Pro / Forge Fast / Forge Local), `useChatStream.ts` (SSE fetch hook, multi-turn history up to 6 turns, streaming; forwards JWT from `localStorage["af_token"]` in the `Authorization` header), `ChatContext.tsx` (React context provider rendering AlphaBar + ChatRail globally), `chat.types.ts` (ModelId, ChatTurn, MODELS, `resolveAutoModel`). Mounted in `layout.tsx` as `<ChatProvider>` so it appears on every screen. **Security:** backend endpoint is JWT-gated (`Depends(get_current_user)`); frontend proxy (`/api/v1/chat` → `route.ts`) keeps provider API keys server-side only.
 - `frontend/src/modules/dashboard/TerminalVoice.tsx` — Legacy static voice dock (no longer rendered — replaced by `AlphaBar` from the chat module)
-- `packages/ravel-ui/src/components/TopBar.tsx` / `VoiceDock.tsx` — Reusable chrome containers carrying `data-af-top` / `data-af-voice` plus `.af-top` / `.af-voice` classes. Paired with `body.chrome-autohide` / `body.no-voice` rules in `frontend/src/app/globals.css` to enable Preferences → Display → Chrome behavior (collapses bars to an accent strip; hover/focus expands) and the voice-bar disable toggle
+- `packages/solar-ui/src/components/TopBar.tsx` / `VoiceDock.tsx` — Reusable chrome containers carrying `data-af-top` / `data-af-voice` plus `.af-top` / `.af-voice` classes. Paired with `body.chrome-autohide` / `body.no-voice` rules in `frontend/src/app/globals.css` to enable Preferences → Display → Chrome behavior (collapses bars to an accent strip; hover/focus expands) and the voice-bar disable toggle
 - `frontend/src/modules/dashboard/BootScreen.tsx` — Full-screen animated boot checklist. Renders one row per real backend system (gateway, Postgres, every broker source); each row's glyph and detail are driven by the `status: BootStatus` field (`ok` ✓ green / `warn` ! amber / `error` ✗ red). `BOOT_STEPS` is the static fallback used only when the live probe fails
 - `frontend/src/modules/dashboard/boot.api.ts` + `boot.types.ts` — Frontend client and TS mirror of `BootReport` / `BootService` from the backend
 - `frontend/src/modules/dashboard/BootGate.tsx` — Sits inside `AuthGuard` in the root layout. On first paint of a tab it hits `GET /api/v1/health/boot`, maps each service to a `BootStep`, then plays the boot screen exactly once per browser tab (gated by `sessionStorage['af-booted']`). Skips entirely on `/login` and survives navigations between Terminal / Portfolio / Preferences. If the probe call fails the static `BOOT_STEPS` fallback still produces a usable splash
@@ -126,11 +125,11 @@ alpha-forge-anton/
 ### Packages & Infra
 - `packages/logger-py/src/alphaforge_logger/logger.py` — Python logger package core
 - `packages/logger-node/src/logger.ts` — Node/TS logger package core
-- `packages/ravel-ui/src/index.ts` — UI library barrel export (Button, Input, Card, Badge, Icon, Text)
-- `packages/ravel-ui/src/styles/theme.css` — Tailwind v4 design tokens (CSS)
-- `packages/ravel-ui/src/tokens/index.ts` — Design tokens (TypeScript)
-- `packages/ravel-ui/src/tokens/tokens.json` — Design tokens (JSON, machine-readable)
-- `packages/ravel-ui/tsup.config.ts` — Package build config
+- `packages/solar-ui/src/index.ts` — UI library barrel export (Button, Input, Card, Badge, Icon, Text, SearchBox, PrefRow, PrefGroup, PrefControls, …)
+- `packages/solar-ui/src/styles/theme.css` — Tailwind v4 design tokens (CSS)
+- `packages/solar-ui/src/tokens/index.ts` — Design tokens (TypeScript)
+- `packages/solar-ui/src/tokens/tokens.json` — Design tokens (JSON, machine-readable)
+- `packages/solar-ui/tsup.config.ts` — Package build config
 - `repo-context-mcp/src/alphaforge_anton_repo_context/server.py` — MCP server entry (stdio); exposes `search_code`, `get_symbol`, `module_overview`, `recent_changes`, `read_file_range`
 - `repo-context-mcp/src/alphaforge_anton_repo_context/indexer.py` — Walk → chunk → embed → pgvector
 - `repo-context-mcp/src/alphaforge_anton_repo_context/chunker.py` — AST (Python), regex (TS/TSX), section (Markdown), sliding-window fallback

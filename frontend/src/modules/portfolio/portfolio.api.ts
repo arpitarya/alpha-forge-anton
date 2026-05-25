@@ -17,4 +17,5 @@ export const portfolioApi = {
   listWallets: () => api.get("/portfolio/wallets"),
   syncWallets: () => api.post("/portfolio/wallets/sync"),
   syncWallet: (slug: string) => api.post(`/portfolio/wallets/${slug}/sync`),
+  forceRefresh: () => api.post("/portfolio/refresh"),
 };

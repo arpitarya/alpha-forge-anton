@@ -1,8 +1,8 @@
 "use client";
 
-import { PrefInput } from "./PrefControls";
-import { PrefGroup } from "./PrefGroup";
-import { PrefRow } from "./PrefRow";
+import { PrefInput } from "@alphaforge-anton/solar-ui";
+import { PrefGroup } from "@alphaforge-anton/solar-ui";
+import { PrefRow } from "@alphaforge-anton/solar-ui";
 import type { PrefDraft } from "./usePrefStore";
 
 export interface AccountSectionProps {

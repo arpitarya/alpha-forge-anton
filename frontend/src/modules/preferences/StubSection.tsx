@@ -1,4 +1,4 @@
-import { PrefGroup } from "./PrefGroup";
+import { PrefGroup } from "@alphaforge-anton/solar-ui";
 
 export interface StubSectionProps {
   label: string;

@@ -15,7 +15,7 @@
   "dependencies": {
     "@alphaforge/logger": "workspace:*",
     "@alphaforge/solar-orb-ball": "workspace:*",
-    "@alphaforge-anton/ravel-ui": "workspace:*",
+    "@alphaforge-anton/solar-ui": "workspace:*",
     "@tanstack/react-query": "^5.96.2",
     "axios": "^1.7.0",
     "clsx": "^2.1.0",

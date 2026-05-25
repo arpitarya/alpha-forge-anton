@@ -12,7 +12,7 @@ from app.modules.brokers.binance import BinanceSource
 from app.modules.brokers.groww import GrowwSource
 from app.modules.brokers.indmoney import IndMoneySource
 from app.modules.brokers.tickertape import TickerTapeSource
-from app.modules.brokers.zerodha import ZerodhaKiteSource
+from app.modules.brokers.zerodha_kite import ZerodhaKiteSource
 from app.modules.brokers.zerodha_coin import ZerodhaCoinSource
 
 

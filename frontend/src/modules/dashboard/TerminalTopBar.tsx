@@ -1,6 +1,6 @@
 "use client";
 
-import { Kbd, LiveDot, Logo, TopBar, type TopBarNavItem } from "@alphaforge-anton/ravel-ui";
+import { Kbd, LiveDot, Logo, TopBar, type TopBarNavItem } from "@alphaforge-anton/solar-ui";
 import { clsx } from "clsx";
 import { usePathname, useRouter } from "next/navigation";
 

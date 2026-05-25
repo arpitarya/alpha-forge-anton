@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "@alphaforge-anton/ravel-ui";
+import { useTheme } from "@alphaforge-anton/solar-ui";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AboutSection } from "./AboutSection";
 import { AccountSection } from "./AccountSection";

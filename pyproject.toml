@@ -1,5 +1,5 @@
 [project]
-name = "alphaforge-anton-monorepo"
+name = "alphaforge-anton"
 version = "0.0.0"
 description = "AlphaForge Anton — workspace root (uv). Not a published package."
 requires-python = ">=3.14"

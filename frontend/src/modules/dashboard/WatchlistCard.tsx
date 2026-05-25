@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, RiskBars, Text, WatchRow } from "@alphaforge-anton/ravel-ui";
+import { Card, RiskBars, Text, WatchRow } from "@alphaforge-anton/solar-ui";
 import { useState } from "react";
 import {
   useAddWatchlistItem,

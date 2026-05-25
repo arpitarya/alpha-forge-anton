@@ -37,6 +37,21 @@ prefix_lines() {
     done
 }
 
+port_in_use() {
+    lsof -tiTCP:"$1" -sTCP:LISTEN 2>/dev/null | head -1 | grep -q .
+}
+
+assert_port_free() {
+    local name="$1" port="$2"
+    if port_in_use "$port"; then
+        local holder
+        holder="$(lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | head -1)"
+        err "Port $port (for $name) is already in use by PID $holder."
+        err "  Kill it with:  kill $holder  (or  kill -9 $holder  if it ignores SIGTERM)"
+        return 1
+    fi
+}
+
 wait_for_port() {
     local name="$1" port="$2" retries="${3:-30}"
     local i=0
@@ -61,10 +76,12 @@ read_env_value() {
     ' "$file"
 }
 
-# ── Guard against double-start ────────────────────────────────────────────────
+# ── If a previous run left services behind, stop them first ──────────────────
 if [ -f "$PID_FILE" ]; then
-    err "Anton appears to be running already (.dev.pids exists). Run ./stop.sh first."
-    exit 1
+    warn ".dev.pids exists — running ./stop.sh to clean up previous run…"
+    bash "$ANTON_ROOT/stop.sh" || warn "stop.sh reported issues — continuing anyway"
+    # stop.sh removes the PID file on success; force it gone if anything slipped through
+    rm -f "$PID_FILE"
 fi
 
 # ── Ports (from .env.port — safe to source: numeric values only) ─────────────
@@ -84,20 +101,58 @@ BACH_PORT="$(read_env_value "$BACH_ROOT/.env.local" AFBACH_VAULT_PORT 2>/dev/nul
 BACH_URL="$(read_env_value "$ANTON_ROOT/.env.cred.local" AFBACH_URL 2>/dev/null \
            || echo "http://[::1]:${BACH_PORT}/v1")"
 
-# ── Cleanup on early failure ─────────────────────────────────────────────────
-cleanup_on_error() {
-    err "Startup failed — rolling back."
-    [ -f "$PID_FILE" ] && {
-        # shellcheck source=/dev/null
-        source "$PID_FILE"
-        for pid in ${FRONTEND_PID:-} ${BACKEND_PID:-} ${WAGNER_PID:-} ${DANTE_PID:-} ${BACH_PID:-}; do
-            kill "$pid" 2>/dev/null || true
-        done
-        rm -f "$PID_FILE"
-    }
+# ── Cleanup ──────────────────────────────────────────────────────────────────
+# Track services as we start them so we can tear down partial progress on
+# Ctrl+C / SIGTERM / unexpected error.
+BACH_PID=""; DANTE_PID=""; WAGNER_PID=""; BACKEND_PID=""; FRONTEND_PID=""
+
+teardown() {
+    local cause="${1:-signal}"
+    # Disable further traps so SIGINT during cleanup doesn't recurse
+    trap - INT TERM HUP ERR EXIT
+    echo ""
+    case "$cause" in
+        err)    err "Startup failed — rolling back." ;;
+        signal) warn "Caught signal — stopping all services…" ;;
+    esac
+    for pid in "$FRONTEND_PID" "$BACKEND_PID" "$WAGNER_PID" "$DANTE_PID" "$BACH_PID"; do
+        [ -n "$pid" ] || continue
+        # Kill the whole process group so uv/uvicorn/pnpm children go too
+        local pgid
+        pgid="$(ps -o pgid= -p "$pid" 2>/dev/null | tr -d ' ' || true)"
+        if [ -n "$pgid" ]; then
+            kill -TERM "-${pgid}" 2>/dev/null || kill -TERM "$pid" 2>/dev/null || true
+        else
+            kill -TERM "$pid" 2>/dev/null || true
+        fi
+    done
+    # Give children a moment to flush, then force-kill stragglers
+    sleep 1
+    for pid in "$FRONTEND_PID" "$BACKEND_PID" "$WAGNER_PID" "$DANTE_PID" "$BACH_PID"; do
+        [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null && kill -KILL "$pid" 2>/dev/null || true
+    done
     bash "$ANTON_ROOT/database/db.sh" stop 2>/dev/null || true
+    rm -f "$PID_FILE"
+    ok "All services stopped."
+    exit 0
 }
-trap cleanup_on_error ERR
+
+trap 'teardown err' ERR
+trap 'teardown signal' INT TERM HUP
+
+# ── 0. Pre-flight: every app port must be free ───────────────────────────────
+log "Checking ports are free…"
+preflight_failed=0
+assert_port_free "Anton backend"  "$BACKEND_PORT"  || preflight_failed=1
+assert_port_free "Anton frontend" "$FRONTEND_PORT" || preflight_failed=1
+[ -f "$WAGNER_ROOT/backend/alembic.ini" ] && { assert_port_free "Wagner backend" "$WAGNER_PORT" || preflight_failed=1; }
+[ -f "$DANTE_ROOT/pyproject.toml" ]      && { assert_port_free "Dante API"      "$DANTE_PORT"  || preflight_failed=1; }
+[ -f "$BACH_ROOT/pyproject.toml" ]       && { assert_port_free "Bach vault"     "$BACH_PORT"   || preflight_failed=1; }
+if [ "$preflight_failed" = 1 ]; then
+    err "Aborting — free the ports above and rerun ./start.sh"
+    exit 1
+fi
+ok "All ports free."
 
 # ── 1. Database: PostgreSQL + Redis ──────────────────────────────────────────
 log "Starting PostgreSQL + Redis…"
@@ -105,56 +160,53 @@ bash "$ANTON_ROOT/database/db.sh" start
 ok "Database services started."
 
 # ── 2. Bach vault ────────────────────────────────────────────────────────────
-BACH_PID=""
-if [ -d "$BACH_ROOT" ] && [ -x "$BACH_ROOT/.venv/bin/afbach" ]; then
+if [ -f "$BACH_ROOT/pyproject.toml" ]; then
     log "Starting Bach vault on :${BACH_PORT}…"
-    (
-        cd "$BACH_ROOT"
-        exec .venv/bin/afbach serve
-    ) 2>&1 | prefix_lines "$MAGENTA" "bach" &
+    ( cd "$BACH_ROOT" && unset VIRTUAL_ENV && exec uv run bach serve ) \
+        > >(prefix_lines "$MAGENTA" "bach") 2>&1 &
     BACH_PID=$!
 
-    if wait_for_port "bach" "$BACH_PORT" 15; then
+    if wait_for_port "bach" "$BACH_PORT" 30; then
         ok "Bach vault ready at ${BACH_URL}"
     else
         warn "Bach vault not responding — backend will fall back to file-based env"
     fi
 else
-    warn "Bach not found / not installed at $BACH_ROOT — skipping (file env will be used)"
+    warn "Bach not found at $BACH_ROOT — skipping (file env will be used)"
 fi
 
 # ── 3. Dante security API (optional) ─────────────────────────────────────────
-DANTE_PID=""
-if [ -d "$DANTE_ROOT" ] && [ -x "$DANTE_ROOT/.venv/bin/dante" ]; then
+if [ -f "$DANTE_ROOT/pyproject.toml" ]; then
     log "Starting Dante security API on :${DANTE_PORT}…"
-    (
-        cd "$DANTE_ROOT"
-        exec .venv/bin/dante serve --port "$DANTE_PORT"
-    ) 2>&1 | prefix_lines "$PURPLE" "dante" &
+    ( cd "$DANTE_ROOT" && unset VIRTUAL_ENV && exec uv run dante serve --port "$DANTE_PORT" ) \
+        > >(prefix_lines "$PURPLE" "dante") 2>&1 &
     DANTE_PID=$!
-    if wait_for_port "dante" "$DANTE_PORT" 10; then
+    if wait_for_port "dante" "$DANTE_PORT" 20; then
         ok "Dante ready at http://127.0.0.1:${DANTE_PORT}"
     else
         warn "Dante did not open :${DANTE_PORT} — continuing (Anton has Dante middleware embedded)"
     fi
 else
-    warn "Dante not found / not installed at $DANTE_ROOT — skipping standalone server (middleware is embedded in Anton)"
+    warn "Dante not found at $DANTE_ROOT — skipping standalone server (middleware is embedded in Anton)"
 fi
 
 # ── 4. Wagner IAM backend (standalone, on :WAGNER_PORT) ──────────────────────
-WAGNER_PID=""
-if [ -d "$WAGNER_ROOT/backend" ]; then
+if [ -f "$WAGNER_ROOT/backend/alembic.ini" ]; then
     log "Running Wagner Alembic migrations…"
-    (cd "$WAGNER_ROOT" && BACKEND_PORT="$WAGNER_PORT" uv run --project backend alembic upgrade head 2>&1) \
-        | prefix_lines "$ORANGE" "wagner-migrate" || warn "Wagner migrations failed — continuing"
+    (
+        cd "$WAGNER_ROOT/backend"
+        unset VIRTUAL_ENV
+        uv run python -m alembic upgrade head 2>&1
+    ) | prefix_lines "$ORANGE" "wagner-migrate" || warn "Wagner migrations failed — continuing"
 
     log "Starting Wagner backend on :${WAGNER_PORT}…"
     (
-        cd "$WAGNER_ROOT"
+        cd "$WAGNER_ROOT/backend"
+        unset VIRTUAL_ENV
         export BACKEND_HOST=127.0.0.1
         export BACKEND_PORT="$WAGNER_PORT"
-        exec uv run --project backend uvicorn app.main:app --reload --host 127.0.0.1 --port "$WAGNER_PORT"
-    ) 2>&1 | prefix_lines "$ORANGE" "wagner" &
+        exec uv run python -m uvicorn app.main:app --reload --host 127.0.0.1 --port "$WAGNER_PORT"
+    ) > >(prefix_lines "$ORANGE" "wagner") 2>&1 &
     WAGNER_PID=$!
     if wait_for_port "wagner" "$WAGNER_PORT" 30; then
         ok "Wagner ready at http://127.0.0.1:${WAGNER_PORT}"
@@ -162,20 +214,28 @@ if [ -d "$WAGNER_ROOT/backend" ]; then
         warn "Wagner backend did not open :${WAGNER_PORT} — continuing (Anton has Wagner embedded)"
     fi
 else
-    warn "Wagner not found at $WAGNER_ROOT — skipping standalone server (IAM is embedded in Anton)"
+    warn "Wagner not found at $WAGNER_ROOT/backend — skipping standalone server (IAM is embedded in Anton)"
 fi
 
 # ── 5. Anton DB migrations ───────────────────────────────────────────────────
+# Use `python -m alembic` instead of `uv run alembic` so the venv's possibly
+# stale console-script shebangs (e.g. if .venv was created at a renamed-away
+# project path) don't matter — `python -m` ignores them.
 log "Running Anton Alembic migrations…"
-(cd "$ANTON_ROOT/backend" && uv run alembic upgrade head 2>&1) | prefix_lines "$YELLOW" "migrate"
+(
+    cd "$ANTON_ROOT/backend"
+    unset VIRTUAL_ENV
+    uv run python -m alembic upgrade head 2>&1
+) | prefix_lines "$YELLOW" "migrate"
 ok "Anton migrations up to date."
 
 # ── 6. Anton backend ─────────────────────────────────────────────────────────
 log "Starting Anton backend on :${BACKEND_PORT}…"
 (
     cd "$ANTON_ROOT/backend"
-    exec uv run uvicorn app.main:app --reload --host 0.0.0.0 --port "$BACKEND_PORT"
-) 2>&1 | prefix_lines "$BLUE" "backend" &
+    unset VIRTUAL_ENV
+    exec uv run python -m uvicorn app.main:app --reload --host 0.0.0.0 --port "$BACKEND_PORT"
+) > >(prefix_lines "$BLUE" "backend") 2>&1 &
 BACKEND_PID=$!
 
 if ! wait_for_port "backend" "$BACKEND_PORT" 30; then
@@ -189,7 +249,7 @@ log "Starting Anton frontend on :${FRONTEND_PORT}…"
 (
     cd "$ANTON_ROOT/frontend"
     exec pnpm dev
-) 2>&1 | prefix_lines "$GREEN" "frontend" &
+) > >(prefix_lines "$GREEN" "frontend") 2>&1 &
 FRONTEND_PID=$!
 
 # ── Persist PIDs for stop.sh ─────────────────────────────────────────────────
@@ -201,7 +261,8 @@ FRONTEND_PID=$!
     echo "FRONTEND_PID=${FRONTEND_PID}"
 } > "$PID_FILE"
 
-# Don't roll-back from here onward — services are launched and tracked
+# Don't roll back from here onward — services are launched and tracked.
+# Keep the INT/TERM trap so Ctrl+C in this terminal tears the stack down cleanly.
 trap - ERR
 
 # ── Ready ────────────────────────────────────────────────────────────────────

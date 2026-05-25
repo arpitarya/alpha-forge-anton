@@ -1,5 +1,5 @@
 {
-  "name": "@alphaforge-anton/ravel-ui",
+  "name": "@alphaforge-anton/solar-ui",
   "version": "0.1.0",
   "description": "Solar Terminal design system — UI components, tokens, and fonts for AlphaForge Anton",
   "license": "MIT",
@@ -74,6 +74,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/alphaforge-anton/alpha-forge-anton",
-    "directory": "packages/ravel-ui"
+    "directory": "packages/solar-ui"
   }
 }

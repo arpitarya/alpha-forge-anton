@@ -1,6 +1,6 @@
 "use client";
 
-import { CountUp, SegmentedControl, Stat } from "@alphaforge-anton/ravel-ui";
+import { CountUp, SegmentedControl, Stat } from "@alphaforge-anton/solar-ui";
 import { useHoldings } from "@/modules/portfolio";
 
 export type PortfolioView = "tree" | "ledger";

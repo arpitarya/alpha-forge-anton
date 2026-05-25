@@ -1,4 +1,4 @@
-# @alphaforge-anton/ravel-ui
+# @alphaforge-anton/solar-ui
 
 > Solar Terminal design system — UI primitives, design tokens, and fonts for AlphaForge Anton.
 
@@ -7,7 +7,7 @@ A publishable React component library following the **Solar Terminal** design sp
 ## Install
 
 ```bash
-pnpm add @alphaforge-anton/ravel-ui
+pnpm add @alphaforge-anton/solar-ui
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ pnpm add @alphaforge-anton/ravel-ui
 ### Components
 
 ```tsx
-import { Button, Input, Card, Badge, Icon, Text } from "@alphaforge-anton/ravel-ui";
+import { Button, Input, Card, Badge, Icon, Text } from "@alphaforge-anton/solar-ui";
 
 function Example() {
   return (
@@ -35,14 +35,14 @@ Import the combined stylesheet (fonts + theme tokens + base utilities) in your a
 
 ```css
 /* globals.css */
-@import "@alphaforge-anton/ravel-ui/styles";
+@import "@alphaforge-anton/solar-ui/styles";
 @import "tailwindcss";
 ```
 
 Or import pieces individually:
 
 ```css
-@import "@alphaforge-anton/ravel-ui/theme";   /* Tailwind v4 @theme tokens only */
+@import "@alphaforge-anton/solar-ui/theme";   /* Tailwind v4 @theme tokens only */
 ```
 
 ### Design Tokens
@@ -75,7 +75,7 @@ The theme provides these Tailwind v4 color tokens:
 ## Development
 
 ```bash
-cd packages/ravel-ui
+cd packages/solar-ui
 pnpm install
 pnpm dev     # Watch mode
 pnpm build   # Production build → dist/

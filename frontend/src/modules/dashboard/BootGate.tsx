@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { BOOT_STEPS, BootScreen, type BootStep } from "./BootScreen";
-import { fetchBootReport, triggerBootSync } from "./boot.api";
+import { fetchBootReport, streamBootSync } from "./boot.api";
 import type { BootService } from "./boot.types";
 
 type Phase = "boot" | "exiting" | "done";
@@ -38,29 +38,23 @@ export function BootGate({ children }: { children: ReactNode }) {
     }
 
     // 1. Fetch static boot report to populate the row list.
-    // 2. Concurrently fire broker sync — resolves when all syncs settle.
-    // Navigation is held until both the animation AND sync are done.
+    // 2. Stream broker syncs — each row patches the moment its broker resolves.
+    // Navigation is held until both the animation AND all stream events arrive.
+    const ctrl = new AbortController();
+
     fetchBootReport()
       .then((r) => setSteps(r.services.map(toStep)))
       .catch(() => { /* fallback BOOT_STEPS already in state */ })
-      .finally(() => {
-        setPhase("boot");
-        setHydrated(true);
-      });
+      .finally(() => { setPhase("boot"); setHydrated(true); });
 
-    triggerBootSync()
-      .then((report) => {
-        // Patch broker step doneStatus values with live sync results.
-        setSteps((prev) =>
-          prev.map((s) => {
-            const result = report.results[s.key];
-            if (!result) return s;
-            return { ...s, doneStatus: result.detail, status: result.ok ? "ok" : "error" };
-          })
-        );
-      })
-      .catch(() => { /* leave steps as-is; sync failed silently */ })
-      .finally(() => setSyncReady(true));
+    streamBootSync(
+      (slug, res) => setSteps((prev) =>
+        prev.map((s) => s.key === slug ? { ...s, doneStatus: res.detail, status: res.ok ? "ok" : "error" } : s)
+      ),
+      ctrl.signal,
+    ).catch(() => {}).finally(() => setSyncReady(true));
+
+    return () => ctrl.abort();
   }, [skip]);
 
   const handleDone = useCallback(() => {

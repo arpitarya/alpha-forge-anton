@@ -57,9 +57,14 @@ async def run(base: str, cdp_port: int) -> bool:
     page.on("console", lambda m: console_errors.append(m.text) if m.type == "error" else None)
 
     try:
-        # Clear any stale session so we always test from a clean state
+        # Clear any stale session so we always test from a clean state.
+        # `af_token` is the legacy key; `af-auth` is the zustand-persist key for
+        # the current useAuthStore; `af-refresh` holds the refresh token.
         await page.goto(base, wait_until="domcontentloaded")
-        await page.evaluate("() => localStorage.removeItem('af_token')")
+        await page.evaluate(
+            "() => ['af_token', 'af-auth', 'af-refresh']"
+            ".forEach(k => localStorage.removeItem(k))"
+        )
 
         # ── 1. Auth guard ─────────────────────────────────────────────
         print("\n── Auth guard")
@@ -74,7 +79,7 @@ async def run(base: str, cdp_port: int) -> bool:
 
         # ── 2. Login ──────────────────────────────────────────────────
         print("\n── Login")
-        await page.fill('input[type="text"]', USERNAME)
+        await page.fill('input[type="email"]', USERNAME)
         await page.fill('input[type="password"]', PASSWORD)
         await page.click('button[type="submit"]')
         try:
@@ -120,7 +125,7 @@ async def run(base: str, cdp_port: int) -> bool:
         api_base = base.replace(":3000", ":8000")
         async with httpx.AsyncClient(base_url=api_base, headers=headers, timeout=10.0) as client:
             try:
-                r = await client.get("/api/portfolio/holdings")
+                r = await client.get("/api/v1/portfolio/holdings")
                 _record("Holdings API responds", r.status_code < 400, f"HTTP {r.status_code}")
                 if r.status_code < 400:
                     payload = r.json()
@@ -163,7 +168,10 @@ async def run(base: str, cdp_port: int) -> bool:
 
         # ── 7. Logout ─────────────────────────────────────────────────
         print("\n── Logout")
-        await page.evaluate("() => localStorage.removeItem('af_token')")
+        await page.evaluate(
+            "() => ['af_token', 'af-auth', 'af-refresh']"
+            ".forEach(k => localStorage.removeItem(k))"
+        )
         await page.reload(wait_until="networkidle")
         back_to_login = "/login" in page.url
         _record("Removing token redirects back to /login", back_to_login, page.url)

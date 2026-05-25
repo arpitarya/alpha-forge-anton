@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import asyncio
+import json
 
 from fastapi import APIRouter
+from fastapi.responses import StreamingResponse
 
 from app.core.logging import get_logger
 from app.modules.brokers.broker_schemas import SourceStatus
@@ -40,24 +42,35 @@ async def boot_report() -> BootReport:
     return BootReport(services=services)
 
 
-@router.post("/health/boot/sync")
-async def boot_sync():
-    """Concurrently sync all non-unconfigured broker sources.
+@router.get("/health/boot/sync-stream")
+async def boot_sync_stream() -> StreamingResponse:
+    """SSE: emits one JSON event per broker as each sync settles.
 
-    Called by the boot splash immediately after GET /health/boot. Blocks until
-    all syncs settle; the frontend holds navigation until this resolves."""
-    results: dict[str, dict] = {}
+    Replaces the old blocking POST so the boot splash can patch each row the
+    moment its broker resolves instead of waiting for the slowest one."""
+    queue: asyncio.Queue[dict] = asyncio.Queue()
 
     async def _sync_one(slug: str) -> None:
         src = SOURCES[slug]
         if src.info().status == SourceStatus.UNCONFIGURED:
+            await queue.put({"slug": slug, "ok": True, "holdings_count": 0, "detail": "not linked"})
             return
         try:
-            holdings = await src.sync()
-            results[slug] = {"ok": True, "holdings_count": len(holdings), "detail": f"{len(holdings)} holdings"}
-        except Exception as e:  # noqa: BLE001
-            logger.warning("boot sync failed for %s: %s", slug, e)
-            results[slug] = {"ok": False, "holdings_count": 0, "detail": "sync failed"}
+            holdings = await asyncio.wait_for(src.sync(), timeout=15.0)
+            await queue.put({"slug": slug, "ok": True, "holdings_count": len(holdings),
+                             "detail": f"{len(holdings)} holdings"})
+        except (asyncio.TimeoutError, Exception) as e:  # noqa: BLE001
+            logger.warning("boot stream: %s failed — %s", slug, e)
+            await queue.put({"slug": slug, "ok": False, "holdings_count": 0, "detail": "sync failed"})
 
-    await asyncio.gather(*[_sync_one(slug) for slug in SOURCES])
-    return {"results": results}
+    async def generate():
+        tasks = [asyncio.create_task(_sync_one(s)) for s in SOURCES]
+        for _ in range(len(SOURCES)):
+            yield f"data: {json.dumps(await queue.get())}\n\n"
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+    return StreamingResponse(
+        generate(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )

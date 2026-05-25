@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Icon, Text } from "@alphaforge-anton/ravel-ui";
+import { Card, Icon, Text } from "@alphaforge-anton/solar-ui";
 import { useDashboardBrief } from "@/modules/dashboard";
 
 export function AlphaBriefCard() {

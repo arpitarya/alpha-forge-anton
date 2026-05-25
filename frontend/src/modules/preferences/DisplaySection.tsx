@@ -1,8 +1,8 @@
 "use client";
 
-import { PrefSeg, PrefSlider, PrefTog } from "./PrefControls";
-import { PrefGroup } from "./PrefGroup";
-import { PrefRow } from "./PrefRow";
+import { PrefSeg, PrefSlider, PrefTog } from "@alphaforge-anton/solar-ui";
+import { PrefGroup } from "@alphaforge-anton/solar-ui";
+import { PrefRow } from "@alphaforge-anton/solar-ui";
 import type { PrefDraft } from "./usePrefStore";
 
 export interface DisplaySectionProps {

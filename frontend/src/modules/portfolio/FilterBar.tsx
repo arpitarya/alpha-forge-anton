@@ -1,10 +1,10 @@
 "use client";
 
-import { SegmentedControl } from "@alphaforge-anton/ravel-ui";
+import { SegmentedControl } from "@alphaforge-anton/solar-ui";
 import { AssetClassFilter } from "./AssetClassFilter";
 import { PnLToggle } from "./PnLToggle";
 import type { AssetClassCounts, FilterState } from "./portfolio.filter";
-import { SearchBox } from "./SearchBox";
+import { SearchBox } from "@alphaforge-anton/solar-ui";
 import { SortMenu } from "./SortMenu";
 
 export type PortfolioView = "tree" | "ledger";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Text, TreemapCell } from "@alphaforge-anton/ravel-ui";
+import { Text, TreemapCell } from "@alphaforge-anton/solar-ui";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { HoldingDTO } from "./portfolio.types";
 import { squarify } from "./treemap.utils";

@@ -38,11 +38,8 @@ class Settings(BaseSettings):
     # Defaults to bcrypt("alphaforge-anton-dev") in dev; must be set explicitly in production.
     admin_password_hash: str = _DEV_PASSWORD_HASH
 
-    # ── IAM (Wagner) ─────────────────────────────
-    iam_access_token_minutes: int = 30
-    iam_refresh_token_days: int = 30
-    iam_max_api_keys_per_user: int = 10
-    iam_owner_registration_open: bool = False
+    # ── Wagner IAM service ───────────────────────
+    wagner_url: str = "http://127.0.0.1:8001"
 
     # ── CORS ─────────────────────────────────────
     cors_origins: list[str] = ["http://localhost:3000"]

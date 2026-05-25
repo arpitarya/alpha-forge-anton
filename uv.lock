@@ -14,9 +14,9 @@ resolution-markers = [
 
 [manifest]
 members = [
+    "alphaforge-anton",
     "alphaforge-anton-backend",
     "alphaforge-anton-llm",
-    "alphaforge-anton-monorepo",
     "alphaforge-anton-news",
     "alphaforge-logger",
 ]
@@ -126,6 +126,51 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/94/13/8b084e0f2efb0275a1d534838844926f798bd766566b1375174e2448cd31/alembic-1.18.4.tar.gz", hash = "sha256:cb6e1fd84b6174ab8dbb2329f86d631ba9559dd78df550b57804d607672cedbc", size = 2056725, upload-time = "2026-02-10T16:00:47.195Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d2/29/6533c317b74f707ea28f8d633734dbda2119bbadfc61b2f3640ba835d0f7/alembic-1.18.4-py3-none-any.whl", hash = "sha256:a5ed4adcf6d8a4cb575f3d759f071b03cd6e5c7618eb796cb52497be25bfe19a", size = 263893, upload-time = "2026-02-10T16:00:49.997Z" },
+]
+
+[[package]]
+name = "alphaforge-anton"
+version = "0.0.0"
+source = { virtual = "." }
+
+[package.dev-dependencies]
+all = [
+    { name = "alphaforge-anton-backend" },
+    { name = "alphaforge-anton-llm" },
+    { name = "alphaforge-anton-news" },
+    { name = "alphaforge-logger" },
+]
+dev = [
+    { name = "ipython" },
+    { name = "jupytext" },
+    { name = "nbdime" },
+    { name = "nbstripout" },
+    { name = "pip-audit" },
+    { name = "pyrefly" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+all = [
+    { name = "alphaforge-anton-backend", editable = "backend" },
+    { name = "alphaforge-anton-llm", editable = "llm" },
+    { name = "alphaforge-anton-news", editable = "news" },
+    { name = "alphaforge-logger", editable = "packages/logger-py" },
+]
+dev = [
+    { name = "ipython", specifier = ">=8.0" },
+    { name = "jupytext", specifier = ">=1.16" },
+    { name = "nbdime", specifier = ">=4.0" },
+    { name = "nbstripout", specifier = ">=0.7" },
+    { name = "pip-audit", specifier = ">=2.7.0" },
+    { name = "pyrefly", specifier = ">=1.0.0" },
+    { name = "pytest", specifier = ">=8.3.0" },
+    { name = "pytest-asyncio", specifier = ">=0.24.0" },
+    { name = "ruff", specifier = ">=0.6.0" },
 ]
 
 [[package]]
@@ -269,51 +314,6 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.0.0" },
     { name = "pyyaml", specifier = ">=6.0.0" },
     { name = "uvicorn", specifier = ">=0.27.0" },
-]
-
-[[package]]
-name = "alphaforge-anton-monorepo"
-version = "0.0.0"
-source = { virtual = "." }
-
-[package.dev-dependencies]
-all = [
-    { name = "alphaforge-anton-backend" },
-    { name = "alphaforge-anton-llm" },
-    { name = "alphaforge-anton-news" },
-    { name = "alphaforge-logger" },
-]
-dev = [
-    { name = "ipython" },
-    { name = "jupytext" },
-    { name = "nbdime" },
-    { name = "nbstripout" },
-    { name = "pip-audit" },
-    { name = "pyrefly" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-
-[package.metadata.requires-dev]
-all = [
-    { name = "alphaforge-anton-backend", editable = "backend" },
-    { name = "alphaforge-anton-llm", editable = "llm" },
-    { name = "alphaforge-anton-news", editable = "news" },
-    { name = "alphaforge-logger", editable = "packages/logger-py" },
-]
-dev = [
-    { name = "ipython", specifier = ">=8.0" },
-    { name = "jupytext", specifier = ">=1.16" },
-    { name = "nbdime", specifier = ">=4.0" },
-    { name = "nbstripout", specifier = ">=0.7" },
-    { name = "pip-audit", specifier = ">=2.7.0" },
-    { name = "pyrefly", specifier = ">=1.0.0" },
-    { name = "pytest", specifier = ">=8.3.0" },
-    { name = "pytest-asyncio", specifier = ">=0.24.0" },
-    { name = "ruff", specifier = ">=0.6.0" },
 ]
 
 [[package]]

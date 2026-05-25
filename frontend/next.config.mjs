@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 
 const backendPort = process.env.BACKEND_PORT || "8000";
+const isDev = process.env.NODE_ENV !== "production";
+
+// Next.js dev mode needs 'unsafe-eval' for the React Refresh / Webpack HMR
+// runtime. Production builds compile away the eval and don't need it.
+const scriptSrc = isDev
+  ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+  : "script-src 'self' 'unsafe-inline'";
 
 const SECURITY_HEADERS = [
   { key: "X-Frame-Options", value: "DENY" },
@@ -12,7 +19,7 @@ const SECURITY_HEADERS = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      scriptSrc,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: blob:",
       "font-src 'self' https://fonts.gstatic.com",
@@ -26,7 +33,7 @@ const nextConfig = {
   output: "standalone",
   // Transpile workspace packages
   transpilePackages: [
-    "@alphaforge-anton/ravel-ui",
+    "@alphaforge-anton/solar-ui",
     "@alphaforge/solar-orb-ball",
     "@alphaforge/logger",
   ],

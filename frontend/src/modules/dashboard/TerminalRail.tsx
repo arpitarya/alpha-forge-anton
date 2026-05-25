@@ -1,6 +1,6 @@
 "use client";
 
-import { IconRail } from "@alphaforge-anton/ravel-ui";
+import { IconRail } from "@alphaforge-anton/solar-ui";
 import { usePathname, useRouter } from "next/navigation";
 
 const ITEMS = [

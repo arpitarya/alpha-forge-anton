@@ -105,3 +105,15 @@ export function useSyncAllWallets() {
     mutationFn: () => portfolioApi.syncWallets().then((r) => r.data),
   });
 }
+
+export function useSyncAllSources() {
+  return useMutation({
+    mutationFn: () => portfolioApi.syncAll().then((r) => r.data),
+  });
+}
+
+export function useForceRefresh() {
+  return useMutation({
+    mutationFn: () => portfolioApi.forceRefresh().then((r) => r.data),
+  });
+}

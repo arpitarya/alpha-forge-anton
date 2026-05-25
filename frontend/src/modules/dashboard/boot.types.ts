@@ -12,13 +12,9 @@ export interface BootReport {
   services: BootService[];
 }
 
-/** Mirrors `POST /health/boot/sync` response. */
+/** Mirrors per-event payload from GET /health/boot/sync-stream. */
 export interface SyncResult {
   ok: boolean;
   holdings_count: number;
   detail: string;
-}
-
-export interface BootSyncReport {
-  results: Record<string, SyncResult>;
 }

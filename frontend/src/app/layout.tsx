@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@alphaforge-anton/ravel-ui";
+import { ThemeProvider } from "@alphaforge-anton/solar-ui";
 import type { Metadata } from "next";
 import "./globals.css";
 import { QueryProvider } from "@/lib/providers";
@@ -60,7 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: pre-hydration script must be inlined to run before React hydrates and prevent theme-flash */}
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
-        {/* Dante inferno honeypot — hidden from humans, traps automated scanners */}
+      </head>
+      <body className="h-screen overflow-hidden bg-black font-body text-on-surface antialiased selection:bg-primary/30">
+        {/* Dante inferno honeypot — hidden from humans, traps automated scanners. Must live in <body>: <a> is not valid inside <head>. */}
         {/* biome-ignore lint/a11y/useAnchorContent: aria-hidden removes this from the a11y tree; content is intentionally empty */}
         <a
           href="/.well-known/honeypot-af1337"
@@ -69,8 +71,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           aria-hidden="true"
           style={{ display: "none", position: "absolute", left: -9999 }}
         />
-      </head>
-      <body className="h-screen overflow-hidden bg-black font-body text-on-surface antialiased selection:bg-primary/30">
         <ThemeProvider>
           <QueryProvider>
             <AuthGuard>

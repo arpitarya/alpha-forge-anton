@@ -1,4 +1,4 @@
-"""Zerodha Kite equity, ETF, and COIN MF holdings — BrokerSource impl."""
+"""Zerodha Kite equity-only holdings — BrokerSource impl. ETF/MF live in zerodha_coin."""
 
 from __future__ import annotations
 
@@ -17,28 +17,29 @@ from app.modules.brokers.base import (
     SourceStatus,
     WalletBalance,
 )
-from app.modules.brokers.zerodha.zerodha_dump import (
+from app.modules.brokers.zerodha_kite.zerodha_kite_dump import (
     is_csv_fresh,
     live_csv_path,
     read_csv,
     write_csv,
 )
-from app.modules.brokers.zerodha.zerodha_instruments import (
+from app.modules.brokers.zerodha_kite.zerodha_kite_instruments import (
     name_lookup,
     name_lookup_sync,
     type_lookup,
     type_lookup_sync,
 )
-from app.modules.brokers.zerodha.zerodha_source_helper import (
+from app.modules.brokers.zerodha_kite.zerodha_kite_source_helper import (
     REQUIRED_ENV,
     acquire_enctoken,
     env,
     fetch_holdings_json,
     fetch_margins_json,
-    fetch_mf_holdings_json,
 )
 
 logger = get_logger("brokers.zerodha_kite")
+
+_EXCLUDE_CLASSES = {AssetClass.MUTUAL_FUND.value, AssetClass.ETF.value}
 
 __all__ = ["REQUIRED_ENV", "ZerodhaKiteSource", "acquire_enctoken", "env"]
 
@@ -95,21 +96,6 @@ def _holding_from_csv(
     )
 
 
-def _mf_holding_from_row(r: dict, slug: str) -> Holding:
-    qty = float(r.get("quantity") or 0)
-    avg = float(r.get("average_price") or 0)
-    ltp = float(r.get("last_price") or 0)
-    invested, current = qty * avg, qty * ltp
-    pnl = float(r.get("pnl") or current - invested)
-    sym = str(r.get("tradingsymbol") or "").upper()
-    return Holding(
-        source=slug, asset_class=AssetClass.MUTUAL_FUND,
-        symbol=sym, name=r.get("fund") or None, isin=sym or None,
-        quantity=qty, avg_price=avg, last_price=ltp,
-        invested=invested, current_value=current, pnl=pnl,
-        pnl_pct=(pnl / invested * 100) if invested else 0.0,
-    )
-
 
 class ZerodhaKiteSource(BrokerSource):
     slug = "zerodha"
@@ -132,8 +118,9 @@ class ZerodhaKiteSource(BrokerSource):
         if is_csv_fresh():
             rows = read_csv()
             names, types = name_lookup_sync(), type_lookup_sync()
-            logger.info("Zerodha Kite: %d holdings from CSV cache", len(rows))
-            return [_holding_from_csv(r, self.slug, names, types) for r in rows]
+            eq_rows = [r for r in rows if (r.get("asset_class") or "equity") not in _EXCLUDE_CLASSES]
+            logger.info("Zerodha Kite: %d equity holdings from CSV cache", len(eq_rows))
+            return [_holding_from_csv(r, self.slug, names, types) for r in eq_rows]
         try:
             enctoken = await acquire_enctoken()
             rows = await fetch_holdings_json(enctoken)
@@ -157,21 +144,10 @@ class ZerodhaKiteSource(BrokerSource):
             if not r.get("name"):
                 r["name"] = names.get(sym, "")
             r["asset_class"] = _asset_class(types.get(sym, "EQ")).value
-        try:
-            mf_rows = await fetch_mf_holdings_json(enctoken)
-            for r in mf_rows:
-                r["name"] = r.get("fund", "")
-                r["asset_class"] = AssetClass.MUTUAL_FUND.value
-        except Exception as e:
-            logger.warning("Zerodha COIN: MF holdings unavailable (%s) — skipping", e)
-            mf_rows = []
-        write_csv(rows + mf_rows, live_csv_path())
-        eq_etf = [_holding_from_row(r, self.slug, names, types) for r in rows]
-        mf = [_mf_holding_from_row(r, self.slug) for r in mf_rows]
-        out = eq_etf + mf
-        logger.info(
-            "Zerodha Kite: %d equity/ETF + %d COIN MF → cached to CSV", len(eq_etf), len(mf)
-        )
+        eq_rows = [r for r in rows if r["asset_class"] == AssetClass.EQUITY.value]
+        write_csv(eq_rows, live_csv_path())
+        out = [_holding_from_row(r, self.slug, names, types) for r in eq_rows]
+        logger.info("Zerodha Kite: %d equity holdings → cached to CSV", len(out))
         return out
 
     async def fetch_cash(self) -> WalletBalance:

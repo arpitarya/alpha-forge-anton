@@ -1,6 +1,6 @@
 "use client";
 
-import { CountUp, Sparkline, Stat } from "@alphaforge-anton/ravel-ui";
+import { CountUp, Sparkline, Stat } from "@alphaforge-anton/solar-ui";
 import { useDashboardStats } from "@/modules/dashboard";
 
 export function TerminalStats() {

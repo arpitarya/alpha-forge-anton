@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Icon, Text } from "@alphaforge-anton/ravel-ui";
+import { Button, Card, Icon, Text } from "@alphaforge-anton/solar-ui";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSources, useSyncAll } from "./portfolio.query";

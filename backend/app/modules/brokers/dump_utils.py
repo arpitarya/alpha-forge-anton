@@ -26,9 +26,11 @@ CSV_HEADERS = (
     "tradingsymbol", "name", "isin", "exchange",
     "quantity", "average_price", "last_price",
     "invested", "current_value", "pnl", "pnl_pct",
+    "asset_class",
 )
-# `name` is optional so older dumps still validate after the schema change.
-_REQUIRED_HEADERS = frozenset(h for h in CSV_HEADERS if h != "name")
+# Optional columns — older CSVs without them still validate.
+_OPTIONAL_HEADERS = frozenset(["name", "asset_class"])
+_REQUIRED_HEADERS = frozenset(h for h in CSV_HEADERS if h not in _OPTIONAL_HEADERS)
 _CSV_MAX_BYTES = 5 * 1024 * 1024  # 5 MB
 
 
@@ -90,7 +92,17 @@ def _row_values(r: dict[str, Any]) -> list[Any]:
         r.get("tradingsymbol"), r.get("name") or "", r.get("isin"), r.get("exchange"),
         qty, avg, ltp, round(invested, 2), round(cur, 2),
         round(pnl, 2), round((pnl / invested * 100) if invested else 0.0, 2),
+        r.get("asset_class") or "",
     ]
+
+
+def clear_csv_cache(slug: str) -> bool:
+    """Delete the live CSV cache for slug. Returns True if a file was removed."""
+    p = live_csv_path(slug)
+    if p.exists():
+        p.unlink()
+        return True
+    return False
 
 
 def write_csv(rows: list[dict[str, Any]], dst: Path, *, source: str) -> None:

@@ -1,4 +1,4 @@
-import { AppShell } from "@alphaforge-anton/ravel-ui";
+import { AppShell } from "@alphaforge-anton/solar-ui";
 import {
   AlphaBriefCard,
   OrbStage,

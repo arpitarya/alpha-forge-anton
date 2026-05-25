@@ -11,7 +11,7 @@ from app.modules.brokers.base import (
     SourceStatus,
 )
 from app.modules.brokers.registry import SOURCES, get_source
-from app.modules.brokers.zerodha import ZerodhaKiteSource
+from app.modules.brokers.zerodha_kite import ZerodhaKiteSource
 
 __all__ = [
     "SOURCES",

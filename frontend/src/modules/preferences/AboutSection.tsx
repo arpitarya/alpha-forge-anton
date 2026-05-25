@@ -1,7 +1,7 @@
 "use client";
 
-import { PrefGroup } from "./PrefGroup";
-import { PrefRow } from "./PrefRow";
+import { PrefGroup } from "@alphaforge-anton/solar-ui";
+import { PrefRow } from "@alphaforge-anton/solar-ui";
 
 function StaticBox({ children }: { children: React.ReactNode }) {
   return (

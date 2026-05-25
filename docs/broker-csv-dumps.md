@@ -33,36 +33,48 @@ with `chmod 600`.
 
 ```
 tradingsymbol, name, isin, exchange, quantity, average_price, last_price,
-invested, current_value, pnl, pnl_pct
+invested, current_value, pnl, pnl_pct, asset_class
 ```
 
 `invested`, `current_value`, `pnl`, and `pnl_pct` are computed by
 `dump_utils._row_values()` from `quantity`, `average_price`, and
 `last_price`. Never recompute them in broker-specific code.
 
-`name` (company / instrument display name) is optional — older dumps written
-before the column existed still validate. Populate it in the broker normalizer
-when the source returns it (Groww V2 → `symbolData.companyShortName`,
-Wint Wealth → `productName`). Zerodha's Kite holdings JSON does not include it;
-`zerodha_instruments.py` fetches the public Kite instruments dump
+`name` and `asset_class` are optional — older dumps written before these
+columns existed still validate. `asset_class` must be set when a broker source
+returns mixed asset types (e.g. `zerodha_kite` writes `"equity"` only;
+`zerodha_coin` writes `"etf"` or `"mutual_fund"`). When reading back a CSV row
+that lacks `asset_class`, source code falls back to instrument-type lookup or
+the source default. Valid values match `AssetClass` enum values: `equity`,
+`mutual_fund`, `etf`, `bond`, `gold`, `crypto`, `cash`, `other`.
+
+`name` (company / instrument display name): populate it in the broker normalizer
+when the source returns it (Groww V2 → `symbolData.companyShortName`).
+Zerodha's Kite holdings JSON does not include it;
+`zerodha_kite_instruments.py` fetches the public Kite instruments dump
 (`https://api.kite.trade/instruments`, ~3 MB, 24h TTL, cached to
 `{dump_dir}/zerodha-instruments.csv`) and provides a `tradingsymbol → name`
-lookup that is applied in `_holding_from_row` / `_holding_from_csv`. TTL is
-overridable via `ZERODHA_INSTRUMENTS_TTL_SECONDS`.
+lookup. TTL is overridable via `ZERODHA_INSTRUMENTS_TTL_SECONDS`.
 
 ## API
 
 ```python
 from app.modules.brokers.dump_utils import (
-    dump_dir,          # () -> Path  — resolves env var or default
-    live_csv_path,     # (slug) -> Path
-    dated_csv_path,    # (slug) -> Path
-    is_csv_fresh,      # (slug, ttl_seconds) -> bool
-    read_csv,          # (slug) -> list[dict[str, str]]
-    write_csv,         # (rows, dst, *, source) -> None
-    CSV_HEADERS,       # canonical column tuple
+    dump_dir,           # () -> Path  — resolves env var or default
+    live_csv_path,      # (slug) -> Path
+    dated_csv_path,     # (slug) -> Path
+    is_csv_fresh,       # (slug, ttl_seconds) -> bool
+    read_csv,           # (slug) -> list[dict[str, str]]
+    write_csv,          # (rows, dst, *, source) -> None
+    clear_csv_cache,    # (slug) -> bool — deletes live CSV, returns True if it existed
+    CSV_HEADERS,        # canonical column tuple
 )
 ```
+
+`clear_csv_cache(slug)` is used by `POST /portfolio/refresh` to force a full
+re-fetch from the broker API, bypassing the TTL. Broker sources check
+`is_csv_fresh()` on every `fetch()` call — deleting the live file makes the
+next sync skip the CSV path entirely.
 
 ## Adding a new broker
 

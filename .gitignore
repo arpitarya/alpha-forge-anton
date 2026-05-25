@@ -193,3 +193,6 @@ graphify-out/memory/
 # stays so `probes/ui_probe.py` can drop files in without pre-creating it.
 screenshots/*.png
 !screenshots/.gitkeep
+
+# start/stop script pids
+.dev.pids

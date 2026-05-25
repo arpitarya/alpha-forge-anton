@@ -2,7 +2,7 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { useSyncAllWallets, useWallets } from "./portfolio.query";
+import { useForceRefresh, useSyncAllSources, useSyncAllWallets, useWallets } from "./portfolio.query";
 import { WalletCard } from "./WalletCard";
 import { aggregateSelected } from "./wallet.utils";
 
@@ -17,14 +17,34 @@ export function WalletStrip({ selected, onToggleSource, onSelectAll }: WalletStr
   const wallets = data?.wallets ?? [];
   const allCard = useMemo(() => aggregateSelected(wallets, selected), [wallets, selected]);
   const allActive = selected.size === 0;
-  const syncAll = useSyncAllWallets();
+  const syncCash = useSyncAllWallets();
+  const syncHoldings = useSyncAllSources();
+  const forceRefresh = useForceRefresh();
   const qc = useQueryClient();
 
   async function handleSyncCash() {
     try {
-      await syncAll.mutateAsync();
+      await syncCash.mutateAsync();
     } finally {
       qc.invalidateQueries({ queryKey: ["portfolio", "wallets"] });
+    }
+  }
+
+  async function handleRefreshHoldings() {
+    try {
+      await syncHoldings.mutateAsync();
+    } finally {
+      qc.invalidateQueries({ queryKey: ["portfolio", "holdings"] });
+      qc.invalidateQueries({ queryKey: ["portfolio", "treemap"] });
+      qc.invalidateQueries({ queryKey: ["portfolio", "wallets"] });
+    }
+  }
+
+  async function handleForceRefresh() {
+    try {
+      await forceRefresh.mutateAsync();
+    } finally {
+      qc.invalidateQueries({ queryKey: ["portfolio"] });
     }
   }
 
@@ -45,22 +65,26 @@ export function WalletStrip({ selected, onToggleSource, onSelectAll }: WalletStr
 
   return (
     <div data-component="WalletStrip" className="flex flex-col gap-1.5">
-      <div className="flex items-center justify-end">
-        <button
-          type="button"
+      <div className="flex items-center justify-end gap-2">
+        <StripButton
           onClick={handleSyncCash}
-          disabled={syncAll.isPending}
-          className="flex items-center gap-1.5 rounded-[4px] border border-[color:color-mix(in_srgb,var(--accent)_35%,transparent)] bg-[color:color-mix(in_srgb,var(--accent)_8%,transparent)] px-2.5 py-[3px] font-mono text-[9px] uppercase tracking-[0.18em] text-[color:var(--accent)] transition hover:bg-[color:color-mix(in_srgb,var(--accent)_16%,transparent)] hover:shadow-[0_0_10px_var(--glow)] disabled:opacity-40"
-        >
-          {syncAll.isPending ? (
-            <>
-              <span className="inline-block h-1.5 w-1.5 animate-spin rounded-full border border-[color:var(--accent)] border-t-transparent" />
-              Syncing cash…
-            </>
-          ) : (
-            cashSynced ? "⟳ Refresh cash" : "⟳ Sync cash"
-          )}
-        </button>
+          pending={syncCash.isPending}
+          label={cashSynced ? "⟳ Refresh cash" : "⟳ Sync cash"}
+          pendingLabel="Syncing cash…"
+        />
+        <StripButton
+          onClick={handleRefreshHoldings}
+          pending={syncHoldings.isPending}
+          label="⟳ Refresh holdings"
+          pendingLabel="Refreshing holdings…"
+        />
+        <StripButton
+          onClick={handleForceRefresh}
+          pending={forceRefresh.isPending}
+          label="⟳ Refresh"
+          pendingLabel="Refreshing…"
+          dim
+        />
       </div>
       <div
         className="grid gap-2.5"
@@ -77,5 +101,40 @@ export function WalletStrip({ selected, onToggleSource, onSelectAll }: WalletStr
         ))}
       </div>
     </div>
+  );
+}
+
+function StripButton({
+  onClick,
+  pending,
+  label,
+  pendingLabel,
+  dim = false,
+}: {
+  onClick: () => void;
+  pending: boolean;
+  label: string;
+  pendingLabel: string;
+  dim?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={pending}
+      className={[
+        "flex items-center gap-1.5 rounded-[4px] border px-2.5 py-[3px] font-mono text-[9px] uppercase tracking-[0.18em] transition disabled:opacity-40",
+        dim
+          ? "border-[color:var(--line-hi)] bg-transparent text-[color:var(--fg-3)] hover:border-[color:var(--fg-3)] hover:text-[color:var(--fg)]"
+          : "border-[color:color-mix(in_srgb,var(--accent)_35%,transparent)] bg-[color:color-mix(in_srgb,var(--accent)_8%,transparent)] text-[color:var(--accent)] hover:bg-[color:color-mix(in_srgb,var(--accent)_16%,transparent)] hover:shadow-[0_0_10px_var(--glow)]",
+      ].join(" ")}
+    >
+      {pending ? (
+        <>
+          <span className="inline-block h-1.5 w-1.5 animate-spin rounded-full border border-current border-t-transparent" />
+          {pendingLabel}
+        </>
+      ) : label}
+    </button>
   );
 }

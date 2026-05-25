@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input } from "@alphaforge-anton/ravel-ui";
+import { Button, Input } from "@alphaforge-anton/solar-ui";
 
 interface Props {
   code: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Chip, ProgressBar, Text } from "@alphaforge-anton/ravel-ui";
+import { Button, Card, Chip, ProgressBar, Text } from "@alphaforge-anton/solar-ui";
 import { useRebalance } from "@/modules/portfolio";
 
 const CLASS_LABEL: Record<string, string> = {

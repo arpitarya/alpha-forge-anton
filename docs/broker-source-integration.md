@@ -318,7 +318,7 @@ def _build_sources() -> dict[str, BrokerSource]:
 
 **3. Add a CSV fixture + parser test** — drop a sample export at `backend/tests/fixtures/broker_csvs/{slug}_holdings.csv` and add a `Test{Broker}Parser` class in `backend/tests/test_brokers.py`. The shared `BrokerSource.parse()` contract is what the `/sources/{slug}/upload` endpoint relies on.
 
-**4. Add a dev notebook (required)** — copy an existing notebook (e.g. `backend/notebooks/zerodha_dev.ipynb`) to `backend/notebooks/{slug}_dev.ipynb` and search-and-replace the slug + auth instructions. The notebook must exercise, in order:
+**4. Add a dev notebook (required)** — copy an existing notebook (e.g. `backend/notebooks/zerodha_kite_dev.ipynb`) to `backend/notebooks/{slug}_dev.ipynb` and search-and-replace the slug + auth instructions. The notebook must exercise, in order:
 
 1. `GET /portfolio/sources/{slug}` — confirm `status` transitions on env var presence
 2. `POST /portfolio/sources/{slug}/sync` — trigger the live fetch
@@ -429,21 +429,56 @@ ls ~/.alphaforge-anton/portfolio-dumps/binance-*
 
 ---
 
+## Zerodha Kite (`zerodha`)
+
+Equity-only holdings from the Zerodha Kite platform. ETF and mutual fund
+holdings are excluded — they live exclusively in the `zerodha_coin` source.
+Uses a CDP-attached Chrome session to acquire the `enctoken` cookie.
+
+| Detail | Value |
+|--------|-------|
+| Slug | `zerodha` |
+| Module dir | `backend/app/modules/brokers/zerodha_kite/` |
+| Auth | Manual login at `kite.zerodha.com` inside the AlphaForge Anton Chrome (`--remote-debugging-port=9299`); enctoken cookie read via CDP. |
+| `REQUIRED_ENV` | `ZERODHA_USER_ID` |
+| Asset classes | `EQUITY` only — ETF rows are filtered out before the CSV is written |
+| Kind | `SourceKind.API` |
+| Cache TTL | `ZERODHA_REFETCH_SECONDS` (default `3600`) |
+| `supports_cash` | `True` — `GET /oms/user/margins` → `data.equity.available.cash` |
+| **Holdings endpoint** | `kite.zerodha.com/oms/portfolio/holdings` (enctoken auth, `X-Kite-Version: 3`) |
+| **Instrument type** | `zerodha_kite_instruments.py` resolves `tradingsymbol → instrument_type (EQ/ETF)` via the public Kite instruments dump. Rows where `instrument_type == ETF` are dropped before writing CSV. |
+| **Helpers** | [`zerodha_kite_source_helper.py`](../backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py), [`zerodha_kite_dump.py`](../backend/app/modules/brokers/zerodha_kite/zerodha_kite_dump.py), [`zerodha_kite_instruments.py`](../backend/app/modules/brokers/zerodha_kite/zerodha_kite_instruments.py) |
+
+**Standalone dump**:
+
+```bash
+python -m app.modules.brokers.zerodha_kite.zerodha_kite_dump
+python -m app.modules.brokers.zerodha_kite.zerodha_kite_dump --force-login
+ls ~/.alphaforge-anton/portfolio-dumps/zerodha-*
+```
+
+---
+
 ## Zerodha Coin (`zerodha_coin`)
 
-Mutual fund holdings from [Zerodha Coin](https://coin.zerodha.com/dashboard). Uses the same `enctoken` cookie as the Kite equity source — no separate Coin login is needed. All holdings are emitted as `asset_class: MUTUAL_FUND`.
+ETF and mutual fund holdings from Zerodha. Uses the same `enctoken` as the
+Kite equity source — no separate Coin login needed. ETF holdings are fetched
+from the Kite equity endpoint and filtered by instrument type; MF holdings come
+from the Coin MF endpoint. Both are merged into one CSV under the `zerodha_coin`
+slug.
 
 | Detail | Value |
 |--------|-------|
 | Slug | `zerodha_coin` |
-| Auth | Manual login at `kite.zerodha.com` inside the AlphaForge Anton Chrome (`--remote-debugging-port=9299`); `enctoken` re-used for the Coin endpoint. |
+| Auth | Manual login at `kite.zerodha.com` inside the AlphaForge Anton Chrome (`--remote-debugging-port=9299`); `enctoken` re-used for both Kite equity and Coin MF endpoints. |
 | `REQUIRED_ENV` | `ZERODHA_USER_ID` (shared with the `zerodha` Kite source) |
-| Asset classes | `MUTUAL_FUND` |
+| Asset classes | `ETF` (from Kite equity API, filtered by `instrument_type == ETF`) + `MUTUAL_FUND` (from Coin MF API) |
 | Kind | `SourceKind.API` |
 | Cache TTL | `ZERODHA_COIN_REFETCH_SECONDS` (default `3600`) |
-| `supports_cash` | `False` — Coin is MF-only, not a trading account |
-| **Holdings endpoint** | `kite.zerodha.com/oms/mf/holdings` (enctoken auth, `X-Kite-Version: 3`) — probe-confirmed 2026-05-22 |
-| **Holdings key** | `data` — list of `{tradingsymbol, fund, folio, quantity, average_price, last_price, last_price_date, pnl, xirr, discrepancy, pledged_quantity, las_quantity}` |
+| `supports_cash` | `False` — Coin is MF/ETF-only, not a trading account |
+| **MF endpoint** | `kite.zerodha.com/api/mf/holdings` (enctoken auth, `X-Kite-Version: 3`) — probe-confirmed 2026-05-22 |
+| **ETF endpoint** | `kite.zerodha.com/oms/portfolio/holdings` (same as Kite equity) — rows where `instrument_type == ETF` are kept; all others discarded |
+| **MF key** | `data` — list of `{tradingsymbol, fund, folio, quantity, average_price, last_price, pnl, …}` |
 | **Field mapping** | `tradingsymbol→symbol`, `fund→name`, `quantity`, `average_price→avg_price`, `last_price`, computed `invested/current_value/pnl/pnl_pct` |
 | **Helpers** | [`zerodha_coin_source_helper.py`](../backend/app/modules/brokers/zerodha_coin/zerodha_coin_source_helper.py), [`zerodha_coin_dump.py`](../backend/app/modules/brokers/zerodha_coin/zerodha_coin_dump.py) |
 
@@ -523,7 +558,7 @@ One notebook per broker lives in `backend/notebooks/`. Each exercises all
 
 | Broker | Notebook | Auth |
 |--------|----------|------|
-| Zerodha | [zerodha_dev.ipynb](../backend/notebooks/zerodha_dev.ipynb) | CDP enctoken (`kite.zerodha.com`) |
+| Zerodha | [zerodha_kite_dev.ipynb](../backend/notebooks/zerodha_kite_dev.ipynb) | CDP enctoken (`kite.zerodha.com`) |
 | Groww | [groww_dev.ipynb](../backend/notebooks/groww_dev.ipynb) | CDP browser fetch (`groww.in`) |
 | Angel One | [angelone_dev.ipynb](../backend/notebooks/angelone_dev.ipynb) | CDP browser fetch (`angelone.in`) |
 | IndMoney | [`indmoney_dev.ipynb`](../backend/notebooks/indmoney_dev.ipynb) | CDP browser fetch (`indmoney.com/investments/us-stocks/my-us-stocks`) |

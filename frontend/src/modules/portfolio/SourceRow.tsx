@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Text } from "@alphaforge-anton/ravel-ui";
+import { Badge, Text } from "@alphaforge-anton/solar-ui";
 import type { SourceInfoDTO } from "./portfolio.types";
 import { SourceActions } from "./SourceActions";
 import { SourceOtpDialog } from "./SourceOtpDialog";

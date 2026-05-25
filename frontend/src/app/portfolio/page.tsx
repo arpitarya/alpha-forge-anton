@@ -1,6 +1,6 @@
 "use client";
 
-import { AppShell } from "@alphaforge-anton/ravel-ui";
+import { AppShell } from "@alphaforge-anton/solar-ui";
 import { useEffect, useMemo, useState } from "react";
 import { TerminalTicker, TerminalTopBar } from "@/modules/dashboard";
 import type { FilterState } from "@/modules/portfolio";

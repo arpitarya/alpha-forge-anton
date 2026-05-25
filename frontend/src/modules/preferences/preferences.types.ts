@@ -1,4 +1,4 @@
-import type { AccentName } from "@alphaforge-anton/ravel-ui";
+import type { AccentName } from "@alphaforge-anton/solar-ui";
 import type { PrefDraft } from "./usePrefStore";
 
 export interface PrefSectionMeta {

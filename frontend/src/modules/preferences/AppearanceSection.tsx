@@ -1,10 +1,10 @@
 "use client";
 
-import { useTheme } from "@alphaforge-anton/ravel-ui";
+import { useTheme } from "@alphaforge-anton/solar-ui";
 import { clsx } from "clsx";
-import { PrefSeg, PrefSelect, PrefTog } from "./PrefControls";
-import { PrefGroup } from "./PrefGroup";
-import { PrefRow } from "./PrefRow";
+import { PrefSeg, PrefSelect, PrefTog } from "@alphaforge-anton/solar-ui";
+import { PrefGroup } from "@alphaforge-anton/solar-ui";
+import { PrefRow } from "@alphaforge-anton/solar-ui";
 import { ACCENTS } from "./preferences.types";
 import type { PrefDraft } from "./usePrefStore";
 

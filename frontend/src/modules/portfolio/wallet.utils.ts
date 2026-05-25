@@ -4,10 +4,12 @@ import type { WalletInfoDTO } from "./portfolio.types";
 // brokers are added). Falls back to a neutral amber.
 export const WALLET_BRAND: Record<string, { grad: [string, string]; short: string }> = {
   zerodha: { grad: ["#f17545", "#d24316"], short: "KT" },
+  zerodha_coin: { grad: ["#e8a13a", "#b86c0a"], short: "ZC" },
   angelone: { grad: ["#3b6eea", "#0a3d8f"], short: "AO" },
   groww: { grad: ["#00d09c", "#00735c"], short: "GW" },
   indmoney: { grad: ["#6366F1", "#3730A3"], short: "IN" },
   tickertape: { grad: ["#F97316", "#C2410C"], short: "TT" },
+  binance: { grad: ["#F0B90B", "#B08800"], short: "BN" },
   all: { grad: ["#FFB454", "#D45A1A"], short: "ALL" },
 };
 

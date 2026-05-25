@@ -3,8 +3,8 @@
 TTL controlled by ZERODHA_REFETCH_SECONDS (root .env). Default 1h.
 
 Run standalone:
-    python -m app.modules.brokers.zerodha.zerodha_dump
-    python -m app.modules.brokers.zerodha.zerodha_dump --force-login
+    python -m app.modules.brokers.zerodha_kite.zerodha_kite_dump
+    python -m app.modules.brokers.zerodha_kite.zerodha_kite_dump --force-login
 """
 from __future__ import annotations
 
@@ -16,10 +16,10 @@ from typing import Any
 
 import app.modules.brokers.dump_utils as _du
 from app.core.logging import get_logger
-from app.modules.brokers.zerodha.zerodha_source_helper import (
+from app.modules.brokers.zerodha_kite.zerodha_kite_instruments import type_lookup_sync
+from app.modules.brokers.zerodha_kite.zerodha_kite_source_helper import (
     acquire_enctoken,
     fetch_holdings_json,
-    fetch_mf_holdings_json,
 )
 
 logger = get_logger("brokers.zerodha_dump")
@@ -49,18 +49,15 @@ def write_csv(rows: list[dict[str, Any]], dst: Path) -> None:
 async def dump_zerodha(*, force_login: bool = False) -> Path:
     enctoken = await acquire_enctoken(force=force_login)
     rows = await fetch_holdings_json(enctoken)
-    try:
-        mf_rows = await fetch_mf_holdings_json(enctoken)
-        for r in mf_rows:
-            r["name"] = r.get("fund", "")
-            r.setdefault("asset_class", "mutual_fund")
-        rows = rows + mf_rows
-    except Exception as e:
-        logger.warning("Zerodha COIN: MF dump failed (%s) — equity/ETF only", e)
+    types = type_lookup_sync()
+    for r in rows:
+        sym = str(r.get("tradingsymbol") or "").upper()
+        r.setdefault("asset_class", "etf" if types.get(sym, "EQ").upper() == "ETF" else "equity")
+    eq_rows = [r for r in rows if r.get("asset_class") == "equity"]
     live = live_csv_path()
-    write_csv(rows, live)
-    write_csv(rows, _du.dated_csv_path(SLUG))
-    logger.info("Zerodha: dumped %d holdings → %s", len(rows), live)
+    write_csv(eq_rows, live)
+    write_csv(eq_rows, _du.dated_csv_path(SLUG))
+    logger.info("Zerodha: dumped %d equity holdings → %s", len(eq_rows), live)
     return live
 
 
