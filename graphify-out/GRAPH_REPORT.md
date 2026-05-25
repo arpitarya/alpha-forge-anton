@@ -1,11 +1,11 @@
 # Graph Report - anton  (2026-05-25)
 
 ## Corpus Check
-- 305 files · ~411,698 words
+- 305 files · ~446,617 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1666 nodes · 2579 edges · 337 communities detected
+- 1667 nodes · 2579 edges · 338 communities detected
 - Extraction: 53% EXTRACTED · 47% INFERRED · 0% AMBIGUOUS · INFERRED: 1201 edges (avg confidence: 0.68)
 - Token cost: 0 input · 0 output
 
@@ -347,6 +347,7 @@
 - [[_COMMUNITY_Community 438|Community 438]]
 - [[_COMMUNITY_Community 439|Community 439]]
 - [[_COMMUNITY_Community 440|Community 440]]
+- [[_COMMUNITY_Community 441|Community 441]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `get()` - 111 edges
@@ -1540,190 +1541,194 @@ Nodes (1): Pull symbol, probability, rank, raw_features from a pick dict (case-t
 
 ### Community 395 - "Community 395"
 Cohesion: 1.0
-Nodes (1): Market data service — fetches quotes, history, indices from Indian exchanges.
+Nodes (1): Sync any API source whose cached data is missing or older than _STALE_SECONDS.
 
 ### Community 396 - "Community 396"
 Cohesion: 1.0
-Nodes (1): Aggregates market data from NSE, BSE, and third-party providers.
+Nodes (1): Market data service — fetches quotes, history, indices from Indian exchanges.
 
 ### Community 397 - "Community 397"
 Cohesion: 1.0
-Nodes (1): Fetch real-time quote for a symbol.
+Nodes (1): Aggregates market data from NSE, BSE, and third-party providers.
 
 ### Community 398 - "Community 398"
 Cohesion: 1.0
-Nodes (1): Fetch major Indian indices — NIFTY 50, SENSEX, BANK NIFTY, NIFTY IT, etc.
+Nodes (1): Fetch real-time quote for a symbol.
 
 ### Community 399 - "Community 399"
 Cohesion: 1.0
-Nodes (1): Fetch historical OHLCV candles.
+Nodes (1): Fetch major Indian indices — NIFTY 50, SENSEX, BANK NIFTY, NIFTY IT, etc.
 
 ### Community 400 - "Community 400"
 Cohesion: 1.0
-Nodes (1): Search instrument master for stocks, ETFs, MFs by name/symbol.
+Nodes (1): Fetch historical OHLCV candles.
 
 ### Community 401 - "Community 401"
 Cohesion: 1.0
-Nodes (1): # TODO: integrate with data provider (NSE API / broker feed / third-party)
+Nodes (1): Search instrument master for stocks, ETFs, MFs by name/symbol.
 
 ### Community 402 - "Community 402"
 Cohesion: 1.0
-Nodes (1): # TODO: scrape/fetch from NSE/BSE
+Nodes (1): # TODO: integrate with data provider (NSE API / broker feed / third-party)
 
 ### Community 403 - "Community 403"
 Cohesion: 1.0
-Nodes (1): # TODO: implement historical data fetch
+Nodes (1): # TODO: scrape/fetch from NSE/BSE
 
 ### Community 404 - "Community 404"
 Cohesion: 1.0
-Nodes (1): # TODO: search static instrument list (updated daily)
+Nodes (1): # TODO: implement historical data fetch
 
 ### Community 405 - "Community 405"
 Cohesion: 1.0
-Nodes (1): Market data endpoints — quotes, charts, screeners, indices.
+Nodes (1): # TODO: search static instrument list (updated daily)
 
 ### Community 406 - "Community 406"
 Cohesion: 1.0
-Nodes (1): # TODO: integrate with market data provider
+Nodes (1): Market data endpoints — quotes, charts, screeners, indices.
 
 ### Community 407 - "Community 407"
 Cohesion: 1.0
-Nodes (1): Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.
+Nodes (1): # TODO: integrate with market data provider
 
 ### Community 408 - "Community 408"
 Cohesion: 1.0
-Nodes (1): Search stocks, ETFs, mutual funds by name or symbol.
+Nodes (1): Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.
 
 ### Community 409 - "Community 409"
 Cohesion: 1.0
-Nodes (1): Fetch OHLCV price history for charting.
+Nodes (1): Search stocks, ETFs, mutual funds by name or symbol.
 
 ### Community 410 - "Community 410"
 Cohesion: 1.0
-Nodes (1): # TODO: integrate with market data provider
+Nodes (1): Fetch OHLCV price history for charting.
 
 ### Community 411 - "Community 411"
 Cohesion: 1.0
-Nodes (1): # TODO: fetch live index data
+Nodes (1): # TODO: integrate with market data provider
 
 ### Community 412 - "Community 412"
 Cohesion: 1.0
-Nodes (1): # TODO: search against instrument master
+Nodes (1): # TODO: fetch live index data
 
 ### Community 413 - "Community 413"
 Cohesion: 1.0
-Nodes (1): # TODO: fetch historical data
+Nodes (1): # TODO: search against instrument master
 
 ### Community 414 - "Community 414"
 Cohesion: 1.0
-Nodes (1): Clear cached holdings between tests.
+Nodes (1): # TODO: fetch historical data
 
 ### Community 415 - "Community 415"
 Cohesion: 1.0
-Nodes (1): Parse the fixture and apply it onto the registered Kite source's cache.      The
+Nodes (1): Clear cached holdings between tests.
 
 ### Community 416 - "Community 416"
 Cohesion: 1.0
-Nodes (1): Client with zerodha holdings pre-loaded via CSV upload.
+Nodes (1): Parse the fixture and apply it onto the registered Kite source's cache.      The
 
 ### Community 417 - "Community 417"
 Cohesion: 1.0
-Nodes (1): Pretty-print a JSON-serializable response body.
+Nodes (1): Client with zerodha holdings pre-loaded via CSV upload.
 
 ### Community 418 - "Community 418"
 Cohesion: 1.0
-Nodes (1): Raise RuntimeError if base_url is not on the approved list in dev mode.
+Nodes (1): Pretty-print a JSON-serializable response body.
 
 ### Community 419 - "Community 419"
 Cohesion: 1.0
-Nodes (1): Build tradingsymbol→name map from cached CSV (EQ instruments only).
+Nodes (1): Raise RuntimeError if base_url is not on the approved list in dev mode.
 
 ### Community 420 - "Community 420"
 Cohesion: 1.0
-Nodes (1): Return tradingsymbol→name map, refreshing the on-disk cache if stale.
+Nodes (1): Build tradingsymbol→name map from cached CSV (EQ instruments only).
 
 ### Community 421 - "Community 421"
 Cohesion: 1.0
-Nodes (1): Synchronous lookup using the on-disk cache only — never triggers a fetch.
+Nodes (1): Return tradingsymbol→name map, refreshing the on-disk cache if stale.
 
 ### Community 422 - "Community 422"
 Cohesion: 1.0
-Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
+Nodes (1): Synchronous lookup using the on-disk cache only — never triggers a fetch.
 
 ### Community 423 - "Community 423"
 Cohesion: 1.0
-Nodes (1): GET /oms/user/margins → equity available cash for the Kite account.
+Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
 
 ### Community 424 - "Community 424"
 Cohesion: 1.0
-Nodes (1): GET /user/v1/getRMS → risk-management snapshot incl. available cash.
+Nodes (1): GET /oms/user/margins → equity available cash for the Kite account.
 
 ### Community 425 - "Community 425"
 Cohesion: 1.0
-Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
+Nodes (1): GET /user/v1/getRMS → risk-management snapshot incl. available cash.
 
 ### Community 426 - "Community 426"
 Cohesion: 1.0
-Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample.
+Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
 
 ### Community 427 - "Community 427"
 Cohesion: 1.0
-Nodes (1): Raise ValueError for oversized or missing-column CSV files.
+Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample.
 
 ### Community 428 - "Community 428"
 Cohesion: 1.0
-Nodes (1): Map a Groww holdings row to the shared dict shape used by dump.py.
+Nodes (1): Raise ValueError for oversized or missing-column CSV files.
 
 ### Community 429 - "Community 429"
 Cohesion: 1.0
-Nodes (1): Reload the holdings page and capture the holdings + LTP responses.      Groww's
+Nodes (1): Map a Groww holdings row to the shared dict shape used by dump.py.
 
 ### Community 430 - "Community 430"
 Cohesion: 1.0
-Nodes (1): Attach to Chrome, reload Groww's holdings page, capture the response.
+Nodes (1): Reload the holdings page and capture the holdings + LTP responses.      Groww's
 
 ### Community 431 - "Community 431"
 Cohesion: 1.0
-Nodes (1): Return (page, browser, playwright, is_cdp) ready for use.
+Nodes (1): Attach to Chrome, reload Groww's holdings page, capture the response.
 
 ### Community 432 - "Community 432"
 Cohesion: 1.0
-Nodes (1): Sync any API source whose cached data is missing or older than _STALE_SECONDS.
+Nodes (1): Return (page, browser, playwright, is_cdp) ready for use.
 
 ### Community 433 - "Community 433"
 Cohesion: 1.0
-Nodes (1): Fetch real-time quote for a given NSE/BSE symbol.
+Nodes (1): Sync any API source whose cached data is missing or older than _STALE_SECONDS.
 
 ### Community 434 - "Community 434"
 Cohesion: 1.0
-Nodes (1): Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.
+Nodes (1): Fetch real-time quote for a given NSE/BSE symbol.
 
 ### Community 435 - "Community 435"
 Cohesion: 1.0
-Nodes (1): Search stocks, ETFs, mutual funds by name or symbol.
+Nodes (1): Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.
 
 ### Community 436 - "Community 436"
 Cohesion: 1.0
-Nodes (1): Fetch OHLCV price history for charting.
+Nodes (1): Search stocks, ETFs, mutual funds by name or symbol.
 
 ### Community 437 - "Community 437"
 Cohesion: 1.0
-Nodes (1): # TODO: fetch live index data
+Nodes (1): Fetch OHLCV price history for charting.
 
 ### Community 438 - "Community 438"
 Cohesion: 1.0
-Nodes (1): # TODO: search against instrument master
+Nodes (1): # TODO: fetch live index data
 
 ### Community 439 - "Community 439"
 Cohesion: 1.0
-Nodes (1): # TODO: fetch historical data
+Nodes (1): # TODO: search against instrument master
 
 ### Community 440 - "Community 440"
+Cohesion: 1.0
+Nodes (1): # TODO: fetch historical data
+
+### Community 441 - "Community 441"
 Cohesion: 1.0
 Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample.
 
 ## Knowledge Gaps
-- **471 isolated node(s):** `Attach to existing CDP Chrome, intercept Gullak dashboard XHRs.  Run while logge`, `Compact preview: top-level keys + first list-of-dict path with sample.`, `Capture screenshots of the terminal, portfolio, and preferences pages.  Attaches`, `Get a token from the API and stash it in localStorage so AuthGuard lets us in.`, `Attach to existing CDP Chrome, intercept Binance wallet XHRs.  Run while logged` (+466 more)
+- **472 isolated node(s):** `Attach to existing CDP Chrome, intercept Gullak dashboard XHRs.  Run while logge`, `Compact preview: top-level keys + first list-of-dict path with sample.`, `Capture screenshots of the terminal, portfolio, and preferences pages.  Attaches`, `Get a token from the API and stash it in localStorage so AuthGuard lets us in.`, `Attach to existing CDP Chrome, intercept Binance wallet XHRs.  Run while logged` (+467 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **Thin community `Community 18`** (12 nodes): `useAddTickerItem()`, `useAddWatchlistItem()`, `useDashboardBrief()`, `useDashboardRisk()`, `useDashboardStats()`, `useDashboardTicker()`, `useDashboardWatchlist()`, `useDeleteTickerItem()`, `useDeleteWatchlistItem()`, `TerminalStats.tsx`, `TerminalStats()`, `dashboard.query.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -2255,97 +2260,99 @@ Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 394`** (1 nodes): `Pull symbol, probability, rank, raw_features from a pick dict (case-tolerant).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 395`** (1 nodes): `Market data service — fetches quotes, history, indices from Indian exchanges.`
+- **Thin community `Community 395`** (1 nodes): `Sync any API source whose cached data is missing or older than _STALE_SECONDS.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 396`** (1 nodes): `Aggregates market data from NSE, BSE, and third-party providers.`
+- **Thin community `Community 396`** (1 nodes): `Market data service — fetches quotes, history, indices from Indian exchanges.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 397`** (1 nodes): `Fetch real-time quote for a symbol.`
+- **Thin community `Community 397`** (1 nodes): `Aggregates market data from NSE, BSE, and third-party providers.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 398`** (1 nodes): `Fetch major Indian indices — NIFTY 50, SENSEX, BANK NIFTY, NIFTY IT, etc.`
+- **Thin community `Community 398`** (1 nodes): `Fetch real-time quote for a symbol.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 399`** (1 nodes): `Fetch historical OHLCV candles.`
+- **Thin community `Community 399`** (1 nodes): `Fetch major Indian indices — NIFTY 50, SENSEX, BANK NIFTY, NIFTY IT, etc.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 400`** (1 nodes): `Search instrument master for stocks, ETFs, MFs by name/symbol.`
+- **Thin community `Community 400`** (1 nodes): `Fetch historical OHLCV candles.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 401`** (1 nodes): `# TODO: integrate with data provider (NSE API / broker feed / third-party)`
+- **Thin community `Community 401`** (1 nodes): `Search instrument master for stocks, ETFs, MFs by name/symbol.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 402`** (1 nodes): `# TODO: scrape/fetch from NSE/BSE`
+- **Thin community `Community 402`** (1 nodes): `# TODO: integrate with data provider (NSE API / broker feed / third-party)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 403`** (1 nodes): `# TODO: implement historical data fetch`
+- **Thin community `Community 403`** (1 nodes): `# TODO: scrape/fetch from NSE/BSE`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 404`** (1 nodes): `# TODO: search static instrument list (updated daily)`
+- **Thin community `Community 404`** (1 nodes): `# TODO: implement historical data fetch`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 405`** (1 nodes): `Market data endpoints — quotes, charts, screeners, indices.`
+- **Thin community `Community 405`** (1 nodes): `# TODO: search static instrument list (updated daily)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 406`** (1 nodes): `# TODO: integrate with market data provider`
+- **Thin community `Community 406`** (1 nodes): `Market data endpoints — quotes, charts, screeners, indices.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 407`** (1 nodes): `Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.`
+- **Thin community `Community 407`** (1 nodes): `# TODO: integrate with market data provider`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 408`** (1 nodes): `Search stocks, ETFs, mutual funds by name or symbol.`
+- **Thin community `Community 408`** (1 nodes): `Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 409`** (1 nodes): `Fetch OHLCV price history for charting.`
+- **Thin community `Community 409`** (1 nodes): `Search stocks, ETFs, mutual funds by name or symbol.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 410`** (1 nodes): `# TODO: integrate with market data provider`
+- **Thin community `Community 410`** (1 nodes): `Fetch OHLCV price history for charting.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 411`** (1 nodes): `# TODO: fetch live index data`
+- **Thin community `Community 411`** (1 nodes): `# TODO: integrate with market data provider`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 412`** (1 nodes): `# TODO: search against instrument master`
+- **Thin community `Community 412`** (1 nodes): `# TODO: fetch live index data`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 413`** (1 nodes): `# TODO: fetch historical data`
+- **Thin community `Community 413`** (1 nodes): `# TODO: search against instrument master`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 414`** (1 nodes): `Clear cached holdings between tests.`
+- **Thin community `Community 414`** (1 nodes): `# TODO: fetch historical data`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 415`** (1 nodes): `Parse the fixture and apply it onto the registered Kite source's cache.      The`
+- **Thin community `Community 415`** (1 nodes): `Clear cached holdings between tests.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 416`** (1 nodes): `Client with zerodha holdings pre-loaded via CSV upload.`
+- **Thin community `Community 416`** (1 nodes): `Parse the fixture and apply it onto the registered Kite source's cache.      The`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 417`** (1 nodes): `Pretty-print a JSON-serializable response body.`
+- **Thin community `Community 417`** (1 nodes): `Client with zerodha holdings pre-loaded via CSV upload.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 418`** (1 nodes): `Raise RuntimeError if base_url is not on the approved list in dev mode.`
+- **Thin community `Community 418`** (1 nodes): `Pretty-print a JSON-serializable response body.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 419`** (1 nodes): `Build tradingsymbol→name map from cached CSV (EQ instruments only).`
+- **Thin community `Community 419`** (1 nodes): `Raise RuntimeError if base_url is not on the approved list in dev mode.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 420`** (1 nodes): `Return tradingsymbol→name map, refreshing the on-disk cache if stale.`
+- **Thin community `Community 420`** (1 nodes): `Build tradingsymbol→name map from cached CSV (EQ instruments only).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 421`** (1 nodes): `Synchronous lookup using the on-disk cache only — never triggers a fetch.`
+- **Thin community `Community 421`** (1 nodes): `Return tradingsymbol→name map, refreshing the on-disk cache if stale.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 422`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
+- **Thin community `Community 422`** (1 nodes): `Synchronous lookup using the on-disk cache only — never triggers a fetch.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 423`** (1 nodes): `GET /oms/user/margins → equity available cash for the Kite account.`
+- **Thin community `Community 423`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 424`** (1 nodes): `GET /user/v1/getRMS → risk-management snapshot incl. available cash.`
+- **Thin community `Community 424`** (1 nodes): `GET /oms/user/margins → equity available cash for the Kite account.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 425`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
+- **Thin community `Community 425`** (1 nodes): `GET /user/v1/getRMS → risk-management snapshot incl. available cash.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 426`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
+- **Thin community `Community 426`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 427`** (1 nodes): `Raise ValueError for oversized or missing-column CSV files.`
+- **Thin community `Community 427`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 428`** (1 nodes): `Map a Groww holdings row to the shared dict shape used by dump.py.`
+- **Thin community `Community 428`** (1 nodes): `Raise ValueError for oversized or missing-column CSV files.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 429`** (1 nodes): `Reload the holdings page and capture the holdings + LTP responses.      Groww's`
+- **Thin community `Community 429`** (1 nodes): `Map a Groww holdings row to the shared dict shape used by dump.py.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 430`** (1 nodes): `Attach to Chrome, reload Groww's holdings page, capture the response.`
+- **Thin community `Community 430`** (1 nodes): `Reload the holdings page and capture the holdings + LTP responses.      Groww's`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 431`** (1 nodes): `Return (page, browser, playwright, is_cdp) ready for use.`
+- **Thin community `Community 431`** (1 nodes): `Attach to Chrome, reload Groww's holdings page, capture the response.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 432`** (1 nodes): `Sync any API source whose cached data is missing or older than _STALE_SECONDS.`
+- **Thin community `Community 432`** (1 nodes): `Return (page, browser, playwright, is_cdp) ready for use.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 433`** (1 nodes): `Fetch real-time quote for a given NSE/BSE symbol.`
+- **Thin community `Community 433`** (1 nodes): `Sync any API source whose cached data is missing or older than _STALE_SECONDS.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 434`** (1 nodes): `Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.`
+- **Thin community `Community 434`** (1 nodes): `Fetch real-time quote for a given NSE/BSE symbol.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 435`** (1 nodes): `Search stocks, ETFs, mutual funds by name or symbol.`
+- **Thin community `Community 435`** (1 nodes): `Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 436`** (1 nodes): `Fetch OHLCV price history for charting.`
+- **Thin community `Community 436`** (1 nodes): `Search stocks, ETFs, mutual funds by name or symbol.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 437`** (1 nodes): `# TODO: fetch live index data`
+- **Thin community `Community 437`** (1 nodes): `Fetch OHLCV price history for charting.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 438`** (1 nodes): `# TODO: search against instrument master`
+- **Thin community `Community 438`** (1 nodes): `# TODO: fetch live index data`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 439`** (1 nodes): `# TODO: fetch historical data`
+- **Thin community `Community 439`** (1 nodes): `# TODO: search against instrument master`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 440`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
+- **Thin community `Community 440`** (1 nodes): `# TODO: fetch historical data`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 441`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
@@ -2356,7 +2363,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `alphaforge-logger — Structured rotating-file + console logger.` connect `Community 2` to `Community 0`, `Community 1`, `Community 4`, `Community 5`, `Community 7`, `Community 9`?**
   _High betweenness centrality (0.057) - this node is a cross-community bridge._
 - **Why does `QueryType` connect `Community 5` to `Community 0`, `Community 1`, `Community 2`, `Community 4`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Are the 109 inferred relationships involving `get()` (e.g. with `main()` and `run()`) actually correct?**
   _`get()` has 109 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 82 inferred relationships involving `str` (e.g. with `_shape_summary()` and `run()`) actually correct?**

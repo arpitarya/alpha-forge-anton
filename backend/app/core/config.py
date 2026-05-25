@@ -9,9 +9,6 @@ from app.core.env_loader import get_env_files, load_env_files
 
 _LOADED_ENV_FILES = load_env_files()
 
-# bcrypt(rounds=10) of "alphaforge-anton-dev" — only valid in APP_ENV=development
-_DEV_PASSWORD_HASH = "$2b$10$A0KihioA2iYqL64yVkz8beVxCnryP.4CkYPQUUgyJF7HW8GFwf8Zu"  # noqa: S105
-
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -30,13 +27,9 @@ class Settings(BaseSettings):
     # ── Database ─────────────────────────────────
     database_url: str = "postgresql+asyncpg://alphaforge_anton:alphaforge_anton@localhost:5432/alphaforge_anton"
 
-    # ── Auth / JWT ───────────────────────────────
+    # ── Auth / JWT — verify tokens issued by Wagner ──────────────
     jwt_secret_key: str = "change-me-in-production"  # noqa: S105
     jwt_algorithm: str = "HS256"
-    access_token_expire_minutes: int = 30
-    admin_username: str = "admin"
-    # Defaults to bcrypt("alphaforge-anton-dev") in dev; must be set explicitly in production.
-    admin_password_hash: str = _DEV_PASSWORD_HASH
 
     # ── Wagner IAM service ───────────────────────
     wagner_url: str = "http://127.0.0.1:8001"
@@ -53,24 +46,11 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _validate_secrets(self) -> "Settings":
-        is_bcrypt = self.admin_password_hash.startswith(("$2b$", "$2a$"))
-
-        if not is_bcrypt:
-            if self.app_env != "development":
-                raise ValueError(
-                    "ADMIN_PASSWORD_HASH must be a valid bcrypt hash ($2b$...) in production"
-                )
-            # Dev: plaintext or blank value → silently use built-in default
-            self.admin_password_hash = _DEV_PASSWORD_HASH
-            return self
-
         if self.app_env != "development":
             if self.jwt_secret_key == "change-me-in-production":  # noqa: S105
                 raise ValueError(
                     "JWT_SECRET_KEY must be changed from the default before running in production"
                 )
-            if self.admin_password_hash == _DEV_PASSWORD_HASH:
-                raise ValueError("ADMIN_PASSWORD_HASH must be set to a secure value in production")
         return self
 
 

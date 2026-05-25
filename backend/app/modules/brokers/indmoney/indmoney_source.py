@@ -27,6 +27,7 @@ from app.modules.brokers.indmoney.indmoney_dump import (
     read_csv,
     write_csv,
 )
+from app.modules.brokers.broker_env import source_ready
 from app.modules.brokers.indmoney.indmoney_source_helper import (
     REQUIRED_ENV,
     env,
@@ -55,6 +56,7 @@ def _holding_from_row(r: dict, slug: str) -> Holding:
         quantity=qty, avg_price=avg, last_price=ltp,
         invested=inv, current_value=cur, pnl=pnl,
         pnl_pct=pnl_pct,
+        day_change_pct=float(r.get("day_change_pct") or 0.0),
         currency="USD",
         exchange=r.get("exchange") or "NYSE",
         sector=r.get("sector") or None,
@@ -75,7 +77,7 @@ class IndMoneySource(BrokerSource):
 
     def __init__(self) -> None:
         super().__init__()
-        if all(env(k) for k in REQUIRED_ENV):
+        if source_ready(REQUIRED_ENV, env):
             self._status = SourceStatus.READY
         self.refetch_seconds = int(os.getenv("INDMONEY_REFETCH_SECONDS", "3600"))
 

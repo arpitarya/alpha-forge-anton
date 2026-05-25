@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 
 from app.modules.brokers._cdp import connect_existing_chrome, find_or_open_page
 
-HOLDINGS_PAGE = "https://www.indmoney.com/dashboard"
+HOLDINGS_PAGE = "https://www.indmoney.com/investments/us-stocks/my-us-stocks"
 NEEDLES = (
     "holding", "portfolio", "position", "asset", "instrument",
     "stocks", "mutual", "us-stocks", "gold", "investment",

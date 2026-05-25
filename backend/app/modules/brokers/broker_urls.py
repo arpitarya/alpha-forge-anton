@@ -31,9 +31,10 @@ ANGELONE_RMS_URL_NEEDLE = "/funds/v2/getRMSLimit"
 # ── INDmoney ──────────────────────────────────────────────────────────────────
 INDMONEY_HOLDINGS_PAGE = "https://www.indmoney.com/investments/us-stocks/my-us-stocks"
 INDMONEY_LOGIN_URL = "https://www.indmoney.com/login"
-INDMONEY_HOLDINGS_URL_NEEDLE = "/stocks/dw/user/account/holdings"
+# Endpoint confirmed 2026-05-25: us-stock-broker replaced us-stocks-ext
+INDMONEY_HOLDINGS_URL_NEEDLE = "/us-stock-broker/us/portfolio/equity/summary"
 INDMONEY_BALANCE_PAGE = INDMONEY_HOLDINGS_PAGE
-INDMONEY_BALANCE_URL_NEEDLE = "/stocks/dw/user/account/basic"
+INDMONEY_BALANCE_URL_NEEDLE = "/us-stock-broker/us/portfolio/equity/summary"
 
 # ── Binance ───────────────────────────────────────────────────────────────────
 BINANCE_HOLDINGS_PAGE = "https://www.binance.com/en/my/wallet/account/main"

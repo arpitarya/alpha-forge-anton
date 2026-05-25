@@ -19,6 +19,7 @@ from typing import Any
 
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome, find_or_open_page
+from app.modules.brokers.broker_env import require_env
 from app.modules.brokers.broker_urls import GROWW_HOLDINGS_PAGE, GROWW_LOGIN_URL
 
 logger = get_logger("brokers.groww_helper")
@@ -271,6 +272,7 @@ def _merge_ltps(body: Any, out: dict[str, float]) -> None:
 
 async def fetch_holdings_via_browser(*, force_login: bool = False) -> list[dict[str, Any]]:
     """Attach to Chrome, reload Groww's holdings page, capture the response."""
+    require_env("GROWW_USER_ID", env)
     pw, browser = await connect_existing_chrome()
     try:
         target = LOGIN_URL if force_login else HOLDINGS_PAGE

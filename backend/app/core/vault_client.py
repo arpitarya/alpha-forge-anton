@@ -6,6 +6,9 @@ Called by env_loader after dotenv files are loaded, so the AFBACH_TOKEN from
 Behavior:
     - No AFBACH_TOKEN set → no-op (file-based env still works).
     - Vault unreachable → log and continue (file env is the fallback).
+    - Vault locked → log warning; `vault_locked()` returns True so callers
+      can surface a helpful "run afbach unlock" message instead of a cryptic
+      "env var not set" error.
 """
 
 from __future__ import annotations
@@ -21,6 +24,13 @@ logger = logging.getLogger(__name__)
 _DEFAULT_URL = "http://[::1]:54087/v1"
 _TIMEOUT = 5
 
+_vault_locked: bool = False
+
+
+def vault_locked() -> bool:
+    """True when AFBACH_TOKEN is set but the vault responded with 503 (locked)."""
+    return _vault_locked
+
 
 def load_from_vault(*, override: bool = True) -> int:
     """Pull all secrets for this app's namespace into os.environ.
@@ -28,6 +38,9 @@ def load_from_vault(*, override: bool = True) -> int:
     Returns the number of keys injected. Returns 0 (silent) when AFBACH_TOKEN is
     unset — that path lets .env.cred.local keep working during migration.
     """
+    global _vault_locked
+    _vault_locked = False
+
     token = os.getenv("AFBACH_TOKEN")
     if not token:
         return 0
@@ -45,7 +58,8 @@ def load_from_vault(*, override: bool = True) -> int:
         if e.code == 403:
             raise RuntimeError("afbach: invalid AFBACH_TOKEN") from e
         if e.code == 503:
-            msg = "afbach: vault is locked — run `afbach unlock`"
+            _vault_locked = True
+            msg = "afbach: vault is locked — run `afbach unlock` or POST /v1/unlock"
             if os.getenv("APP_ENV", "development") != "development":
                 raise RuntimeError(msg) from e
             logger.warning(msg)

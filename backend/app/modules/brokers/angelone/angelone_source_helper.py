@@ -21,6 +21,7 @@ from typing import Any
 
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome, find_or_open_page
+from app.modules.brokers.broker_env import require_env
 from app.modules.brokers.broker_urls import (
     ANGELONE_HOLDINGS_PAGE as HOLDINGS_PAGE,
     ANGELONE_HOLDINGS_URL_NEEDLE as _HOLDINGS_URL_NEEDLE,
@@ -136,6 +137,7 @@ async def _capture_holdings_via_reload(
 async def fetch_holdings_via_browser(
     *, force_login: bool = False
 ) -> list[dict[str, Any]]:
+    require_env("ANGELONE_CLIENT_ID", env)
     pw, browser = await connect_existing_chrome()
     try:
         target = LOGIN_URL if force_login else HOLDINGS_PAGE

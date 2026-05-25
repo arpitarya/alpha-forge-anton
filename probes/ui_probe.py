@@ -13,8 +13,8 @@ Then run this probe (backend + frontend must be running):
 
 Environment overrides:
     AF_FRONTEND=http://localhost:3000
-    PROBE_USER=<username>   (falls back to afbach vault ADMIN_USERNAME)
-    PROBE_PASS=<password>   (falls back to afbach vault ADMIN_PASSWORD)
+    PROBE_USER=<username>   (falls back to afbach vault PROBE_USER)
+    PROBE_PASS=<password>   (falls back to afbach vault PROBE_PASS)
     BROKER_CDP_PORT=9299
 
 Screenshots are saved to <repo-root>/screenshots/.
@@ -60,11 +60,16 @@ async def run(base: str, cdp_port: int) -> bool:
         # Clear any stale session so we always test from a clean state.
         # `af_token` is the legacy key; `af-auth` is the zustand-persist key for
         # the current useAuthStore; `af-refresh` holds the refresh token.
+        # Hard-reload after clearing so the zustand store re-initialises from the
+        # now-empty localStorage — without this, the in-memory store still holds
+        # the previous accessToken and the login-page useEffect redirects away
+        # before the form can be submitted.
         await page.goto(base, wait_until="domcontentloaded")
         await page.evaluate(
-            "() => ['af_token', 'af-auth', 'af-refresh']"
+            "() => ['af_token', 'af-auth', 'af-refresh', 'af_refresh_token']"
             ".forEach(k => localStorage.removeItem(k))"
         )
+        await page.reload(wait_until="networkidle")
 
         # ── 1. Auth guard ─────────────────────────────────────────────
         print("\n── Auth guard")
@@ -96,6 +101,7 @@ async def run(base: str, cdp_port: int) -> bool:
             return False
 
         # ── 3. Token stored ───────────────────────────────────────────
+        await page.wait_for_load_state("domcontentloaded")
         token = await page.evaluate("() => localStorage.getItem('af_token')")
         _record("JWT token in localStorage", bool(token), "present" if token else "MISSING")
 

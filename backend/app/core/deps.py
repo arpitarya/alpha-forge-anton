@@ -40,8 +40,12 @@ def user_from_jwt(token: str) -> UserClaims:
     payload = decode_access_token(token)
     if not payload or "sub" not in payload:
         raise UNAUTHORIZED
+    try:
+        uid = uuid.UUID(payload["sub"])
+    except (ValueError, AttributeError):
+        raise UNAUTHORIZED
     return UserClaims(
-        id=uuid.UUID(payload["sub"]),
+        id=uid,
         role=payload.get("role", "viewer"),
         email=payload.get("email", ""),
     )

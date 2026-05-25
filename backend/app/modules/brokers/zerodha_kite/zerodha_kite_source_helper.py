@@ -18,6 +18,7 @@ import httpx
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome, cookie_value, find_or_open_page
 from app.modules.brokers._http import load_session, make_client, save_session
+from app.modules.brokers.broker_env import require_env
 from app.modules.brokers.broker_urls import (
     ZERODHA_COIN_HOLDINGS_PATH,
     ZERODHA_HOLDINGS_PATH,
@@ -72,13 +73,9 @@ async def acquire_enctoken(force: bool = False) -> str:
     if not force and cached.get("enctoken"):
         return str(cached["enctoken"])
 
-    if not env("ZERODHA_USER_ID"):
-        raise RuntimeError(
-            "ZERODHA_USER_ID not set in .env.cred.local — fill it in before running."
-        )
-
+    user_id = require_env("ZERODHA_USER_ID", env)
     enctoken = await cdp_login()
-    save_session("zerodha", {"enctoken": enctoken, "user_id": env("ZERODHA_USER_ID")})
+    save_session("zerodha", {"enctoken": enctoken, "user_id": user_id})
     logger.info("Zerodha: acquired new enctoken via CDP-attached Chrome")
     return enctoken
 

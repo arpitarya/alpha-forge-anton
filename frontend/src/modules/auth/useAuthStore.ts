@@ -1,7 +1,7 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
-import { api, getMe, refreshTokens } from "./auth.api"
+import { api, getMe, logoutUser, refreshTokens } from "./auth.api"
 import type { IamUser, TokenResponse } from "./auth.types"
 
 const ACCESS_KEY = "af_token"
@@ -14,6 +14,7 @@ interface AuthState {
   setTokens: (tokens: TokenResponse) => void
   setUser: (user: IamUser) => void
   clearAuth: () => void
+  logout: () => Promise<void>
   silentRefresh: () => Promise<void>
   bootstrap: () => Promise<void>
 }
@@ -44,6 +45,13 @@ export const useAuthStore = create<AuthState>()(
         applyHeader(null)
         localStorage.removeItem(REFRESH_KEY)
         set({ user: null, accessToken: null, refreshToken: null })
+      },
+      logout: async () => {
+        const { refreshToken: rt } = get()
+        if (rt) {
+          try { await logoutUser(rt) } catch { /* revocation is best-effort */ }
+        }
+        get().clearAuth()
       },
       silentRefresh: async () => {
         const rt = get().refreshToken

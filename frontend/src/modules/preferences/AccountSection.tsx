@@ -1,8 +1,7 @@
 "use client";
 
-import { PrefInput } from "@alphaforge-anton/solar-ui";
-import { PrefGroup } from "@alphaforge-anton/solar-ui";
-import { PrefRow } from "@alphaforge-anton/solar-ui";
+import { PrefGroup, PrefInput, PrefRow } from "@alphaforge-anton/solar-ui";
+import { SessionsGroup } from "./SessionsGroup";
 import type { PrefDraft } from "./usePrefStore";
 
 export interface AccountSectionProps {
@@ -121,6 +120,8 @@ export function AccountSection({ t, setTweak }: AccountSectionProps) {
         <Hotkey label="Open preferences" keys={["⌘", ","]} />
         <Hotkey label="Activate Alpha voice" keys={["Space"]} extra="(hold)" />
       </PrefGroup>
+
+      <SessionsGroup />
     </>
   );
 }

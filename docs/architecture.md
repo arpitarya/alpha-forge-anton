@@ -78,6 +78,12 @@ alpha-forge-anton/
 - `backend/app/core/deps.py` — `get_current_user` stateless JWT validation → `UserClaims(id, role, email)`; `require_owner`; optional Dante posture step-up
 - `backend/app/modules/__init__.py` — registers every feature router under `/api/v1/*`
 - `backend/app/modules/iam/iam_proxy.py` — thin httpx reverse proxy; forwards all `/api/v1/iam/*` to Wagner `:8001/iam/*`
+- `frontend/src/modules/auth/auth.api.ts` — IAM client: fetches `GET /iam/login-key` once (cached), verifies the RSA-PSS mode signature, then sends `{encrypted_payload}` in prod or plain `{email, password}` in dev. Includes session management (`listSessions`, `extendSession`, `revokeSession`) and `logoutAll`.
+- `frontend/src/modules/auth/auth.query.ts` — React Query hooks: `useSessions`, `useExtendSession`, `useRevokeSession`
+- `frontend/src/modules/auth/auth.types.ts` — TypeScript mirrors of IAM schemas: `LoginKeyResponse`, `SessionResponse`, user/token types
+- `frontend/src/modules/auth/useAuthStore.ts` — Zustand store; `logout()` revokes the current session then clears local state; `silentRefresh()` serializes concurrent 401 retries; persisted under `af-auth`
+- `frontend/src/modules/preferences/SessionsGroup.tsx` — Sessions panel in Account preferences: lists active sessions with extend/revoke per row; "Sign out this device" triggers `logout()` + redirect
+- `frontend/src/modules/preferences/PrivacySection.tsx` — "Sign out everywhere" calls `logoutAll()` + `clearAuth()` + redirect to `/login`
 - `backend/app/modules/chat/` — Alpha chat module: `chat_routes.py` (`POST /api/v1/chat/` → SSE), `chat_service.py` (gateway dispatch + streaming), `chat_schemas.py` (request schema + model→QueryType mapping)
 - `backend/app/modules/brokers/base.py` — `BrokerSource` ABC; implement for new brokers
 - `backend/app/modules/brokers/registry.py` — broker source registry (slug → class)

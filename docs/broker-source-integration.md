@@ -277,7 +277,7 @@ Patterns in use:
 | Zerodha (INR) | n/a (direct HTTP) | `GET /oms/user/margins` (enctoken) | `data.equity.available.cash` |
 | Angel One (INR) | `angelone.in/trade/funds` | `/funds/v2/getRMSLimit` (CDP) | `data.netAvailableFunds` |
 | Groww (INR) | `groww.in/user/balance/inr` | `/margin/user_margin_details` (CDP) | `CASH.value` (string → float) |
-| IndMoney (USD) | `indmoney.com/investments/us-stocks/my-us-stocks` | `/stocks/dw/user/account/basic` (CDP) | `cash_available_for_trade` |
+| IndMoney (USD) | `indmoney.com/investments/us-stocks/my-us-stocks` | `/us-stock-broker/us/portfolio/equity/summary` (CDP, same as holdings) | `user_wallet_balance.available_balance` |
 | Binance (USD/USDT) | `binance.com/en/my/wallet/account/main` | `/bapi/asset/v2/private/asset-service/wallet/balance` (CDP) | sum of `data[].free` where `asset ∈ {USDT,USDC,BUSD,FDUSD}` |
 | Ticker Tape | not supported (`supports_cash = False`; wallet card shows "Cash N/A") | | |
 
@@ -348,10 +348,10 @@ US-stocks holdings from INDmoney's DriveWealth-backed brokerage account. CDP bro
 | Kind | `SourceKind.API` |
 | Cache TTL | `INDMONEY_REFETCH_SECONDS` (default `3600`) |
 | **Trigger page** | `www.indmoney.com/investments/us-stocks/my-us-stocks` |
-| **Holdings endpoint** | `apixt-fz.indmoney.com/us-stocks-ext/api/v1/stocks/dw/user/account/holdings/?page=1&limit=N` |
-| **Holdings key** | `data` — list of `{ticker, name, quantity, avg_price, live_price, invested_amount, current_value, total_profit_loss, total_percent_change, sector}` |
-| **Field mapping** | `ticker→symbol`, `avg_price→avg_price`, `live_price→last_price`, `invested_amount→invested`, `current_value→current_value`, `total_profit_loss→pnl`, `total_percent_change→pnl_pct` |
-| **Cash endpoint** | `apixt-fz.indmoney.com/us-stocks-ext/api/v3/stocks/dw/user/account/basic` — field `cash_available_for_trade` (USD). Probe-confirmed 2026-05-16. |
+| **Holdings endpoint** | `apixt-fz.indmoney.com/us-stock-broker/us/portfolio/equity/summary?response_format=json` — probe-confirmed 2026-05-25 |
+| **Holdings key** | `demat_summary.asset_summary.scrip_details` — list of `{metadata: {symbol, name, live_price, day_change_percentage, sector}, holdings: {quantity, avg_price, invested_amount, current_value, overall_pnl, overall_pnl_percentage}}` |
+| **Field mapping** | `metadata.symbol→symbol`, `metadata.name→name`, `metadata.live_price→last_price`, `metadata.day_change_percentage→day_change_pct`, `holdings.avg_price→avg_price`, `holdings.invested_amount→invested`, `holdings.current_value→current_value`, `holdings.overall_pnl→pnl`, `holdings.overall_pnl_percentage→pnl_pct` |
+| **Cash endpoint** | `apixt-iw.indmoney.com/ind-investment/api/v4/user/basic/` — field `cash_available_for_trade` (USD). Probe-confirmed 2026-05-25. |
 | **Helpers** | [`indmoney_source_helper.py`](../backend/app/modules/brokers/indmoney/indmoney_source_helper.py), [`indmoney_dump.py`](../backend/app/modules/brokers/indmoney/indmoney_dump.py), [`indmoney_cash_helper.py`](../backend/app/modules/brokers/indmoney/indmoney_cash_helper.py) |
 
 **Setup**:

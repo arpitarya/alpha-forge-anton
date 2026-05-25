@@ -19,6 +19,7 @@ from app.modules.brokers.tickertape.tickertape_dump import (
     read_csv,
     write_csv,
 )
+from app.modules.brokers.broker_env import source_ready
 from app.modules.brokers.tickertape.tickertape_source_helper import (
     REQUIRED_ENV,
     env,
@@ -63,7 +64,7 @@ class TickerTapeSource(BrokerSource):
 
     def __init__(self) -> None:
         super().__init__()
-        if all(env(k) for k in REQUIRED_ENV):
+        if source_ready(REQUIRED_ENV, env):
             self._status = SourceStatus.READY
         self.refetch_seconds = int(os.getenv("TICKERTAPE_REFETCH_SECONDS", "3600"))
 

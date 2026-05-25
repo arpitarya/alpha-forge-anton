@@ -16,6 +16,7 @@ from typing import Any
 
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome, find_or_open_page
+from app.modules.brokers.broker_env import require_env
 from app.modules.brokers.broker_urls import (
     TICKERTAPE_GOLD_PAGE,
     TICKERTAPE_GOLD_PRICE_NEEDLE,
@@ -122,6 +123,7 @@ async def _capture_gold_data(page: Any, timeout: float = 20.0) -> dict[str, Any]
 
 
 async def fetch_holdings_via_browser(*, force_login: bool = False) -> list[dict[str, Any]]:
+    require_env("TICKERTAPE_USER_ID", env)
     pw, browser = await connect_existing_chrome()
     try:
         target = LOGIN_URL if force_login else HOLDINGS_PAGE

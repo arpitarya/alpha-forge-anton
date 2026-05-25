@@ -1,8 +1,8 @@
 """INDmoney — capture free USD cash via CDP from the US-stocks holdings page.
 
-The dashboard fires `/us-stocks-ext/api/v3/stocks/dw/user/account/basic` when
-the holdings page loads. The response carries `cash_available_for_trade`
-(USD), which is what the UI shows as "Wallet Balance: $X.XX".
+The holdings page fires the portfolio summary XHR (`/us-stock-broker/us/portfolio/equity/summary`)
+which contains `user_wallet_balance.available_balance` (USD). Same endpoint as holdings.
+Probe-confirmed 2026-05-25.
 """
 
 from __future__ import annotations
@@ -30,6 +30,13 @@ def _to_float(v: Any) -> float:
 def _pick_cash(payload: Any) -> float | None:
     if not isinstance(payload, dict):
         return None
+    # Current API (2026-05-25): wallet balance in portfolio summary
+    wb = payload.get("user_wallet_balance")
+    if isinstance(wb, dict):
+        for k in ("available_balance", "total_balance"):
+            if k in wb:
+                return _to_float(wb[k])
+    # Legacy DriveWealth endpoint fallback
     for k in ("cash_available_for_trade", "balance_available"):
         if k in payload:
             return _to_float(payload[k])

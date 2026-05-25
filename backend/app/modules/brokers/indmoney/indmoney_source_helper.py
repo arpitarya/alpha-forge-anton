@@ -4,12 +4,12 @@ INDmoney exposes no free public API; we attach to the running Chrome, navigate
 to the US stocks portfolio page, and capture the XHR the web app fires —
 same pattern as Groww / Angel One.
 
-Confirmed holdings endpoint (probed 2026-05-16):
-  apixt-fz.indmoney.com/us-stocks-ext/api/v1/stocks/dw/user/account/holdings/
-  ?page=1&limit=N
-Response shape: {"data": [{ticker, name, quantity, avg_price, live_price,
-  invested_amount, current_value, total_profit_loss, total_percent_change,
-  sector, ...}, ...]}
+Confirmed holdings endpoint (probed 2026-05-25):
+  apixt-fz.indmoney.com/us-stock-broker/us/portfolio/equity/summary?response_format=json
+Response shape: {"demat_summary": {"asset_summary": {"scrip_details": [
+  {"metadata": {symbol, name, live_price, day_change_percentage, sector, ...},
+   "holdings": {quantity, avg_price, invested_amount, current_value,
+                overall_pnl, overall_pnl_percentage, ...}}, ...]}}}
 """
 
 from __future__ import annotations
@@ -20,6 +20,7 @@ from typing import Any
 
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome, find_or_open_page
+from app.modules.brokers.broker_env import require_env
 from app.modules.brokers.broker_urls import (
     INDMONEY_HOLDINGS_PAGE as HOLDINGS_PAGE,
     INDMONEY_HOLDINGS_URL_NEEDLE as _HOLDINGS_URL_NEEDLE,
@@ -61,6 +62,15 @@ async def _ensure_logged_in(page: Any, wait_seconds: int) -> None:
 def _extract_holdings(payload: Any) -> list[dict[str, Any]]:
     """Extract the list of holding rows from the holdings XHR payload."""
     if isinstance(payload, dict):
+        # Current API shape (2026-05-25): demat_summary → asset_summary → scrip_details
+        demat = payload.get("demat_summary")
+        if isinstance(demat, dict):
+            asset = demat.get("asset_summary")
+            if isinstance(asset, dict):
+                scrips = asset.get("scrip_details")
+                if isinstance(scrips, list):
+                    return [r for r in scrips if isinstance(r, dict)]
+        # Legacy shape: {"data": [...]}
         v = payload.get("data")
         if isinstance(v, list):
             return [r for r in v if isinstance(r, dict)]
@@ -70,18 +80,31 @@ def _extract_holdings(payload: Any) -> list[dict[str, Any]]:
 
 
 def normalize(row: dict[str, Any]) -> dict[str, Any]:
-    """Map an INDmoney holding row to the shared dict shape."""
-    qty = _to_float(row.get("quantity"))
-    avg = _to_float(row.get("avg_price"))
-    ltp = _to_float(row.get("live_price"))
-    inv = _to_float(row.get("invested_amount")) or (qty * avg)
-    cur = _to_float(row.get("current_value")) or (qty * ltp)
-    pnl = _to_float(row.get("total_profit_loss")) or (cur - inv)
-    pnl_pct = _to_float(row.get("total_percent_change")) or ((pnl / inv * 100) if inv else 0.0)
+    """Map an INDmoney holding row (new or legacy shape) to the shared dict shape."""
+    meta = row.get("metadata") or {}
+    hold = row.get("holdings") or {}
+    # New API: row = {metadata: {...}, holdings: {...}}
+    # Legacy API: flat dict with ticker/avg_price/live_price keys
+
+    qty = _to_float(hold.get("quantity") or row.get("quantity"))
+    avg = _to_float(hold.get("avg_price") or row.get("avg_price"))
+    ltp = _to_float(meta.get("live_price") or row.get("live_price"))
+    inv = _to_float(hold.get("invested_amount") or row.get("invested_amount")) or (qty * avg)
+    cur = _to_float(hold.get("current_value") or row.get("current_value")) or (qty * ltp)
+    pnl = _to_float(hold.get("overall_pnl") or row.get("total_profit_loss")) or (cur - inv)
+    pnl_pct = (
+        _to_float(hold.get("overall_pnl_percentage") or row.get("total_percent_change"))
+        or ((pnl / inv * 100) if inv else 0.0)
+    )
+    day_change_pct = _to_float(
+        meta.get("day_change_percentage") or row.get("day_change_percentage")
+    )
     return {
-        "tradingsymbol": str(row.get("ticker") or "").upper(),
-        "name": str(row.get("name") or "").strip() or None,
-        "isin": row.get("isin") or "",
+        "tradingsymbol": str(
+            meta.get("symbol") or meta.get("ind_key") or row.get("ticker") or ""
+        ).upper(),
+        "name": str(meta.get("name") or row.get("name") or "").strip() or None,
+        "isin": meta.get("isin") or row.get("isin") or "",
         "exchange": "NYSE",
         "quantity": qty,
         "average_price": avg,
@@ -90,7 +113,8 @@ def normalize(row: dict[str, Any]) -> dict[str, Any]:
         "current_value": cur,
         "pnl": pnl,
         "pnl_pct": pnl_pct,
-        "sector": row.get("sector") or None,
+        "day_change_pct": day_change_pct,
+        "sector": meta.get("sector") or row.get("sector") or None,
     }
 
 
@@ -133,6 +157,7 @@ async def _capture_holdings_via_reload(
 async def fetch_holdings_via_browser(
     *, force_login: bool = False
 ) -> list[dict[str, Any]]:
+    require_env("INDMONEY_USER_ID", env)
     pw, browser = await connect_existing_chrome()
     try:
         target = LOGIN_URL if force_login else HOLDINGS_PAGE

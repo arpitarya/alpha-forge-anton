@@ -10,6 +10,7 @@ import httpx
 
 from app.core.logging import get_logger
 from app.modules.brokers._cdp import connect_existing_chrome, find_or_open_page
+from app.modules.brokers.broker_env import require_env
 from app.modules.brokers.broker_urls import BINANCE_HOLDINGS_PAGE as HOLDINGS_PAGE
 from app.modules.brokers.broker_urls import BINANCE_HOLDINGS_URL_NEEDLES as _NEEDLES
 from app.modules.brokers.broker_urls import BINANCE_LOGIN_URL as LOGIN_URL
@@ -86,6 +87,7 @@ async def _capture(page: Any, timeout_seconds: float = 30.0) -> list[dict[str, A
 
 
 async def fetch_holdings_via_browser(*, force_login: bool = False) -> list[dict[str, Any]]:
+    require_env("BINANCE_USER_ID", env)
     pw, browser = await connect_existing_chrome()
     try:
         page = await find_or_open_page(browser, LOGIN_URL if force_login else HOLDINGS_PAGE, "binance.com")

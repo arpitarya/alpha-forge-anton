@@ -1,8 +1,8 @@
-"""Resolve probe credentials from the afbach vault or environment.
+"""Resolve probe credentials from environment or afbach vault.
 
 Priority:
   1. PROBE_USER / PROBE_PASS env vars (explicit override)
-  2. afbach vault keys ADMIN_USERNAME / ADMIN_PASSWORD
+  2. afbach vault keys PROBE_USER / PROBE_PASS (Wagner user credentials)
   3. Error — no hardcoded fallbacks
 
 Usage:
@@ -47,12 +47,12 @@ def _vault_secret(key: str) -> str | None:
 
 
 def probe_credentials() -> tuple[str, str]:
-    """Return (username, password) for UI probes."""
-    username = os.getenv("PROBE_USER") or _vault_secret("ADMIN_USERNAME")
-    password = os.getenv("PROBE_PASS") or _vault_secret("ADMIN_PASSWORD")
+    """Return (username, password) for UI probes — sourced from Wagner user credentials."""
+    username = os.getenv("PROBE_USER") or _vault_secret("PROBE_USER")
+    password = os.getenv("PROBE_PASS") or _vault_secret("PROBE_PASS")
     if not username or not password:
         raise RuntimeError(
             "Cannot resolve probe credentials. "
-            "Set PROBE_USER/PROBE_PASS env vars or ensure the afbach vault is running."
+            "Set PROBE_USER/PROBE_PASS env vars or store them in the afbach vault."
         )
     return username, password

@@ -9,7 +9,7 @@
 - All financial amounts use `float` for now (will migrate to `Decimal` before production)
 - Password hashing uses `bcrypt` directly (passlib removed — incompatible with bcrypt 4.x)
 - Auth enforced via `Depends(get_current_user)` on all routes except `/health` and `/auth/token`
-- Dev login credentials stored in afbach vault (`ADMIN_USERNAME` / `ADMIN_PASSWORD`) — never hardcode them; must set `ADMIN_PASSWORD_HASH` in production
+- Auth handled by Wagner IAM — user credentials managed in Wagner's database; probe credentials stored in afbach vault as `PROBE_USER` / `PROBE_PASS`
 - Cloud LLM providers disabled in `APP_ENV=development` unless `ALLOW_CLOUD_LLM_IN_DEV=true`
 - Broker outbound HTTP guarded against unapproved hosts in dev mode via `BROKER_ALLOWED_HOSTS`
 - Run `just audit` to scan Python + Node dependencies for known CVEs
@@ -36,6 +36,8 @@
 
 - All ports defined in `.env.port` at repo root
 - Add new vars to the appropriate `.env.example` file — never commit `.env`
+- **Broker user IDs and API keys must live in the afbach vault, never in `.env` files** — vault-only keys are not listed in `.env.cred.example`
+- Vault-aware env helpers are in `broker_env.py`: use `source_ready(REQUIRED_ENV, env)` in source `__init__` and `require_env(key, env)` in acquire functions — both surface a `vault locked` hint automatically
 
 ## Broker CSV Dumps
 
