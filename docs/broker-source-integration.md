@@ -85,27 +85,32 @@ Plus these outside the module dir:
 | `probes/{slug}_probe.py` | XHR probe for holdings | API kinds only |
 | `probes/{slug}_cash_probe.py` | XHR/HTTP probe for free cash | only if `supports_cash = True` |
 
-Then register in `registry.py` (one line), add the env var(s) to `.env.cred.example`, and add URL/needle constants to `broker_urls.py` (cash brokers also add `{SLUG}_BALANCE_PAGE`, `{SLUG}_BALANCE_URL_NEEDLES`).
+Then register in `registry.py` (one line), store user IDs / API keys in the afbach vault (see Step 2 below), and add URL/needle constants to `broker_urls.py` (cash brokers also add `{SLUG}_BALANCE_PAGE`, `{SLUG}_BALANCE_URL_NEEDLES`).
 
 ---
 
 ## `{slug}_source_helper.py` — what it must export
 
 ```python
+from app.modules.brokers.broker_env import require_env
+
 REQUIRED_ENV: tuple[str, ...] = ("MYBROKER_USER_ID",)
 
 def env(key: str) -> str:
     return os.getenv(key, "").strip()
 
 # Acquire auth credential (enctoken, access_token, session cookie, …)
-async def acquire_token(force: bool = False) -> str: ...
+# require_env() raises with a vault hint if the key is missing or vault is locked.
+async def acquire_token(force: bool = False) -> str:
+    require_env("MYBROKER_USER_ID", env)
+    ...
 
 # Call broker API; returns raw list[dict] with at least:
 #   tradingsymbol, isin, exchange, quantity, average_price, last_price
 async def fetch_holdings_json(token: str) -> list[dict[str, Any]]: ...
 ```
 
-`REQUIRED_ENV` drives the `SourceStatus.READY` check in `__init__` — if any env var is missing the source stays `UNCONFIGURED` and the UI surfaces that clearly.
+`REQUIRED_ENV` drives the `SourceStatus.READY` check in `__init__` via `source_ready()` — if any env var is missing (or the vault is locked) the source stays `UNCONFIGURED` and the UI surfaces that clearly. `require_env()` in the acquire/fetch functions gives a vault-aware error at runtime instead of a silent 180-second CDP timeout.
 
 ---
 
@@ -180,6 +185,7 @@ from app.modules.brokers._http import clear_session
 from app.modules.brokers.base import AssetClass, BrokerSource, Holding, SourceKind, SourceStatus
 from app.modules.brokers.mybroker.mybroker_csv import MyBrokerCSVSource as _CSV
 from app.modules.brokers.mybroker.mybroker_dump import is_csv_fresh, live_csv_path, read_csv, write_csv
+from app.modules.brokers.broker_env import source_ready
 from app.modules.brokers.mybroker.mybroker_source_helper import REQUIRED_ENV, acquire_token, env, fetch_holdings_json
 
 logger = get_logger("brokers.mybroker")
@@ -223,12 +229,13 @@ class MyBrokerSource(BrokerSource):
     notes = (
         "Manual login: log in to mybroker.com inside the AlphaForge Anton Chrome "
         "(started with --remote-debugging-port=9299). "
-        "Set MYBROKER_USER_ID in .env.cred.local."
+        "Store MYBROKER_USER_ID in the afbach vault: "
+        "PUT /v1/secrets {\"key\": \"MYBROKER_USER_ID\", \"value\": \"<your-id>\"}."
     )
 
     def __init__(self) -> None:
         super().__init__()
-        if all(env(k) for k in REQUIRED_ENV):
+        if source_ready(REQUIRED_ENV, env):
             self._status = SourceStatus.READY
 
     def parse(self, stream: IO[bytes], filename: str | None = None) -> list[Holding]:
@@ -314,7 +321,20 @@ def _build_sources() -> dict[str, BrokerSource]:
     return {s.slug: s for s in instances}
 ```
 
-**2. Declare credentials** — add the env var(s) with empty defaults to [.env.cred.example](../.env.cred.example) (tracked) so other contributors know what to fill in `.env.cred.local`.
+**2. Declare credentials** — store the user ID / API key in the afbach vault:
+
+```bash
+# Unlock the vault first if needed
+afbach unlock   # or POST http://[::1]:54087/v1/unlock
+
+# Store the secret
+curl -s -X PUT http://[::1]:54087/v1/secrets \
+  -H "X-Afbach-Token: $AFBACH_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"key": "MYBROKER_USER_ID", "value": "<your-id>"}'
+```
+
+Vault-only keys (user IDs, API keys) are **not** added to `.env.cred.example`. Only fallback/bootstrap values that must survive a locked vault (e.g. `BROKER_CACHE_KEY`, `JWT_SECRET_KEY`) belong there.
 
 **3. Add a CSV fixture + parser test** — drop a sample export at `backend/tests/fixtures/broker_csvs/{slug}_holdings.csv` and add a `Test{Broker}Parser` class in `backend/tests/test_brokers.py`. The shared `BrokerSource.parse()` contract is what the `/sources/{slug}/upload` endpoint relies on.
 
@@ -358,7 +378,7 @@ US-stocks holdings from INDmoney's DriveWealth-backed brokerage account. CDP bro
 
 1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-anton-chrome`.
 2. Log in to [indmoney.com](https://indmoney.com) inside that Chrome window.
-3. Set `INDMONEY_USER_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
+3. Store `INDMONEY_USER_ID` in the afbach vault: `PUT /v1/secrets {"key": "INDMONEY_USER_ID", "value": "<your-id>"}`. The source auto-upgrades to `READY` on next startup (or vault unlock).
 
 ---
 
@@ -384,7 +404,7 @@ Digital gold (SafeGold) balance from Ticker Tape. Captures two XHRs on page load
 
 1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-anton-chrome`.
 2. Log in to [tickertape.in](https://tickertape.in) inside that Chrome window.
-3. Set `TICKERTAPE_USER_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
+3. Store `TICKERTAPE_USER_ID` in the afbach vault: `PUT /v1/secrets {"key": "TICKERTAPE_USER_ID", "value": "<your-id>"}`. The source auto-upgrades to `READY` on next startup (or vault unlock).
 
 ---
 
@@ -414,7 +434,7 @@ CDP browser fetch with an on-disk cache — same pattern as Groww / IndMoney.
 
 1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-anton-chrome`.
 2. Log in to [binance.com](https://binance.com) inside that Chrome window.
-3. Set `BINANCE_USER_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
+3. Store `BINANCE_USER_ID` in the afbach vault: `PUT /v1/secrets {"key": "BINANCE_USER_ID", "value": "<your-id>"}`. The source auto-upgrades to `READY` on next startup (or vault unlock).
 4. Run `uv run python probes/binance_probe.py` once to confirm the holdings XHR URL still matches `BINANCE_HOLDINGS_URL_NEEDLES`. Crypto exchanges rotate endpoints more aggressively than equity brokers.
 
 AlphaForge Anton never sees your password or 2FA — login happens in your own Chrome; the backend just reads the authenticated XHR off the wire.
@@ -486,7 +506,7 @@ slug.
 
 1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-anton-chrome`.
 2. Log in to [kite.zerodha.com](https://kite.zerodha.com) inside that Chrome window.
-3. Set `ZERODHA_USER_ID` in `.env.cred.local` (same variable as the Kite source). The source auto-upgrades to `READY`.
+3. Store `ZERODHA_USER_ID` in the afbach vault: `PUT /v1/secrets {"key": "ZERODHA_USER_ID", "value": "<your-id>"}` (shared with the Kite source). The source auto-upgrades to `READY` on next startup (or vault unlock).
 
 AlphaForge Anton never sees your password or TOTP — login happens in your own Chrome; the backend reads the `enctoken` cookie from the running CDP session.
 
@@ -534,7 +554,7 @@ SmartAPI's free tier proved unreliable for personal sync (rate limits, TOTP fric
 
 1. Start Chrome with `--remote-debugging-port=9299 --user-data-dir=$HOME/.cache/alphaforge-anton-chrome`.
 2. Log in to [angelone.in](https://angelone.in) inside that Chrome window.
-3. Set `ANGELONE_CLIENT_ID` in `.env.cred.local`. The source auto-upgrades to `READY`.
+3. Store `ANGELONE_CLIENT_ID` in the afbach vault: `PUT /v1/secrets {"key": "ANGELONE_CLIENT_ID", "value": "<your-id>"}`. The source auto-upgrades to `READY` on next startup (or vault unlock).
 
 AlphaForge Anton never sees your password or TOTP — login + 2FA happen in your own Chrome; the backend just reads the authenticated XHR off the wire.
 
@@ -672,19 +692,23 @@ All fields the portfolio layer cares about:
 
 ## Environment variables
 
-Add to `.env.example` and `.env.cred.example`:
+Only add **non-secret config** (TTLs, feature flags) to `.env.cred.example`. User IDs and API keys are vault-only — do not list them in any `.env` file:
 
 ```bash
-# MyBroker
-MYBROKER_USER_ID=           # required — triggers READY status
+# MyBroker — add to root .env (non-secret tuning knobs only)
 MYBROKER_REFETCH_SECONDS=3600  # optional TTL, default 1h
 ```
 
-The `REQUIRED_ENV` tuple in `{slug}_source_helper.py` must list every variable that must be non-empty before the source is usable.
+Store the actual credential in the afbach vault:
 
-### Storing the value
+```bash
+curl -s -X PUT http://[::1]:54087/v1/secrets \
+  -H "X-Afbach-Token: $AFBACH_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"key": "MYBROKER_USER_ID", "value": "<your-id>"}'
+```
 
-Real values live in the **alpha-forge-bach vault** — never in `.env.cred.local`.
+The `REQUIRED_ENV` tuple in `{slug}_source_helper.py` lists every variable that must be non-empty before the source is usable. `source_ready(REQUIRED_ENV, env)` in `__init__` reads it and logs a vault-locked hint when keys are missing because the vault is locked. `require_env(key, env)` in acquire/fetch functions raises immediately with the same hint instead of timing out after 180s of CDP waiting.
 ---
 
 ## Quick sanity check after wiring up

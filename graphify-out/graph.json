@@ -4166,9 +4166,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/core/deps.py",
       "source_location": "L32",
-      "id": "deps_rationale_32",
       "community": 0,
-      "norm_label": "lightweight user object built from wagner jwt claims \u2014 no db round-trip."
+      "norm_label": "lightweight user object built from wagner jwt claims \u2014 no db round-trip.",
+      "id": "deps_rationale_32"
     },
     {
       "label": "config.py",
@@ -4400,18 +4400,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/core/vault_client.py",
       "source_location": "L31",
-      "id": "vault_client_rationale_31",
       "community": 17,
-      "norm_label": "true when afbach_token is set but the vault responded with 503 (locked)."
+      "norm_label": "true when afbach_token is set but the vault responded with 503 (locked).",
+      "id": "vault_client_rationale_31"
     },
     {
       "label": "Pull all secrets for this app's namespace into os.environ.      Returns the numb",
       "file_type": "rationale",
       "source_file": "backend/app/core/vault_client.py",
       "source_location": "L36",
-      "id": "vault_client_rationale_36",
       "community": 17,
-      "norm_label": "pull all secrets for this app's namespace into os.environ.      returns the numb"
+      "norm_label": "pull all secrets for this app's namespace into os.environ.      returns the numb",
+      "id": "vault_client_rationale_36"
     },
     {
       "label": "limiter.py",
@@ -4472,27 +4472,27 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/broker_env.py",
       "source_location": "L1",
-      "id": "broker_env_rationale_1",
       "community": 4,
-      "norm_label": "vault-aware env helpers shared by all broker source helpers.  two public helpers"
+      "norm_label": "vault-aware env helpers shared by all broker source helpers.  two public helpers",
+      "id": "broker_env_rationale_1"
     },
     {
       "label": "Return True when every required key is set; log a vault hint if not.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/broker_env.py",
       "source_location": "L23",
-      "id": "broker_env_rationale_23",
       "community": 4,
-      "norm_label": "return true when every required key is set; log a vault hint if not."
+      "norm_label": "return true when every required key is set; log a vault hint if not.",
+      "id": "broker_env_rationale_23"
     },
     {
       "label": "Return the env value for *key*, or raise with vault context if missing.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/broker_env.py",
       "source_location": "L36",
-      "id": "broker_env_rationale_36",
       "community": 1,
-      "norm_label": "return the env value for *key*, or raise with vault context if missing."
+      "norm_label": "return the env value for *key*, or raise with vault context if missing.",
+      "id": "broker_env_rationale_36"
     },
     {
       "label": "aggregator.py",
@@ -4832,18 +4832,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/dump_utils.py",
       "source_location": "L64",
-      "id": "dump_utils_rationale_64",
       "community": 9,
-      "norm_label": "raise valueerror for oversized or missing-column csv files."
+      "norm_label": "raise valueerror for oversized or missing-column csv files.",
+      "id": "dump_utils_rationale_64"
     },
     {
       "label": "Delete the live CSV cache for slug. Returns True if a file was removed.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/dump_utils.py",
       "source_location": "L100",
-      "id": "dump_utils_rationale_100",
       "community": 9,
-      "norm_label": "delete the live csv cache for slug. returns true if a file was removed."
+      "norm_label": "delete the live csv cache for slug. returns true if a file was removed.",
+      "id": "dump_utils_rationale_100"
     },
     {
       "label": "broker_urls.py",
@@ -5921,18 +5921,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/indmoney/indmoney_source_helper.py",
       "source_location": "L63",
-      "id": "indmoney_source_helper_rationale_63",
       "community": 0,
-      "norm_label": "extract the list of holding rows from the holdings xhr payload."
+      "norm_label": "extract the list of holding rows from the holdings xhr payload.",
+      "id": "indmoney_source_helper_rationale_63"
     },
     {
       "label": "Map an INDmoney holding row (new or legacy shape) to the shared dict shape.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/indmoney/indmoney_source_helper.py",
       "source_location": "L83",
-      "id": "indmoney_source_helper_rationale_83",
       "community": 1,
-      "norm_label": "map an indmoney holding row (new or legacy shape) to the shared dict shape."
+      "norm_label": "map an indmoney holding row (new or legacy shape) to the shared dict shape.",
+      "id": "indmoney_source_helper_rationale_83"
     },
     {
       "label": "__init__.py",
@@ -5993,9 +5993,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/indmoney/indmoney_cash_helper.py",
       "source_location": "L47",
-      "id": "indmoney_cash_helper_rationale_47",
       "community": 19,
-      "norm_label": "open a fresh indmoney tab, capture `/account/basic`, return usd cash."
+      "norm_label": "open a fresh indmoney tab, capture `/account/basic`, return usd cash.",
+      "id": "indmoney_cash_helper_rationale_47"
     },
     {
       "label": "indmoney_source.py",
@@ -6209,9 +6209,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/tickertape/tickertape_source_helper.py",
       "source_location": "L60",
-      "id": "tickertape_source_helper_rationale_60",
       "community": 1,
-      "norm_label": "convert profile/v2 + price response into a single holding dict."
+      "norm_label": "convert profile/v2 + price response into a single holding dict.",
+      "id": "tickertape_source_helper_rationale_60"
     },
     {
       "label": "tickertape_dump.py",
@@ -6641,63 +6641,63 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "source_location": "L39",
-      "id": "groww_source_helper_rationale_39",
       "community": 1,
-      "norm_label": "if the page is on /login, wait for the user to complete login."
+      "norm_label": "if the page is on /login, wait for the user to complete login.",
+      "id": "groww_source_helper_rationale_39"
     },
     {
       "label": "Drill into common Groww response shapes to find the holdings list.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "source_location": "L75",
-      "id": "groww_source_helper_rationale_75",
       "community": 15,
-      "norm_label": "drill into common groww response shapes to find the holdings list."
+      "norm_label": "drill into common groww response shapes to find the holdings list.",
+      "id": "groww_source_helper_rationale_75"
     },
     {
       "label": "First non-None value across `keys` \u2014 handles camelCase/snake_case drift.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "source_location": "L116",
-      "id": "groww_source_helper_rationale_116",
       "community": 15,
-      "norm_label": "first non-none value across `keys` \u2014 handles camelcase/snake_case drift."
+      "norm_label": "first non-none value across `keys` \u2014 handles camelcase/snake_case drift.",
+      "id": "groww_source_helper_rationale_116"
     },
     {
       "label": "Return first non-empty value from `keys` in **rupees**, scaling paise fields by",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "source_location": "L133",
-      "id": "groww_source_helper_rationale_133",
       "community": 15,
-      "norm_label": "return first non-empty value from `keys` in **rupees**, scaling paise fields by"
+      "norm_label": "return first non-empty value from `keys` in **rupees**, scaling paise fields by",
+      "id": "groww_source_helper_rationale_133"
     },
     {
       "label": "Map a Groww holdings row to the shared dict shape used by dump.py.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "source_location": "L144",
-      "id": "groww_source_helper_rationale_144",
       "community": 15,
-      "norm_label": "map a groww holdings row to the shared dict shape used by dump.py."
+      "norm_label": "map a groww holdings row to the shared dict shape used by dump.py.",
+      "id": "groww_source_helper_rationale_144"
     },
     {
       "label": "Reload the holdings page and capture the holdings + LTP responses.      Groww's",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "source_location": "L201",
-      "id": "groww_source_helper_rationale_201",
       "community": 15,
-      "norm_label": "reload the holdings page and capture the holdings + ltp responses.      groww's"
+      "norm_label": "reload the holdings page and capture the holdings + ltp responses.      groww's",
+      "id": "groww_source_helper_rationale_201"
     },
     {
       "label": "Attach to Chrome, reload Groww's holdings page, capture the response.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "source_location": "L274",
-      "id": "groww_source_helper_rationale_274",
       "community": 1,
-      "norm_label": "attach to chrome, reload groww's holdings page, capture the response."
+      "norm_label": "attach to chrome, reload groww's holdings page, capture the response.",
+      "id": "groww_source_helper_rationale_274"
     },
     {
       "label": "zerodha_coin_source.py",
@@ -6839,9 +6839,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source_helper.py",
       "source_location": "L71",
-      "id": "zerodha_coin_source_helper_rationale_71",
       "community": 0,
-      "norm_label": "get /api/mf/holdings \u2192 coin mutual fund holdings list."
+      "norm_label": "get /api/mf/holdings \u2192 coin mutual fund holdings list.",
+      "id": "zerodha_coin_source_helper_rationale_71"
     },
     {
       "label": "zerodha_coin_dump.py",
@@ -7064,18 +7064,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "source_location": "L64",
-      "id": "angelone_source_helper_rationale_64",
       "community": 1,
-      "norm_label": "drill into the superportfolio response to pull out holdingdetail rows."
+      "norm_label": "drill into the superportfolio response to pull out holdingdetail rows.",
+      "id": "angelone_source_helper_rationale_64"
     },
     {
       "label": "Map a superportfolio HoldingDetail row to the shared dict shape.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "source_location": "L83",
-      "id": "angelone_source_helper_rationale_83",
       "community": 1,
-      "norm_label": "map a superportfolio holdingdetail row to the shared dict shape."
+      "norm_label": "map a superportfolio holdingdetail row to the shared dict shape.",
+      "id": "angelone_source_helper_rationale_83"
     },
     {
       "label": "angelone_source.py",
@@ -7307,9 +7307,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_dump.py",
       "source_location": "L1",
-      "id": "zerodha_kite_dump_rationale_1",
       "community": 0,
-      "norm_label": "zerodha holdings csv cache \u2014 fetches via cdp, caches to csv.  ttl controlled by"
+      "norm_label": "zerodha holdings csv cache \u2014 fetches via cdp, caches to csv.  ttl controlled by",
+      "id": "zerodha_kite_dump_rationale_1"
     },
     {
       "label": "zerodha_kite_instruments.py",
@@ -7433,18 +7433,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_instruments.py",
       "source_location": "L1",
-      "id": "zerodha_kite_instruments_rationale_1",
       "community": 0,
-      "norm_label": "kite instrument-master cache \u2192 tradingsymbol\u2192name/type lookup for zerodha holdin"
+      "norm_label": "kite instrument-master cache \u2192 tradingsymbol\u2192name/type lookup for zerodha holdin",
+      "id": "zerodha_kite_instruments_rationale_1"
     },
     {
       "label": "Return tradingsymbol\u2192instrument_type (EQ/ETF) map.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_instruments.py",
       "source_location": "L100",
-      "id": "zerodha_kite_instruments_rationale_100",
       "community": 0,
-      "norm_label": "return tradingsymbol\u2192instrument_type (eq/etf) map."
+      "norm_label": "return tradingsymbol\u2192instrument_type (eq/etf) map.",
+      "id": "zerodha_kite_instruments_rationale_100"
     },
     {
       "label": "zerodha_kite_source.py",
@@ -7523,9 +7523,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L1",
-      "id": "zerodha_kite_source_rationale_1",
       "community": 0,
-      "norm_label": "zerodha kite equity-only holdings \u2014 brokersource impl. etf/mf live in zerodha_co"
+      "norm_label": "zerodha kite equity-only holdings \u2014 brokersource impl. etf/mf live in zerodha_co",
+      "id": "zerodha_kite_source_rationale_1"
     },
     {
       "label": "__init__.py",
@@ -7604,36 +7604,36 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L1",
-      "id": "zerodha_kite_source_helper_rationale_1",
       "community": 0,
-      "norm_label": "zerodha kite \u2014 manual cdp login + enctoken cache + holdings fetch.  login flow:"
+      "norm_label": "zerodha kite \u2014 manual cdp login + enctoken cache + holdings fetch.  login flow:",
+      "id": "zerodha_kite_source_helper_rationale_1"
     },
     {
       "label": "Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L46",
-      "id": "zerodha_kite_source_helper_rationale_46",
       "community": 1,
-      "norm_label": "acquire enctoken from an already-running chrome (cdp, port 9299).      if the us"
+      "norm_label": "acquire enctoken from an already-running chrome (cdp, port 9299).      if the us",
+      "id": "zerodha_kite_source_helper_rationale_46"
     },
     {
       "label": "GET /oms/user/margins \u2192 equity available cash for the Kite account.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L84",
-      "id": "zerodha_kite_source_helper_rationale_84",
       "community": 0,
-      "norm_label": "get /oms/user/margins \u2192 equity available cash for the kite account."
+      "norm_label": "get /oms/user/margins \u2192 equity available cash for the kite account.",
+      "id": "zerodha_kite_source_helper_rationale_84"
     },
     {
       "label": "GET /api/mf/holdings \u2192 COIN mutual fund holdings (empty list if not subscribed).",
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L101",
-      "id": "zerodha_kite_source_helper_rationale_101",
       "community": 0,
-      "norm_label": "get /api/mf/holdings \u2192 coin mutual fund holdings (empty list if not subscribed)."
+      "norm_label": "get /api/mf/holdings \u2192 coin mutual fund holdings (empty list if not subscribed).",
+      "id": "zerodha_kite_source_helper_rationale_101"
     },
     {
       "label": "binance_dump.py",
@@ -8243,18 +8243,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/health/health_routes.py",
       "source_location": "L35",
-      "id": "health_routes_rationale_35",
       "community": 12,
-      "norm_label": "per-system readiness snapshot consumed by the terminal boot splash.      probes"
+      "norm_label": "per-system readiness snapshot consumed by the terminal boot splash.      probes",
+      "id": "health_routes_rationale_35"
     },
     {
       "label": "SSE: emits one JSON event per broker as each sync settles.      Replaces the old",
       "file_type": "rationale",
       "source_file": "backend/app/modules/health/health_routes.py",
       "source_location": "L47",
-      "id": "health_routes_rationale_47",
       "community": 12,
-      "norm_label": "sse: emits one json event per broker as each sync settles.      replaces the old"
+      "norm_label": "sse: emits one json event per broker as each sync settles.      replaces the old",
+      "id": "health_routes_rationale_47"
     },
     {
       "label": "dashboard_routes.py",
@@ -8720,9 +8720,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/iam/iam_proxy.py",
       "source_location": "L1",
-      "id": "iam_proxy_rationale_1",
       "community": 0,
-      "norm_label": "iam proxy \u2014 forwards all /iam/* requests to wagner."
+      "norm_label": "iam proxy \u2014 forwards all /iam/* requests to wagner.",
+      "id": "iam_proxy_rationale_1"
     },
     {
       "label": "news_service.py",
@@ -9035,27 +9035,27 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/portfolio/portfolio_routes.py",
       "source_location": "L28",
-      "id": "portfolio_routes_rationale_28",
       "community": 5,
-      "norm_label": "sync stale sources concurrently; cap at 8 s so the request never hangs."
+      "norm_label": "sync stale sources concurrently; cap at 8 s so the request never hangs.",
+      "id": "portfolio_routes_rationale_28"
     },
     {
       "label": "Current FX rates used to roll up cross-currency totals (1-hour CSV cache).",
       "file_type": "rationale",
       "source_file": "backend/app/modules/portfolio/portfolio_routes.py",
       "source_location": "L85",
-      "id": "portfolio_routes_rationale_85",
       "community": 5,
-      "norm_label": "current fx rates used to roll up cross-currency totals (1-hour csv cache)."
+      "norm_label": "current fx rates used to roll up cross-currency totals (1-hour csv cache).",
+      "id": "portfolio_routes_rationale_85"
     },
     {
       "label": "Hard refresh: bust all CSV caches, re-sync every source + all wallets.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/portfolio/portfolio_routes.py",
       "source_location": "L121",
-      "id": "portfolio_routes_rationale_121",
       "community": 9,
-      "norm_label": "hard refresh: bust all csv caches, re-sync every source + all wallets."
+      "norm_label": "hard refresh: bust all csv caches, re-sync every source + all wallets.",
+      "id": "portfolio_routes_rationale_121"
     },
     {
       "label": "test_brokers.py",
@@ -9656,9 +9656,9 @@
       "file_type": "rationale",
       "source_file": "backend/alembic/versions/b3d6f8a2c9e1_remove_iam_tables.py",
       "source_location": "L1",
-      "id": "b3d6f8a2c9e1_remove_iam_tables_rationale_1",
       "community": 10,
-      "norm_label": "remove iam tables \u2014 iam is now owned by wagner.  revision id: b3d6f8a2c9e1 revis"
+      "norm_label": "remove iam tables \u2014 iam is now owned by wagner.  revision id: b3d6f8a2c9e1 revis",
+      "id": "b3d6f8a2c9e1_remove_iam_tables_rationale_1"
     },
     {
       "label": "portfolio_dev.py",
@@ -16017,8 +16017,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_dump.py",
       "source_location": "L67",
       "weight": 1.0,
-      "_src": "zerodha_kite_dump_main",
-      "_tgt": "ui_probe_run",
+      "_src": "ui_probe_run",
+      "_tgt": "zerodha_kite_dump_main",
       "source": "ui_probe_run",
       "target": "zerodha_kite_dump_main"
     },
@@ -19306,9 +19306,9 @@
       "weight": 0.8,
       "_src": "init_rationale_1",
       "_tgt": "zerodha_kite_source_zerodhakitesource",
+      "confidence_score": 0.5,
       "source": "init_rationale_1",
-      "target": "zerodha_kite_source_zerodhakitesource",
-      "confidence_score": 0.5
+      "target": "zerodha_kite_source_zerodhakitesource"
     },
     {
       "relation": "uses",
@@ -20649,8 +20649,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source.py",
       "source_location": "L47",
       "weight": 1.0,
-      "_src": "zerodha_coin_source_mf_holding_from_row",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_coin_source_mf_holding_from_row",
       "source": "str",
       "target": "zerodha_coin_source_mf_holding_from_row"
     },
@@ -20661,8 +20661,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source.py",
       "source_location": "L64",
       "weight": 1.0,
-      "_src": "zerodha_coin_source_etf_holding_from_row",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_coin_source_etf_holding_from_row",
       "source": "str",
       "target": "zerodha_coin_source_etf_holding_from_row"
     },
@@ -20685,8 +20685,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source.py",
       "source_location": "L144",
       "weight": 1.0,
-      "_src": "zerodha_coin_source_zerodhacoinsource_fetch",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_coin_source_zerodhacoinsource_fetch",
       "source": "str",
       "target": "zerodha_coin_source_zerodhacoinsource_fetch"
     },
@@ -20709,8 +20709,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_dump.py",
       "source_location": "L66",
       "weight": 1.0,
-      "_src": "zerodha_coin_dump_dump_zerodha_coin",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_coin_dump_dump_zerodha_coin",
       "source": "str",
       "target": "zerodha_coin_dump_dump_zerodha_coin"
     },
@@ -20781,8 +20781,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_dump.py",
       "source_location": "L54",
       "weight": 1.0,
-      "_src": "zerodha_kite_dump_dump_zerodha",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_kite_dump_dump_zerodha",
       "source": "str",
       "target": "zerodha_kite_dump_dump_zerodha"
     },
@@ -20793,8 +20793,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_instruments.py",
       "source_location": "L34",
       "weight": 1.0,
-      "_src": "zerodha_kite_instruments_ttl",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_kite_instruments_ttl",
       "source": "str",
       "target": "zerodha_kite_instruments_ttl"
     },
@@ -20805,8 +20805,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L60",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_holding_from_row",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_kite_source_holding_from_row",
       "source": "str",
       "target": "zerodha_kite_source_holding_from_row"
     },
@@ -20817,8 +20817,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L80",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_holding_from_csv",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_kite_source_holding_from_csv",
       "source": "str",
       "target": "zerodha_kite_source_holding_from_csv"
     },
@@ -20829,8 +20829,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L144",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_zerodhakitesource_fetch",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_kite_source_zerodhakitesource_fetch",
       "source": "str",
       "target": "zerodha_kite_source_zerodhakitesource_fetch"
     },
@@ -20841,8 +20841,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L74",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_acquire_enctoken",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "zerodha_kite_source_helper_acquire_enctoken",
       "source": "str",
       "target": "zerodha_kite_source_helper_acquire_enctoken"
     },
@@ -27201,8 +27201,8 @@
       "source_file": "backend/app/modules/brokers/broker_env.py",
       "source_location": "L27",
       "weight": 1.0,
-      "_src": "broker_env_source_ready",
-      "_tgt": "vault_client_vault_locked",
+      "_src": "vault_client_vault_locked",
+      "_tgt": "broker_env_source_ready",
       "source": "vault_client_vault_locked",
       "target": "broker_env_source_ready"
     },
@@ -27213,8 +27213,8 @@
       "source_file": "backend/app/modules/brokers/broker_env.py",
       "source_location": "L40",
       "weight": 1.0,
-      "_src": "broker_env_require_env",
-      "_tgt": "vault_client_vault_locked",
+      "_src": "vault_client_vault_locked",
+      "_tgt": "broker_env_require_env",
       "source": "vault_client_vault_locked",
       "target": "broker_env_require_env"
     },
@@ -27321,8 +27321,8 @@
       "source_file": "backend/app/modules/brokers/indmoney/indmoney_source.py",
       "source_location": "L80",
       "weight": 1.0,
-      "_src": "indmoney_source_indmoneysource_init",
-      "_tgt": "broker_env_source_ready",
+      "_src": "broker_env_source_ready",
+      "_tgt": "indmoney_source_indmoneysource_init",
       "source": "broker_env_source_ready",
       "target": "indmoney_source_indmoneysource_init"
     },
@@ -27333,8 +27333,8 @@
       "source_file": "backend/app/modules/brokers/tickertape/tickertape_source.py",
       "source_location": "L67",
       "weight": 1.0,
-      "_src": "tickertape_source_tickertapesource_init",
-      "_tgt": "broker_env_source_ready",
+      "_src": "broker_env_source_ready",
+      "_tgt": "tickertape_source_tickertapesource_init",
       "source": "broker_env_source_ready",
       "target": "tickertape_source_tickertapesource_init"
     },
@@ -27345,8 +27345,8 @@
       "source_file": "backend/app/modules/brokers/groww/groww_source.py",
       "source_location": "L93",
       "weight": 1.0,
-      "_src": "groww_source_growwsource_init",
-      "_tgt": "broker_env_source_ready",
+      "_src": "broker_env_source_ready",
+      "_tgt": "groww_source_growwsource_init",
       "source": "broker_env_source_ready",
       "target": "groww_source_growwsource_init"
     },
@@ -27357,8 +27357,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source.py",
       "source_location": "L109",
       "weight": 1.0,
-      "_src": "zerodha_coin_source_zerodhacoinsource_init",
-      "_tgt": "broker_env_source_ready",
+      "_src": "broker_env_source_ready",
+      "_tgt": "zerodha_coin_source_zerodhacoinsource_init",
       "source": "broker_env_source_ready",
       "target": "zerodha_coin_source_zerodhacoinsource_init"
     },
@@ -27369,8 +27369,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_source.py",
       "source_location": "L88",
       "weight": 1.0,
-      "_src": "angelone_source_angelonesource_init",
-      "_tgt": "broker_env_source_ready",
+      "_src": "broker_env_source_ready",
+      "_tgt": "angelone_source_angelonesource_init",
       "source": "broker_env_source_ready",
       "target": "angelone_source_angelonesource_init"
     },
@@ -27381,8 +27381,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L114",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_zerodhakitesource_init",
-      "_tgt": "broker_env_source_ready",
+      "_src": "broker_env_source_ready",
+      "_tgt": "zerodha_kite_source_zerodhakitesource_init",
       "source": "broker_env_source_ready",
       "target": "zerodha_kite_source_zerodhakitesource_init"
     },
@@ -27393,8 +27393,8 @@
       "source_file": "backend/app/modules/brokers/binance/binance_source.py",
       "source_location": "L70",
       "weight": 1.0,
-      "_src": "binance_source_binancesource_init",
-      "_tgt": "broker_env_source_ready",
+      "_src": "broker_env_source_ready",
+      "_tgt": "binance_source_binancesource_init",
       "source": "broker_env_source_ready",
       "target": "binance_source_binancesource_init"
     },
@@ -27417,8 +27417,8 @@
       "source_file": "backend/app/modules/brokers/indmoney/indmoney_source_helper.py",
       "source_location": "L160",
       "weight": 1.0,
-      "_src": "indmoney_source_helper_fetch_holdings_via_browser",
-      "_tgt": "broker_env_require_env",
+      "_src": "broker_env_require_env",
+      "_tgt": "indmoney_source_helper_fetch_holdings_via_browser",
       "source": "broker_env_require_env",
       "target": "indmoney_source_helper_fetch_holdings_via_browser"
     },
@@ -27429,8 +27429,8 @@
       "source_file": "backend/app/modules/brokers/tickertape/tickertape_source_helper.py",
       "source_location": "L126",
       "weight": 1.0,
-      "_src": "tickertape_source_helper_fetch_holdings_via_browser",
-      "_tgt": "broker_env_require_env",
+      "_src": "broker_env_require_env",
+      "_tgt": "tickertape_source_helper_fetch_holdings_via_browser",
       "source": "broker_env_require_env",
       "target": "tickertape_source_helper_fetch_holdings_via_browser"
     },
@@ -27441,8 +27441,8 @@
       "source_file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "source_location": "L275",
       "weight": 1.0,
-      "_src": "groww_source_helper_fetch_holdings_via_browser",
-      "_tgt": "broker_env_require_env",
+      "_src": "broker_env_require_env",
+      "_tgt": "groww_source_helper_fetch_holdings_via_browser",
       "source": "broker_env_require_env",
       "target": "groww_source_helper_fetch_holdings_via_browser"
     },
@@ -27453,8 +27453,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source_helper.py",
       "source_location": "L63",
       "weight": 1.0,
-      "_src": "zerodha_coin_source_helper_acquire_token",
-      "_tgt": "broker_env_require_env",
+      "_src": "broker_env_require_env",
+      "_tgt": "zerodha_coin_source_helper_acquire_token",
       "source": "broker_env_require_env",
       "target": "zerodha_coin_source_helper_acquire_token"
     },
@@ -27465,8 +27465,8 @@
       "source_file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "source_location": "L140",
       "weight": 1.0,
-      "_src": "angelone_source_helper_fetch_holdings_via_browser",
-      "_tgt": "broker_env_require_env",
+      "_src": "broker_env_require_env",
+      "_tgt": "angelone_source_helper_fetch_holdings_via_browser",
       "source": "broker_env_require_env",
       "target": "angelone_source_helper_fetch_holdings_via_browser"
     },
@@ -27477,8 +27477,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L76",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_acquire_enctoken",
-      "_tgt": "broker_env_require_env",
+      "_src": "broker_env_require_env",
+      "_tgt": "zerodha_kite_source_helper_acquire_enctoken",
       "source": "broker_env_require_env",
       "target": "zerodha_kite_source_helper_acquire_enctoken"
     },
@@ -27489,8 +27489,8 @@
       "source_file": "backend/app/modules/brokers/binance/binance_source_helper.py",
       "source_location": "L90",
       "weight": 1.0,
-      "_src": "binance_source_helper_fetch_holdings_via_browser",
-      "_tgt": "broker_env_require_env",
+      "_src": "broker_env_require_env",
+      "_tgt": "binance_source_helper_fetch_holdings_via_browser",
       "source": "broker_env_require_env",
       "target": "binance_source_helper_fetch_holdings_via_browser"
     },
@@ -28449,8 +28449,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_instruments.py",
       "source_location": "L43",
       "weight": 1.0,
-      "_src": "zerodha_kite_instruments_download",
-      "_tgt": "http_make_client",
+      "_src": "http_make_client",
+      "_tgt": "zerodha_kite_instruments_download",
       "source": "http_make_client",
       "target": "zerodha_kite_instruments_download"
     },
@@ -28461,8 +28461,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L86",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_fetch_margins_json",
-      "_tgt": "http_make_client",
+      "_src": "http_make_client",
+      "_tgt": "zerodha_kite_source_helper_fetch_margins_json",
       "source": "http_make_client",
       "target": "zerodha_kite_source_helper_fetch_margins_json"
     },
@@ -28473,8 +28473,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L103",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_fetch_mf_holdings_json",
-      "_tgt": "http_make_client",
+      "_src": "http_make_client",
+      "_tgt": "zerodha_kite_source_helper_fetch_mf_holdings_json",
       "source": "http_make_client",
       "target": "zerodha_kite_source_helper_fetch_mf_holdings_json"
     },
@@ -28485,8 +28485,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L122",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_fetch_holdings_json",
-      "_tgt": "http_make_client",
+      "_src": "http_make_client",
+      "_tgt": "zerodha_kite_source_helper_fetch_holdings_json",
       "source": "http_make_client",
       "target": "zerodha_kite_source_helper_fetch_holdings_json"
     },
@@ -28581,8 +28581,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L72",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_acquire_enctoken",
-      "_tgt": "http_load_session",
+      "_src": "http_load_session",
+      "_tgt": "zerodha_kite_source_helper_acquire_enctoken",
       "source": "http_load_session",
       "target": "zerodha_kite_source_helper_acquire_enctoken"
     },
@@ -28605,8 +28605,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L78",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_acquire_enctoken",
-      "_tgt": "http_save_session",
+      "_src": "http_save_session",
+      "_tgt": "zerodha_kite_source_helper_acquire_enctoken",
       "source": "http_save_session",
       "target": "zerodha_kite_source_helper_acquire_enctoken"
     },
@@ -28629,8 +28629,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L136",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_zerodhakitesource_fetch",
-      "_tgt": "http_clear_session",
+      "_src": "http_clear_session",
+      "_tgt": "zerodha_kite_source_zerodhakitesource_fetch",
       "source": "http_clear_session",
       "target": "zerodha_kite_source_zerodhakitesource_fetch"
     },
@@ -28641,8 +28641,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L160",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_zerodhakitesource_fetch_cash",
-      "_tgt": "http_clear_session",
+      "_src": "http_clear_session",
+      "_tgt": "zerodha_kite_source_zerodhakitesource_fetch_cash",
       "source": "http_clear_session",
       "target": "zerodha_kite_source_zerodhakitesource_fetch_cash"
     },
@@ -28881,8 +28881,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_instruments.py",
       "source_location": "L30",
       "weight": 1.0,
-      "_src": "zerodha_kite_instruments_cache_path",
-      "_tgt": "dump_utils_dump_dir",
+      "_src": "dump_utils_dump_dir",
+      "_tgt": "zerodha_kite_instruments_cache_path",
       "source": "dump_utils_dump_dir",
       "target": "zerodha_kite_instruments_cache_path"
     },
@@ -28989,8 +28989,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_dump.py",
       "source_location": "L59",
       "weight": 1.0,
-      "_src": "zerodha_kite_dump_dump_zerodha",
-      "_tgt": "dump_utils_dated_csv_path",
+      "_src": "dump_utils_dated_csv_path",
+      "_tgt": "zerodha_kite_dump_dump_zerodha",
       "source": "dump_utils_dated_csv_path",
       "target": "zerodha_kite_dump_dump_zerodha"
     },
@@ -29073,8 +29073,8 @@
       "source_file": "backend/app/modules/portfolio/portfolio_routes.py",
       "source_location": "L123",
       "weight": 1.0,
-      "_src": "portfolio_routes_force_refresh",
-      "_tgt": "dump_utils_clear_csv_cache",
+      "_src": "dump_utils_clear_csv_cache",
+      "_tgt": "portfolio_routes_force_refresh",
       "source": "dump_utils_clear_csv_cache",
       "target": "portfolio_routes_force_refresh"
     },
@@ -29685,8 +29685,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source.py",
       "source_location": "L82",
       "weight": 1.0,
-      "_src": "zerodha_coin_source_holding_from_csv",
-      "_tgt": "broker_schemas_assetclass",
+      "_src": "broker_schemas_assetclass",
+      "_tgt": "zerodha_coin_source_holding_from_csv",
       "source": "broker_schemas_assetclass",
       "target": "zerodha_coin_source_holding_from_csv"
     },
@@ -29697,8 +29697,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L85",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_holding_from_csv",
-      "_tgt": "broker_schemas_assetclass",
+      "_src": "broker_schemas_assetclass",
+      "_tgt": "zerodha_kite_source_holding_from_csv",
       "source": "broker_schemas_assetclass",
       "target": "zerodha_kite_source_holding_from_csv"
     },
@@ -29816,11 +29816,11 @@
       "source_file": "backend/app/modules/health/health_routes.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "health_routes_rationale_35",
-      "_tgt": "broker_schemas_sourcestatus",
+      "_src": "broker_schemas_sourcestatus",
+      "_tgt": "health_routes_rationale_35",
+      "confidence_score": 0.5,
       "source": "broker_schemas_sourcestatus",
-      "target": "health_routes_rationale_35",
-      "confidence_score": 0.5
+      "target": "health_routes_rationale_35"
     },
     {
       "relation": "uses",
@@ -29828,11 +29828,11 @@
       "source_file": "backend/app/modules/health/health_routes.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "health_routes_rationale_47",
-      "_tgt": "broker_schemas_sourcestatus",
+      "_src": "broker_schemas_sourcestatus",
+      "_tgt": "health_routes_rationale_47",
+      "confidence_score": 0.5,
       "source": "broker_schemas_sourcestatus",
-      "target": "health_routes_rationale_47",
-      "confidence_score": 0.5
+      "target": "health_routes_rationale_47"
     },
     {
       "relation": "uses",
@@ -30213,8 +30213,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L167",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_zerodhakitesource_fetch_cash",
-      "_tgt": "broker_schemas_walletbalance",
+      "_src": "broker_schemas_walletbalance",
+      "_tgt": "zerodha_kite_source_zerodhakitesource_fetch_cash",
       "source": "broker_schemas_walletbalance",
       "target": "zerodha_kite_source_zerodhakitesource_fetch_cash"
     },
@@ -30681,8 +30681,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L52",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_cdp_login",
-      "_tgt": "cdp_connect_existing_chrome",
+      "_src": "cdp_connect_existing_chrome",
+      "_tgt": "zerodha_kite_source_helper_cdp_login",
       "source": "cdp_connect_existing_chrome",
       "target": "zerodha_kite_source_helper_cdp_login"
     },
@@ -30789,8 +30789,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L54",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_cdp_login",
-      "_tgt": "cdp_find_or_open_page",
+      "_src": "cdp_find_or_open_page",
+      "_tgt": "zerodha_kite_source_helper_cdp_login",
       "source": "cdp_find_or_open_page",
       "target": "zerodha_kite_source_helper_cdp_login"
     },
@@ -30837,8 +30837,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L56",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_cdp_login",
-      "_tgt": "cdp_cookie_value",
+      "_src": "cdp_cookie_value",
+      "_tgt": "zerodha_kite_source_helper_cdp_login",
       "source": "cdp_cookie_value",
       "target": "zerodha_kite_source_helper_cdp_login"
     },
@@ -31269,8 +31269,8 @@
       "source_file": "backend/app/modules/portfolio/portfolio_routes.py",
       "source_location": "L134",
       "weight": 1.0,
-      "_src": "portfolio_routes_force_refresh",
-      "_tgt": "wallet_aggregator_sync_all",
+      "_src": "wallet_aggregator_sync_all",
+      "_tgt": "portfolio_routes_force_refresh",
       "source": "wallet_aggregator_sync_all",
       "target": "portfolio_routes_force_refresh"
     },
@@ -32060,11 +32060,11 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "zerodha_kite_source_zerodhakitesource",
-      "_tgt": "base_brokersource",
+      "_src": "base_brokersource",
+      "_tgt": "zerodha_kite_source_zerodhakitesource",
+      "confidence_score": 0.5,
       "source": "base_brokersource",
-      "target": "zerodha_kite_source_zerodhakitesource",
-      "confidence_score": 0.5
+      "target": "zerodha_kite_source_zerodhakitesource"
     },
     {
       "relation": "uses",
@@ -32072,11 +32072,11 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "zerodha_kite_source_rationale_1",
-      "_tgt": "base_brokersource",
+      "_src": "base_brokersource",
+      "_tgt": "zerodha_kite_source_rationale_1",
+      "confidence_score": 0.5,
       "source": "base_brokersource",
-      "target": "zerodha_kite_source_rationale_1",
-      "confidence_score": 0.5
+      "target": "zerodha_kite_source_rationale_1"
     },
     {
       "relation": "uses",
@@ -32481,8 +32481,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_dump.py",
       "source_location": "L60",
       "weight": 1.0,
-      "_src": "zerodha_kite_dump_dump_zerodha",
-      "_tgt": "base_brokersource_info",
+      "_src": "base_brokersource_info",
+      "_tgt": "zerodha_kite_dump_dump_zerodha",
       "source": "base_brokersource_info",
       "target": "zerodha_kite_dump_dump_zerodha"
     },
@@ -32493,8 +32493,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_instruments.py",
       "source_location": "L54",
       "weight": 1.0,
-      "_src": "zerodha_kite_instruments_refresh_cache",
-      "_tgt": "base_brokersource_info",
+      "_src": "base_brokersource_info",
+      "_tgt": "zerodha_kite_instruments_refresh_cache",
       "source": "base_brokersource_info",
       "target": "zerodha_kite_instruments_refresh_cache"
     },
@@ -32505,8 +32505,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_instruments.py",
       "source_location": "L88",
       "weight": 1.0,
-      "_src": "zerodha_kite_instruments_ensure_loaded",
-      "_tgt": "base_brokersource_info",
+      "_src": "base_brokersource_info",
+      "_tgt": "zerodha_kite_instruments_ensure_loaded",
       "source": "base_brokersource_info",
       "target": "zerodha_kite_instruments_ensure_loaded"
     },
@@ -32517,8 +32517,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L123",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_zerodhakitesource_fetch",
-      "_tgt": "base_brokersource_info",
+      "_src": "base_brokersource_info",
+      "_tgt": "zerodha_kite_source_zerodhakitesource_fetch",
       "source": "base_brokersource_info",
       "target": "zerodha_kite_source_zerodhakitesource_fetch"
     },
@@ -32529,8 +32529,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L58",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_cdp_login",
-      "_tgt": "base_brokersource_info",
+      "_src": "base_brokersource_info",
+      "_tgt": "zerodha_kite_source_helper_cdp_login",
       "source": "base_brokersource_info",
       "target": "zerodha_kite_source_helper_cdp_login"
     },
@@ -32541,8 +32541,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "source_location": "L79",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_helper_acquire_enctoken",
-      "_tgt": "base_brokersource_info",
+      "_src": "base_brokersource_info",
+      "_tgt": "zerodha_kite_source_helper_acquire_enctoken",
       "source": "base_brokersource_info",
       "target": "zerodha_kite_source_helper_acquire_enctoken"
     },
@@ -37029,8 +37029,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L141",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_zerodhakitesource_fetch",
-      "_tgt": "zerodha_kite_instruments_name_lookup",
+      "_src": "zerodha_kite_instruments_name_lookup",
+      "_tgt": "zerodha_kite_source_zerodhakitesource_fetch",
       "source": "zerodha_kite_instruments_name_lookup",
       "target": "zerodha_kite_source_zerodhakitesource_fetch"
     },
@@ -37053,8 +37053,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L142",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_zerodhakitesource_fetch",
-      "_tgt": "zerodha_kite_instruments_type_lookup",
+      "_src": "zerodha_kite_instruments_type_lookup",
+      "_tgt": "zerodha_kite_source_zerodhakitesource_fetch",
       "source": "zerodha_kite_instruments_type_lookup",
       "target": "zerodha_kite_source_zerodhakitesource_fetch"
     },
@@ -37089,8 +37089,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L121",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_zerodhakitesource_fetch",
-      "_tgt": "zerodha_kite_instruments_name_lookup_sync",
+      "_src": "zerodha_kite_instruments_name_lookup_sync",
+      "_tgt": "zerodha_kite_source_zerodhakitesource_fetch",
       "source": "zerodha_kite_instruments_name_lookup_sync",
       "target": "zerodha_kite_source_zerodhakitesource_fetch"
     },
@@ -37101,8 +37101,8 @@
       "source_file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "source_location": "L121",
       "weight": 1.0,
-      "_src": "zerodha_kite_source_zerodhakitesource_fetch",
-      "_tgt": "zerodha_kite_instruments_type_lookup_sync",
+      "_src": "zerodha_kite_instruments_type_lookup_sync",
+      "_tgt": "zerodha_kite_source_zerodhakitesource_fetch",
       "source": "zerodha_kite_instruments_type_lookup_sync",
       "target": "zerodha_kite_source_zerodhakitesource_fetch"
     },
@@ -38696,11 +38696,11 @@
       "source_file": "backend/app/modules/health/health_routes.py",
       "source_location": "L21",
       "weight": 0.8,
-      "_src": "health_routes_rationale_35",
-      "_tgt": "boot_schemas_bootreport",
+      "_src": "boot_schemas_bootreport",
+      "_tgt": "health_routes_rationale_35",
+      "confidence_score": 0.5,
       "source": "boot_schemas_bootreport",
-      "target": "health_routes_rationale_35",
-      "confidence_score": 0.5
+      "target": "health_routes_rationale_35"
     },
     {
       "relation": "uses",
@@ -38708,11 +38708,11 @@
       "source_file": "backend/app/modules/health/health_routes.py",
       "source_location": "L21",
       "weight": 0.8,
-      "_src": "health_routes_rationale_47",
-      "_tgt": "boot_schemas_bootreport",
+      "_src": "boot_schemas_bootreport",
+      "_tgt": "health_routes_rationale_47",
+      "confidence_score": 0.5,
       "source": "boot_schemas_bootreport",
-      "target": "health_routes_rationale_47",
-      "confidence_score": 0.5
+      "target": "health_routes_rationale_47"
     },
     {
       "relation": "calls",
