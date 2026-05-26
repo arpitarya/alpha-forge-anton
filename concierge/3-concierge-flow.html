@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alpha Chat — Backend Flow Diagrams</title>
+  <title>Orff — Backend Flow Diagrams</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
@@ -233,7 +233,7 @@
 <header>
   <span class="logo">AlphaForge</span>
   <span class="header-sep">·</span>
-  <span class="header-title">Chat Backend — Flow Diagrams</span>
+  <span class="header-title">Concierge Backend — Flow Diagrams</span>
   <div class="header-right">
     <span class="badge">13 diagrams</span>
     <span class="badge">Mermaid v11</span>
@@ -263,20 +263,20 @@
 <div class="panel active" id="panel-all">
   <div class="panel-hd" style="border:none;padding-bottom:6px;margin-bottom:24px;">
     <div class="panel-meta">
-      <h2>Chat Backend — Flow Diagrams</h2>
-      <p>Architecture and implementation reference for the Alpha chat module — Anthropic API, server-side memory, shared Voice + Chat sessions. Click any card to open the diagram.</p>
+      <h2>Concierge Backend — Flow Diagrams</h2>
+      <p>Architecture and implementation reference for the Orff module — Anthropic API, server-side memory, shared Voice + Concierge sessions. Click any card to open the diagram.</p>
     </div>
   </div>
   <div class="ov-grid">
-    <div class="ov-card" onclick="go('1')"><span class="ov-tag">01 · Sequence</span><div class="ov-title"><span class="arrow">→</span>End-to-End Request Lifecycle</div><div class="ov-desc">Full sequence from user keypress through ChatRail, hook, proxy, FastAPI JWT guard, memory load, Anthropic stream, back to UI.</div></div>
-    <div class="ov-card" onclick="go('2')"><span class="ov-tag">02 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>Backend Module Dependency Graph</div><div class="ov-desc">Static import map of all chat module files and their relationships to core infrastructure, Anthropic SDK, and PostgreSQL.</div></div>
+    <div class="ov-card" onclick="go('1')"><span class="ov-tag">01 · Sequence</span><div class="ov-title"><span class="arrow">→</span>End-to-End Request Lifecycle</div><div class="ov-desc">Full sequence from user keypress through ConciergeRail, hook, proxy, FastAPI JWT guard, memory load, Anthropic stream, back to UI.</div></div>
+    <div class="ov-card" onclick="go('2')"><span class="ov-tag">02 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>Backend Module Dependency Graph</div><div class="ov-desc">Static import map of all concierge module files and their relationships to core infrastructure, Anthropic SDK, and PostgreSQL.</div></div>
     <div class="ov-card" onclick="go('3')"><span class="ov-tag">03 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>Memory Service Internal Flow</div><div class="ov-desc">Session lookup or creation, history hydration, and turn persistence after the Anthropic stream closes.</div></div>
     <div class="ov-card" onclick="go('4')"><span class="ov-tag">04 · Sequence</span><div class="ov-title"><span class="arrow">→</span>Anthropic SDK to SSE Chain</div><div class="ov-desc">Token-level flow from messages.stream() through FastAPI StreamingResponse yield frames to the ReadableStream reader in the hook.</div></div>
-    <div class="ov-card" onclick="go('5')"><span class="ov-tag">05 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>Frontend Component Tree</div><div class="ov-desc">ChatProvider → useChatStream → AlphaBar + ChatRail + ModelPicker, plus the dashed future VoiceRail branch.</div></div>
+    <div class="ov-card" onclick="go('5')"><span class="ov-tag">05 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>Frontend Component Tree</div><div class="ov-desc">ConciergeProvider → useConciergeStream → AlphaBar + ConciergeRail + ModelPicker, plus the dashed future VoiceRail branch.</div></div>
     <div class="ov-card" onclick="go('6')"><span class="ov-tag">06 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>Prompt Caching Strategy</div><div class="ov-desc">Which message blocks get cache_control: ephemeral and expected cache-hit rates. System prompt alone cuts ~80% of prompt-token cost.</div></div>
     <div class="ov-card" onclick="go('7')"><span class="ov-tag">07 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>Model Routing Decision Tree</div><div class="ov-desc">Auto regex branches to Sonnet vs Haiku, explicit slugs to direct Anthropic SDK vs the existing LLM gateway.</div></div>
-    <div class="ov-card" onclick="go('8')"><span class="ov-tag">08 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>Voice + Chat Shared Session</div><div class="ov-desc">Both modalities write to the same chat_turns table. Anthropic sees unified mixed-source history regardless of modality.</div></div>
-    <div class="ov-card" onclick="go('9')"><span class="ov-tag">09 · ER Diagram</span><div class="ov-title"><span class="arrow">→</span>Database Schema</div><div class="ov-desc">Full ERD for chat_sessions and chat_turns — every column, type, and constraint. Direct spec for the Alembic migration.</div></div>
+    <div class="ov-card" onclick="go('8')"><span class="ov-tag">08 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>Voice + Concierge Shared Session</div><div class="ov-desc">Both modalities write to the same concierge_turns table. Anthropic sees unified mixed-source history regardless of modality.</div></div>
+    <div class="ov-card" onclick="go('9')"><span class="ov-tag">09 · ER Diagram</span><div class="ov-title"><span class="arrow">→</span>Database Schema</div><div class="ov-desc">Full ERD for concierge_sessions and concierge_turns — every column, type, and constraint. Direct spec for the Alembic migration.</div></div>
     <div class="ov-card" onclick="go('10')"><span class="ov-tag">10 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>API Wire Format</div><div class="ov-desc">Exact shape at every hop — POST body, session bootstrap frame, delta frames, metadata frame, and DONE sentinel.</div></div>
     <div class="ov-card" onclick="go('11')"><span class="ov-tag">11 · Flowchart</span><div class="ov-title"><span class="arrow">→</span>Error Handling</div><div class="ov-desc">Every failure path — auth errors, rate limits, DB write failures, JWT expiry, and client abort — with HTTP codes and SSE error frames.</div></div>
     <div class="ov-card" onclick="go('12')"><span class="ov-tag">12 · State Diagram</span><div class="ov-title"><span class="arrow">→</span>Session State Machine</div><div class="ov-desc">New → Active → Streaming → Idle → Expired → Abandoned lifecycle with all transition triggers.</div></div>
@@ -286,38 +286,38 @@
 
 <!-- ══ Panel 1 ══ -->
 <div class="panel" id="panel-1">
-  <div class="panel-hd"><div class="panel-num">1</div><div class="panel-meta"><h2>End-to-End Request Lifecycle</h2><p>Traces a single user message from the <code>ChatRail</code> textarea through every layer — Next.js proxy, FastAPI JWT guard, memory DB reads, Anthropic token stream, SSE delivery, and final DB persistence.</p></div></div>
+  <div class="panel-hd"><div class="panel-num">1</div><div class="panel-meta"><h2>End-to-End Request Lifecycle</h2><p>Traces a single user message from the <code>ConciergeRail</code> textarea through every layer — Next.js proxy, FastAPI JWT guard, memory DB reads, Anthropic token stream, SSE delivery, and final DB persistence.</p></div></div>
   <div class="diagram-card">
     <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">sequence diagram · request lifecycle</span></div>
     <div class="dc-body"><div class="mermaid">
 sequenceDiagram
     actor User
-    participant ChatRail
-    participant Hook as useChatStream
+    participant ConciergeRail
+    participant Hook as useConciergeStream
     participant Proxy as Next.js Proxy
-    participant Routes as chat_routes
+    participant Routes as concierge_routes
     participant Deps as deps.py
-    participant Service as chat_service
-    participant Memory as chat_memory_service
+    participant Service as concierge_service
+    participant Memory as concierge_memory_service
     participant DB as PostgreSQL
     participant Claude as Anthropic SDK
 
-    User->>ChatRail: type message, press Enter
-    ChatRail->>Hook: onSeed(query)
+    User->>ConciergeRail: type message, press Enter
+    ConciergeRail->>Hook: onSeed(query)
     Hook->>Hook: append optimistic turn loading=true
-    Hook->>Proxy: POST /api/v1/chat with session_id
+    Hook->>Proxy: POST /api/v1/concierge with session_id
     Proxy->>Routes: forward to backend port 8000
     Routes->>Deps: validate JWT
     Deps-->>Routes: UserClaims id + role + email
-    Routes->>Service: stream_chat(messages, model, session_id)
+    Routes->>Service: stream_concierge(messages, model, session_id)
 
     Service->>Memory: get_or_create_session(session_id, user_id)
-    Memory->>DB: SELECT or INSERT chat_sessions
+    Memory->>DB: SELECT or INSERT concierge_sessions
     DB-->>Memory: session row
     Memory-->>Service: session_id UUID
 
     Service->>Memory: load_history(session_id, limit=20)
-    Memory->>DB: SELECT chat_turns ORDER BY created_at
+    Memory->>DB: SELECT concierge_turns ORDER BY created_at
     DB-->>Memory: turn rows
     Memory-->>Service: list of Messages
 
@@ -329,12 +329,12 @@ sequenceDiagram
         Service-->>Routes: yield SSE delta frame
         Routes-->>Hook: StreamingResponse chunk
         Hook->>Hook: accumulate and patchTurn
-        ChatRail->>User: render streaming response
+        ConciergeRail->>User: render streaming response
     end
 
     Claude-->>Service: MessageStopEvent with usage
     Service->>Memory: append_turn user then assistant
-    Memory->>DB: INSERT two chat_turns rows
+    Memory->>DB: INSERT two concierge_turns rows
     Service-->>Routes: yield SSE meta frame
     Routes-->>Hook: data DONE
     Hook->>Hook: patchTurn loading=false
@@ -350,7 +350,7 @@ sequenceDiagram
 
 <!-- ══ Panel 2 ══ -->
 <div class="panel" id="panel-2">
-  <div class="panel-hd"><div class="panel-num">2</div><div class="panel-meta"><h2>Backend Module Dependency Graph</h2><p>Static import/dependency map of all chat module files and their relationships to <code>app/core</code>, the Anthropic SDK, and PostgreSQL.</p></div></div>
+  <div class="panel-hd"><div class="panel-num">2</div><div class="panel-meta"><h2>Backend Module Dependency Graph</h2><p>Static import/dependency map of all concierge module files and their relationships to <code>app/core</code>, the Anthropic SDK, and PostgreSQL.</p></div></div>
   <div class="diagram-card">
     <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">flowchart · module dependencies</span></div>
     <div class="dc-body"><div class="mermaid">
@@ -360,12 +360,12 @@ flowchart TD
         MODULES["app/modules/init.py"]
     end
 
-    subgraph ChatModule["chat module"]
-        ROUTES["chat_routes.py"]
-        SERVICE["chat_service.py"]
-        SCHEMAS["chat_schemas.py"]
-        MEM_SVC["chat_memory_service.py"]
-        MEM_MDL["chat_memory_models.py"]
+    subgraph ConciergeModule["concierge module"]
+        ROUTES["concierge_routes.py"]
+        SERVICE["concierge_service.py"]
+        SCHEMAS["concierge_schemas.py"]
+        MEM_SVC["concierge_memory_service.py"]
+        MEM_MDL["concierge_memory_models.py"]
     end
 
     subgraph Core["app/core"]
@@ -399,29 +399,29 @@ flowchart TD
 
 <!-- ══ Panel 3 ══ -->
 <div class="panel" id="panel-3">
-  <div class="panel-hd"><div class="panel-num">3</div><div class="panel-meta"><h2>Memory Service Internal Flow</h2><p>Decision tree inside <code>chat_memory_service.py</code> — session lookup or creation, history hydration, and turn persistence after the Anthropic stream closes.</p></div></div>
+  <div class="panel-hd"><div class="panel-num">3</div><div class="panel-meta"><h2>Memory Service Internal Flow</h2><p>Decision tree inside <code>concierge_memory_service.py</code> — session lookup or creation, history hydration, and turn persistence after the Anthropic stream closes.</p></div></div>
   <div class="diagram-card">
     <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">flowchart · memory service</span></div>
     <div class="dc-body"><div class="mermaid">
 flowchart TD
-    A(["stream_chat called\nsession_id: str or None"]) --> B{"session_id provided?"}
+    A(["stream_concierge called\nsession_id: str or None"]) --> B{"session_id provided?"}
 
-    B -- No --> C["INSERT chat_sessions\nid=uuid4, user_id, title"]
-    B -- Yes --> D["SELECT chat_sessions\nWHERE id=session_id\nAND user_id=caller"]
+    B -- No --> C["INSERT concierge_sessions\nid=uuid4, user_id, title"]
+    B -- Yes --> D["SELECT concierge_sessions\nWHERE id=session_id\nAND user_id=caller"]
     D --> E{"row found?"}
     E -- No or wrong owner --> F["raise 404 or 403"]
     E -- Yes --> G["return session_id"]
     C --> G
 
-    G --> H["load_history\nSELECT chat_turns\nORDER BY created_at\nLIMIT 20"]
+    G --> H["load_history\nSELECT concierge_turns\nORDER BY created_at\nLIMIT 20"]
     H --> I["map rows to list of Message"]
-    I --> J(["return history to chat_service"])
+    I --> J(["return history to concierge_service"])
 
     J --> K["build messages array\n1. system prompt cached\n2. history turns\n3. new user message"]
     K --> L["Anthropic stream completes"]
 
-    L --> M["INSERT chat_turns\nrole=user, source=chat or voice"]
-    M --> N["INSERT chat_turns\nrole=assistant, model\ntokens_in, tokens_out, elapsed_ms"]
+    L --> M["INSERT concierge_turns\nrole=user, source=concierge or voice"]
+    M --> N["INSERT concierge_turns\nrole=assistant, model\ntokens_in, tokens_out, elapsed_ms"]
     N --> O(["done"])
     </div></div>
   </div>
@@ -439,10 +439,10 @@ flowchart TD
     <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">sequence diagram · anthropic sdk streaming</span></div>
     <div class="dc-body"><div class="mermaid">
 sequenceDiagram
-    participant Service as chat_service
+    participant Service as concierge_service
     participant SDK as Anthropic SDK
-    participant Route as chat_routes
-    participant Hook as useChatStream
+    participant Route as concierge_routes
+    participant Hook as useConciergeStream
 
     Service->>SDK: messages.stream(model, system with cache, messages)
     SDK-->>Service: stream_start
@@ -467,7 +467,7 @@ sequenceDiagram
 
 <!-- ══ Panel 5 ══ -->
 <div class="panel" id="panel-5">
-  <div class="panel-hd"><div class="panel-num">5</div><div class="panel-meta"><h2>Frontend Component Tree</h2><p>React component hierarchy from <code>layout.tsx</code> through <code>ChatProvider</code> and the shared <code>useChatStream</code> hook into rendered UI — plus the dashed future <code>VoiceRail</code> branch.</p></div></div>
+  <div class="panel-hd"><div class="panel-num">5</div><div class="panel-meta"><h2>Frontend Component Tree</h2><p>React component hierarchy from <code>layout.tsx</code> through <code>ConciergeProvider</code> and the shared <code>useConciergeStream</code> hook into rendered UI — plus the dashed future <code>VoiceRail</code> branch.</p></div></div>
   <div class="diagram-card">
     <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">flowchart · frontend components</span></div>
     <div class="dc-body"><div class="mermaid">
@@ -477,12 +477,12 @@ flowchart TD
         QP[QueryProvider]
         AG[AuthGuard]
         BG[BootGate]
-        CP[ChatProvider]
+        CP[ConciergeProvider]
     end
 
-    CP --> US["useChatStream\nturns, sessionRef, open\nsubmit, clear"]
-    CP --> AB["AlphaBar.tsx\nVoice or Chat toggle + Deploy"]
-    CP --> CR["ChatRail.tsx\nthread + composer\nResponseBody markdown"]
+    CP --> US["useConciergeStream\nturns, sessionRef, open\nsubmit, clear"]
+    CP --> AB["AlphaBar.tsx\nVoice or Concierge toggle + Deploy"]
+    CP --> CR["ConciergeRail.tsx\nthread + composer\nResponseBody markdown"]
 
     US -->|turns + open| CR
     US -->|submit| AB
@@ -564,37 +564,37 @@ flowchart TD
 
 <!-- ══ Panel 8 ══ -->
 <div class="panel" id="panel-8">
-  <div class="panel-hd"><div class="panel-num">8</div><div class="panel-meta"><h2>Voice + Chat Shared Session</h2><p>Both modalities write to the same <code>chat_turns</code> table with a <code>source</code> column. Anthropic always loads the full interleaved history, keeping context coherent across Voice ↔ Chat switches.</p></div></div>
+  <div class="panel-hd"><div class="panel-num">8</div><div class="panel-meta"><h2>Voice + Concierge Shared Session</h2><p>Both modalities write to the same <code>concierge_turns</code> table with a <code>source</code> column. Anthropic always loads the full interleaved history, keeping context coherent across Voice ↔ Concierge switches.</p></div></div>
   <div class="diagram-card">
     <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">flowchart · shared session memory</span></div>
     <div class="dc-body"><div class="mermaid">
 flowchart TD
     subgraph Client
-        CHAT["ChatRail\nsource=chat"]
+        CHAT["ConciergeRail\nsource=concierge"]
         VOICE["VoiceRail\nsource=voice"]
     end
 
     subgraph Session["shared session_id UUID"]
-        T1["turn 1 user via chat\nAnalyze my AI exposure"]
+        T1["turn 1 user via concierge\nAnalyze my AI exposure"]
         T2["turn 2 assistant\nYour top AI holding is..."]
         T3["turn 3 user via voice\nWhat about HDFC Bank?"]
         T4["turn 4 assistant\nHDFC is 8% of portfolio"]
-        T5["turn 5 user via chat\nRebalance suggestion?"]
+        T5["turn 5 user via concierge\nRebalance suggestion?"]
         T6["turn 6 assistant\nReduce AI by 2L"]
         T1 --> T2 --> T3 --> T4 --> T5 --> T6
     end
 
-    CHAT -- source=chat --> Routes["chat_routes.py"]
+    CHAT -- source=concierge --> Routes["concierge_routes.py"]
     VOICE -- source=voice --> Routes
 
-    Routes --> SVC["chat_service.py"]
-    SVC -- load_history all sources --> DB[("chat_turns")]
+    Routes --> SVC["concierge_service.py"]
+    SVC -- load_history all sources --> DB[("concierge_turns")]
     DB -- full mixed context --> SVC
     SVC -- append_turn with source tag --> DB
     </div></div>
   </div>
   <div class="legend">
-    <span class="chip"><span class="chip-dot" style="background:var(--accent)"></span>Chat modality</span>
+    <span class="chip"><span class="chip-dot" style="background:var(--accent)"></span>Concierge modality</span>
     <span class="chip"><span class="chip-dot" style="background:var(--violet)"></span>Voice modality</span>
     <span class="chip"><span class="chip-dot" style="background:var(--green)"></span>Unified session</span>
   </div>
@@ -602,9 +602,9 @@ flowchart TD
 
 <!-- ══ Panel 9 ══ -->
 <div class="panel" id="panel-9">
-  <div class="panel-hd"><div class="panel-num">9</div><div class="panel-meta"><h2>Database Schema</h2><p>Full ERD for <code>chat_sessions</code> and <code>chat_turns</code> — every column, type, and constraint. This is the direct spec for the Alembic migration.</p></div></div>
+  <div class="panel-hd"><div class="panel-num">9</div><div class="panel-meta"><h2>Database Schema</h2><p>Full ERD for <code>concierge_sessions</code> and <code>concierge_turns</code> — every column, type, and constraint. This is the direct spec for the Alembic migration.</p></div></div>
   <div class="diagram-card">
-    <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">er diagram · chat tables</span></div>
+    <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">er diagram · concierge tables</span></div>
     <div class="dc-body"><div class="mermaid">
 erDiagram
     USERS {
@@ -638,7 +638,7 @@ erDiagram
     CHAT_SESSIONS ||--o{ CHAT_TURNS : contains
     </div></div>
   </div>
-  <div class="note"><strong>role</strong> values: <code>user</code> or <code>assistant</code> — <strong>source</strong> values: <code>chat</code> or <code>voice</code> — <strong>USERS</strong> lives in Wagner SQLite; the FK is a logical reference only, no DB-level constraint across services.</div>
+  <div class="note"><strong>role</strong> values: <code>user</code> or <code>assistant</code> — <strong>source</strong> values: <code>concierge</code> or <code>voice</code> — <strong>USERS</strong> lives in Wagner SQLite; the FK is a logical reference only, no DB-level constraint across services.</div>
 </div>
 
 <!-- ══ Panel 10 ══ -->
@@ -648,7 +648,7 @@ erDiagram
     <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">flowchart · json wire format</span></div>
     <div class="dc-body"><div class="mermaid">
 flowchart TD
-    REQ["POST /api/v1/chat\nAuthorization: Bearer JWT\nmessages: ChatMessage list\nmodel: ModelSlug\nsession_id: string or null\nsource: chat or voice"]
+    REQ["POST /api/v1/concierge\nAuthorization: Bearer JWT\nmessages: ConciergeMessage list\nmodel: ModelSlug\nsession_id: string or null\nsource: concierge or voice"]
 
     REQ --> F1["SSE frame 1 — session bootstrap\nsession_id: uuid string\ndelta: empty string"]
     F1 --> FN["SSE frames 2 to N — token deltas\ndelta: partial token string"]
@@ -672,7 +672,7 @@ flowchart TD
     <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">flowchart · error paths</span></div>
     <div class="dc-body"><div class="mermaid">
 flowchart TD
-    START(["request enters chat_routes"]) --> JWT{"JWT valid?"}
+    START(["request enters concierge_routes"]) --> JWT{"JWT valid?"}
 
     JWT -- invalid or expired --> J401["HTTP 401\nfrontend redirects to login"]
     JWT -- valid --> MEM{"session DB lookup"}
@@ -702,13 +702,13 @@ flowchart TD
 
 <!-- ══ Panel 12 ══ -->
 <div class="panel" id="panel-12">
-  <div class="panel-hd"><div class="panel-num">12</div><div class="panel-meta"><h2>Session State Machine</h2><p>Lifecycle of a single <code>chat_session</code> row from creation through active use to expiry, with all transition triggers.</p></div></div>
+  <div class="panel-hd"><div class="panel-num">12</div><div class="panel-meta"><h2>Session State Machine</h2><p>Lifecycle of a single <code>concierge_session</code> row from creation through active use to expiry, with all transition triggers.</p></div></div>
   <div class="diagram-card">
     <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">state diagram · session lifecycle</span></div>
     <div class="dc-body"><div class="mermaid">
 stateDiagram-v2
     [*] --> New : first POST without session_id
-    New --> Active : INSERT chat_sessions succeeds
+    New --> Active : INSERT concierge_sessions succeeds
 
     Active --> Streaming : Anthropic stream opens
     Streaming --> Active : stream closes and turns persisted
@@ -738,16 +738,16 @@ stateDiagram-v2
     <div class="dc-bar"><span class="dot" style="background:#ef4444"></span><span class="dot" style="background:#f59e0b"></span><span class="dot" style="background:#22c55e"></span><span class="dc-label">flowchart · build sequence</span></div>
     <div class="dc-body"><div class="mermaid">
 flowchart TD
-    S1["Step 1\nAlembic migration\nchat_sessions + chat_turns tables"] --> S2
-    S2["Step 2\nchat_memory_models.py\nChatSession + ChatTurn ORM"] --> S3
-    S3["Step 3\nchat_memory_service.py\nget_or_create_session, load_history, append_turn"] --> S4
-    S4["Step 4\nchat_schemas.py\nadd session_id, source, ChatStreamMeta"] --> S5
-    S5["Step 5\nchat_service.py\nswap to Anthropic SDK + wire memory + caching"] --> S6
-    S6["Step 6\nchat_routes.py\ninject AsyncSession + thread session_id"] --> S7
+    S1["Step 1\nAlembic migration\nconcierge_sessions + concierge_turns tables"] --> S2
+    S2["Step 2\nconcierge_memory_models.py\nConciergeSession + ConciergeTurn ORM"] --> S3
+    S3["Step 3\nconcierge_memory_service.py\nget_or_create_session, load_history, append_turn"] --> S4
+    S4["Step 4\nconcierge_schemas.py\nadd session_id, source, ConciergeStreamMeta"] --> S5
+    S5["Step 5\nconcierge_service.py\nswap to Anthropic SDK + wire memory + caching"] --> S6
+    S6["Step 6\nconcierge_routes.py\ninject AsyncSession + thread session_id"] --> S7
     S7["Step 7\nconfig.py\nANTHROPIC_API_KEY + model env vars"] --> S8
-    S8["Step 8\nuseChatStream.ts\nsession_id ref + remove client history window"] --> S9
-    S9["Step 9\nchat.types.ts\nsessionId + source fields"] --> S10
-    S10["Step 10\nUpdate docs\narchitecture.md + chat-plan.md"]
+    S8["Step 8\nuseConciergeStream.ts\nsession_id ref + remove client history window"] --> S9
+    S9["Step 9\nconcierge.types.ts\nsessionId + source fields"] --> S10
+    S10["Step 10\nUpdate docs\narchitecture.md + concierge-plan.md"]
     </div></div>
   </div>
   <div class="step-legend">

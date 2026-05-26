@@ -15,8 +15,7 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 | Graphify knowledge graph | [docs/graphify.md](docs/graphify.md) |
 | Vault-backed secrets (alpha-forge-bach) | [docs/vault.md](docs/vault.md) |
 | Live-prices design plan (not yet built) | [docs/live-prices-plan.md](docs/live-prices-plan.md) |
-| Chat + memory plan (Anthropic API, shared with voice) | [docs/chat-plan.md](docs/chat-plan.md) |
-| Chat backend flow diagrams (8 Mermaid diagrams) | [docs/chat-flow.md](docs/chat-flow.md) |
+| Orff concierge AI — plan, flows, viewer | [concierge/README.md](concierge/README.md) |
 
 ## Must-Know Rules
 

@@ -1,36 +1,36 @@
-# Chat Backend — Flow Diagrams
+# Concierge Backend — Flow Diagrams
 
 ## 1. End-to-End Request Lifecycle
 
 ```mermaid
 sequenceDiagram
     actor User
-    participant ChatRail
-    participant Hook as useChatStream
+    participant ConciergeRail
+    participant Hook as useConciergeStream
     participant Proxy as Next.js Proxy
-    participant Routes as chat_routes
+    participant Routes as concierge_routes
     participant Deps as deps.py
-    participant Service as chat_service
-    participant Memory as chat_memory_service
+    participant Service as concierge_service
+    participant Memory as concierge_memory_service
     participant DB as PostgreSQL
     participant Claude as Anthropic SDK
 
-    User->>ChatRail: type message, press Enter
-    ChatRail->>Hook: onSeed(query)
+    User->>ConciergeRail: type message, press Enter
+    ConciergeRail->>Hook: onSeed(query)
     Hook->>Hook: append optimistic turn loading=true
-    Hook->>Proxy: POST /api/v1/chat with session_id
+    Hook->>Proxy: POST /api/v1/concierge with session_id
     Proxy->>Routes: forward to backend port 8000
     Routes->>Deps: validate JWT
     Deps-->>Routes: UserClaims id + role + email
-    Routes->>Service: stream_chat(messages, model, session_id)
+    Routes->>Service: stream_concierge(messages, model, session_id)
 
     Service->>Memory: get_or_create_session(session_id, user_id)
-    Memory->>DB: SELECT or INSERT chat_sessions
+    Memory->>DB: SELECT or INSERT concierge_sessions
     DB-->>Memory: session row
     Memory-->>Service: session_id UUID
 
     Service->>Memory: load_history(session_id, limit=20)
-    Memory->>DB: SELECT chat_turns ORDER BY created_at
+    Memory->>DB: SELECT concierge_turns ORDER BY created_at
     DB-->>Memory: turn rows
     Memory-->>Service: list of Messages
 
@@ -42,12 +42,12 @@ sequenceDiagram
         Service-->>Routes: yield SSE delta frame
         Routes-->>Hook: StreamingResponse chunk
         Hook->>Hook: accumulate and patchTurn
-        ChatRail->>User: render streaming response
+        ConciergeRail->>User: render streaming response
     end
 
     Claude-->>Service: MessageStopEvent with usage
     Service->>Memory: append_turn user then assistant
-    Memory->>DB: INSERT two chat_turns rows
+    Memory->>DB: INSERT two concierge_turns rows
     Service-->>Routes: yield SSE meta frame
     Routes-->>Hook: data DONE
     Hook->>Hook: patchTurn loading=false
@@ -64,12 +64,12 @@ flowchart TD
         MODULES["app/modules/init.py"]
     end
 
-    subgraph ChatModule["chat module"]
-        ROUTES["chat_routes.py"]
-        SERVICE["chat_service.py"]
-        SCHEMAS["chat_schemas.py"]
-        MEM_SVC["chat_memory_service.py"]
-        MEM_MDL["chat_memory_models.py"]
+    subgraph ConciergeModule["concierge module"]
+        ROUTES["concierge_routes.py"]
+        SERVICE["concierge_service.py"]
+        SCHEMAS["concierge_schemas.py"]
+        MEM_SVC["concierge_memory_service.py"]
+        MEM_MDL["concierge_memory_models.py"]
     end
 
     subgraph Core["app/core"]
@@ -105,24 +105,24 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A(["stream_chat called\nsession_id: str or None"]) --> B{"session_id provided?"}
+    A(["stream_concierge called\nsession_id: str or None"]) --> B{"session_id provided?"}
 
-    B -- No --> C["INSERT chat_sessions\nid=uuid4, user_id, title"]
-    B -- Yes --> D["SELECT chat_sessions\nWHERE id=session_id\nAND user_id=caller"]
+    B -- No --> C["INSERT concierge_sessions\nid=uuid4, user_id, title"]
+    B -- Yes --> D["SELECT concierge_sessions\nWHERE id=session_id\nAND user_id=caller"]
     D --> E{"row found?"}
     E -- No or wrong owner --> F["raise 404 or 403"]
     E -- Yes --> G["return session_id"]
     C --> G
 
-    G --> H["load_history\nSELECT chat_turns\nORDER BY created_at\nLIMIT 20"]
+    G --> H["load_history\nSELECT concierge_turns\nORDER BY created_at\nLIMIT 20"]
     H --> I["map rows to list of Message"]
-    I --> J(["return history to chat_service"])
+    I --> J(["return history to concierge_service"])
 
     J --> K["build messages array\n1. system prompt cached\n2. history turns\n3. new user message"]
     K --> L["Anthropic stream completes"]
 
-    L --> M["INSERT chat_turns\nrole=user, source=chat or voice"]
-    M --> N["INSERT chat_turns\nrole=assistant, model\ntokens_in, tokens_out, elapsed_ms"]
+    L --> M["INSERT concierge_turns\nrole=user, source=concierge or voice"]
+    M --> N["INSERT concierge_turns\nrole=assistant, model\ntokens_in, tokens_out, elapsed_ms"]
     N --> O(["done"])
 ```
 
@@ -132,10 +132,10 @@ flowchart TD
 
 ```mermaid
 sequenceDiagram
-    participant Service as chat_service
+    participant Service as concierge_service
     participant SDK as Anthropic SDK
-    participant Route as chat_routes
-    participant Hook as useChatStream
+    participant Route as concierge_routes
+    participant Hook as useConciergeStream
 
     Service->>SDK: messages.stream(model, system with cache, messages)
     SDK-->>Service: stream_start
@@ -167,12 +167,12 @@ flowchart TD
         QP[QueryProvider]
         AG[AuthGuard]
         BG[BootGate]
-        CP[ChatProvider]
+        CP[ConciergeProvider]
     end
 
-    CP --> US["useChatStream\nturns, sessionRef, open\nsubmit, clear"]
-    CP --> AB["AlphaBar.tsx\nVoice or Chat toggle + Deploy"]
-    CP --> CR["ChatRail.tsx\nthread + composer\nResponseBody markdown"]
+    CP --> US["useConciergeStream\nturns, sessionRef, open\nsubmit, clear"]
+    CP --> AB["AlphaBar.tsx\nVoice or Concierge toggle + Deploy"]
+    CP --> CR["ConciergeRail.tsx\nthread + composer\nResponseBody markdown"]
 
     US -->|turns + open| CR
     US -->|submit| AB
@@ -232,30 +232,30 @@ flowchart TD
 
 ---
 
-## 8. Voice + Chat Shared Session
+## 8. Voice + Concierge Shared Session
 
 ```mermaid
 flowchart TD
     subgraph Client
-        CHAT["ChatRail\nsource=chat"]
+        CHAT["ConciergeRail\nsource=concierge"]
         VOICE["VoiceRail\nsource=voice"]
     end
 
     subgraph Session["shared session_id UUID"]
-        T1["turn 1 user via chat\nAnalyze my AI exposure"]
+        T1["turn 1 user via concierge\nAnalyze my AI exposure"]
         T2["turn 2 assistant\nYour top AI holding is..."]
         T3["turn 3 user via voice\nWhat about HDFC Bank?"]
         T4["turn 4 assistant\nHDFC is 8% of portfolio"]
-        T5["turn 5 user via chat\nRebalance suggestion?"]
+        T5["turn 5 user via concierge\nRebalance suggestion?"]
         T6["turn 6 assistant\nReduce AI by 2L"]
         T1 --> T2 --> T3 --> T4 --> T5 --> T6
     end
 
-    CHAT -- source=chat --> Routes["chat_routes.py"]
+    CHAT -- source=concierge --> Routes["concierge_routes.py"]
     VOICE -- source=voice --> Routes
 
-    Routes --> SVC["chat_service.py"]
-    SVC -- load_history all sources --> DB[("chat_turns")]
+    Routes --> SVC["concierge_service.py"]
+    SVC -- load_history all sources --> DB[("concierge_turns")]
     DB -- full mixed context --> SVC
     SVC -- append_turn with source tag --> DB
 ```
@@ -297,7 +297,7 @@ erDiagram
     CHAT_SESSIONS ||--o{ CHAT_TURNS : contains
 ```
 
-> `role` values: `user` or `assistant` — `source` values: `chat` or `voice`
+> `role` values: `user` or `assistant` — `source` values: `concierge` or `voice`
 > `USERS` lives in Wagner SQLite; the FK is a logical reference only (no DB-level FK constraint across services).
 
 ---
@@ -306,7 +306,7 @@ erDiagram
 
 ```mermaid
 flowchart TD
-    REQ["POST /api/v1/chat\nAuthorization: Bearer JWT\nmessages: ChatMessage list\nmodel: ModelSlug\nsession_id: string or null\nsource: chat or voice"]
+    REQ["POST /api/v1/concierge\nAuthorization: Bearer JWT\nmessages: ConciergeMessage list\nmodel: ModelSlug\nsession_id: string or null\nsource: concierge or voice"]
 
     REQ --> F1["SSE frame 1 — session bootstrap\nsession_id: uuid string\ndelta: empty string"]
     F1 --> FN["SSE frames 2 to N — token deltas\ndelta: partial token string"]
@@ -322,7 +322,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START(["request enters chat_routes"]) --> JWT{"JWT valid?"}
+    START(["request enters concierge_routes"]) --> JWT{"JWT valid?"}
 
     JWT -- invalid or expired --> J401["HTTP 401\nfrontend redirects to login"]
     JWT -- valid --> MEM{"session DB lookup"}
@@ -350,7 +350,7 @@ flowchart TD
 ```mermaid
 stateDiagram-v2
     [*] --> New : first POST without session_id
-    New --> Active : INSERT chat_sessions succeeds
+    New --> Active : INSERT concierge_sessions succeeds
 
     Active --> Streaming : Anthropic stream opens
     Streaming --> Active : stream closes and turns persisted
@@ -372,16 +372,16 @@ stateDiagram-v2
 
 ```mermaid
 flowchart TD
-    S1["Step 1\nAlembic migration\nchat_sessions + chat_turns tables"] --> S2
-    S2["Step 2\nchat_memory_models.py\nChatSession + ChatTurn ORM"] --> S3
-    S3["Step 3\nchat_memory_service.py\nget_or_create_session, load_history, append_turn"] --> S4
-    S4["Step 4\nchat_schemas.py\nadd session_id, source, ChatStreamMeta"] --> S5
-    S5["Step 5\nchat_service.py\nswap to Anthropic SDK + wire memory + caching"] --> S6
-    S6["Step 6\nchat_routes.py\ninject AsyncSession + thread session_id"] --> S7
+    S1["Step 1\nAlembic migration\nconcierge_sessions + concierge_turns tables"] --> S2
+    S2["Step 2\nconcierge_memory_models.py\nConciergeSession + ConciergeTurn ORM"] --> S3
+    S3["Step 3\nconcierge_memory_service.py\nget_or_create_session, load_history, append_turn"] --> S4
+    S4["Step 4\nconcierge_schemas.py\nadd session_id, source, ConciergeStreamMeta"] --> S5
+    S5["Step 5\nconcierge_service.py\nswap to Anthropic SDK + wire memory + caching"] --> S6
+    S6["Step 6\nconcierge_routes.py\ninject AsyncSession + thread session_id"] --> S7
     S7["Step 7\nconfig.py\nANTHROPIC_API_KEY + model env vars"] --> S8
-    S8["Step 8\nuseChatStream.ts\nsession_id ref + remove client history window"] --> S9
-    S9["Step 9\nchat.types.ts\nsessionId + source fields"] --> S10
-    S10["Step 10\nUpdate docs\narchitecture.md + chat-plan.md"]
+    S8["Step 8\nuseConciergeStream.ts\nsession_id ref + remove client history window"] --> S9
+    S9["Step 9\nconcierge.types.ts\nsessionId + source fields"] --> S10
+    S10["Step 10\nUpdate docs\narchitecture.md + concierge-plan.md"]
 
     style S1 fill:#1e1b4b,stroke:#6366f1,color:#e0e7ff
     style S2 fill:#1e1b4b,stroke:#6366f1,color:#e0e7ff
