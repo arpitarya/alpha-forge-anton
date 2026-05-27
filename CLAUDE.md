@@ -14,8 +14,7 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 | Broker CSV dumps (shared dump_utils contract) | [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md) |
 | Graphify knowledge graph | [docs/graphify.md](docs/graphify.md) |
 | Vault-backed secrets (alpha-forge-bach) | [docs/vault.md](docs/vault.md) |
-| Live-prices design plan (not yet built) | [docs/live-prices-plan.md](docs/live-prices-plan.md) |
-| Orff concierge AI — plan, flows, viewer | [concierge/README.md](concierge/README.md) |
+| Orff concierge AI implementation docs | [concierge/README.md](concierge/README.md) |
 
 ## Must-Know Rules
 

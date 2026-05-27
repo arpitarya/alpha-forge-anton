@@ -2,7 +2,11 @@
 
 import { Kbd, LiveDot, Logo, TopBar, type TopBarNavItem } from "@alphaforge-anton/solar-ui";
 import { clsx } from "clsx";
+import { LogOut } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+
+import { useAuthStore } from "@/modules/auth/useAuthStore";
 
 const NAV_ITEMS: Array<{ id: string; label: string; href: string }> = [
   { id: "terminal", label: "Terminal", href: "/" },
@@ -19,6 +23,8 @@ export function TerminalTopBar() {
   const router = useRouter();
   const pathname = usePathname();
   const prefsActive = isActive(pathname, "/preferences");
+  const logout = useAuthStore((s) => s.logout);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const nav: TopBarNavItem[] = NAV_ITEMS.map((n) => ({
     id: n.id,
@@ -26,6 +32,13 @@ export function TerminalTopBar() {
     active: isActive(pathname, n.href),
     onClick: () => router.push(n.href),
   }));
+
+  async function handleLogout() {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    await logout();
+    router.replace("/login");
+  }
 
   return (
     <TopBar
@@ -38,8 +51,12 @@ export function TerminalTopBar() {
             <Logo variant="icon" size="xs" />
           </div>
           <div className="flex flex-col gap-[2px] leading-none">
-            <span className="font-[700] tracking-[0.2em] text-[10.5px] text-[color:var(--fg)]">ALPHA</span>
-            <span className="font-[500] tracking-[0.32em] text-[7.5px] text-[color:var(--fg-3)]">FORGE</span>
+            <span className="font-[700] tracking-[0.2em] text-[10.5px] text-[color:var(--fg)]">
+              ALPHA
+            </span>
+            <span className="font-[500] tracking-[0.32em] text-[7.5px] text-[color:var(--fg-3)]">
+              FORGE
+            </span>
           </div>
         </>
       }
@@ -73,6 +90,16 @@ export function TerminalTopBar() {
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3 1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8 1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
             </svg>
+          </button>
+          <button
+            type="button"
+            aria-label="Log out"
+            title="Log out"
+            disabled={loggingOut}
+            onClick={handleLogout}
+            className="grid h-[26px] w-[26px] cursor-pointer place-items-center rounded-[5px] border border-transparent text-[color:var(--fg-3)] transition-colors hover:border-[color:color-mix(in_srgb,var(--red)_45%,transparent)] hover:bg-[color:color-mix(in_srgb,var(--red)_10%,transparent)] hover:text-[color:var(--red)] disabled:cursor-default disabled:opacity-40"
+          >
+            <LogOut size={14} strokeWidth={1.8} aria-hidden />
           </button>
           <span>◉ ARPIT</span>
         </>

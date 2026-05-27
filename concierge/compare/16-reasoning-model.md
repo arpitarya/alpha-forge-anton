@@ -11,7 +11,7 @@
 
 ## Context
 
-The fast/general/deep three-tier in [02](02-claude-model-routing.md) maps to chat-style models. State-of-the-art in 2026 includes a fourth tier: **reasoning models** that produce explicit thought traces before answers. For multi-step portfolio reasoning ("should I rebalance? consider tax, sector weights, my intent doc, current news"), they materially outperform same-size chat models.
+The fast/general/deep three-tier in [02](02-claude-model-routing.md) maps to chat-style models. The planned fourth tier is **reasoning models** that produce explicit thought traces before answers. For multi-step portfolio reasoning ("should I rebalance? consider tax, sector weights, my intent doc, current news"), they materially outperform same-size chat models.
 
 Until 2024 reasoning models were paid (OpenAI o-series). In 2025–2026 the free landscape opened up dramatically.
 
@@ -53,7 +53,7 @@ DeepSeek R1's output is a mix of `<think>` content and final answer. Two routes:
 1. **Hide thinking** — strip `<think>...</think>` before streaming to user; expose only final answer.
 2. **Show thinking** — stream as a typed event (see [24](24-streaming-protocol.md)) so the frontend renders a collapsible "Orff is thinking..." block above the answer.
 
-**Choice**: option 2. Showing the trace is a SOTA UX expectation in 2026 and helps the user trust the answer. Default to collapsed; expand on click.
+**Choice**: option 2. Showing the trace helps the user inspect the answer path. Default to collapsed; expand on click.
 
 ## Verifier interaction
 

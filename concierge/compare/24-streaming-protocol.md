@@ -11,7 +11,7 @@
 
 ## Context
 
-The v1 substrate uses untyped SSE frames (`data: {"delta": "..."}`). State-of-the-art chat UIs in 2026 (Claude, ChatGPT, Gemini) display the model's *work* visibly: thinking traces, plan steps, tool invocations, sources. To support this, the streaming protocol must carry typed events, not just text deltas.
+The v1 substrate uses untyped SSE frames (`data: {"delta": "..."}`). The planned chat UI displays model work visibly: thinking traces, plan steps, tool invocations, and sources. To support this, the streaming protocol must carry typed events, not just text deltas.
 
 This doc upgrades the streaming envelope to support the typed-event UX needed by reasoning models ([16](16-reasoning-model.md)), agentic loop ([17](17-agentic-loop.md)), tool calls ([19](19-tool-calling.md)), and verifier pass ([25](25-verifier-pass.md)).
 

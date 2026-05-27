@@ -30,18 +30,17 @@ Decision rationale for every choice Orff needs to make beyond the three locked d
 | 09 | [Vector DB](09-vector-db.md) | pgvector vs Qdrant vs Chroma vs Pinecone (only if RAG wins) |
 | 10 | [Embedding model](10-embedding-model.md) | Voyage vs OpenAI vs Cohere vs local (only if RAG wins) |
 | 11 | [News source expansion](11-news-source-expansion.md) | Free sources to add to the existing aggregator (StockTwits, HackerNews, Nitter, YouTube RSS, Telegram, MCA, FRED, …) + the one-file extensibility contract |
-| 12 | [Long-term memory](12-long-term-memory.md) | Multi-layer memory: rolling session summary + nightly cross-session summary + extracted facts table. Anthropic memory tool deferred to paid extension. |
-| 13 | [Holdings injection](13-holdings-injection.md) | Pass user portfolio into LLM context. Session-cached snapshot (1h TTL); refresh on demand. Tool-use deferred to Anthropic extension. |
+| 12 | [Long-term memory](12-long-term-memory.md) | Multi-layer memory: rolling session summary + nightly cross-session summary + extracted facts table. |
+| 13 | [Holdings injection](13-holdings-injection.md) | Pass user portfolio into LLM context. Session-cached snapshot (1h TTL); refresh on demand. |
 | 14 | [User intent document](14-user-intent-doc.md) | Markdown file (`concierge/intent/profile.md`) the user authors describing philosophy, risk tolerance, exclusions, style preferences for Orff. Injected on every turn. |
 | 15 | [Testing strategy](15-testing-strategy.md) | Per-file unit test + Jupyter notebook for every concierge module. Dependency injection, fakes, snapshot tests. |
 | 16 | [Reasoning model](16-reasoning-model.md) | Add a reasoning tier. DeepSeek R1 distill via Groq primary; Gemini 2.5 Flash Thinking fallback. Reasoning trace surfaced in UI. |
 | 17 | [Agentic loop](17-agentic-loop.md) | Plan-execute loop with bounded iterations + verifier pass. Single-shot for simple intents; agentic for multi-step. |
-| 18 | [Multimodal inputs](18-multimodal-inputs.md) | Accept images + PDFs. Gemini Flash for vision; local pypdf for large PDFs; Qwen-VL via Ollama for offline. |
+| 18 | [Multimodal inputs](18-multimodal-inputs.md) | Accept images + PDFs through cloud vision on free-provider routes. |
 | 19 | [Tool calling](19-tool-calling.md) | Pydantic `Tool` ABC; parallel execution; pyodide sandbox for code tools. Foundational tools: prices, web, news, holdings, python, chart. |
 | 20 | [Voice stack](20-voice-stack.md) | **Browser Web Speech API only** (STT + TTS). No local model weights. Frontend-only feature. |
 | 21 | [Web search grounding](21-web-search-grounding.md) | **DuckDuckGo HTML primary** (no install); Brave free API opt-in; public SearXNG instance opt-in. No Docker, no local reranker. |
 | 22 | [Structured outputs](22-structured-outputs.md) | Pydantic-first; native JSON-mode where supported; Instructor adapter for cross-provider. |
-| 23 | [Local LLM fallback](23-local-llm-fallback.md) | **Deferred** under no-local-models + 16GB MBA constraint. App is cloud-only; offline state surfaced in UI; queued turn auto-retries on reconnect. |
 | 24 | [Streaming protocol](24-streaming-protocol.md) | Typed SSE events: session / intent / thinking / plan / tool_call / tool_result / content / citation / verification / meta. |
 | 25 | [Verifier pass](25-verifier-pass.md) | Hybrid symbolic + LLM verifier. Flags portfolio claims, citations, math, intent-doc adherence. ~600ms after answer streams. |
 

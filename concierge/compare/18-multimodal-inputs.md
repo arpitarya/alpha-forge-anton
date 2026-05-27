@@ -18,7 +18,7 @@
 
 ## Context
 
-State-of-the-art in 2026 means users can paste a TradingView chart screenshot, upload an annual report PDF, drag-drop a Tweet image, and have Orff understand it. Free multimodal models cover this fully — Gemini Flash accepts images and PDFs natively.
+The planned multimodal path lets users paste a TradingView chart screenshot, upload an annual report PDF, drag-drop a Tweet image, and have Orff inspect it. Free multimodal routes cover the required input types.
 
 Use cases for a portfolio assistant:
 

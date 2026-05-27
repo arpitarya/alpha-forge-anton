@@ -23,7 +23,7 @@ export function WalletCard({ wallet, active, onClick }: WalletCardProps) {
       data-broker={wallet.slug}
       onClick={onClick}
       className={clsx(
-        "relative flex flex-col gap-2 overflow-hidden rounded-[10px] border p-3 text-left transition",
+        "relative flex min-w-0 flex-col gap-2 overflow-hidden rounded-[10px] border p-3 text-left transition",
         "bg-[color:color-mix(in_srgb,var(--surface)_88%,transparent)]",
         active
           ? "border-[color:color-mix(in_srgb,var(--accent)_70%,transparent)] shadow-[inset_0_0_28px_color-mix(in_srgb,var(--accent)_10%,transparent),0_0_28px_var(--glow)]"
@@ -33,7 +33,7 @@ export function WalletCard({ wallet, active, onClick }: WalletCardProps) {
       {active && (
         <span className="pointer-events-none absolute left-0 top-0 bottom-0 w-[3px] bg-[color:var(--accent)] shadow-[0_0_12px_var(--glow)]" />
       )}
-      <div className="flex items-center gap-2.5">
+      <div className="flex min-w-0 items-center gap-2.5">
         <div
           className="grid h-[34px] w-[34px] flex-shrink-0 place-items-center rounded-[8px] font-mono text-[11px] font-bold tracking-[0.04em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-4px_8px_rgba(0,0,0,0.18)]"
           style={{ background: `linear-gradient(135deg, ${brand.grad[0]}, ${brand.grad[1]})` }}
@@ -53,11 +53,11 @@ export function WalletCard({ wallet, active, onClick }: WalletCardProps) {
           {relTime(wallet.last_synced_at)}
         </span>
       </div>
-      <div className="flex items-baseline justify-between gap-2">
-        <div>
+      <div className="flex min-w-0 items-baseline justify-between gap-2">
+        <div className="min-w-0">
           <div
             className={clsx(
-              "text-[22px] font-medium leading-[1.05] tabular-nums",
+              "truncate text-[22px] font-medium leading-[1.05] tabular-nums",
               active ? "text-[color:var(--accent)]" : "text-[color:var(--fg)]",
             )}
           >
@@ -68,15 +68,20 @@ export function WalletCard({ wallet, active, onClick }: WalletCardProps) {
           </div>
         </div>
       </div>
-      <div className="mt-0.5 flex items-center justify-between border-t border-[color:var(--line)] pt-2 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--fg-3)] tabular-nums">
-        <span>
+      <div className="mt-0.5 flex min-w-0 items-center justify-between gap-3 border-t border-[color:var(--line)] pt-2 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--fg-3)] tabular-nums">
+        <span className="min-w-0 truncate whitespace-nowrap">
           <span className="font-medium text-[color:var(--fg)]">
             {fmtMoneyShort(wallet.holdings_value, wallet.currency)}
           </span>
           <span className="text-[color:var(--fg-3)]"> · {wallet.holdings_count} POS</span>
         </span>
-        <span className={clsx("inline-flex items-baseline gap-1.5", pnlCls)}>
-          <span>
+        <span
+          className={clsx(
+            "inline-flex flex-shrink-0 items-baseline gap-1.5 whitespace-nowrap",
+            pnlCls,
+          )}
+        >
+          <span className="whitespace-nowrap">
             {wallet.pnl >= 0 ? "+" : "−"}
             {fmtMoneyShort(Math.abs(wallet.pnl), wallet.currency)}
           </span>

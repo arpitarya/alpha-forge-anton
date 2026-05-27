@@ -22,7 +22,7 @@
 
 ## Context
 
-The news aggregator handles structured Indian financial sources. For long-tail queries ("Has anyone written about the new MUDRA scheme limits?") that don't match curated RSS, the agent needs general web search. SOTA in 2026 means having grounded answers with citations.
+The news aggregator handles structured Indian financial sources. For long-tail queries ("Has anyone written about the new MUDRA scheme limits?") that don't match curated RSS, the agent needs general web search with grounded answers and citations.
 
 Paid options (Tavily, Perplexity API, Brave paid, Bing) are excellent but skipped per the no-paid constraint.
 

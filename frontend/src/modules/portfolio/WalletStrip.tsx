@@ -2,7 +2,12 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { useForceRefresh, useSyncAllSources, useSyncAllWallets, useWallets } from "./portfolio.query";
+import {
+  useForceRefresh,
+  useSyncAllSources,
+  useSyncAllWallets,
+  useWallets,
+} from "./portfolio.query";
 import { WalletCard } from "./WalletCard";
 import { aggregateSelected } from "./wallet.utils";
 
@@ -50,22 +55,27 @@ export function WalletStrip({ selected, onToggleSource, onSelectAll }: WalletStr
 
   if (isLoading && wallets.length === 0) {
     return (
-      <div className="grid h-[110px] grid-cols-5 gap-2.5">
-        {["all", "zerodha", "angelone", "groww", "wintwealth"].map((k) => (
-          <div
-            key={k}
-            className="animate-pulse rounded-[10px] border border-[color:var(--line)] bg-[color:color-mix(in_srgb,var(--surface)_60%,transparent)]"
-          />
-        ))}
+      <div className="overflow-x-auto pb-1">
+        <div className="grid h-[110px] min-w-max grid-cols-[repeat(5,minmax(235px,1fr))] gap-2.5">
+          {["all", "zerodha", "angelone", "groww", "wintwealth"].map((k) => (
+            <div
+              key={k}
+              className="animate-pulse rounded-[10px] border border-[color:var(--line)] bg-[color:color-mix(in_srgb,var(--surface)_60%,transparent)]"
+            />
+          ))}
+        </div>
       </div>
     );
   }
 
   const cashSynced = wallets.some((w) => w.cash_available);
+  const cardColumns = ["minmax(250px, 1.05fr)", ...wallets.map(() => "minmax(235px, 1fr)")].join(
+    " ",
+  );
 
   return (
-    <div data-component="WalletStrip" className="flex flex-col gap-1.5">
-      <div className="flex items-center justify-end gap-2">
+    <div data-component="WalletStrip" className="flex min-w-0 flex-col gap-1.5">
+      <div className="flex flex-wrap items-center justify-end gap-2">
         <StripButton
           onClick={handleSyncCash}
           pending={syncCash.isPending}
@@ -86,19 +96,18 @@ export function WalletStrip({ selected, onToggleSource, onSelectAll }: WalletStr
           dim
         />
       </div>
-      <div
-        className="grid gap-2.5"
-        style={{ gridTemplateColumns: `1.05fr repeat(${wallets.length}, 1fr)` }}
-      >
-        <WalletCard wallet={allCard} active={allActive} onClick={onSelectAll} />
-        {wallets.map((w) => (
-          <WalletCard
-            key={w.slug}
-            wallet={w}
-            active={selected.has(w.slug)}
-            onClick={() => onToggleSource(w.slug)}
-          />
-        ))}
+      <div className="min-w-0 overflow-x-auto pb-1 [scrollbar-gutter:stable]">
+        <div className="grid min-w-max gap-2.5" style={{ gridTemplateColumns: cardColumns }}>
+          <WalletCard wallet={allCard} active={allActive} onClick={onSelectAll} />
+          {wallets.map((w) => (
+            <WalletCard
+              key={w.slug}
+              wallet={w}
+              active={selected.has(w.slug)}
+              onClick={() => onToggleSource(w.slug)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -134,7 +143,9 @@ function StripButton({
           <span className="inline-block h-1.5 w-1.5 animate-spin rounded-full border border-current border-t-transparent" />
           {pendingLabel}
         </>
-      ) : label}
+      ) : (
+        label
+      )}
     </button>
   );
 }

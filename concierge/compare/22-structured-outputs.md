@@ -11,7 +11,7 @@
 
 ## Context
 
-Tool calls, plan steps, fact extraction, intent classification, verifier output — all of these need the LLM to produce structured data, not prose. Free-text parsing is brittle (regex over LLM output is a known failure mode). SOTA 2026 means native JSON/schema-mode on every major provider.
+Tool calls, plan steps, fact extraction, intent classification, verifier output — all of these need the LLM to produce structured data, not prose. Free-text parsing is brittle (regex over LLM output is a known failure mode). The planned path uses native JSON/schema mode where providers support it.
 
 ## Options
 

@@ -15,7 +15,7 @@
 
 ## Context
 
-State-of-the-art 2026 free LLMs (Llama 3.3, Qwen 3, DeepSeek R1 distill) run well on consumer hardware via Ollama. For Anton — a self-hosted, single-user app — local LLM gives:
+Some free LLMs can run on consumer hardware via Ollama. For Anton - a self-hosted, single-user app - local LLM would give:
 
 - **Offline mode**: works without internet.
 - **Privacy escape hatch**: portfolio + intent doc never leave the machine.

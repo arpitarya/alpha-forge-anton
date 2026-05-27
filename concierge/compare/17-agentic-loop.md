@@ -11,7 +11,7 @@
 
 ## Context
 
-A single LLM call ("turn") produces one answer from one input. Real assistant behavior often requires multiple steps: fetch live price → compute weight → compare to intent doc → recommend → verify against constraints. SOTA 2026 patterns wrap the model in an **agentic loop** so it can think, call tools, observe results, and iterate.
+A single LLM call ("turn") produces one answer from one input. Real assistant behavior often requires multiple steps: fetch live price → compute weight → compare to intent doc → recommend → verify against constraints. The planned **agentic loop** lets Orff call tools, observe results, and iterate before answering.
 
 ## Options
 
@@ -149,5 +149,5 @@ Force the loop for:
 - **Parallel tool execution** within a step: use `asyncio.gather` with per-tool timeouts. Already familiar pattern from the news aggregator.
 - **User cancellation**: AbortController should kill the loop cleanly mid-iteration. Each iteration must check the cancel token.
 - **Cost tracking** per turn: track total tokens across all model calls + tool execution time. Surface in the meta frame.
-- **Plan caching**: if the user asks "do that again with HDFC instead of Reliance", can we reuse the plan structure and just swap the tool args? Worth exploring post-v1.2.
+- **Plan caching**: if the user asks "do that again with HDFC instead of Reliance", can we reuse the plan structure and just swap the tool args? Worth exploring after the initial loop ships.
 - **Failure handling**: if a tool throws inside a step, does the loop retry, skip, or abort? Default: surface the error in `tool_result`, let the model decide.

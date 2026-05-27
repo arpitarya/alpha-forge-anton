@@ -109,7 +109,7 @@ Dedup before insert: for each new fact, compute a cheap local embedding, cosine-
 ## Open questions
 
 - **Fact staleness**: a fact extracted 6 months ago may have changed silently. Should the nightly job re-validate by checking if a contradicting statement appears in recent sessions? Probably yes — flag conflicts for user review rather than auto-delete.
-- **User control**: should the user see the extracted facts in a UI and be able to edit/delete? Yes — surface in a "Memory" tab post-v1 ([§15 future extension](../4-news-llm-architecture.md#15-future-extensions-out-of-scope-for-v1)).
+- **User control**: should the user see the extracted facts in a UI and be able to edit/delete? Yes - surface them in a dedicated Memory view once the core memory pipeline ships.
 - **Privacy**: never include the intent document text or extracted facts in logs. Add a logging sanitizer.
 - **Session-close detection**: a session is "closed" if idle 30 min OR user clicks "clear" OR opens a new chat. Implement as a debounced async task triggered from `concierge_memory_service.append_turn`.
 - **Cold start**: a brand-new user has no facts and no cross-session summary. Prompt builder must handle empty blocks gracefully (omit them, don't inject `"None"`).

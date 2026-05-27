@@ -131,7 +131,6 @@ All CSV-based brokers share `dump_utils.py` — see [docs/broker-csv-dumps.md](d
 | [docs/guardrails.md](docs/guardrails.md) | Project rules and guardrails |
 | [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md) | Broker CSV dump contract (shared `dump_utils`) |
 | [docs/vault.md](docs/vault.md) | Vault-backed secrets (`alpha-forge-bach`) |
-| [docs/live-prices-plan.md](docs/live-prices-plan.md) | Live prices design plan (not yet built) |
 
 ---
 

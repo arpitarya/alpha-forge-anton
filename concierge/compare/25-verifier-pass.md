@@ -11,7 +11,7 @@
 
 ## Context
 
-LLMs confabulate. Even reasoning models occasionally invent ticker symbols, misstate portfolio weights, attribute news to the wrong company, or recommend actions that contradict the user's stated exclusions. State-of-the-art 2026 means **catching these before they reach the user.**
+LLMs confabulate. Even reasoning models occasionally invent ticker symbols, misstate portfolio weights, attribute news to the wrong company, or recommend actions that contradict the user's stated exclusions. The verifier pass exists to catch those issues before they reach the user.
 
 The verifier is the difference between "trust the answer" and "double-check everything Orff says."
 
