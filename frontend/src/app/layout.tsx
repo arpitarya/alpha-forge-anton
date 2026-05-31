@@ -1,15 +1,14 @@
-import { ThemeProvider } from "@alphaforge-anton/solar-ui";
+import { NotificationsHost, ThemeProvider } from "@alphaforge-anton/solar-ui";
 import type { Metadata } from "next";
 import "./globals.css";
 import { QueryProvider } from "@/lib/providers";
 import { AuthGuard } from "@/modules/auth/auth.guard";
-import { ChatProvider } from "@/modules/chat";
+import { ChatProvider } from "@/modules/concierge";
 import { BootGate } from "@/modules/dashboard/BootGate";
 
 export const metadata: Metadata = {
   title: "AlphaForge Anton | Personal Investment Terminal",
-  description:
-    "Personal AI-powered portfolio management & investment terminal for Indian markets.",
+  description: "Personal AI-powered portfolio management & investment terminal for Indian markets.",
 };
 
 // Pre-hydration script: read persisted theme/accent from localStorage and set
@@ -77,6 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <BootGate>
                 <ChatProvider>{children}</ChatProvider>
               </BootGate>
+              <NotificationsHost />
             </AuthGuard>
           </QueryProvider>
         </ThemeProvider>

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port ${FRONTEND_PORT:-3000}",
+    "dev": "next dev --port ${FRONTEND_PORT:-3000} --experimental-https",
     "build": "next build",
     "start": "next start --port ${FRONTEND_PORT:-3000}",
     "lint": "next lint",
@@ -13,9 +13,9 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@alphaforge-anton/solar-ui": "workspace:*",
     "@alphaforge/logger": "workspace:*",
     "@alphaforge/solar-orb-ball": "workspace:*",
-    "@alphaforge-anton/solar-ui": "workspace:*",
     "@tanstack/react-query": "^5.96.2",
     "axios": "^1.7.0",
     "clsx": "^2.1.0",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
     "@eslint/eslintrc": "^3.3.5",
+    "@playwright/test": "1.60.0",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",

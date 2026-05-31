@@ -14,6 +14,24 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 | Broker CSV dumps (shared dump_utils contract) | [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md) |
 | Graphify knowledge graph | [docs/graphify.md](docs/graphify.md) |
 
+## UI & Broker Verification
+
+**Always use probes (`probes/`), never Playwright MCP**, for any UI or broker endpoint verification.
+
+Probes are Python scripts that attach to the existing AlphaForge Chrome via CDP on port 9299 — the same session used by broker scrapers. They have full access to project internals, run without Claude, and are version-controlled.
+
+| Probe | Command | Purpose |
+|-------|---------|---------|
+| `ui_probe.py` | `just ui-probe` | Full auth + dashboard + portfolio smoke test |
+| `ui_portfolio_probe.py` | `just ui-portfolio` | Portfolio filter chips, sort, PnL filter, text search |
+| `ui_screens.py` | `just ui-screens` | Terminal / portfolio / preferences screenshots |
+| `ui_pref_tabs.py` | `just ui-pref-tabs` | Preferences sidebar tab screenshots |
+| `ui_concierge_probe.py` | `just ui-concierge` | Concierge AI chat UI |
+| `ui_model_picker_probe.py` | `just ui-model-picker` | Model picker UI |
+| `{broker}_probe.py` | `just probe-{broker}` | Broker XHR endpoint verification |
+
+See [probes/WHY_PROBES_NOT_MCP.md](probes/WHY_PROBES_NOT_MCP.md) for the full rationale. When adding a new feature or broker, create a probe and a `just` recipe before marking it verified.
+
 ## graphify
 
 This project has a graphify knowledge graph at graphify-out/.

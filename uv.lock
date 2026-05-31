@@ -157,7 +157,7 @@ dev = [
 [package.metadata.requires-dev]
 all = [
     { name = "alphaforge-anton-backend", editable = "backend" },
-    { name = "alphaforge-anton-llm", editable = "llm" },
+    { name = "alphaforge-anton-llm", editable = "concierge/llm" },
     { name = "alphaforge-anton-news", editable = "news" },
     { name = "alphaforge-logger", editable = "packages/logger-py" },
 ]
@@ -238,7 +238,7 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "alembic", specifier = ">=1.13.0" },
-    { name = "alphaforge-anton-llm", editable = "llm" },
+    { name = "alphaforge-anton-llm", editable = "concierge/llm" },
     { name = "alphaforge-anton-news", editable = "news" },
     { name = "alphaforge-dante", directory = "../dante" },
     { name = "alphaforge-logger", editable = "packages/logger-py" },
@@ -294,7 +294,7 @@ test = [
 [[package]]
 name = "alphaforge-anton-llm"
 version = "0.1.0"
-source = { editable = "llm" }
+source = { editable = "concierge/llm" }
 dependencies = [
     { name = "anthropic" },
     { name = "fastapi" },

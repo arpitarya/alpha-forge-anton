@@ -1,5 +1,6 @@
 import axios from "axios";
 
+import { type ApiError, toApiError } from "@/lib/apiError";
 import { getLogger } from "@/lib/logger";
 
 const log = getLogger("api");
@@ -17,13 +18,24 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Opt-out flag for requests that must NOT trigger the 401 refresh dance —
+// notably the refresh endpoint itself (otherwise a 401 from /iam/refresh
+// would re-call silentRefresh → infinite loop) and the login endpoints.
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    skipAuthRefresh?: boolean;
+  }
+}
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const original = error.config;
     if (
       error.response?.status === 401 &&
+      original &&
       !original._retry &&
+      !original.skipAuthRefresh &&
       typeof window !== "undefined" &&
       window.location.pathname !== "/login"
     ) {
@@ -40,13 +52,21 @@ api.interceptors.response.use(
         window.location.replace("/login");
       }
     }
-    log.error(
-      { status: error.response?.status, url: error.config?.url },
-      "API request failed: %s",
-      error.message,
-    );
+    const apiErr: ApiError = toApiError(error);
+    // Canceled requests are not failures — they happen on unmount, debounce, etc.
+    // Logging them as errors creates noise and triggers false-positive alerting.
+    if (apiErr.kind !== "canceled") {
+      log.error(
+        { status: apiErr.status, url: apiErr.url, kind: apiErr.kind, requestId: apiErr.requestId },
+        "API request failed: %s",
+        apiErr.message,
+      );
+    }
+    // Attach the normalized error so consumers can read it without re-parsing axios shape.
+    (error as { apiError?: ApiError }).apiError = apiErr;
     return Promise.reject(error);
   },
 );
 
 export default api;
+export { type ApiError, toApiError } from "@/lib/apiError";

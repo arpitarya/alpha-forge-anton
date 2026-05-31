@@ -27,6 +27,7 @@ Apply these on every file without looking up the docs:
 - Never commit `.env` files or API keys
 - All broker CSV dumps use `dump_utils.py` — see [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md)
 - Every code change must be accompanied by a doc update in the same session
+- **UI & broker verification: always use `probes/` (CDP :9299), never Playwright MCP** — see [probes/WHY_PROBES_NOT_MCP.md](probes/WHY_PROBES_NOT_MCP.md). New features need a probe + `just` recipe before they count as verified.
 
 ## Skills
 

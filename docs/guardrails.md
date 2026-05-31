@@ -39,6 +39,15 @@
 - **Broker user IDs and API keys must live in the afbach vault, never in `.env` files** — vault-only keys are not listed in `.env.cred.example`
 - Vault-aware env helpers are in `broker_env.py`: use `source_ready(REQUIRED_ENV, env)` in source `__init__` and `require_env(key, env)` in acquire functions — both surface a `vault locked` hint automatically
 
+## UI Verification
+
+- **Always use probes (`probes/`) for all UI and broker verification — never Playwright MCP**
+- Probes attach to the existing Chrome session via CDP (port 9299) — the same session the broker scrapers already use. No extra browser setup required.
+- Each probe is a Python script checked into the repo, runnable independently of Claude: `just ui-probe`, `just ui-portfolio`, `just probe-zerodha`, etc.
+- See [probes/WHY_PROBES_NOT_MCP.md](../probes/WHY_PROBES_NOT_MCP.md) for the full rationale.
+- When adding a new UI feature or broker, add a corresponding probe in `probes/` and a `just` recipe in the justfile before considering the feature verified.
+- Playwright MCP is acceptable only for ad-hoc one-off exploration of external third-party pages where no project internals are needed.
+
 ## Broker CSV Dumps
 
 - All broker holdings dumps must use `dump_utils.py` — see [broker-csv-dumps.md](broker-csv-dumps.md)

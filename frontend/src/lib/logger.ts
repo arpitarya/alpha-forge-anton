@@ -7,7 +7,7 @@
  * Configured via env vars: LOG_LEVEL, LOG_DIR, LOG_FILE
  */
 
-import { createLogger, getLogger as _getLogger } from "../../../packages/logger-node/dist";
+import { getLogger as _getLogger, createLogger } from "../../../packages/logger-node/dist";
 
 const logger = createLogger({
   name: "alphaforge-anton-frontend",

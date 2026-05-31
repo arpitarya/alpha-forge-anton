@@ -3,6 +3,18 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getSRCtor, type WebkitSR } from "./webspeech.types";
 
+const VOICE_ERRORS = {
+  "not-allowed": "Microphone access denied. Allow it in your browser settings.",
+  "permission-denied": "Microphone access denied. Allow it in your browser settings.",
+  "audio-capture": "No microphone found. Plug one in and try again.",
+  "no-speech": "No speech detected. Try speaking closer to the mic.",
+  network: "Voice recognition needs a network connection.",
+  "service-not-allowed": "Voice recognition is not allowed on this page.",
+  aborted: "Voice input was cancelled.",
+  "bad-grammar": "Voice grammar error.",
+  "language-not-supported": "Language not supported.",
+} as const;
+
 interface VoiceState {
   supported: boolean;
   listening: boolean;
@@ -19,20 +31,42 @@ interface Voice extends VoiceState {
 }
 
 export function useVoice(onFinal?: (text: string) => void): Voice {
-  const SR = getSRCtor();
   const [state, setState] = useState<VoiceState>({
-    supported: !!SR && typeof window !== "undefined" && "speechSynthesis" in window,
+    supported: false,
     listening: false,
     transcript: "",
     interim: "",
     error: null,
   });
+  // Holds the SR constructor (set once on mount, client-only)
+  const SRCtorRef = useRef<{ new (): WebkitSR } | null>(null);
+  // Holds the active recognition instance for the current session
   const recRef = useRef<WebkitSR | null>(null);
   const finalRef = useRef(onFinal);
   finalRef.current = onFinal;
 
   useEffect(() => {
+    const SR = getSRCtor();
+    SRCtorRef.current = SR;
+    setState((s) => ({ ...s, supported: !!SR && "speechSynthesis" in window }));
+    return () => {
+      try {
+        recRef.current?.abort();
+      } catch {}
+      recRef.current = null;
+    };
+  }, []);
+
+  const start = useCallback(() => {
+    const SR = SRCtorRef.current;
     if (!SR) return;
+
+    // Always create a fresh instance — reusing a ended/aborted instance causes
+    // Chrome to fire not-allowed on subsequent starts.
+    try {
+      recRef.current?.abort();
+    } catch {}
+
     const rec = new SR();
     rec.continuous = false;
     rec.interimResults = true;
@@ -48,23 +82,16 @@ export function useVoice(onFinal?: (text: string) => void): Voice {
       setState((s) => ({ ...s, transcript: (s.transcript + finalText).trim(), interim }));
       if (finalText && finalRef.current) finalRef.current(finalText.trim());
     };
-    rec.onerror = (e) =>
-      setState((s) => ({ ...s, error: e.error || "voice error", listening: false }));
+    rec.onerror = (e) => {
+      const msg = VOICE_ERRORS[e.error as keyof typeof VOICE_ERRORS] ?? "Voice error. Try again.";
+      setState((s) => ({ ...s, error: msg, listening: false }));
+    };
     rec.onend = () => setState((s) => ({ ...s, listening: false, interim: "" }));
     recRef.current = rec;
-    return () => {
-      try {
-        rec.abort();
-      } catch {}
-      recRef.current = null;
-    };
-  }, [SR]);
 
-  const start = useCallback(() => {
-    if (!recRef.current) return;
     setState((s) => ({ ...s, listening: true, transcript: "", interim: "", error: null }));
     try {
-      recRef.current.start();
+      rec.start();
     } catch (e) {
       setState((s) => ({ ...s, listening: false, error: String(e) }));
     }

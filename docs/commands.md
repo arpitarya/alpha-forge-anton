@@ -54,7 +54,42 @@ docker compose -f infra/docker-compose.yml up -d                 # via OrbStack
 cd backend && uv run alembic upgrade head
 cd backend && uv run alembic revision --autogenerate -m "description"
 
+# ── Probes (UI + Broker verification) ────────────────────────────────────────
+# Probes attach to the existing Chrome session via CDP (:9299) — never use Playwright MCP.
+# See probes/WHY_PROBES_NOT_MCP.md for the rationale.
+
+just zerodha-chrome          # Open Chrome with CDP on :9299 (required by all UI probes)
+
+# UI probes — full-stack verification via CDP
+just ui-probe                # Full UI smoke test: auth, dashboard, portfolio, console errors
+just ui-portfolio            # Portfolio filter probe: chips, sort, PnL filter, text search
+just ui-screens              # Capture terminal / portfolio / preferences screenshots
+just ui-pref-tabs            # Walk every Preferences sidebar tab → screenshots
+just ui-concierge            # Concierge AI chat UI probe
+just ui-model-picker         # Model picker UI probe
+
+# Or run directly:
+uv run python probes/ui_probe.py
+uv run python probes/ui_portfolio_probe.py
+uv run python probes/ui_screens.py
+
+# Broker XHR probes — confirm live API endpoints match source code
+just probe-zerodha           # Zerodha equity holdings (enctoken)
+just probe-zerodha-coin      # Zerodha Coin MF holdings (enctoken)
+just probe-zerodha-cash      # Zerodha free cash
+just probe-groww             # Groww equity holdings (XHR intercept)
+just probe-groww-cash        # Groww free cash
+just probe-angelone          # Angel One holdings (XHR intercept)
+just probe-angelone-cash     # Angel One free cash
+just probe-indmoney          # IndMoney US holdings (XHR intercept)
+just probe-indmoney-cash     # IndMoney free cash
+just probe-binance           # Binance crypto wallet (XHR intercept)
+just probe-binance-cash      # Binance free cash
+just probe-tickertape        # Ticker Tape portfolio (XHR intercept)
+just probe-gullak            # Gullak gold holdings
+
 # ── Repo Context MCP ─────────────────────────────────────────────────────────
+# (code-search server for Claude/Copilot/Cursor — separate from UI probes)
 cd repo-context-mcp && pdm install                               # Install deps
 cd repo-context-mcp && pdm run index --full                      # Build initial vector index
 cd repo-context-mcp && pdm run index --watch                     # Watch + incremental reindex

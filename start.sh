@@ -41,15 +41,30 @@ port_in_use() {
     lsof -tiTCP:"$1" -sTCP:LISTEN 2>/dev/null | head -1 | grep -q .
 }
 
-assert_port_free() {
+free_port() {
     local name="$1" port="$2"
+    port_in_use "$port" || return 0
+    local pids
+    pids="$(lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | tr '\n' ' ' | sed 's/ $//')"
+    warn "Port $port ($name) held by PID(s) $pids — killing…"
+    # SIGTERM first
+    for pid in $pids; do kill -TERM "$pid" 2>/dev/null || true; done
+    local i=0
+    while port_in_use "$port"; do
+        i=$((i + 1))
+        if [ "$i" -ge 5 ]; then
+            # SIGKILL stragglers
+            for pid in $pids; do kill -KILL "$pid" 2>/dev/null || true; done
+            sleep 1
+            break
+        fi
+        sleep 1
+    done
     if port_in_use "$port"; then
-        local holder
-        holder="$(lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | head -1)"
-        err "Port $port (for $name) is already in use by PID $holder."
-        err "  Kill it with:  kill $holder  (or  kill -9 $holder  if it ignores SIGTERM)"
+        err "Could not free port $port — please kill PID(s) $pids manually and rerun"
         return 1
     fi
+    ok "Port $port ($name) is now free."
 }
 
 wait_for_port() {
@@ -140,16 +155,16 @@ teardown() {
 trap 'teardown err' ERR
 trap 'teardown signal' INT TERM HUP
 
-# ── 0. Pre-flight: every app port must be free ───────────────────────────────
+# ── 0. Pre-flight: ensure every app port is free (auto-kill stale holders) ───
 log "Checking ports are free…"
 preflight_failed=0
-assert_port_free "Anton backend"  "$BACKEND_PORT"  || preflight_failed=1
-assert_port_free "Anton frontend" "$FRONTEND_PORT" || preflight_failed=1
-[ -f "$WAGNER_ROOT/backend/alembic.ini" ] && { assert_port_free "Wagner backend" "$WAGNER_PORT" || preflight_failed=1; }
-[ -f "$DANTE_ROOT/pyproject.toml" ]      && { assert_port_free "Dante API"      "$DANTE_PORT"  || preflight_failed=1; }
-[ -f "$BACH_ROOT/pyproject.toml" ]       && { assert_port_free "Bach vault"     "$BACH_PORT"   || preflight_failed=1; }
+free_port "Anton backend"  "$BACKEND_PORT"  || preflight_failed=1
+free_port "Anton frontend" "$FRONTEND_PORT" || preflight_failed=1
+[ -f "$WAGNER_ROOT/backend/alembic.ini" ] && { free_port "Wagner backend" "$WAGNER_PORT" || preflight_failed=1; }
+[ -f "$DANTE_ROOT/pyproject.toml" ]      && { free_port "Dante API"      "$DANTE_PORT"  || preflight_failed=1; }
+[ -f "$BACH_ROOT/pyproject.toml" ]       && { free_port "Bach vault"     "$BACH_PORT"   || preflight_failed=1; }
 if [ "$preflight_failed" = 1 ]; then
-    err "Aborting — free the ports above and rerun ./start.sh"
+    err "Aborting — could not free all ports."
     exit 1
 fi
 ok "All ports free."

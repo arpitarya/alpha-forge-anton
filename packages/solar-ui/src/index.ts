@@ -74,6 +74,22 @@ export { IconRail } from "./components/IconRail";
 export { TopBar } from "./components/TopBar";
 export { VoiceDock } from "./components/VoiceDock";
 
+// Notifications
+export {
+  clearNotifications,
+  Notification,
+  NotificationsHost,
+  notify,
+  useNotifications,
+} from "./components/notifications";
+export type {
+  NotificationAction,
+  NotificationInput,
+  NotificationModel,
+  NotificationsHostProps,
+  Severity as NotificationSeverity,
+} from "./components/notifications";
+
 // Theming
 export { ThemeProvider, useTheme } from "./components/ThemeProvider";
 

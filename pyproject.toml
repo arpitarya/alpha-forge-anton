@@ -14,7 +14,7 @@ members = [
     "backend",
     "packages/logger-py",
     "news",
-    "llm",
+    "concierge/llm",
 ]
 
 # Local workspace deps resolve to the in-tree member, not PyPI.

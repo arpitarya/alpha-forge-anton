@@ -23,6 +23,7 @@ export interface AssetClassFilterProps {
 export function AssetClassFilter({ assetClass, equitySub, counts, onChange }: AssetClassFilterProps) {
   return (
     <div
+    data-component="asset-class-filter"
       className="flex min-w-0 flex-1 items-center gap-[5px] overflow-x-auto py-[2px] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       style={{
         maskImage:

@@ -16,6 +16,7 @@
 @import "@alphaforge-anton/solar-ui/src/styles/fonts.css";
 @import "@alphaforge-anton/solar-ui/src/styles/theme.css";
 @import "@alphaforge-anton/solar-ui/src/styles/base.css";
+@import "@alphaforge-anton/solar-ui/src/styles/notifications.css";
 @import "@alphaforge/solar-orb-ball/styles";
 
 @source "../../../packages/solar-ui/src";

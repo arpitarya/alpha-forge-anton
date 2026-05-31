@@ -9,11 +9,15 @@ import type {
   WalletsResponseDTO,
 } from "./portfolio.types";
 
+// notifyOnError surfaces backend failures via the toast system instead of
+// leaving the UI silently empty — see queryCache onError in lib/providers.tsx.
+
 export function useHoldings(source?: string) {
   return useQuery<HoldingsResponseDTO>({
     queryKey: ["portfolio", "holdings", source ?? "all"],
     queryFn: () => portfolioApi.getHoldings(source).then((r) => r.data),
     staleTime: 10_000,
+    meta: { notifyOnError: true },
   });
 }
 
@@ -22,6 +26,7 @@ export function useTreemap(source?: string) {
     queryKey: ["portfolio", "treemap", source ?? "all"],
     queryFn: () => portfolioApi.getTreemap(source).then((r) => r.data),
     staleTime: 10_000,
+    meta: { notifyOnError: true },
   });
 }
 
@@ -30,6 +35,7 @@ export function useRebalance() {
     queryKey: ["portfolio", "rebalance"],
     queryFn: () => portfolioApi.getRebalance().then((r) => r.data),
     staleTime: 30_000,
+    meta: { notifyOnError: true },
   });
 }
 
@@ -38,6 +44,7 @@ export function useSources() {
     queryKey: ["portfolio", "sources"],
     queryFn: () => portfolioApi.listSources().then((r) => r.data),
     staleTime: 5_000,
+    meta: { notifyOnError: true },
   });
 }
 
@@ -83,6 +90,7 @@ export function useFx() {
     queryFn: () => portfolioApi.getFx().then((r) => r.data),
     // Refetch alongside the backend's 1-hour CSV TTL.
     staleTime: 60 * 60 * 1000,
+    meta: { notifyOnError: true },
   });
 }
 
@@ -91,6 +99,7 @@ export function useWallets() {
     queryKey: ["portfolio", "wallets"],
     queryFn: () => portfolioApi.listWallets().then((r) => r.data),
     staleTime: 30_000,
+    meta: { notifyOnError: true },
   });
 }
 

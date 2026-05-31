@@ -53,15 +53,25 @@ async def boot_sync_stream() -> StreamingResponse:
     async def _sync_one(slug: str) -> None:
         src = SOURCES[slug]
         if src.info().status == SourceStatus.UNCONFIGURED:
-            await queue.put({"slug": slug, "ok": True, "holdings_count": 0, "detail": "not linked"})
+            # Pull the actual unconfigured-reason if the source recorded one
+            # (e.g. "vault is locked, cannot load: ZERODHA_USER_ID") so the UI
+            # can suggest the right fix instead of generic "not linked".
+            reason = src.info().error_message or "not linked"
+            await queue.put({"slug": slug, "ok": True, "holdings_count": 0,
+                             "detail": "not linked", "reason": reason})
             return
         try:
             holdings = await asyncio.wait_for(src.sync(), timeout=15.0)
             await queue.put({"slug": slug, "ok": True, "holdings_count": len(holdings),
                              "detail": f"{len(holdings)} holdings"})
-        except (asyncio.TimeoutError, Exception) as e:  # noqa: BLE001
+        except asyncio.TimeoutError:
+            logger.warning("boot stream: %s timed out after 15s", slug)
+            await queue.put({"slug": slug, "ok": False, "holdings_count": 0,
+                             "detail": "sync failed", "reason": "timeout after 15s"})
+        except Exception as e:  # noqa: BLE001
             logger.warning("boot stream: %s failed — %s", slug, e)
-            await queue.put({"slug": slug, "ok": False, "holdings_count": 0, "detail": "sync failed"})
+            await queue.put({"slug": slug, "ok": False, "holdings_count": 0,
+                             "detail": "sync failed", "reason": str(e)[:200]})
 
     async def generate():
         tasks = [asyncio.create_task(_sync_one(s)) for s in SOURCES]

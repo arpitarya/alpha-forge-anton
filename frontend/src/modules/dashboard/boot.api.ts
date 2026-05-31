@@ -33,7 +33,12 @@ export async function streamBootSync(
     for (const line of lines) {
       if (!line.startsWith("data: ")) continue;
       const ev = JSON.parse(line.slice(6)) as SyncResult & { slug: string };
-      onResult(ev.slug, { ok: ev.ok, holdings_count: ev.holdings_count, detail: ev.detail });
+      onResult(ev.slug, {
+        ok: ev.ok,
+        holdings_count: ev.holdings_count,
+        detail: ev.detail,
+        reason: ev.reason,
+      });
     }
   }
 }

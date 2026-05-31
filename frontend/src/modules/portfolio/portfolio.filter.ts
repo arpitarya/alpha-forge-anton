@@ -5,13 +5,17 @@ export type PnLMode = "all" | "up" | "dn";
 
 /**
  * Top-level asset class bucket shown in the filter chips.
- * Maps to one or more {@link HoldingDTO.asset_class} values.
- *   - `equity`  → equity (incl. INVIT/REIT, split further by EquitySub)
- *   - `mfetf`   → mutual_fund + etf
- *   - `gold`    → gold
- *   - `all`     → no filter (crypto/bond/etc. show only here)
+ * Chips are shown only when the bucket has ≥ 1 holding — fully dynamic.
  */
-export type AssetClassBucket = "all" | "equity" | "mfetf" | "gold";
+export type AssetClassBucket =
+  | "all"
+  | "equity"
+  | "mfetf"
+  | "gold"
+  | "crypto"
+  | "bond"
+  | "cash"
+  | "other";
 
 /** Sub-filter applied when {@link FilterState.assetClass} === "equity". */
 export type EquitySub = "all" | "in" | "us" | "invitreit";
@@ -21,6 +25,10 @@ export const ASSET_BUCKETS: { id: AssetClassBucket; label: string; hasSub?: bool
   { id: "equity", label: "Equity", hasSub: true },
   { id: "mfetf", label: "MF/ETF" },
   { id: "gold", label: "Gold" },
+  { id: "crypto", label: "Crypto" },
+  { id: "bond", label: "Bonds" },
+  { id: "cash", label: "Cash" },
+  { id: "other", label: "Other" },
 ];
 
 export const EQUITY_SUBS: { id: EquitySub; label: string }[] = [
@@ -62,11 +70,14 @@ function isUSEquity(h: HoldingDTO): boolean {
 }
 
 /** Map a holding to its top-level filter bucket. */
-function bucketOf(h: HoldingDTO): AssetClassBucket | null {
+function bucketOf(h: HoldingDTO): AssetClassBucket {
   if (h.asset_class === "equity") return "equity";
   if (h.asset_class === "mutual_fund" || h.asset_class === "etf") return "mfetf";
   if (h.asset_class === "gold") return "gold";
-  return null; // crypto, bond, cash, other → only visible under "all"
+  if (h.asset_class === "crypto") return "crypto";
+  if (h.asset_class === "bond") return "bond";
+  if (h.asset_class === "cash") return "cash";
+  return "other";
 }
 
 function equitySubOf(h: HoldingDTO): EquitySub | null {
@@ -136,11 +147,20 @@ export interface AssetClassCounts {
 }
 
 export function assetClassCounts(rows: HoldingDTO[]): AssetClassCounts {
-  const cls: Record<AssetClassBucket, number> = { all: rows.length, equity: 0, mfetf: 0, gold: 0 };
+  const cls: Record<AssetClassBucket, number> = {
+    all: rows.length,
+    equity: 0,
+    mfetf: 0,
+    gold: 0,
+    crypto: 0,
+    bond: 0,
+    cash: 0,
+    other: 0,
+  };
   const sub: Record<EquitySub, number> = { all: 0, in: 0, us: 0, invitreit: 0 };
   for (const r of rows) {
     const b = bucketOf(r);
-    if (b && b !== "all") cls[b] += 1;
+    cls[b] += 1;
     if (b === "equity") {
       sub.all += 1;
       const s = equitySubOf(r);

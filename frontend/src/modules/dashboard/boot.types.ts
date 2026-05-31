@@ -17,4 +17,8 @@ export interface SyncResult {
   ok: boolean;
   holdings_count: number;
   detail: string;
+  /** Raw failure reason from the backend (exception message, timeout, vault-lock).
+   * Present when ok=false, or when the source is unconfigured for a recoverable
+   * reason (e.g. vault locked). The frontend uses this to propose a fix. */
+  reason?: string;
 }

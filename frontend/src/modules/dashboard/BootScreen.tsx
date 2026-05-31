@@ -16,35 +16,50 @@ export interface BootStep {
 /** Static fallback used only if the live probe call fails. Real boot rows
  * come from `GET /api/v1/health/boot` via `BootGate`. */
 export const BOOT_STEPS: BootStep[] = [
-  { key: "backend",   label: "Backend · FastAPI gateway",      status: "ok",   doneStatus: "online"     },
-  { key: "database",  label: "Database · Postgres ready",      status: "ok",   doneStatus: "ready"      },
-  { key: "llm",       label: "AI Gateway · LLM routing",       status: "warn", doneStatus: "no key"     },
-  { key: "zerodha",   label: "Zerodha (Kite) · holdings source", status: "warn", doneStatus: "not linked" },
-  { key: "groww",     label: "Groww · holdings source",        status: "warn", doneStatus: "not linked" },
-  { key: "wintwealth", label: "Wint Wealth · holdings source", status: "warn", doneStatus: "not linked" },
-  { key: "angelone",  label: "Angel One · holdings source",    status: "warn", doneStatus: "not linked" },
+  { key: "backend", label: "Backend · FastAPI gateway", status: "ok", doneStatus: "online" },
+  { key: "database", label: "Database · Postgres ready", status: "ok", doneStatus: "ready" },
+  { key: "llm", label: "AI Gateway · LLM routing", status: "warn", doneStatus: "no key" },
+  {
+    key: "zerodha",
+    label: "Zerodha (Kite) · holdings source",
+    status: "warn",
+    doneStatus: "not linked",
+  },
+  { key: "groww", label: "Groww · holdings source", status: "warn", doneStatus: "not linked" },
+  {
+    key: "wintwealth",
+    label: "Wint Wealth · holdings source",
+    status: "warn",
+    doneStatus: "not linked",
+  },
+  {
+    key: "angelone",
+    label: "Angel One · holdings source",
+    status: "warn",
+    doneStatus: "not linked",
+  },
 ];
 
 const NOW_STATUS: Record<string, string> = {
-  database:    "querying postgres…",
-  llm:         "connecting to AI providers…",
-  zerodha:     "syncing Zerodha positions…",
-  groww:       "syncing Groww holdings…",
-  wintwealth:  "syncing bonds & SGBs…",
-  angelone:    "syncing Angel One snapshot…",
-  indmoney:    "syncing IndMoney holdings…",
-  tickertape:  "syncing Tickertape data…",
+  database: "querying postgres…",
+  llm: "connecting to AI providers…",
+  zerodha: "syncing Zerodha positions…",
+  groww: "syncing Groww holdings…",
+  wintwealth: "syncing bonds & SGBs…",
+  angelone: "syncing Angel One snapshot…",
+  indmoney: "syncing IndMoney holdings…",
+  tickertape: "syncing Tickertape data…",
 };
 
 const HEADLINES: Record<string, string> = {
-  backend:    "Give me a second — I'm spinning up your terminal.",
-  database:   "Connecting to your data.",
-  llm:        "Wiring up your AI analyst…",
-  zerodha:    "Pulling your Zerodha positions…",
-  groww:      "Loading your Groww book…",
+  backend: "Give me a second — I'm spinning up your terminal.",
+  database: "Connecting to your data.",
+  llm: "Wiring up your AI analyst…",
+  zerodha: "Pulling your Zerodha positions…",
+  groww: "Loading your Groww book…",
   wintwealth: "Reading Wint Wealth bonds & SGBs…",
-  angelone:   "Refreshing your Angel One snapshot…",
-  done:       "Welcome back, Arpit.",
+  angelone: "Refreshing your Angel One snapshot…",
+  done: "Welcome back, Arpit.",
 };
 
 export interface BootScreenProps {
@@ -54,11 +69,24 @@ export interface BootScreenProps {
   exiting?: boolean;
   /** Gate: navigation is held until sync resolves. Animation still plays immediately. */
   syncReady?: boolean;
+  /** When true, each row is shown immediately with its declared status (no
+   * timer-driven reveal). Used by BootGate when /health/boot is the source of
+   * truth so the splash mirrors actual probe state instead of a fake progress. */
+  live?: boolean;
 }
 
-export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncReady = false }: BootScreenProps) {
-  const [done, setDone] = useState(3);
-  const [animDone, setAnimDone] = useState(false);
+export function BootScreen({
+  steps = BOOT_STEPS,
+  onDone,
+  exiting = false,
+  syncReady = false,
+  live = false,
+}: BootScreenProps) {
+  // In live mode every row is "done" the moment we have probe data; the row's
+  // colour/glyph already encodes whether it's OK or blocking. In demo mode we
+  // keep the staggered reveal so the splash feels alive even with no data.
+  const [done, setDone] = useState(live ? steps.length : 3);
+  const [animDone, setAnimDone] = useState(live);
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
 
@@ -67,7 +95,16 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncRe
     if (animDone && syncReady) onDoneRef.current();
   }, [animDone, syncReady]);
 
+  // Keep `done` synced with the live step count so newly-arriving probe rows
+  // appear immediately rather than waiting for a timer.
   useEffect(() => {
+    if (!live) return;
+    setDone(steps.length);
+    setAnimDone(true);
+  }, [live, steps.length]);
+
+  useEffect(() => {
+    if (live) return;
     let step = 3;
     let t: ReturnType<typeof setTimeout>;
 
@@ -83,12 +120,29 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncRe
 
     t = setTimeout(next, 900);
     return () => clearTimeout(t);
-  }, [steps.length]);
+  }, [steps.length, live]);
 
-  const pct = Math.round((done / steps.length) * 100);
-  const currentKey = done < steps.length ? steps[done].key : "done";
-  const headline = HEADLINES[currentKey] ?? HEADLINES.done;
-  const allDone = done >= steps.length;
+  // In live mode the meaningful progress is "OK probes / total probes" rather
+  // than "rows revealed / total rows" (which would always be 100%).
+  const okCount = steps.filter((s) => s.status === "ok").length;
+  const pct = live
+    ? Math.round((okCount / Math.max(steps.length, 1)) * 100)
+    : Math.round((done / steps.length) * 100);
+  const firstBlocker = live
+    ? steps.find((s) => s.status === "error" || s.status === "warn")
+    : undefined;
+  const currentKey = live
+    ? syncReady
+      ? "done"
+      : (firstBlocker?.key ?? "backend")
+    : done < steps.length
+      ? steps[done].key
+      : "done";
+  const headline =
+    live && firstBlocker?.key === "vault"
+      ? "Vault is locked — run `afbach unlock` to continue."
+      : (HEADLINES[currentKey] ?? HEADLINES.done);
+  const allDone = live ? syncReady : done >= steps.length;
 
   return (
     <>
@@ -165,7 +219,8 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncRe
           style={{ animation: "boot-corner-in 0.7s 0.15s ease-out both" }}
         >
           <span className="text-[color:var(--accent)]">SYSTEM.CORE.KERNEL</span>
-          <br />VER_0.9.4.ALPHA
+          <br />
+          VER_0.9.4.ALPHA
         </span>
         <span
           aria-hidden
@@ -173,7 +228,8 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncRe
           style={{ animation: "boot-corner-in 0.7s 0.25s ease-out both" }}
         >
           <span className="text-[color:var(--accent)]">LATENCY · 8ms</span>
-          <br />UPLINK_STABLE ⦾
+          <br />
+          UPLINK_STABLE ⦾
         </span>
         <span
           aria-hidden
@@ -181,7 +237,8 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncRe
           style={{ animation: "boot-corner-bl-in 0.7s 0.3s ease-out both" }}
         >
           MEMORY_ALLOCATION
-          <br /><span className="text-[color:var(--accent)]">128.00 GB</span>
+          <br />
+          <span className="text-[color:var(--accent)]">128.00 GB</span>
         </span>
         <span
           aria-hidden
@@ -189,7 +246,8 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncRe
           style={{ animation: "boot-corner-bl-in 0.7s 0.2s ease-out both" }}
         >
           GEOLOCATION
-          <br /><span className="text-[color:var(--accent)]">NODE_MUMBAI_01</span>
+          <br />
+          <span className="text-[color:var(--accent)]">NODE_MUMBAI_01</span>
         </span>
 
         {/* Main column */}
@@ -227,25 +285,40 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncRe
           <ul className="flex flex-col gap-3">
             {steps.map((s, idx) => {
               const isDone = idx < done;
-              const isNow  = idx === done;
+              const isNow = idx === done;
               type RowState = BootStatus | "pending" | "queued";
               const probeStatus: RowState = isDone ? s.status : isNow ? "pending" : "queued";
               const detail = isDone ? s.doneStatus : isNow ? (NOW_STATUS[s.key] ?? "…") : "queued";
               const glyph =
-                probeStatus === "ok"      ? "✓" :
-                probeStatus === "warn"    ? "!" :
-                probeStatus === "error"   ? "✗" :
-                probeStatus === "pending" ? "◐" : "○";
+                probeStatus === "ok"
+                  ? "✓"
+                  : probeStatus === "warn"
+                    ? "!"
+                    : probeStatus === "error"
+                      ? "✗"
+                      : probeStatus === "pending"
+                        ? "◐"
+                        : "○";
               const glyphColor =
-                probeStatus === "ok"      ? "var(--green)" :
-                probeStatus === "warn"    ? "var(--accent)" :
-                probeStatus === "error"   ? "var(--red)" :
-                probeStatus === "pending" ? "var(--accent)" : "var(--fg-4)";
+                probeStatus === "ok"
+                  ? "var(--green)"
+                  : probeStatus === "warn"
+                    ? "var(--accent)"
+                    : probeStatus === "error"
+                      ? "var(--red)"
+                      : probeStatus === "pending"
+                        ? "var(--accent)"
+                        : "var(--fg-4)";
               const detailColor =
-                probeStatus === "warn"    ? "var(--accent)" :
-                probeStatus === "error"   ? "var(--red)" :
-                isNow                     ? "var(--accent)" :
-                isDone                    ? "var(--fg-3)" : "var(--fg-4)";
+                probeStatus === "warn"
+                  ? "var(--accent)"
+                  : probeStatus === "error"
+                    ? "var(--red)"
+                    : isNow
+                      ? "var(--accent)"
+                      : isDone
+                        ? "var(--fg-3)"
+                        : "var(--fg-4)";
 
               return (
                 <li
@@ -263,7 +336,10 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncRe
                     style={{
                       color: glyphColor,
                       transition: "color 0.35s ease",
-                      animation: probeStatus === "pending" ? "boot-step-spin 1.4s linear infinite" : undefined,
+                      animation:
+                        probeStatus === "pending"
+                          ? "boot-step-spin 1.4s linear infinite"
+                          : undefined,
                     }}
                   >
                     {glyph}
@@ -293,7 +369,8 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncRe
               className="h-full rounded-full"
               style={{
                 width: `${pct}%`,
-                background: "linear-gradient(90deg, var(--accent-dim), var(--accent), var(--accent-soft))",
+                background:
+                  "linear-gradient(90deg, var(--accent-dim), var(--accent), var(--accent-soft))",
                 boxShadow: "0 0 12px var(--glow), 0 0 28px var(--glow)",
                 transition: "width 0.75s cubic-bezier(0.4, 0, 0.2, 1)",
               }}
@@ -316,7 +393,9 @@ export function BootScreen({ steps = BOOT_STEPS, onDone, exiting = false, syncRe
           </div>
 
           <div className="mt-2 flex justify-between font-mono text-[10px] tracking-[0.2em] uppercase text-[color:var(--fg-3)]">
-            <span>{done} of {steps.length} systems ready</span>
+            <span>
+              {done} of {steps.length} systems ready
+            </span>
             <span
               style={{
                 color: allDone ? "var(--green)" : "var(--accent)",

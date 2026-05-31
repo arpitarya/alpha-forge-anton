@@ -143,6 +143,14 @@ html[data-theme="dark"] {
 
   --green: #37d17a;
   --red: #ff5a3a;
+
+  /* Semantic notification palette — locked to meaning, never themed by --accent.
+   * The -rgb companions exist because rgba(var(--x), .12) needs raw triplets. */
+  --ok: #37d17a;      --ok-rgb: 55, 209, 122;
+  --err: #ff5a3a;     --err-rgb: 255, 90, 58;
+  --warn: #ffbb3d;    --warn-rgb: 255, 187, 61;
+  --info: #5b8cff;    --info-rgb: 91, 140, 255;
+  --neutral: #9aa0ab; --neutral-rgb: 154, 160, 171;
 }
 
 html[data-theme="light"] {
@@ -160,6 +168,12 @@ html[data-theme="light"] {
 
   --green: #15803d;
   --red: #b91c1c;
+
+  --ok: #1f9d5a;      --ok-rgb: 31, 157, 90;
+  --err: #d83a1c;     --err-rgb: 216, 58, 28;
+  --warn: #c98a00;    --warn-rgb: 201, 138, 0;
+  --info: #2f5fe0;    --info-rgb: 47, 95, 224;
+  --neutral: #6a6f78; --neutral-rgb: 106, 111, 120;
 }
 
 /* Accent palettes — default to amber when no [data-accent] is set */

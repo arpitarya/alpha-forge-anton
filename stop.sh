@@ -40,11 +40,31 @@ kill_tree() {
     ok "Force-killed ${name} (PID ${pid})"
 }
 
+kill_port() {
+    local name="$1" port="$2"
+    local pids
+    pids="$(lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | tr '\n' ' ' | sed 's/ $//')"
+    [ -z "$pids" ] && return 0
+    warn "Port $port ($name) held by PID(s) $pids — killing…"
+    for pid in $pids; do kill -TERM "$pid" 2>/dev/null || true; done
+    sleep 2
+    for pid in $pids; do kill -0 "$pid" 2>/dev/null && kill -KILL "$pid" 2>/dev/null || true; done
+    ok "Cleared port $port ($name)."
+}
+
 # ── Load PIDs ────────────────────────────────────────────────────────────────
+ANTON_ENV="$ANTON_ROOT/.env.port"
+BACKEND_PORT=8000; FRONTEND_PORT=3000; WAGNER_BACKEND_PORT=8001; DANTE_PORT=9100
+[ -f "$ANTON_ENV" ] && { set -a; source "$ANTON_ENV"; set +a; }
+
 if [ ! -f "$PID_FILE" ]; then
-    warn "No .dev.pids file — services may not have been started with start.sh"
-    warn "Attempting to stop PostgreSQL + Redis anyway…"
+    warn "No .dev.pids file — killing by port instead…"
+    kill_port "Anton backend"  "${BACKEND_PORT:-8000}"
+    kill_port "Anton frontend" "${FRONTEND_PORT:-3000}"
+    kill_port "Wagner backend" "${WAGNER_BACKEND_PORT:-8001}"
+    kill_port "Dante API"      "${DANTE_PORT:-9100}"
     bash "$ANTON_ROOT/database/db.sh" stop 2>/dev/null || true
+    ok "All services stopped."
     exit 0
 fi
 

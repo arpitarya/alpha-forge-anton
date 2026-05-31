@@ -37,3 +37,25 @@ def get_source(slug: str) -> BrokerSource:
     if not src:
         raise KeyError(f"Unknown broker source: {slug!r}")
     return src
+
+
+def refresh_unconfigured_sources() -> list[str]:
+    """Re-instantiate sources stuck at UNCONFIGURED so they re-check env.
+
+    Sources decide READY-vs-UNCONFIGURED in __init__ from os.getenv. After a
+    mid-life vault unlock the env is now populated but the cached instance
+    still reports UNCONFIGURED — rebuild only those so the boot probe flips
+    them to READY without losing already-synced state on healthy sources.
+    """
+    from app.modules.brokers.broker_schemas import SourceStatus
+    promoted: list[str] = []
+    rebuilt = _build_sources()
+    for slug, current in list(SOURCES.items()):
+        if current.info().status != SourceStatus.UNCONFIGURED:
+            continue
+        fresh = rebuilt.get(slug)
+        if fresh is None or fresh.info().status == SourceStatus.UNCONFIGURED:
+            continue
+        SOURCES[slug] = fresh
+        promoted.append(slug)
+    return promoted

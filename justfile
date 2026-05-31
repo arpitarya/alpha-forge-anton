@@ -155,6 +155,17 @@ db-migrate:
 db-revision msg:
     cd backend && uv run alembic revision --autogenerate -m "{{msg}}"
 
+# ── Probes ───────────────────────────────────────
+
+# Open Chrome with CDP on :9299 (required before running any probe)
+zerodha-chrome:
+    bash broker/zerodha/chrome.sh
+
+# Run a probe by name — omit name to list all available probes (CDP :9299 required)
+# Examples: just probe ui | just probe zerodha | just probe groww-cash
+probe name="":
+    bash probes/probe.sh {{name}}
+
 # ── Testing ──────────────────────────────────────
 
 # Run all tests and linters

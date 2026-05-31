@@ -1,5 +1,6 @@
 "use client";
 
+import { notify } from "@alphaforge-anton/solar-ui";
 import { useEffect, useState } from "react";
 import { useVoice } from "./useVoice";
 
@@ -26,6 +27,11 @@ export function VoiceCenter({ onTranscript }: Props) {
     return () => clearInterval(id);
   }, [voice.listening]);
 
+  useEffect(() => {
+    if (!voice.error) return;
+    notify.error({ title: "Voice input failed", message: voice.error });
+  }, [voice.error]);
+
   const liveText = voice.listening
     ? voice.transcript || voice.interim || "Listening…"
     : VOICE_PROMPTS[promptIdx];
@@ -43,7 +49,6 @@ export function VoiceCenter({ onTranscript }: Props) {
       </div>
       {voice.listening && <Waveform />}
       <span style={textStyle}>{liveText}</span>
-      {voice.error && <span style={errorStyle}>· {voice.error}</span>}
     </div>
   );
 }
@@ -144,11 +149,4 @@ const textStyle = {
   fontSize: 12,
   color: "var(--fg-2)",
   fontStyle: "italic" as const,
-};
-const errorStyle = {
-  fontFamily: "Space Mono, monospace",
-  fontSize: 9,
-  letterSpacing: "0.18em",
-  color: "var(--red)",
-  textTransform: "uppercase" as const,
 };

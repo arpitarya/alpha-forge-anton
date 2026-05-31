@@ -24,10 +24,32 @@ async def probe_vault() -> BootService:
     if not os.getenv("AFBACH_TOKEN"):
         return BootService(key="vault", label="Secrets · afbach vault",
                            status=BootStatus.WARN, detail="AFBACH_TOKEN not set — file env only")
+    # Re-attempt the vault fetch on every probe so a mid-life `afbach unlock`
+    # takes effect without a backend restart. load_from_vault is idempotent
+    # and cheap (one HTTP call); when the vault is still locked it sets the
+    # _vault_locked flag and returns 0 without raising.
+    from app.core.vault_client import load_from_vault, vault_locked
+    from app.modules.brokers.registry import refresh_unconfigured_sources
+    try:
+        loaded_now = load_from_vault(override=True)
+    except Exception as e:
+        return BootService(key="vault", label="Secrets · afbach vault",
+                           status=BootStatus.ERROR, detail=str(e)[:80])
+    if vault_locked():
+        return BootService(key="vault", label="Secrets · afbach vault",
+                           status=BootStatus.ERROR,
+                           detail="vault locked — run `afbach unlock`")
+    if loaded_now:
+        # Newly loaded keys may unblock brokers that were UNCONFIGURED at boot.
+        refresh_unconfigured_sources()
     loaded = sum(1 for k in _LLM_VAULT_KEYS if os.getenv(k))
-    status = BootStatus.OK if loaded else BootStatus.ERROR
-    detail = f"{loaded}/{len(_LLM_VAULT_KEYS)} LLM keys loaded" if loaded else "vault connected but no LLM keys found"
-    return BootService(key="vault", label="Secrets · afbach vault", status=status, detail=detail)
+    if not loaded:
+        return BootService(key="vault", label="Secrets · afbach vault",
+                           status=BootStatus.ERROR,
+                           detail="vault connected but no LLM keys found")
+    return BootService(key="vault", label="Secrets · afbach vault",
+                       status=BootStatus.OK,
+                       detail=f"{loaded}/{len(_LLM_VAULT_KEYS)} LLM keys loaded")
 
 
 async def probe_backend() -> BootService:
@@ -86,14 +108,17 @@ _BROKER_STATUS_MAP = {
 }
 
 
-def _broker_detail(status: SourceStatus, holdings_count: int) -> str:
+def _broker_detail(status: SourceStatus, holdings_count: int, error_message: str | None) -> str:
     if status == SourceStatus.READY:
         return f"{holdings_count} holdings" if holdings_count else "linked · not synced"
     if status == SourceStatus.SYNCING:
         return "syncing…"
     if status == SourceStatus.UNCONFIGURED:
         return "not linked"
-    return "error"
+    # ERROR: surface the actual sync failure so the boot toast can say *why* —
+    # the bare "error" string used to mask issues like expired creds, network
+    # blocks, or upstream-broker outages.
+    return (error_message or "sync failed")[:80]
 
 
 async def probe_brokers() -> list[BootService]:
@@ -104,6 +129,6 @@ async def probe_brokers() -> list[BootService]:
             key=slug,
             label=f"{info.label} · holdings source",
             status=_BROKER_STATUS_MAP.get(info.status, BootStatus.WARN),
-            detail=_broker_detail(info.status, info.holdings_count),
+            detail=_broker_detail(info.status, info.holdings_count, info.error_message),
         ))
     return rows

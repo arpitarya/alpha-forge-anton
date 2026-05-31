@@ -17,7 +17,14 @@ const DEFAULT_PILL: Record<NotificationModel["severity"], string> = {
 const EXIT_MS = 300;
 
 function fmtTime(ts: number): string {
-  return new Date(ts).toLocaleTimeString("en-GB"); // HH:MM:SS
+  return new Date(ts).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+}
+
+function fmtDateTime(ts: number): string {
+  return new Date(ts).toLocaleString("en-US", {
+    month: "short", day: "numeric", year: "numeric",
+    hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true,
+  });
 }
 
 interface Props {
@@ -73,7 +80,7 @@ export function Notification({ n }: Props) {
         <div className="af-hd">
           <span className="af-ti">{n.title}</span>
           {pill ? <span className="af-pill">{pill}</span> : null}
-          <span className="af-tm">{fmtTime(n.createdAt)}</span>
+          <span className="af-tm" title={fmtDateTime(n.createdAt)}>{fmtTime(n.createdAt)}</span>
         </div>
         {n.message ? <div className="af-ms">{n.message}</div> : null}
         {n.actions?.length ? (

@@ -13,4 +13,5 @@
 # just db-status   # Check service status
 
 backend: bash -c 'set -a && source .env.port && set +a && cd backend && uv run uvicorn app.main:app --reload --host 0.0.0.0 --port "$BACKEND_PORT"'
+solar-ui: cd packages/solar-ui && pnpm dev
 frontend: bash -c 'set -a && source .env.port && set +a && cd frontend && pnpm dev'

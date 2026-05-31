@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-from app.modules.chat import router as chat_router
+from app.modules.concierge import router as concierge_router
 from app.modules.dashboard import router as dashboard_router
 from app.modules.health import router as health_router
 from app.modules.iam import router as iam_router
@@ -17,6 +17,6 @@ api_router.include_router(iam_router)
 api_router.include_router(portfolio_router, prefix="/portfolio", tags=["portfolio"])
 api_router.include_router(dashboard_router, prefix="/dashboard", tags=["dashboard"])
 api_router.include_router(news_router, tags=["news"])
-api_router.include_router(chat_router, prefix="/chat", tags=["chat"])
+api_router.include_router(concierge_router, prefix="/concierge", tags=["concierge"])
 
 __all__ = ["api_router"]
