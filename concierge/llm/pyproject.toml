@@ -1,0 +1,36 @@
+[project]
+name = "alphaforge-anton-llm"
+version = "0.1.0"
+description = "AlphaForge Anton — multi-provider LLM gateway (standalone package)"
+requires-python = ">=3.14"
+license = { text = "MIT" }
+authors = [{ name = "Arpit Arya" }]
+
+dependencies = [
+    "anthropic>=0.40.0",
+    "fastapi>=0.100.0",
+    "httpx>=0.27.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.0",
+    "uvicorn>=0.27.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/alphaforge_anton_llm"]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "S", "B", "A", "C4", "RUF"]
+ignore = ["S101"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
