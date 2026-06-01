@@ -1,23 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getSRCtor, type WebkitSR } from "./webspeech.types";
-
-const VOICE_ERRORS = {
-  "not-allowed": "Microphone access denied. Allow it in your browser settings.",
-  "permission-denied": "Microphone access denied. Allow it in your browser settings.",
-  "audio-capture": "No microphone found. Plug one in and try again.",
-  "no-speech": "No speech detected. Try speaking closer to the mic.",
-  network: "Voice recognition needs a network connection.",
-  "service-not-allowed": "Voice recognition is not allowed on this page.",
-  aborted: "Voice input was cancelled.",
-  "bad-grammar": "Voice grammar error.",
-  "language-not-supported": "Language not supported.",
-} as const;
 
 interface VoiceState {
   supported: boolean;
   listening: boolean;
+  transcribing: boolean;
   transcript: string;
   interim: string;
   error: string | null;
@@ -30,74 +18,135 @@ interface Voice extends VoiceState {
   cancelSpeaking: () => void;
 }
 
+function pickMimeType(): string {
+  if (typeof MediaRecorder === "undefined") return "";
+  const candidates = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"];
+  return candidates.find((t) => MediaRecorder.isTypeSupported(t)) ?? "";
+}
+
 export function useVoice(onFinal?: (text: string) => void): Voice {
   const [state, setState] = useState<VoiceState>({
     supported: false,
     listening: false,
+    transcribing: false,
     transcript: "",
     interim: "",
     error: null,
   });
-  // Holds the SR constructor (set once on mount, client-only)
-  const SRCtorRef = useRef<{ new (): WebkitSR } | null>(null);
-  // Holds the active recognition instance for the current session
-  const recRef = useRef<WebkitSR | null>(null);
+  const recRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
   const finalRef = useRef(onFinal);
   finalRef.current = onFinal;
 
   useEffect(() => {
-    const SR = getSRCtor();
-    SRCtorRef.current = SR;
-    setState((s) => ({ ...s, supported: !!SR && "speechSynthesis" in window }));
+    const supported =
+      typeof window !== "undefined" &&
+      !!navigator.mediaDevices?.getUserMedia &&
+      typeof MediaRecorder !== "undefined";
+    setState((s) => ({ ...s, supported }));
     return () => {
       try {
-        recRef.current?.abort();
+        if (recRef.current?.state === "recording") recRef.current.stop();
       } catch {}
+      streamRef.current?.getTracks().forEach((t) => {
+        t.stop();
+      });
+      streamRef.current = null;
       recRef.current = null;
     };
   }, []);
 
-  const start = useCallback(() => {
-    const SR = SRCtorRef.current;
-    if (!SR) return;
+  const teardown = useCallback(() => {
+    streamRef.current?.getTracks().forEach((t) => {
+      t.stop();
+    });
+    streamRef.current = null;
+    recRef.current = null;
+  }, []);
 
-    // Always create a fresh instance — reusing a ended/aborted instance causes
-    // Chrome to fire not-allowed on subsequent starts.
+  const transcribe = useCallback(async (blob: Blob) => {
+    setState((s) => ({ ...s, transcribing: true }));
     try {
-      recRef.current?.abort();
-    } catch {}
-
-    const rec = new SR();
-    rec.continuous = false;
-    rec.interimResults = true;
-    rec.lang = "en-IN";
-    rec.onresult = (e) => {
-      let interim = "";
-      let finalText = "";
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        const r = e.results[i];
-        if (r.isFinal) finalText += r[0].transcript;
-        else interim += r[0].transcript;
+      const form = new FormData();
+      const ext = blob.type.includes("mp4") ? "m4a" : "webm";
+      form.append("file", blob, `voice.${ext}`);
+      const token = localStorage.getItem("af_token");
+      const res = await fetch("/api/v1/concierge/stt", {
+        method: "POST",
+        body: form,
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+      if (!res.ok) {
+        const detail = await res.text();
+        throw new Error(`STT ${res.status}: ${detail.slice(0, 120)}`);
       }
-      setState((s) => ({ ...s, transcript: (s.transcript + finalText).trim(), interim }));
-      if (finalText && finalRef.current) finalRef.current(finalText.trim());
-    };
-    rec.onerror = (e) => {
-      const msg = VOICE_ERRORS[e.error as keyof typeof VOICE_ERRORS] ?? "Voice error. Try again.";
-      setState((s) => ({ ...s, error: msg, listening: false }));
-    };
-    rec.onend = () => setState((s) => ({ ...s, listening: false, interim: "" }));
-    recRef.current = rec;
-
-    setState((s) => ({ ...s, listening: true, transcript: "", interim: "", error: null }));
-    try {
-      rec.start();
+      const { transcript } = (await res.json()) as { transcript: string };
+      const clean = (transcript ?? "").trim();
+      setState((s) => ({ ...s, transcript: clean, transcribing: false, interim: "" }));
+      if (clean && finalRef.current) finalRef.current(clean);
     } catch (e) {
-      setState((s) => ({ ...s, listening: false, error: String(e) }));
+      setState((s) => ({
+        ...s,
+        transcribing: false,
+        error: e instanceof Error ? e.message : "Transcription failed",
+      }));
     }
   }, []);
 
-  const stop = useCallback(() => recRef.current?.stop(), []);
+  const start = useCallback(async () => {
+    if (recRef.current?.state === "recording") return;
+    setState((s) => ({ ...s, transcript: "", interim: "", error: null }));
+
+    let stream: MediaStream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (e) {
+      const name = e instanceof Error ? e.name : "Error";
+      const msg =
+        name === "NotAllowedError"
+          ? "Microphone access denied. Allow it in your browser settings."
+          : name === "NotFoundError"
+            ? "No microphone found. Plug one in and try again."
+            : `Microphone error: ${name}`;
+      setState((s) => ({ ...s, error: msg, listening: false }));
+      return;
+    }
+
+    streamRef.current = stream;
+    const mime = pickMimeType();
+    const rec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+    chunksRef.current = [];
+
+    rec.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0) chunksRef.current.push(e.data);
+    };
+    rec.onstop = () => {
+      const blob = new Blob(chunksRef.current, { type: mime || "audio/webm" });
+      chunksRef.current = [];
+      teardown();
+      setState((s) => ({ ...s, listening: false }));
+      if (blob.size > 0) void transcribe(blob);
+    };
+    rec.onerror = (e) => {
+      const err = (e as unknown as { error?: { name?: string } }).error;
+      setState((s) => ({
+        ...s,
+        error: `Recorder error: ${err?.name ?? "unknown"}`,
+        listening: false,
+      }));
+      teardown();
+    };
+
+    recRef.current = rec;
+    rec.start();
+    setState((s) => ({ ...s, listening: true }));
+  }, [teardown, transcribe]);
+
+  const stop = useCallback(() => {
+    const rec = recRef.current;
+    if (rec && rec.state === "recording") rec.stop();
+  }, []);
 
   const speak = useCallback((text: string) => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;

@@ -12,7 +12,7 @@ Then run this probe (backend + frontend must be running):
     uv run python probes/ui_probe.py --cdp-port 9299
 
 Environment overrides:
-    AF_FRONTEND=http://localhost:3000
+    AF_FRONTEND=https://localhost:3000
     PROBE_USER=<username>   (falls back to afbach vault PROBE_USER)
     PROBE_PASS=<password>   (falls back to afbach vault PROBE_PASS)
     BROKER_CDP_PORT=9299
@@ -33,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 from app.modules.brokers._cdp import connect_existing_chrome
 from _probe_auth import probe_credentials
 
-BASE_URL = os.getenv("AF_FRONTEND", "http://localhost:3000")
+BASE_URL = os.getenv("AF_FRONTEND", "https://localhost:3000")
 CDP_PORT = int(os.getenv("BROKER_CDP_PORT", "9299"))
 USERNAME, PASSWORD = probe_credentials()
 SHOT_DIR = Path(__file__).resolve().parent.parent / "screenshots"

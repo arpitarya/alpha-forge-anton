@@ -13,7 +13,7 @@ and exercises:
 
 Run:
     uv run python probes/ui_concierge_probe.py
-    uv run python probes/ui_concierge_probe.py --cdp-port 9299 --base http://localhost:3000
+    uv run python probes/ui_concierge_probe.py --cdp-port 9299 --base https://localhost:3000
 
 Screenshots saved to <repo-root>/screenshots/.
 """
@@ -34,7 +34,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 
 from app.modules.brokers._cdp import connect_existing_chrome
 
-DEFAULT_BASE = "http://localhost:3000"
+DEFAULT_BASE = "https://localhost:3000"
 DEFAULT_CDP = 9299
 JWT_SECRET = "dev-secret-change-me"
 JWT_ALGO = "HS256"

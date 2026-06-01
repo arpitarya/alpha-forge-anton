@@ -34,8 +34,12 @@ class Settings(BaseSettings):
     # ── Wagner IAM service ───────────────────────
     wagner_url: str = "http://127.0.0.1:8001"
 
+    # ── Broker sync retries ──────────────────────
+    broker_sync_retry_count: int = 3
+    broker_sync_retry_delay_seconds: int = 8
+
     # ── CORS ─────────────────────────────────────
-    cors_origins: list[str] = ["http://localhost:3000"]
+    cors_origins: list[str] = ["https://localhost:3000"]
 
     # ── Logging ──────────────────────────────────
     log_level: str = "INFO"

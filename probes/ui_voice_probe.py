@@ -1,24 +1,23 @@
 """Playwright UI probe — exercises the AlphaForge Anton voice (mic) flow.
 
 Attaches to the existing Chrome CDP session (port 9299), injects a dev JWT,
-then mocks window.SpeechRecognition so we can drive the full voice flow without
-a real microphone.  Tests:
+then mocks:
+  * navigator.mediaDevices.getUserMedia  → returns a fake MediaStream
+  * window.MediaRecorder                  → records a few chunks, fires onstop
+  * fetch('/api/v1/concierge/stt')        → returns a canned transcript
 
+Tests:
   1. App reachable (not redirected to /login)
   2. Voice bar renders in the footer
-  3. Mic button is present and NOT disabled (supported=true after mount)
-  4. Mic button is clickable (user-gesture start doesn't throw)
-  5. Listening state becomes active after click
-  6. Waveform appears while listening
-  7. Transcript fires onFinal and is submitted as a chat query
-  8. Listening state resets after recognition ends
-  9. Error flow: not-allowed fires notification, button resets to idle
+  3. Mic button enabled (supported=true after mount)
+  4. Click → getUserMedia called, MediaRecorder.start() called, listening=true
+  5. Click again → MediaRecorder.stop() called, /stt POST fires, transcript received
+  6. Transcript opens chat rail and creates a user turn
+  7. Error flow: getUserMedia NotAllowedError → notification shows, button idle
 
 Run:
     uv run python probes/ui_voice_probe.py
-    uv run python probes/ui_voice_probe.py --cdp-port 9299 --base http://localhost:3000
-
-Screenshots saved to <repo-root>/screenshots/.
+    uv run python probes/ui_voice_probe.py --cdp-port 9299 --base https://localhost:3000
 """
 
 from __future__ import annotations
@@ -37,7 +36,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 
 from app.modules.brokers._cdp import connect_existing_chrome
 
-DEFAULT_BASE = "http://localhost:3000"
+DEFAULT_BASE = "https://localhost:3000"
 DEFAULT_CDP = 9299
 JWT_SECRET = "dev-secret-change-me"
 JWT_ALGO = "HS256"
@@ -51,6 +50,8 @@ FAKE_USER = {
     "role": "admin",
     "created_at": "2025-01-01T00:00:00Z",
 }
+
+CANNED_TRANSCRIPT = "show my portfolio risk"
 
 
 def _record(label: str, ok: bool, detail: str = "") -> None:
@@ -73,7 +74,85 @@ def _mint_token() -> str:
         return pyjwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGO)
 
 
-async def _inject_auth_and_navigate(page, base: str, token: str) -> bool:
+def _build_mock(simulate_denied: bool) -> str:
+    return f"""
+(function () {{
+    window.__voiceMock = {{
+        simulateDenied: {str(simulate_denied).lower()},
+        recorderStarted: 0,
+        recorderStopped: 0,
+        gumCalled: 0,
+        sttPosted: 0,
+    }};
+
+    class FakeTrack {{
+        constructor() {{ this.kind = 'audio'; this.label = 'fake-mic'; this.readyState = 'live'; }}
+        stop() {{ this.readyState = 'ended'; }}
+    }}
+    class FakeStream {{
+        constructor() {{ this._tracks = [new FakeTrack()]; }}
+        getTracks() {{ return this._tracks; }}
+        getAudioTracks() {{ return this._tracks; }}
+    }}
+
+    if (!navigator.mediaDevices) navigator.mediaDevices = {{}};
+    navigator.mediaDevices.getUserMedia = async function () {{
+        window.__voiceMock.gumCalled++;
+        if (window.__voiceMock.simulateDenied) {{
+            const err = new Error('Permission denied');
+            err.name = 'NotAllowedError';
+            throw err;
+        }}
+        return new FakeStream();
+    }};
+
+    class MockRecorder extends EventTarget {{
+        constructor(stream, opts) {{
+            super();
+            this.stream = stream;
+            this.mimeType = (opts && opts.mimeType) || 'audio/webm';
+            this.state = 'inactive';
+            this.ondataavailable = null;
+            this.onstop = null;
+            this.onerror = null;
+        }}
+        start() {{
+            this.state = 'recording';
+            window.__voiceMock.recorderStarted++;
+            setTimeout(() => {{
+                if (this.ondataavailable) {{
+                    const blob = new Blob(['fake-audio-bytes'], {{ type: this.mimeType }});
+                    this.ondataavailable({{ data: blob }});
+                }}
+            }}, 50);
+        }}
+        stop() {{
+            if (this.state !== 'recording') return;
+            this.state = 'inactive';
+            window.__voiceMock.recorderStopped++;
+            setTimeout(() => {{ if (this.onstop) this.onstop(); }}, 20);
+        }}
+    }}
+    MockRecorder.isTypeSupported = () => true;
+    window.MediaRecorder = MockRecorder;
+
+    const origFetch = window.fetch.bind(window);
+    window.fetch = async function (input, init) {{
+        const url = typeof input === 'string' ? input : input.url;
+        if (url && url.includes('/api/v1/concierge/stt')) {{
+            window.__voiceMock.sttPosted++;
+            return new Response(
+                JSON.stringify({{ transcript: {json.dumps(CANNED_TRANSCRIPT)} }}),
+                {{ status: 200, headers: {{ 'Content-Type': 'application/json' }} }},
+            );
+        }}
+        return origFetch(input, init);
+    }};
+}})();
+"""
+
+
+async def _inject_auth_and_navigate(page, base: str, token: str, mock_script: str) -> bool:
     await page.goto(base, wait_until="domcontentloaded")
     auth_state = json.dumps({
         "state": {"accessToken": token, "refreshToken": None, "user": FAKE_USER},
@@ -86,72 +165,9 @@ async def _inject_auth_and_navigate(page, base: str, token: str) -> bool:
         localStorage.setItem('af-mode', 'voice');
         sessionStorage.setItem('af-booted', '1');
     }}""")
+    await page.add_init_script(mock_script)
     await page.goto(f"{base}/", wait_until="networkidle")
     return "/login" not in page.url
-
-
-# ---------------------------------------------------------------------------
-# SpeechRecognition mock — injected into the page via addInitScript so it
-# runs before any React code.  The mock is controllable via window.__srMock.
-# ---------------------------------------------------------------------------
-SR_MOCK_SCRIPT = """
-(function () {
-    window.__srMock = {
-        instances: [],
-        // Call to simulate a successful transcript
-        fireResult(transcript) {
-            const inst = window.__srMock.instances.at(-1);
-            if (!inst) return;
-            const fakeEvent = {
-                resultIndex: 0,
-                results: [{
-                    isFinal: true,
-                    0: { transcript },
-                    length: 1,
-                }],
-            };
-            if (inst.onresult) inst.onresult(fakeEvent);
-            if (inst.onend) inst.onend();
-        },
-        // Call to simulate an error
-        fireError(code) {
-            const inst = window.__srMock.instances.at(-1);
-            if (!inst) return;
-            if (inst.onerror) inst.onerror({ error: code });
-            if (inst.onend) inst.onend();
-        },
-        // Check if the latest instance has been started
-        get started() {
-            const inst = window.__srMock.instances.at(-1);
-            return inst ? inst._started : false;
-        },
-    };
-
-    class MockSR {
-        constructor() {
-            this.continuous = false;
-            this.interimResults = false;
-            this.lang = '';
-            this.onresult = null;
-            this.onerror = null;
-            this.onend = null;
-            this._started = false;
-            window.__srMock.instances.push(this);
-        }
-        start() { this._started = true; }
-        stop()  { this._started = false; if (this.onend) this.onend(); }
-        abort() { this._started = false; }
-    }
-
-    // Override both variants so getSRCtor() always finds our mock
-    window.SpeechRecognition = MockSR;
-    window.webkitSpeechRecognition = MockSR;
-    // Keep speechSynthesis stub so supported check passes
-    if (!window.speechSynthesis) {
-        window.speechSynthesis = { speak() {}, cancel() {} };
-    }
-})();
-"""
 
 
 async def run(base: str, cdp_port: int) -> bool:
@@ -160,9 +176,6 @@ async def run(base: str, cdp_port: int) -> bool:
 
     pw, browser = await connect_existing_chrome(cdp_port)
     ctx = browser.contexts[0] if browser.contexts else await browser.new_context()
-
-    # Inject the SR mock before the page JS runs
-    await ctx.add_init_script(SR_MOCK_SCRIPT)
     page = await ctx.new_page()
 
     await page.route("**/api/v1/iam/me", lambda route: route.fulfill(
@@ -172,16 +185,16 @@ async def run(base: str, cdp_port: int) -> bool:
     ))
 
     try:
-        # ── 1. Auth bypass ────────────────────────────────────────────────────
         print("\n── Auth bypass + navigation")
-        on_app = await _inject_auth_and_navigate(page, base, token)
+        on_app = await _inject_auth_and_navigate(
+            page, base, token, _build_mock(simulate_denied=False)
+        )
         _record("Reached app (not /login)", on_app, page.url)
         if not on_app:
             await page.screenshot(path=str(SHOT_DIR / "voice-00-login-fail.png"))
             return False
-        await page.wait_for_timeout(1_000)  # let React mount + useEffect fire
+        await page.wait_for_timeout(800)
 
-        # ── 2. Voice bar renders ──────────────────────────────────────────────
         print("\n── Voice bar")
         voice_bar = page.locator("footer.af-voice")
         bar_visible = await voice_bar.is_visible()
@@ -190,7 +203,6 @@ async def run(base: str, cdp_port: int) -> bool:
         if not bar_visible:
             return False
 
-        # ── 3. Mic button enabled ─────────────────────────────────────────────
         print("\n── Mic button state")
         mic_btn = page.get_by_role("button", name="Start listening")
         await mic_btn.wait_for(state="visible", timeout=5_000)
@@ -198,84 +210,65 @@ async def run(base: str, cdp_port: int) -> bool:
         _record("Mic button is enabled (supported=true after mount)", disabled is None,
                 f"disabled={disabled!r}")
 
-        # Inspect supported flag via React state (check aria-pressed is accessible)
-        aria_pressed = await mic_btn.get_attribute("aria-pressed")
-        _record("Mic button has aria-pressed attribute", aria_pressed is not None,
-                f"aria-pressed={aria_pressed!r}")
-
-        # ── 4. SR mock is installed ───────────────────────────────────────────
-        print("\n── SpeechRecognition mock")
-        sr_available = await page.evaluate("() => typeof window.SpeechRecognition === 'function'")
-        _record("Mock SpeechRecognition in window", sr_available)
-
-        # ── 5. Clicking mic starts listening ─────────────────────────────────
-        print("\n── Start listening")
+        print("\n── Start recording")
         await mic_btn.click()
-        await page.wait_for_timeout(400)
+        await page.wait_for_timeout(300)
 
-        sr_started = await page.evaluate("() => window.__srMock.started")
-        _record("SpeechRecognition.start() was called", sr_started)
+        gum_called = await page.evaluate("() => window.__voiceMock.gumCalled")
+        _record("getUserMedia called", gum_called >= 1, f"calls={gum_called}")
+        rec_started = await page.evaluate("() => window.__voiceMock.recorderStarted")
+        _record("MediaRecorder.start() called", rec_started >= 1, f"starts={rec_started}")
 
         stop_btn = page.get_by_role("button", name="Stop listening")
         listening_visible = await stop_btn.is_visible()
-        _record("Button switches to 'Stop listening' while active", listening_visible)
-
+        _record("Button switches to 'Stop listening'", listening_visible)
         await page.screenshot(path=str(SHOT_DIR / "voice-02-listening.png"))
 
-        # ── 6. Waveform appears ───────────────────────────────────────────────
-        print("\n── Waveform")
-        # VoiceCenter renders <Waveform> only while voice.listening is true
-        status_text = await page.locator("footer.af-voice").inner_text()
-        _record("Footer shows 'Listening' label while active",
-                "Listening" in status_text, repr(status_text[:80]))
-
-        # ── 7. Transcript fires onFinal → chat submission ─────────────────────
-        print("\n── Transcript → submit")
-        await page.evaluate("() => window.__srMock.fireResult('show my portfolio risk')")
+        print("\n── Stop + transcribe")
+        await stop_btn.click()
         await page.wait_for_timeout(800)
 
-        # After onFinal, AlphaBar calls onChatModeOpen + onSubmit,
-        # which opens the chat rail and creates a user turn
-        user_turn = page.locator('text="show my portfolio risk"')
+        rec_stopped = await page.evaluate("() => window.__voiceMock.recorderStopped")
+        _record("MediaRecorder.stop() called", rec_stopped >= 1, f"stops={rec_stopped}")
+
+        stt_posted = await page.evaluate("() => window.__voiceMock.sttPosted")
+        _record("POST /api/v1/concierge/stt fired", stt_posted >= 1, f"posts={stt_posted}")
+
+        print("\n── Transcript → chat rail")
+        await page.wait_for_timeout(500)
+        user_turn = page.locator(f'text="{CANNED_TRANSCRIPT}"')
         turn_visible = await user_turn.is_visible()
-        _record("Transcript fires onFinal and creates a chat user turn", turn_visible)
+        _record("Transcript creates a chat user turn", turn_visible)
         await page.screenshot(path=str(SHOT_DIR / "voice-03-transcript.png"))
 
-        # ── 8. Listening state resets after recognition ends ──────────────────
-        print("\n── Listening reset")
-        await page.wait_for_timeout(300)
-        start_btn_back = page.get_by_role("button", name="Start listening")
-        reset_visible = await start_btn_back.is_visible()
-        _record("Button resets to 'Start listening' after recognition ends", reset_visible)
+        rail_open = await page.evaluate("""() => {
+            const aside = document.querySelector('[aria-label="Alpha chat"]');
+            if (!aside) return false;
+            return window.getComputedStyle(aside).pointerEvents !== 'none';
+        }""")
+        _record("Chat rail opens after transcript", rail_open)
 
-        # ── 9. Error flow: not-allowed ─────────────────────────────────────────
-        print("\n── Error flow (not-allowed)")
-        # Switch back to voice mode and click mic again
+        print("\n── Error flow (NotAllowedError)")
         await page.keyboard.press("Escape")
-        await page.wait_for_timeout(500)
-
-        # Reset to voice mode
+        await page.wait_for_timeout(300)
         await page.evaluate("() => localStorage.setItem('af-mode', 'voice')")
         await page.reload(wait_until="networkidle")
-        await page.wait_for_timeout(1_000)
+        await page.wait_for_timeout(800)
+        # Flip the live mock flag (init script re-installed a fresh one on reload)
+        await page.evaluate("() => { window.__voiceMock.simulateDenied = true; }")
 
         mic_btn2 = page.get_by_role("button", name="Start listening")
         await mic_btn2.wait_for(state="visible", timeout=5_000)
         await mic_btn2.click()
-        await page.wait_for_timeout(300)
-        await page.evaluate("() => window.__srMock.fireError('not-allowed')")
         await page.wait_for_timeout(600)
 
-        # A notification toast should appear
         notif = page.locator("text=Voice input failed")
         notif_visible = await notif.is_visible()
-        _record("not-allowed error shows 'Voice input failed' notification", notif_visible)
+        _record("NotAllowedError shows 'Voice input failed' notification", notif_visible)
 
-        # Button should be back to idle (not stuck in listening)
         idle_btn = page.get_by_role("button", name="Start listening")
         idle_after_err = await idle_btn.is_visible()
         _record("Mic button returns to idle after error", idle_after_err)
-
         await page.screenshot(path=str(SHOT_DIR / "voice-04-error.png"))
 
     finally:

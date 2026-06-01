@@ -8,6 +8,7 @@ import json
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 
+from app.core.config import settings
 from app.core.logging import get_logger
 from app.modules.brokers.broker_schemas import SourceStatus
 from app.modules.brokers.registry import SOURCES
@@ -53,25 +54,41 @@ async def boot_sync_stream() -> StreamingResponse:
     async def _sync_one(slug: str) -> None:
         src = SOURCES[slug]
         if src.info().status == SourceStatus.UNCONFIGURED:
-            # Pull the actual unconfigured-reason if the source recorded one
-            # (e.g. "vault is locked, cannot load: ZERODHA_USER_ID") so the UI
-            # can suggest the right fix instead of generic "not linked".
             reason = src.info().error_message or "not linked"
             await queue.put({"slug": slug, "ok": True, "holdings_count": 0,
                              "detail": "not linked", "reason": reason})
             return
-        try:
-            holdings = await asyncio.wait_for(src.sync(), timeout=15.0)
-            await queue.put({"slug": slug, "ok": True, "holdings_count": len(holdings),
-                             "detail": f"{len(holdings)} holdings"})
-        except asyncio.TimeoutError:
-            logger.warning("boot stream: %s timed out after 15s", slug)
-            await queue.put({"slug": slug, "ok": False, "holdings_count": 0,
-                             "detail": "sync failed", "reason": "timeout after 15s"})
-        except Exception as e:  # noqa: BLE001
-            logger.warning("boot stream: %s failed — %s", slug, e)
-            await queue.put({"slug": slug, "ok": False, "holdings_count": 0,
-                             "detail": "sync failed", "reason": str(e)[:200]})
+
+        max_attempts = settings.broker_sync_retry_count + 1
+        delay = settings.broker_sync_retry_delay_seconds
+        last_err: str = "sync failed"
+
+        for attempt in range(max_attempts):
+            if attempt > 0:
+                logger.info(
+                    "boot stream: %s retry %d/%d in %ds",
+                    slug, attempt, settings.broker_sync_retry_count, delay,
+                )
+                await asyncio.sleep(delay)
+            try:
+                holdings = await asyncio.wait_for(src.sync(), timeout=15.0)
+                await queue.put({"slug": slug, "ok": True, "holdings_count": len(holdings),
+                                 "detail": f"{len(holdings)} holdings"})
+                return
+            except TimeoutError:
+                last_err = "timeout after 15s"
+                logger.warning(
+                    "boot stream: %s timed out (attempt %d/%d)", slug, attempt + 1, max_attempts,
+                )
+            except Exception as e:
+                last_err = str(e)[:200]
+                logger.warning(
+                    "boot stream: %s failed (attempt %d/%d) — %s",
+                    slug, attempt + 1, max_attempts, e,
+                )
+
+        await queue.put({"slug": slug, "ok": False, "holdings_count": 0,
+                         "detail": "sync failed", "reason": last_err})
 
     async def generate():
         tasks = [asyncio.create_task(_sync_one(s)) for s in SOURCES]

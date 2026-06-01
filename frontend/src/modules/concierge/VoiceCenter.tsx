@@ -32,9 +32,11 @@ export function VoiceCenter({ onTranscript }: Props) {
     notify.error({ title: "Voice input failed", message: voice.error });
   }, [voice.error]);
 
-  const liveText = voice.listening
-    ? voice.transcript || voice.interim || "Listening…"
-    : VOICE_PROMPTS[promptIdx];
+  const liveText = voice.transcribing
+    ? "Transcribing…"
+    : voice.listening
+      ? voice.transcript || voice.interim || "Listening…"
+      : VOICE_PROMPTS[promptIdx];
 
   return (
     <div style={{ display: "flex", minWidth: 0, flex: 1, alignItems: "center", gap: 14 }}>
@@ -44,8 +46,10 @@ export function VoiceCenter({ onTranscript }: Props) {
         onClick={() => (voice.listening ? voice.stop() : voice.start())}
       />
       <div style={{ display: "flex", flexShrink: 0, alignItems: "center", gap: 8 }}>
-        <span style={labelStyle}>{voice.listening ? "Listening…" : "Voice idle"}</span>
-        <span style={subStyle}>· {voice.supported ? "WEB SPEECH" : "UNAVAILABLE"}</span>
+        <span style={labelStyle}>
+          {voice.transcribing ? "Transcribing…" : voice.listening ? "Listening…" : "Voice idle"}
+        </span>
+        <span style={subStyle}>· {voice.supported ? "WHISPER" : "UNAVAILABLE"}</span>
       </div>
       {voice.listening && <Waveform />}
       <span style={textStyle}>{liveText}</span>

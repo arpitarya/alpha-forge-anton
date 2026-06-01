@@ -12,6 +12,7 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 | CLI commands (setup, run, build, migrate, clean) | [docs/commands.md](docs/commands.md) |
 | Guardrails & project rules | [docs/guardrails.md](docs/guardrails.md) |
 | Broker CSV dumps (shared dump_utils contract) | [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md) |
+| Comparison docs — how to write `<name>.compare.md` | [docs/comparison.guide.md](docs/comparison.guide.md) |
 | Graphify knowledge graph | [docs/graphify.md](docs/graphify.md) |
 
 ## UI & Broker Verification

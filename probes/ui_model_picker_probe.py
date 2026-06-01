@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 
 from app.modules.brokers._cdp import connect_existing_chrome
 
-BASE_URL = "http://localhost:3000"
+BASE_URL = "https://localhost:3000"
 CDP_PORT = 9299
 JWT_SECRET = "dev-secret-change-me"
 JWT_ALGO = "HS256"

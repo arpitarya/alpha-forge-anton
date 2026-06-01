@@ -123,7 +123,10 @@ alpha-forge-anton/
 - `backend/app/modules/health/boot_probes.py` — One probe function per system (`probe_backend`, `probe_database`, `probe_brokers`). Each probe swallows its own errors so a single failure can't take down the whole `/health/boot` response
 - `backend/app/modules/health/boot_schemas.py` — `BootStatus` enum (`ok` / `warn` / `error` / `skip`), `BootService`, and `BootReport` Pydantic v2 schemas; the frontend mirror is `boot.types.ts`
 - `frontend/src/modules/dashboard/TerminalRail.tsx` — Icon sidebar (unused; nav lives in the top bar per Hi-Fi design)
-- `frontend/src/lib/api.ts` — Axios HTTP client (interceptors only; per-domain `*.api.ts` lives in each module)
+- `frontend/src/lib/api.ts` — Axios HTTP client (interceptors only; per-domain `*.api.ts` lives in each module). The response interceptor handles 401 → silent refresh → redirect and attaches a normalized `ApiError` as `error.apiError` on every failed request.
+- `frontend/src/lib/apiError.ts` — `ApiError` type + `toApiError()` normalizer. All HTTP errors collapse to a typed shape with `kind` (`network/canceled/auth/forbidden/notFound/validation/client/server/unknown`), `status`, `message`, and optional `detail`/`requestId`.
+- `frontend/src/lib/apiNotify.ts` — `notifyApiError(err)`: bridges an `ApiError` to a `notify.error()` toast. Skips `canceled` (unmount noise) and `auth` (interceptor already handles redirect).
+- `frontend/src/lib/providers.tsx` — React Query `QueryProvider`. Global error handlers: mutations always call `notifyApiError` (suppress with `meta: { silent: true }`); queries are silent unless `meta: { notifyOnError: true }`. See [conventions.md § Error Handling](conventions.md#error-handling--notifications).
 - `frontend/src/lib/logger.ts` — Frontend logging setup (wraps @alphaforge/logger)
 - `frontend/src/modules/<name>/<name>.api.ts` — Per-domain axios calls
 - `frontend/src/modules/<name>/<name>.query.ts` — Per-domain React Query hooks

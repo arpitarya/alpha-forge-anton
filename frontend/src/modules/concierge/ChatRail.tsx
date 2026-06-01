@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { type ChatTurn, formatChoiceLabel, type ModelChoice } from "./concierge.types";
+import {
+  type ChatTurn,
+  formatChoiceLabel,
+  type ModelChoice,
+  PROVIDERS,
+  type ProviderId,
+} from "./concierge.types";
 import { ModelPicker } from "./ModelPicker";
 
 interface Props {
@@ -111,6 +117,7 @@ export function ChatRail({
 }: Props) {
   const [size, setSize] = useState<"md" | "lg">("md");
   const [inputValue, setInputValue] = useState("");
+  const [lastSubmitted, setLastSubmitted] = useState("");
   const threadRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const thinking = turns.some((t) => t.loading);
@@ -144,6 +151,7 @@ export function ChatRail({
     const q = inputValue.trim();
     if (!q) return;
     onSeed(q);
+    setLastSubmitted(q);
     setInputValue("");
     if (textareaRef.current) textareaRef.current.style.height = "auto";
   }
@@ -248,7 +256,7 @@ export function ChatRail({
                   lineHeight: 1.1,
                 }}
               >
-                Alpha · Conversation
+                orff (concierge)
               </div>
               <div
                 style={{
@@ -416,7 +424,7 @@ export function ChatRail({
               <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0, flex: 1 }}>
                 <ModelPicker
                   value={choice}
-                  query={inputValue}
+                  query={inputValue || lastSubmitted}
                   onChange={onChoiceChange}
                   footerRef={footerModelRef}
                 />
@@ -858,8 +866,20 @@ function SeedCard({ seed, onSeed }: { seed: (typeof SEEDS)[0]; onSeed: (q: strin
   );
 }
 
+function resolveResponderLabel(turn: ChatTurn): string {
+  if (turn.provider && turn.model) {
+    const providerMeta = PROVIDERS[turn.provider as ProviderId];
+    const providerName = providerMeta?.name ?? turn.provider;
+    const modelName =
+      providerMeta?.models.find((m) => m.id === turn.model)?.name ?? turn.model;
+    return `${providerName} · ${modelName}`;
+  }
+  return formatChoiceLabel(turn.active);
+}
+
 function TurnPair({ turn, thinking }: { turn: ChatTurn; thinking: boolean }) {
   const modelName = formatChoiceLabel(turn.active);
+  const responderLabel = resolveResponderLabel(turn);
 
   const now = new Date();
   const timeStr = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
@@ -953,12 +973,12 @@ function TurnPair({ turn, thinking }: { turn: ChatTurn; thinking: boolean }) {
               color: "var(--fg-3)",
             }}
           >
-            <span style={{ color: "var(--accent)", fontWeight: 700 }}>ALPHA</span>
+            <span style={{ color: "var(--accent)", fontWeight: 700 }}>ORFF</span>
             <span>·</span>
             <span style={{ marginLeft: "auto", textTransform: "none", letterSpacing: "0.06em" }}>
               {turn.loading
                 ? `thinking · ${modelName}`
-                : `${turn.tokens ?? 0} tok · ${modelName}${turn.elapsed != null ? ` · ${turn.elapsed.toFixed(1)}s` : ""}`}
+                : `${turn.tokens ?? 0} tok · ${responderLabel}${turn.elapsed != null ? ` · ${turn.elapsed.toFixed(1)}s` : ""}`}
             </span>
           </div>
           <div
