@@ -45,3 +45,14 @@ Rules:
 - If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
 - For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep — these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files
 - After modifying code files in this session, run `graphify update .` to keep the graph current (AST-only, no API cost)
+
+<!-- fux:start -->
+## Fux knowledge engine
+
+This project's rules, memory, narrative, and graph live in `.fux/` (one substrate).
+
+- SessionStart injects the compact INDEX automatically — no manual read needed.
+- Look up a rule: `fux why <id>` · what governs a file: `fux refs <path>`
+- Rebuild derived views ($0): `fux build` · check for drift: `fux check`
+- Author a new entry: `fux new <type> <id>`
+<!-- fux:end -->

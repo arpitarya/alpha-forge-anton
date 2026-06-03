@@ -1,0 +1,20 @@
+[fux]
+# Enforcement: off | warn | fix (default) | strict  — see fux-plan.md §8
+mode = "fix"
+
+# Opt-in rule packs from ~/.claude/fux/packs/ (plan §5)
+packs = ["indian-markets-tax"]
+
+# Inherit ~/.claude/fux/global/ best practices
+use_global = true
+
+# Pilot scope: the brokers domain the first rules govern. Widen as Fux adoption
+# grows across the repo (plan §13.4 — author by demand, not exhaustively).
+important_globs = ["backend/app/modules/brokers/**/*.py"]
+ignore_globs = [
+  "**/node_modules/**", "**/.venv/**", "**/__pycache__/**",
+  "graphify-out/**", "**/dist/**", "**/build/**",
+]
+
+# Phase-2 local embedding re-rank for recall (no API). Off by default.
+recall_rerank = false

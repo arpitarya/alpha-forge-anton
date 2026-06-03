@@ -15,6 +15,37 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/arpitarya/.claude/fux/hooks/session_start.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/arpitarya/.claude/fux/hooks/post_tool_use.sh"
+          }
+        ],
+        "matcher": "Edit|Write"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/arpitarya/.claude/fux/hooks/stop.sh"
+          }
+        ]
+      }
     ]
   }
 }

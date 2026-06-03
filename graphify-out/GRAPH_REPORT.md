@@ -1,12 +1,12 @@
 # Graph Report - anton  (2026-06-01)
 
 ## Corpus Check
-- 346 files · ~586,427 words
+- 331 files · ~585,151 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1906 nodes · 2986 edges · 361 communities detected
-- Extraction: 54% EXTRACTED · 46% INFERRED · 0% AMBIGUOUS · INFERRED: 1367 edges (avg confidence: 0.69)
+- 1858 nodes · 2881 edges · 375 communities detected
+- Extraction: 54% EXTRACTED · 46% INFERRED · 0% AMBIGUOUS · INFERRED: 1330 edges (avg confidence: 0.69)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -41,7 +41,7 @@
 - [[_COMMUNITY_Community 29|Community 29]]
 - [[_COMMUNITY_Community 30|Community 30]]
 - [[_COMMUNITY_Community 31|Community 31]]
-- [[_COMMUNITY_Community 37|Community 37]]
+- [[_COMMUNITY_Community 32|Community 32]]
 - [[_COMMUNITY_Community 38|Community 38]]
 - [[_COMMUNITY_Community 42|Community 42]]
 - [[_COMMUNITY_Community 65|Community 65]]
@@ -371,10 +371,24 @@
 - [[_COMMUNITY_Community 467|Community 467]]
 - [[_COMMUNITY_Community 468|Community 468]]
 - [[_COMMUNITY_Community 469|Community 469]]
+- [[_COMMUNITY_Community 470|Community 470]]
+- [[_COMMUNITY_Community 471|Community 471]]
+- [[_COMMUNITY_Community 472|Community 472]]
+- [[_COMMUNITY_Community 473|Community 473]]
+- [[_COMMUNITY_Community 474|Community 474]]
+- [[_COMMUNITY_Community 475|Community 475]]
+- [[_COMMUNITY_Community 476|Community 476]]
+- [[_COMMUNITY_Community 477|Community 477]]
+- [[_COMMUNITY_Community 478|Community 478]]
+- [[_COMMUNITY_Community 479|Community 479]]
+- [[_COMMUNITY_Community 480|Community 480]]
+- [[_COMMUNITY_Community 481|Community 481]]
+- [[_COMMUNITY_Community 482|Community 482]]
+- [[_COMMUNITY_Community 483|Community 483]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `get()` - 125 edges
-2. `alphaforge-logger — Structured rotating-file + console logger.` - 64 edges
+1. `get()` - 119 edges
+2. `alphaforge-logger — Structured rotating-file + console logger.` - 63 edges
 3. `QueryType` - 49 edges
 4. `BrokerSource` - 46 edges
 5. `Message` - 42 edges
@@ -385,106 +399,106 @@
 10. `SourceHealth` - 30 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Holding` --uses--> `Test suite for broker source plugins + portfolio routes.  Run from the backend d`  [INFERRED]
-  /Users/arpitarya/my_programs/alpha-forge/backend/app/modules/brokers/broker_schemas.py → backend/tests/test_brokers.py
-- `Holding` --uses--> `Inject five synthetic holdings directly into the zerodha source cache.`  [INFERRED]
-  /Users/arpitarya/my_programs/alpha-forge/backend/app/modules/brokers/broker_schemas.py → backend/tests/test_brokers.py
-- `Holding` --uses--> `Client with zerodha holdings pre-seeded in memory.`  [INFERRED]
-  /Users/arpitarya/my_programs/alpha-forge/backend/app/modules/brokers/broker_schemas.py → backend/tests/test_brokers.py
-- `Background refetch loop — auto-syncs broker sources when their TTL expires.  Eac` --uses--> `BrokerSource`  [INFERRED]
-  backend/app/modules/brokers/refetch.py → /Users/arpitarya/my_programs/alpha-forge/backend/app/modules/brokers/base.py
-- `BrokerSource` --uses--> `Groww holdings — BrokerSource impl over CDP browser fetch + CSV cache.  Auth flo`  [INFERRED]
-  /Users/arpitarya/my_programs/alpha-forge/backend/app/modules/brokers/base.py → backend/app/modules/brokers/groww/groww_source.py
+- `Message` --uses--> `Alpha chat service — routes model choice to LLMGateway and streams SSE.`  [INFERRED]
+  concierge/llm/src/alphaforge_anton_llm/types.py → backend/app/modules/chat/chat_service.py
+- `Message` --uses--> `Async generator yielding SSE-formatted bytes per token snapshot.`  [INFERRED]
+  concierge/llm/src/alphaforge_anton_llm/types.py → backend/app/modules/chat/chat_service.py
+- `Message` --uses--> `Return (query_type, preferred_provider). preferred_provider=None lets the gatewa`  [INFERRED]
+  concierge/llm/src/alphaforge_anton_llm/types.py → backend/app/modules/chat/chat_service.py
+- `Message` --uses--> `Async generator yielding SSE-formatted bytes.`  [INFERRED]
+  concierge/llm/src/alphaforge_anton_llm/types.py → backend/app/modules/chat/chat_service.py
+- `Message` --uses--> `Return (query_type, preferred_provider). preferred_provider is None for auto.`  [INFERRED]
+  concierge/llm/src/alphaforge_anton_llm/types.py → backend/app/modules/chat/chat_service.py
 
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.02
-Nodes (139): capture_angelone_cash(), main(), Print Angel One free cash via CDP capture of /funds/v2/getRMSLimit.  Attaches to, dump_angelone(), is_csv_fresh(), live_csv_path(), main(), Angel One holdings CSV cache — fetches via SmartAPI, caches to CSV.  TTL control (+131 more)
+Cohesion: 0.03
+Nodes (121): dump_angelone(), is_csv_fresh(), live_csv_path(), main(), Angel One holdings CSV cache — fetches via SmartAPI, caches to CSV.  TTL control, read_csv(), _ttl(), write_csv() (+113 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.03
-Nodes (90): default_model(), ProviderAdapter, ProviderHealth, Auto-benchmarking system — evaluates providers per QueryType., Run benchmark across all available providers., Result for a single provider/query_type evaluation., Full benchmark report across all providers and query types., Return results for a query type, sorted by score descending. (+82 more)
+Nodes (88): Angel One equity holdings CSV source (angelone.in portfolio export)., AngelOneSource, env(), Angel One holdings — BrokerSource impl over SmartAPI + CSV cache.  Free SmartAPI, BrokerSource, BrokerSource ABC + lifecycle (sync, ingest_csv, info, reset).  Schemas live in `, Adapter for one holdings provider — override `fetch()` (API) or `parse()` (CSV)., Adapter for one holdings provider — override `fetch()` (API) or `parse()` (CSV). (+80 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.03
-Nodes (90): ABC, Angel One equity holdings CSV source (angelone.in portfolio export)., env(), BrokerSource, health(), BrokerSource ABC + lifecycle (sync, ingest_csv, info, reset).  Schemas live in `, Adapter for one holdings provider — override `fetch()` (API) or `parse()` (CSV)., Adapter for one holdings provider — override `fetch()` (API) or `parse()` (CSV). (+82 more)
+Nodes (72): capture_angelone_cash(), _pick_cash(), Angel One — capture free-cash balance via CDP from the funds page.  Probe-confir, _to_float(), main(), Print Angel One free cash via CDP capture of /funds/v2/getRMSLimit.  Attaches to, createApiKey(), encryptCredentials() (+64 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.03
-Nodes (46): NewsAggregator, NewsSource, BraveSource, Brave Search source — free 2k req/month, web search fallback., BseAnnouncementsSource, BSE corporate announcements — uses BSE's public JSON API (no auth required)., default_model(), deduplicate() (+38 more)
+Cohesion: 0.04
+Nodes (33): NewsAggregator, NewsSource, BraveSource, Brave Search source — free 2k req/month, web search fallback., BseAnnouncementsSource, BSE corporate announcements — uses BSE's public JSON API (no auth required)., default_model(), deduplicate() (+25 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.03
-Nodes (78): _pick_cash(), Angel One — capture free-cash balance via CDP from the funds page.  Probe-confir, _to_float(), createApiKey(), encryptCredentials(), extendSession(), getLoginKey(), getMe() (+70 more)
+Cohesion: 0.05
+Nodes (43): ABC, default_model(), health(), ProviderAdapter, ProviderHealth, CerebrasAdapter, Cerebras adapter — free tier, sub-second inference for short queries., ClaudeSdkAdapter (+35 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.04
-Nodes (69): HoldingsAggregator, _inr_invested(), _inr_value(), Holdings aggregator — read-only roll-up over registered BrokerSource caches.  Di, AllocationSlice, Aggregator response dataclasses + default rebalance targets., RebalanceDrift, RebalanceSuggestion (+61 more)
+Nodes (67): HoldingsAggregator, _inr_invested(), _inr_value(), Holdings aggregator — read-only roll-up over registered BrokerSource caches.  Di, AllocationSlice, Aggregator response dataclasses + default rebalance targets., RebalanceDrift, RebalanceSuggestion (+59 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.04
-Nodes (66): clear_csv_cache(), dated_csv_path(), dump_dir(), is_csv_fresh(), live_csv_path(), Shared CSV-cache utilities for broker holdings dump modules., Delete the live CSV cache for slug. Returns True if a file was removed., Raise ValueError for oversized or missing-column CSV files. (+58 more)
+Cohesion: 0.05
+Nodes (56): Auto-benchmarking system — evaluates providers per QueryType., Run benchmark across all available providers., Result for a single provider/query_type evaluation., Full benchmark report across all providers and query types., Return results for a query type, sorted by score descending., Load benchmark test fixtures., Load evaluation rubrics., Heuristic scoring of a response (0-100). (+48 more)
 
 ### Community 7 - "Community 7"
+Cohesion: 0.04
+Nodes (63): clear_csv_cache(), dated_csv_path(), dump_dir(), is_csv_fresh(), live_csv_path(), Shared CSV-cache utilities for broker holdings dump modules., Delete the live CSV cache for slug. Returns True if a file was removed., Raise ValueError for oversized or missing-column CSV files. (+55 more)
+
+### Community 8 - "Community 8"
 Cohesion: 0.05
 Nodes (49): BaseSettings, Chunk, chunk_file(), _chunk_markdown(), _chunk_python(), _chunk_ts_like(), _chunk_window(), detect_lang() (+41 more)
 
-### Community 8 - "Community 8"
+### Community 9 - "Community 9"
 Cohesion: 0.06
 Nodes (48): Base, BaseModel, DashboardTickerItem, DashboardWatchlistItem, SQLAlchemy ORM models for the terminal dashboard feeds.  Single-user app: ticker, One symbol that scrolls in the global terminal ticker bar., One row in the terminal-side Watchlist panel., add_ticker() (+40 more)
 
-### Community 9 - "Community 9"
-Cohesion: 0.04
-Nodes (46): ChatProvider(), loadChoice(), fux build — assemble the merged graph and write all outputs ($0)., run(), _aslist(), fux check — schema, dead code_refs, staleness. Honors strictness (default fix)., _read(), _report() (+38 more)
-
 ### Community 10 - "Community 10"
-Cohesion: 0.05
-Nodes (51): Compact preview: top-level keys + first list-of-dict path with sample., _shape_summary(), _holding_from_csv(), _holding_from_row(), Angel One holdings — BrokerSource impl over SmartAPI + CSV cache.  Free SmartAPI, _holding_from_row(), Attach to existing CDP Chrome, intercept Groww holdings-page XHRs.  Run while th, Compact preview: top-level keys + first list-of-dict path with sample. (+43 more)
+Cohesion: 0.04
+Nodes (51): _capture(), main(), Attach to existing CDP Chrome, intercept Angel One portfolio + funds XHRs.  Run, Compact preview: top-level keys + first list-of-dict path with sample., _shape_summary(), goto(), capture_groww_cash(), Groww — capture free-cash balance via CDP from a fresh tab.  Groww's balance API (+43 more)
 
 ### Community 11 - "Community 11"
+Cohesion: 0.06
+Nodes (46): _cache_root(), _check_dev_host(), clear_session(), _fernet(), load_session(), make_client(), Shared httpx client factory + a tiny on-disk JSON cache for session tokens.  Bro, Raise RuntimeError if base_url is not on the approved list in dev mode. (+38 more)
+
+### Community 12 - "Community 12"
 Cohesion: 0.04
 Nodes (23): initial schema with pgvector memory  Revision ID: 640eee61bc50 Revises:  Create, upgrade(), IAM tables — users, refresh tokens, API keys, audit log.  Revision ID: a3c9f2e1b, upgrade(), AppShell(), downgrade(), Remove IAM tables — IAM is now owned by Wagner.  Revision ID: b3d6f8a2c9e1 Revis, Badge() (+15 more)
 
-### Community 12 - "Community 12"
+### Community 13 - "Community 13"
+Cohesion: 0.1
+Nodes (25): next(), concierge(), Concierge routes — SSE streaming endpoint for the Orff concierge rail., ChatMessage, ChatRequest, Request/response schemas for the Orff concierge endpoint., Resolved model choice from the frontend ModelPicker.      The frontend already a, Orff concierge service — streams provider tokens as SSE. (+17 more)
+
+### Community 14 - "Community 14"
 Cohesion: 0.09
 Nodes (17): streamBootSync(), diagnose(), groupByReason(), reloadAction(), slugList(), truncate(), announce(), BootGate() (+9 more)
 
-### Community 13 - "Community 13"
-Cohesion: 0.1
-Nodes (21): next(), concierge(), Concierge routes — SSE streaming endpoint for the Orff concierge rail., stt(), ChatMessage, ChatRequest, Request/response schemas for the Orff concierge endpoint., Resolved model choice from the frontend ModelPicker.      The frontend already a (+13 more)
-
-### Community 14 - "Community 14"
-Cohesion: 0.15
-Nodes (21): dump_zerodha(), is_csv_fresh(), live_csv_path(), main(), Zerodha holdings CSV cache — fetches via CDP, caches to CSV.  TTL controlled by, _ttl(), write_csv(), _cache_path() (+13 more)
-
 ### Community 15 - "Community 15"
-Cohesion: 0.12
-Nodes (17): createLogger(), get_logger(), getLogger(), Centralized logging configuration for AlphaForge Python services.  Usage::, Return a child logger under the given *namespace*.      Example::          logge, Configure and return the application root logger.      Resolution order for ever, setup_logging(), get_logger() (+9 more)
+Cohesion: 0.1
+Nodes (19): createLogger(), get_logger(), getLogger(), Centralized logging configuration for AlphaForge Python services.  Usage::, Return a child logger under the given *namespace*.      Example::          logge, Configure and return the application root logger.      Resolution order for ever, setup_logging(), get_logger() (+11 more)
 
 ### Community 16 - "Community 16"
 Cohesion: 0.13
 Nodes (5): useResetSource(), useStartLogin(), useSubmitOtp(), useSyncSource(), useSourceRow()
 
 ### Community 17 - "Community 17"
+Cohesion: 0.18
+Nodes (11): get_env_files(), load_env_files(), Resolve the ordered list of .env files to load.  Mirrors Next.js convention with, Return the ordered tuple of .env file paths for the given environment.      `env, Inject `.env*` files into `os.environ` in priority order (later wins).      Pyda, _repo_root(), load_from_vault(), Fetch secrets from the alpha-forge-bach vault into os.environ.  Called by env_lo (+3 more)
+
+### Community 18 - "Community 18"
 Cohesion: 0.22
 Nodes (8): clearNotifications(), defaultTtl(), dismissNotification(), emit(), nextId(), pushNotification(), useNotifications(), NotificationsHost()
 
-### Community 18 - "Community 18"
+### Community 19 - "Community 19"
 Cohesion: 0.17
 Nodes (2): useDashboardStats(), TerminalStats()
 
-### Community 19 - "Community 19"
-Cohesion: 0.27
-Nodes (8): probe_credentials(), Resolve probe credentials from the afbach vault or environment.  Priority:   1., Return (username, password) for UI probes., _vault_secret(), main(), Probe: notification timestamp shows 12-hour time and title tooltip with full dat, _record(), run()
-
 ### Community 20 - "Community 20"
-Cohesion: 0.28
-Nodes (4): aggregateAll(), aggregateSelected(), currencySymbol(), fmtMoneyShort()
+Cohesion: 0.22
+Nodes (2): ChatProvider(), useChatStream()
 
 ### Community 21 - "Community 21"
 Cohesion: 0.28
-Nodes (4): available(), Per-provider token bucket rate limiter with free-tier limits., Refills `rate` tokens per second up to `capacity`., TokenBucket
+Nodes (4): aggregateAll(), aggregateSelected(), currencySymbol(), fmtMoneyShort()
 
 ### Community 22 - "Community 22"
 Cohesion: 0.32
@@ -511,24 +525,24 @@ Cohesion: 0.33
 Nodes (2): Notification(), severityIcon()
 
 ### Community 29 - "Community 29"
-Cohesion: 0.5
-Nodes (2): handleKeyDown(), handleSubmit()
-
-### Community 30 - "Community 30"
 Cohesion: 0.4
 Nodes (2): useVoice(), getSRCtor()
+
+### Community 30 - "Community 30"
+Cohesion: 0.5
+Nodes (2): handleKeyDown(), handleSubmit()
 
 ### Community 31 - "Community 31"
 Cohesion: 0.5
 Nodes (3): dashboard ticker + watchlist items  Revision ID: 1d8f1014a7d4 Revises: 640eee61b, _table(), upgrade()
 
-### Community 37 - "Community 37"
-Cohesion: 0.83
-Nodes (3): aspectRatio(), squarify(), worstAspect()
+### Community 32 - "Community 32"
+Cohesion: 0.5
+Nodes (2): readPersisted(), writePersisted()
 
 ### Community 38 - "Community 38"
-Cohesion: 0.5
-Nodes (1): FastAPI application factory.
+Cohesion: 0.83
+Nodes (3): aspectRatio(), squarify(), worstAspect()
 
 ### Community 42 - "Community 42"
 Cohesion: 1.0
@@ -556,1306 +570,1364 @@ Nodes (1): Strip query-string from URL for dedup purposes.
 
 ### Community 148 - "Community 148"
 Cohesion: 1.0
-Nodes (1): Request/response schemas for the Alpha chat endpoint.
+Nodes (1): Emit GRAPH_REPORT.md — summary, node-type mix, and god nodes.
 
 ### Community 149 - "Community 149"
 Cohesion: 1.0
-Nodes (1): Resolved model choice from the frontend ModelPicker.      The frontend already a
+Nodes (1): fux build — assemble the merged graph and write all outputs ($0).
 
 ### Community 150 - "Community 150"
 Cohesion: 1.0
-Nodes (1): Chat routes — SSE streaming endpoint for Alpha conversation rail.
+Nodes (1): File discovery with an ignore list. stdlib only.
 
 ### Community 151 - "Community 151"
 Cohesion: 1.0
-Nodes (1): Return (encoded_jwt, expires_in_seconds).
+Nodes (1): Emit INDEX.md (compact Tier-1) and rules.json (machine) from doc nodes.
 
 ### Community 152 - "Community 152"
 Cohesion: 1.0
-Nodes (1): Pull all secrets for this app's namespace into os.environ.      Returns the numb
+Nodes (1): fux check — schema, dead code_refs, staleness. Honors strictness (default fix).
 
 ### Community 153 - "Community 153"
 Cohesion: 1.0
-Nodes (1): Raise ValueError for oversized or missing-column CSV files.
+Nodes (1): fux CLI — build · check · context · init.
 
 ### Community 154 - "Community 154"
 Cohesion: 1.0
-Nodes (1): Extract the list of holding rows from the holdings XHR payload.
+Nodes (1): Build the code graph from all sources; group into communities by directory.
 
 ### Community 155 - "Community 155"
 Cohesion: 1.0
-Nodes (1): Map an INDmoney holding row to the shared dict shape.
+Nodes (1): Python AST -> graph nodes/edges for one file. Deterministic, $0.
 
 ### Community 156 - "Community 156"
 Cohesion: 1.0
-Nodes (1): Open a fresh INDmoney tab, capture `/account/basic`, return USD cash.
+Nodes (1): Lightweight TS/TSX extraction (top-level exports) via regex. $0.
 
 ### Community 157 - "Community 157"
 Cohesion: 1.0
-Nodes (1): Kite instrument-master cache → tradingsymbol→name lookup for Zerodha holdings.
+Nodes (1): Knowledge nodes (rule/memory/narrative/glossary) from markdown.  This is the doc
 
 ### Community 158 - "Community 158"
 Cohesion: 1.0
-Nodes (1): Return tradingsymbol→instrument_type (EQ/ETF) map.
+Nodes (1): Fux config — defaults + optional .fux/config.json override.
 
 ### Community 159 - "Community 159"
 Cohesion: 1.0
-Nodes (1): Zerodha holdings CSV cache — fetches via CDP, caches to CSV.  TTL controlled by
+Nodes (1): Render the interactive graph.html UI from a template + embedded graph JSON.
 
 ### Community 160 - "Community 160"
 Cohesion: 1.0
-Nodes (1): Zerodha Kite — manual CDP login + enctoken cache + holdings fetch.  Login flow:
+Nodes (1): Minimal YAML-frontmatter parser (scalars + simple lists). stdlib only.
 
 ### Community 161 - "Community 161"
 Cohesion: 1.0
-Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
+Nodes (1): Return (meta dict, body str). No frontmatter -> ({}, text).
 
 ### Community 162 - "Community 162"
 Cohesion: 1.0
-Nodes (1): GET /oms/user/margins → equity available cash for the Kite account.
+Nodes (1): Request/response schemas for the Alpha chat endpoint.
 
 ### Community 163 - "Community 163"
 Cohesion: 1.0
-Nodes (1): GET /api/mf/holdings → COIN mutual fund holdings (empty list if not subscribed).
+Nodes (1): Resolved model choice from the frontend ModelPicker.      The frontend already a
 
 ### Community 164 - "Community 164"
 Cohesion: 1.0
-Nodes (1): Convert profile/v2 + price response into a single holding dict.
+Nodes (1): Chat routes — SSE streaming endpoint for Alpha conversation rail.
 
 ### Community 165 - "Community 165"
 Cohesion: 1.0
-Nodes (1): If the page is on /login, wait for the user to complete login.
+Nodes (1): Return (encoded_jwt, expires_in_seconds).
 
 ### Community 166 - "Community 166"
 Cohesion: 1.0
-Nodes (1): Drill into common Groww response shapes to find the holdings list.
+Nodes (1): Pull all secrets for this app's namespace into os.environ.      Returns the numb
 
 ### Community 167 - "Community 167"
 Cohesion: 1.0
-Nodes (1): First non-None value across `keys` — handles camelCase/snake_case drift.
+Nodes (1): Raise ValueError for oversized or missing-column CSV files.
 
 ### Community 168 - "Community 168"
 Cohesion: 1.0
-Nodes (1): Return first non-empty value from `keys` in **rupees**, scaling paise fields by
+Nodes (1): Extract the list of holding rows from the holdings XHR payload.
 
 ### Community 169 - "Community 169"
 Cohesion: 1.0
-Nodes (1): Map a Groww holdings row to the shared dict shape used by dump.py.
+Nodes (1): Map an INDmoney holding row to the shared dict shape.
 
 ### Community 170 - "Community 170"
 Cohesion: 1.0
-Nodes (1): Reload the holdings page and capture the holdings + LTP responses.      Groww's
+Nodes (1): Open a fresh INDmoney tab, capture `/account/basic`, return USD cash.
 
 ### Community 171 - "Community 171"
 Cohesion: 1.0
-Nodes (1): Attach to Chrome, reload Groww's holdings page, capture the response.
+Nodes (1): Kite instrument-master cache → tradingsymbol→name lookup for Zerodha holdings.
 
 ### Community 172 - "Community 172"
 Cohesion: 1.0
-Nodes (1): GET /api/mf/holdings → COIN mutual fund holdings list.
+Nodes (1): Return tradingsymbol→instrument_type (EQ/ETF) map.
 
 ### Community 173 - "Community 173"
 Cohesion: 1.0
-Nodes (1): Drill into the superportfolio response to pull out HoldingDetail rows.
+Nodes (1): Zerodha holdings CSV cache — fetches via CDP, caches to CSV.  TTL controlled by
 
 ### Community 174 - "Community 174"
 Cohesion: 1.0
-Nodes (1): Map a superportfolio HoldingDetail row to the shared dict shape.
+Nodes (1): Zerodha Kite — manual CDP login + enctoken cache + holdings fetch.  Login flow:
 
 ### Community 175 - "Community 175"
 Cohesion: 1.0
-Nodes (1): Auth endpoints — token login only.
+Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
 
 ### Community 176 - "Community 176"
 Cohesion: 1.0
-Nodes (1): Sync any API source whose cached data is missing or older than _STALE_SECONDS.
+Nodes (1): GET /oms/user/margins → equity available cash for the Kite account.
 
 ### Community 177 - "Community 177"
 Cohesion: 1.0
-Nodes (1): Current FX rates used to roll up cross-currency totals (1-hour CSV cache).
+Nodes (1): GET /api/mf/holdings → COIN mutual fund holdings (empty list if not subscribed).
 
 ### Community 178 - "Community 178"
 Cohesion: 1.0
-Nodes (1): Configure and return the application root logger.
+Nodes (1): Convert profile/v2 + price response into a single holding dict.
 
 ### Community 179 - "Community 179"
 Cohesion: 1.0
-Nodes (1): Return a child logger under the ``alphaforge`` namespace.
+Nodes (1): If the page is on /login, wait for the user to complete login.
 
 ### Community 180 - "Community 180"
 Cohesion: 1.0
-Nodes (1): Raise RuntimeError if base_url is not on the approved list in dev mode.
+Nodes (1): Drill into common Groww response shapes to find the holdings list.
 
 ### Community 181 - "Community 181"
 Cohesion: 1.0
-Nodes (1): Raise ValueError for oversized or missing-column CSV files.
+Nodes (1): First non-None value across `keys` — handles camelCase/snake_case drift.
 
 ### Community 182 - "Community 182"
 Cohesion: 1.0
-Nodes (1): Encrypted secrets vault — PBKDF2-derived Fernet key, in-memory state.  On-disk l
+Nodes (1): Return first non-empty value from `keys` in **rupees**, scaling paise fields by
 
 ### Community 183 - "Community 183"
 Cohesion: 1.0
-Nodes (1): Create vault from scratch. Overwrites any existing vault.
+Nodes (1): Map a Groww holdings row to the shared dict shape used by dump.py.
 
 ### Community 184 - "Community 184"
 Cohesion: 1.0
-Nodes (1): Decrypt vault and load secrets into memory. Raises InvalidToken on bad password.
+Nodes (1): Reload the holdings page and capture the holdings + LTP responses.      Groww's
 
 ### Community 185 - "Community 185"
 Cohesion: 1.0
-Nodes (1): Return copy of in-memory secrets (vault must be unlocked).
+Nodes (1): Attach to Chrome, reload Groww's holdings page, capture the response.
 
 ### Community 186 - "Community 186"
 Cohesion: 1.0
-Nodes (1): Re-encrypt vault with updated secrets dict (vault must be unlocked).
+Nodes (1): GET /api/mf/holdings → COIN mutual fund holdings list.
 
 ### Community 187 - "Community 187"
 Cohesion: 1.0
-Nodes (1): Return raw encrypted blob for backup.
+Nodes (1): Drill into the superportfolio response to pull out HoldingDetail rows.
 
 ### Community 188 - "Community 188"
 Cohesion: 1.0
-Nodes (1): Validate blob against password and replace current vault.
+Nodes (1): Map a superportfolio HoldingDetail row to the shared dict shape.
 
 ### Community 189 - "Community 189"
 Cohesion: 1.0
-Nodes (1): Push unlocked secrets into os.environ (vault values win over .env files).
+Nodes (1): Auth endpoints — token login only.
 
 ### Community 190 - "Community 190"
 Cohesion: 1.0
-Nodes (1): Read key=value pairs from .env.cred.local for vault init pre-population.
+Nodes (1): Sync any API source whose cached data is missing or older than _STALE_SECONDS.
 
 ### Community 191 - "Community 191"
 Cohesion: 1.0
-Nodes (1): Vault API — manage encrypted secrets at runtime.
+Nodes (1): Current FX rates used to roll up cross-currency totals (1-hour CSV cache).
 
 ### Community 192 - "Community 192"
 Cohesion: 1.0
-Nodes (1): Return key/value pairs from .env.cred.local to pre-fill the init form.
+Nodes (1): Configure and return the application root logger.
 
 ### Community 193 - "Community 193"
 Cohesion: 1.0
-Nodes (1): Return all key-value pairs (values in plaintext). Use sparingly.
+Nodes (1): Return a child logger under the ``alphaforge`` namespace.
 
 ### Community 194 - "Community 194"
 Cohesion: 1.0
-Nodes (1): Pydantic schemas for the vault API.
+Nodes (1): Raise RuntimeError if base_url is not on the approved list in dev mode.
 
 ### Community 195 - "Community 195"
 Cohesion: 1.0
-Nodes (1): Keys found in .env.cred.local that can be pre-populated into the vault.
+Nodes (1): Raise ValueError for oversized or missing-column CSV files.
 
 ### Community 196 - "Community 196"
 Cohesion: 1.0
-Nodes (1): Attach to existing CDP Chrome, intercept Wint Wealth portfolio-page XHRs.  Run w
+Nodes (1): Encrypted secrets vault — PBKDF2-derived Fernet key, in-memory state.  On-disk l
 
 ### Community 197 - "Community 197"
 Cohesion: 1.0
-Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample.
+Nodes (1): Create vault from scratch. Overwrites any existing vault.
 
 ### Community 198 - "Community 198"
 Cohesion: 1.0
-Nodes (1): Phase 3.1 — Target Variable Labeler.  Computes forward-looking labels for the ML
+Nodes (1): Decrypt vault and load secrets into memory. Raises InvalidToken on bad password.
 
 ### Community 199 - "Community 199"
 Cohesion: 1.0
-Nodes (1): Compute the N-day forward return from Adjusted Close prices.      Forward return
+Nodes (1): Return copy of in-memory secrets (vault must be unlocked).
 
 ### Community 200 - "Community 200"
 Cohesion: 1.0
-Nodes (1): Convert forward return to binary classification label.      1 = stock returned >
+Nodes (1): Re-encrypt vault with updated secrets dict (vault must be unlocked).
 
 ### Community 201 - "Community 201"
 Cohesion: 1.0
-Nodes (1): Compute all labels for a single stock's OHLCV DataFrame.      Args:         df:
+Nodes (1): Return raw encrypted blob for backup.
 
 ### Community 202 - "Community 202"
 Cohesion: 1.0
-Nodes (1): Compute labels for a single stock by loading its OHLCV parquet.      Args:
+Nodes (1): Validate blob against password and replace current vault.
 
 ### Community 203 - "Community 203"
 Cohesion: 1.0
-Nodes (1): Phase 3.2 — Dataset Assembly.  Combines features (Phase 2) + labels (Phase 3.1)
+Nodes (1): Push unlocked secrets into os.environ (vault values win over .env files).
 
 ### Community 204 - "Community 204"
 Cohesion: 1.0
-Nodes (1): Get symbols that have OHLCV parquet files downloaded.
+Nodes (1): Read key=value pairs from .env.cred.local for vault init pre-population.
 
 ### Community 205 - "Community 205"
 Cohesion: 1.0
-Nodes (1): Build a complete feature + label row-set for one stock.      Args:         symbo
+Nodes (1): Vault API — manage encrypted secrets at runtime.
 
 ### Community 206 - "Community 206"
 Cohesion: 1.0
-Nodes (1): Apply data quality rules to the assembled dataset.      Rules:     1. Drop rows
+Nodes (1): Return key/value pairs from .env.cred.local to pre-fill the init form.
 
 ### Community 207 - "Community 207"
 Cohesion: 1.0
-Nodes (1): Compute and format dataset statistics as a text report.
+Nodes (1): Return all key-value pairs (values in plaintext). Use sparingly.
 
 ### Community 208 - "Community 208"
 Cohesion: 1.0
-Nodes (1): Build the full ML dataset for all available stocks.      Args:         symbols:
+Nodes (1): Pydantic schemas for the vault API.
 
 ### Community 209 - "Community 209"
 Cohesion: 1.0
-Nodes (1): Phase 2.5 — Feature Orchestrator.  Combines all feature groups (technical, relat
+Nodes (1): Keys found in .env.cred.local that can be pre-populated into the vault.
 
 ### Community 210 - "Community 210"
 Cohesion: 1.0
-Nodes (1): Compute derived/interaction features from existing features.      These capture
+Nodes (1): Attach to existing CDP Chrome, intercept Wint Wealth portfolio-page XHRs.  Run w
 
 ### Community 211 - "Community 211"
 Cohesion: 1.0
-Nodes (1): Build all features for a single stock.      Args:         symbol: NSE symbol (e.
+Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample.
 
 ### Community 212 - "Community 212"
 Cohesion: 1.0
-Nodes (1): Build features for all stocks in the filtered universe.      Args:         max_s
+Nodes (1): Phase 3.1 — Target Variable Labeler.  Computes forward-looking labels for the ML
 
 ### Community 213 - "Community 213"
 Cohesion: 1.0
-Nodes (1): Phase 2.1 — Technical Indicators.  Computes ~30 technical indicators per stock u
+Nodes (1): Compute the N-day forward return from Adjusted Close prices.      Forward return
 
 ### Community 214 - "Community 214"
 Cohesion: 1.0
-Nodes (1): Momentum indicators: RSI, Stochastic, Williams %R, ROC.
+Nodes (1): Convert forward return to binary classification label.      1 = stock returned >
 
 ### Community 215 - "Community 215"
 Cohesion: 1.0
-Nodes (1): Trend indicators: MACD, ADX, Aroon, SMA crossovers.
+Nodes (1): Compute all labels for a single stock's OHLCV DataFrame.      Args:         df:
 
 ### Community 216 - "Community 216"
 Cohesion: 1.0
-Nodes (1): Volatility indicators: Bollinger Bands, ATR, Keltner Channel.
+Nodes (1): Compute labels for a single stock by loading its OHLCV parquet.      Args:
 
 ### Community 217 - "Community 217"
 Cohesion: 1.0
-Nodes (1): Volume indicators: OBV, Volume ratio, A/D, MFI.
+Nodes (1): Phase 3.2 — Dataset Assembly.  Combines features (Phase 2) + labels (Phase 3.1)
 
 ### Community 218 - "Community 218"
 Cohesion: 1.0
-Nodes (1): Price action features: 52w high/low distance, consecutive days, gaps, candle bod
+Nodes (1): Get symbols that have OHLCV parquet files downloaded.
 
 ### Community 219 - "Community 219"
 Cohesion: 1.0
-Nodes (1): Compute all technical indicators for a single stock's OHLCV DataFrame.      Args
+Nodes (1): Build a complete feature + label row-set for one stock.      Args:         symbo
 
 ### Community 220 - "Community 220"
 Cohesion: 1.0
-Nodes (1): Phase 2.3 — Fundamental Features.  Fetches PE, PB, market cap, 52-week return, a
+Nodes (1): Apply data quality rules to the assembled dataset.      Rules:     1. Drop rows
 
 ### Community 221 - "Community 221"
 Cohesion: 1.0
-Nodes (1): Fetch fundamental data for a single stock from yfinance.      Returns a dict wit
+Nodes (1): Compute and format dataset statistics as a text report.
 
 ### Community 222 - "Community 222"
 Cohesion: 1.0
-Nodes (1): Compute rolling 252-day (52-week) return from Close prices.
+Nodes (1): Build the full ML dataset for all available stocks.      Args:         symbols:
 
 ### Community 223 - "Community 223"
 Cohesion: 1.0
-Nodes (1): Compute fundamental features for a stock.      Args:         df: OHLCV DataFrame
+Nodes (1): Phase 2.5 — Feature Orchestrator.  Combines all feature groups (technical, relat
 
 ### Community 224 - "Community 224"
 Cohesion: 1.0
-Nodes (1): Clear the cached fundamental data.
+Nodes (1): Compute derived/interaction features from existing features.      These capture
 
 ### Community 225 - "Community 225"
 Cohesion: 1.0
-Nodes (1): Phase 2.2 — Relative Strength Features.  Computes stock returns relative to benc
+Nodes (1): Build all features for a single stock.      Args:         symbol: NSE symbol (e.
 
 ### Community 226 - "Community 226"
 Cohesion: 1.0
-Nodes (1): Load and cache the Close price series for a benchmark index.
+Nodes (1): Build features for all stocks in the filtered universe.      Args:         max_s
 
 ### Community 227 - "Community 227"
 Cohesion: 1.0
-Nodes (1): Compute rolling percentage return over N days.
+Nodes (1): Phase 2.1 — Technical Indicators.  Computes ~30 technical indicators per stock u
 
 ### Community 228 - "Community 228"
 Cohesion: 1.0
-Nodes (1): Compute relative strength of a stock vs a benchmark index.      Args:         st
+Nodes (1): Momentum indicators: RSI, Stochastic, Williams %R, ROC.
 
 ### Community 229 - "Community 229"
 Cohesion: 1.0
-Nodes (1): Compute relative strength vs all available benchmarks.      Args:         stock_
+Nodes (1): Trend indicators: MACD, ADX, Aroon, SMA crossovers.
 
 ### Community 230 - "Community 230"
 Cohesion: 1.0
-Nodes (1): Clear the cached index data (e.g., between runs).
+Nodes (1): Volatility indicators: Bollinger Bands, ATR, Keltner Channel.
 
 ### Community 231 - "Community 231"
 Cohesion: 1.0
-Nodes (1): Phase 2.4 — NSE-Specific Features.  Computes features from delivery %, bulk/bloc
+Nodes (1): Volume indicators: OBV, Volume ratio, A/D, MFI.
 
 ### Community 232 - "Community 232"
 Cohesion: 1.0
-Nodes (1): Load and cache delivery percentage data.
+Nodes (1): Price action features: 52w high/low distance, consecutive days, gaps, candle bod
 
 ### Community 233 - "Community 233"
 Cohesion: 1.0
-Nodes (1): Load and cache bulk deals data.
+Nodes (1): Compute all technical indicators for a single stock's OHLCV DataFrame.      Args
 
 ### Community 234 - "Community 234"
 Cohesion: 1.0
-Nodes (1): Load and cache block deals data.
+Nodes (1): Phase 2.3 — Fundamental Features.  Fetches PE, PB, market cap, 52-week return, a
 
 ### Community 235 - "Community 235"
 Cohesion: 1.0
-Nodes (1): Compute delivery percentage features for a stock.      Args:         stock_dates
+Nodes (1): Fetch fundamental data for a single stock from yfinance.      Returns a dict wit
 
 ### Community 236 - "Community 236"
 Cohesion: 1.0
-Nodes (1): Compute bulk/block deal presence features.      Args:         stock_dates: Datet
+Nodes (1): Compute rolling 252-day (52-week) return from Close prices.
 
 ### Community 237 - "Community 237"
 Cohesion: 1.0
-Nodes (1): Compute all NSE-specific features for a stock.      Args:         df: OHLCV Data
+Nodes (1): Compute fundamental features for a stock.      Args:         df: OHLCV DataFrame
 
 ### Community 238 - "Community 238"
 Cohesion: 1.0
-Nodes (1): Clear cached NSE supplementary data.
+Nodes (1): Clear the cached fundamental data.
 
 ### Community 239 - "Community 239"
 Cohesion: 1.0
-Nodes (1): Phase 4.1 — Baseline Technical Rules Strategy.  Simple rule-based screener for c
+Nodes (1): Phase 2.2 — Relative Strength Features.  Computes stock returns relative to benc
 
 ### Community 240 - "Community 240"
 Cohesion: 1.0
-Nodes (1): RSI(14) < 35 — stock is oversold territory.
+Nodes (1): Load and cache the Close price series for a benchmark index.
 
 ### Community 241 - "Community 241"
 Cohesion: 1.0
-Nodes (1): Volume > 2× 20-day average (VOL_SMA_RATIO > 2.0).
+Nodes (1): Compute rolling percentage return over N days.
 
 ### Community 242 - "Community 242"
 Cohesion: 1.0
-Nodes (1): MACD histogram is positive (bullish momentum).
+Nodes (1): Compute relative strength of a stock vs a benchmark index.      Args:         st
 
 ### Community 243 - "Community 243"
 Cohesion: 1.0
-Nodes (1): Price is above SMA(50) — uptrend confirmation.
+Nodes (1): Compute relative strength vs all available benchmarks.      Args:         stock_
 
 ### Community 244 - "Community 244"
 Cohesion: 1.0
-Nodes (1): Apply a named rule-based strategy to generate signals.      Args:         df: Da
+Nodes (1): Clear the cached index data (e.g., between runs).
 
 ### Community 245 - "Community 245"
 Cohesion: 1.0
-Nodes (1): Run baseline strategy on dataset and compute performance metrics.      Args:
+Nodes (1): Phase 2.4 — NSE-Specific Features.  Computes features from delivery %, bulk/bloc
 
 ### Community 246 - "Community 246"
 Cohesion: 1.0
-Nodes (1): Phase 4.2 — LightGBM Classifier for Stock Screener.  Primary ML model. Trains a
+Nodes (1): Load and cache delivery percentage data.
 
 ### Community 247 - "Community 247"
 Cohesion: 1.0
-Nodes (1): Compute scale_pos_weight for class imbalance.      ratio = n_negative / n_positi
+Nodes (1): Load and cache bulk deals data.
 
 ### Community 248 - "Community 248"
 Cohesion: 1.0
-Nodes (1): Create a LightGBM classifier instance.      Args:         params: Custom hyperpa
+Nodes (1): Load and cache block deals data.
 
 ### Community 249 - "Community 249"
 Cohesion: 1.0
-Nodes (1): Train LightGBM with walk-forward CV and optionally save final model.      Args:
+Nodes (1): Compute delivery percentage features for a stock.      Args:         stock_dates
 
 ### Community 250 - "Community 250"
 Cohesion: 1.0
-Nodes (1): Save trained model + metadata to models/saved/.      Saves:     - lightgbm_model
+Nodes (1): Compute bulk/block deal presence features.      Args:         stock_dates: Datet
 
 ### Community 251 - "Community 251"
 Cohesion: 1.0
-Nodes (1): Load a saved LightGBM model + metadata.      Returns:         Tuple of (model, m
+Nodes (1): Compute all NSE-specific features for a stock.      Args:         df: OHLCV Data
 
 ### Community 252 - "Community 252"
 Cohesion: 1.0
-Nodes (1): Phase 4.5 — Feature Importance & Selection.  Analyzes feature importance from tr
+Nodes (1): Clear cached NSE supplementary data.
 
 ### Community 253 - "Community 253"
 Cohesion: 1.0
-Nodes (1): Load feature importance CSV from a saved model directory.
+Nodes (1): Phase 4.1 — Baseline Technical Rules Strategy.  Simple rule-based screener for c
 
 ### Community 254 - "Community 254"
 Cohesion: 1.0
-Nodes (1): Compare feature importance across LightGBM and XGBoost.      Returns:         Da
+Nodes (1): RSI(14) < 35 — stock is oversold territory.
 
 ### Community 255 - "Community 255"
 Cohesion: 1.0
-Nodes (1): Compute SHAP values for feature importance.      Args:         model: Trained mo
+Nodes (1): Volume > 2× 20-day average (VOL_SMA_RATIO > 2.0).
 
 ### Community 256 - "Community 256"
 Cohesion: 1.0
-Nodes (1): Select features above a minimum importance threshold.      Args:         importa
+Nodes (1): MACD histogram is positive (bullish momentum).
 
 ### Community 257 - "Community 257"
 Cohesion: 1.0
-Nodes (1): Generate a text report of feature importance analysis.      Args:         compar
+Nodes (1): Price is above SMA(50) — uptrend confirmation.
 
 ### Community 258 - "Community 258"
 Cohesion: 1.0
-Nodes (1): Phase 4.4 — Walk-Forward Cross-Validation Engine.  ⚠️ CRITICAL: Never use random
+Nodes (1): Apply a named rule-based strategy to generate signals.      Args:         df: Da
 
 ### Community 259 - "Community 259"
 Cohesion: 1.0
-Nodes (1): Results from a single walk-forward fold.
+Nodes (1): Run baseline strategy on dataset and compute performance metrics.      Args:
 
 ### Community 260 - "Community 260"
 Cohesion: 1.0
-Nodes (1): Walk-forward cross-validation splitter for time-series data.      Expanding wind
+Nodes (1): Phase 4.2 — LightGBM Classifier for Stock Screener.  Primary ML model. Trains a
 
 ### Community 261 - "Community 261"
 Cohesion: 1.0
-Nodes (1): Generate walk-forward train/test index splits.          Args:             df: Da
+Nodes (1): Compute scale_pos_weight for class imbalance.      ratio = n_negative / n_positi
 
 ### Community 262 - "Community 262"
 Cohesion: 1.0
-Nodes (1): Get human-readable info about each fold.
+Nodes (1): Create a LightGBM classifier instance.      Args:         params: Custom hyperpa
 
 ### Community 263 - "Community 263"
 Cohesion: 1.0
-Nodes (1): Compute classification + trading metrics for one fold.      Args:         y_true
+Nodes (1): Train LightGBM with walk-forward CV and optionally save final model.      Args:
 
 ### Community 264 - "Community 264"
 Cohesion: 1.0
-Nodes (1): Run walk-forward cross-validation with a model.      Args:         df: Full data
+Nodes (1): Save trained model + metadata to models/saved/.      Saves:     - lightgbm_model
 
 ### Community 265 - "Community 265"
 Cohesion: 1.0
-Nodes (1): Get feature column names from dataset (everything except metadata/target).
+Nodes (1): Load a saved LightGBM model + metadata.      Returns:         Tuple of (model, m
 
 ### Community 266 - "Community 266"
 Cohesion: 1.0
-Nodes (1): Drop feature columns that are entirely NaN.
+Nodes (1): Phase 4.5 — Feature Importance & Selection.  Analyzes feature importance from tr
 
 ### Community 267 - "Community 267"
 Cohesion: 1.0
-Nodes (1): Phase 4.3 — XGBoost Classifier for Stock Screener.  Comparison model against Lig
+Nodes (1): Load feature importance CSV from a saved model directory.
 
 ### Community 268 - "Community 268"
 Cohesion: 1.0
-Nodes (1): Compute scale_pos_weight for class imbalance.
+Nodes (1): Compare feature importance across LightGBM and XGBoost.      Returns:         Da
 
 ### Community 269 - "Community 269"
 Cohesion: 1.0
-Nodes (1): Create an XGBoost classifier instance.
+Nodes (1): Compute SHAP values for feature importance.      Args:         model: Trained mo
 
 ### Community 270 - "Community 270"
 Cohesion: 1.0
-Nodes (1): Train XGBoost with walk-forward CV and optionally save final model.      Args:
+Nodes (1): Select features above a minimum importance threshold.      Args:         importa
 
 ### Community 271 - "Community 271"
 Cohesion: 1.0
-Nodes (1): Save trained model + metadata to models/saved/xgboost/.
+Nodes (1): Generate a text report of feature importance analysis.      Args:         compar
 
 ### Community 272 - "Community 272"
 Cohesion: 1.0
-Nodes (1): Load a saved XGBoost model + metadata.
+Nodes (1): Phase 4.4 — Walk-Forward Cross-Validation Engine.  ⚠️ CRITICAL: Never use random
 
 ### Community 273 - "Community 273"
 Cohesion: 1.0
-Nodes (1): Phase 5.3 — Portfolio & Trading Performance Metrics.  Computes comprehensive per
+Nodes (1): Results from a single walk-forward fold.
 
 ### Community 274 - "Community 274"
 Cohesion: 1.0
-Nodes (1): Compute trade-level performance metrics.      Args:         trades: DataFrame wi
+Nodes (1): Walk-forward cross-validation splitter for time-series data.      Expanding wind
 
 ### Community 275 - "Community 275"
 Cohesion: 1.0
-Nodes (1): Return zeroed trade metrics when no trades exist.
+Nodes (1): Generate walk-forward train/test index splits.          Args:             df: Da
 
 ### Community 276 - "Community 276"
 Cohesion: 1.0
-Nodes (1): Compute annualized Sharpe ratio.      Args:         returns: Array of periodic r
+Nodes (1): Get human-readable info about each fold.
 
 ### Community 277 - "Community 277"
 Cohesion: 1.0
-Nodes (1): Compute maximum drawdown from an equity curve.      Args:         equity_curve:
+Nodes (1): Compute classification + trading metrics for one fold.      Args:         y_true
 
 ### Community 278 - "Community 278"
 Cohesion: 1.0
-Nodes (1): Compute Compound Annual Growth Rate.      Args:         initial_value: Starting
+Nodes (1): Run walk-forward cross-validation with a model.      Args:         df: Full data
 
 ### Community 279 - "Community 279"
 Cohesion: 1.0
-Nodes (1): Compute Calmar ratio (CAGR / Max Drawdown).      Args:         cagr: Compound an
+Nodes (1): Get feature column names from dataset (everything except metadata/target).
 
 ### Community 280 - "Community 280"
 Cohesion: 1.0
-Nodes (1): Compute portfolio-level performance metrics from equity curve.      Args:
+Nodes (1): Drop feature columns that are entirely NaN.
 
 ### Community 281 - "Community 281"
 Cohesion: 1.0
-Nodes (1): Compute Sortino ratio (like Sharpe but only downside volatility).
+Nodes (1): Phase 4.3 — XGBoost Classifier for Stock Screener.  Comparison model against Lig
 
 ### Community 282 - "Community 282"
 Cohesion: 1.0
-Nodes (1): Return zeroed portfolio metrics.
+Nodes (1): Compute scale_pos_weight for class imbalance.
 
 ### Community 283 - "Community 283"
 Cohesion: 1.0
-Nodes (1): Compute all trade-level + portfolio-level metrics.      Args:         trades: Da
+Nodes (1): Create an XGBoost classifier instance.
 
 ### Community 284 - "Community 284"
 Cohesion: 1.0
-Nodes (1): Format metrics dict as a human-readable text table.      Args:         metrics:
+Nodes (1): Train XGBoost with walk-forward CV and optionally save final model.      Args:
 
 ### Community 285 - "Community 285"
 Cohesion: 1.0
-Nodes (1): Check metrics against target benchmarks.      Args:         metrics: Output from
+Nodes (1): Save trained model + metadata to models/saved/xgboost/.
 
 ### Community 286 - "Community 286"
 Cohesion: 1.0
-Nodes (1): Phase 5.1 + 5.2 — Backtest Engine with Indian Market Cost Model.  Simulates trad
+Nodes (1): Load a saved XGBoost model + metadata.
 
 ### Community 287 - "Community 287"
 Cohesion: 1.0
-Nodes (1): Indian equities delivery cost model.      All rates as fractions (e.g., 0.001 =
+Nodes (1): Phase 5.3 — Portfolio & Trading Performance Metrics.  Computes comprehensive per
 
 ### Community 288 - "Community 288"
 Cohesion: 1.0
-Nodes (1): Compute detailed trading costs for a round-trip trade.          Args:
+Nodes (1): Compute trade-level performance metrics.      Args:         trades: DataFrame wi
 
 ### Community 289 - "Community 289"
 Cohesion: 1.0
-Nodes (1): Compute approximate round-trip cost as a percentage.          Assumes entry_valu
+Nodes (1): Return zeroed trade metrics when no trades exist.
 
 ### Community 290 - "Community 290"
 Cohesion: 1.0
-Nodes (1): Record of a single simulated trade.
+Nodes (1): Compute annualized Sharpe ratio.      Args:         returns: Array of periodic r
 
 ### Community 291 - "Community 291"
 Cohesion: 1.0
-Nodes (1): Walk-forward backtest engine for stock screener strategies.      Modes:     1. M
+Nodes (1): Compute maximum drawdown from an equity curve.      Args:         equity_curve:
 
 ### Community 292 - "Community 292"
 Cohesion: 1.0
-Nodes (1): Initialize backtest engine.          Args:             top_n: Number of top pick
+Nodes (1): Compute Compound Annual Growth Rate.      Args:         initial_value: Starting
 
 ### Community 293 - "Community 293"
 Cohesion: 1.0
-Nodes (1): Load and cache OHLCV data for a symbol.
+Nodes (1): Compute Calmar ratio (CAGR / Max Drawdown).      Args:         cagr: Compound an
 
 ### Community 294 - "Community 294"
 Cohesion: 1.0
-Nodes (1): Get trade return, entry/exit dates and prices.          Returns:             (gr
+Nodes (1): Compute portfolio-level performance metrics from equity curve.      Args:
 
 ### Community 295 - "Community 295"
 Cohesion: 1.0
-Nodes (1): Run backtest from pre-computed predictions.          Args:             dataset:
+Nodes (1): Compute Sortino ratio (like Sharpe but only downside volatility).
 
 ### Community 296 - "Community 296"
 Cohesion: 1.0
-Nodes (1): Run backtest using FoldResult objects from walk-forward CV.          Args:
+Nodes (1): Return zeroed portfolio metrics.
 
 ### Community 297 - "Community 297"
 Cohesion: 1.0
-Nodes (1): Run backtest for a rule-based strategy.          Args:             dataset: Full
+Nodes (1): Compute all trade-level + portfolio-level metrics.      Args:         trades: Da
 
 ### Community 298 - "Community 298"
 Cohesion: 1.0
-Nodes (1): Build equity curve and compute metrics from trade list.          Returns:
+Nodes (1): Format metrics dict as a human-readable text table.      Args:         metrics:
 
 ### Community 299 - "Community 299"
 Cohesion: 1.0
-Nodes (1): Run complete backtest for all models and configurations.      Args:         data
+Nodes (1): Check metrics against target benchmarks.      Args:         metrics: Output from
 
 ### Community 300 - "Community 300"
 Cohesion: 1.0
-Nodes (1): Load a saved model by type.
+Nodes (1): Phase 5.1 + 5.2 — Backtest Engine with Indian Market Cost Model.  Simulates trad
 
 ### Community 301 - "Community 301"
 Cohesion: 1.0
-Nodes (1): Phase 5.4 — Backtest Comparison Report.  Generates a side-by-side comparison of
+Nodes (1): Indian equities delivery cost model.      All rates as fractions (e.g., 0.001 =
 
 ### Community 302 - "Community 302"
 Cohesion: 1.0
-Nodes (1): Generate a comparison DataFrame from backtest results.      Args:         result
+Nodes (1): Compute detailed trading costs for a round-trip trade.          Args:
 
 ### Community 303 - "Community 303"
 Cohesion: 1.0
-Nodes (1): Generate a full text comparison report.      Args:         results: Dict from ru
+Nodes (1): Compute approximate round-trip cost as a percentage.          Assumes entry_valu
 
 ### Community 304 - "Community 304"
 Cohesion: 1.0
-Nodes (1): Generate and save comparison report.      Args:         results: Dict from run_f
+Nodes (1): Record of a single simulated trade.
 
 ### Community 305 - "Community 305"
 Cohesion: 1.0
-Nodes (1): Save trade list to CSV.      Args:         trades: List of Trade objects.
+Nodes (1): Walk-forward backtest engine for stock screener strategies.      Modes:     1. M
 
 ### Community 306 - "Community 306"
 Cohesion: 1.0
-Nodes (1): Phase 6.3 — Monthly Model Retraining with Drift Detection.  Automates model retr
+Nodes (1): Initialize backtest engine.          Args:             top_n: Number of top pick
 
 ### Community 307 - "Community 307"
 Cohesion: 1.0
-Nodes (1): Retrain model on latest dataset.      Args:         model_type: 'lightgbm' or 'x
+Nodes (1): Load and cache OHLCV data for a symbol.
 
 ### Community 308 - "Community 308"
 Cohesion: 1.0
-Nodes (1): Append retrain event to retrain log.
+Nodes (1): Get trade return, entry/exit dates and prices.          Returns:             (gr
 
 ### Community 309 - "Community 309"
 Cohesion: 1.0
-Nodes (1): Check for model drift by comparing backtest metrics to live performance.      Lo
+Nodes (1): Run backtest from pre-computed predictions.          Args:             dataset:
 
 ### Community 310 - "Community 310"
 Cohesion: 1.0
-Nodes (1): Load retrain log entries.
+Nodes (1): Run backtest using FoldResult objects from walk-forward CV.          Args:
 
 ### Community 311 - "Community 311"
 Cohesion: 1.0
-Nodes (1): Retrain model if enough time has passed since last retrain.      Args:         m
+Nodes (1): Run backtest for a rule-based strategy.          Args:             dataset: Full
 
 ### Community 312 - "Community 312"
 Cohesion: 1.0
-Nodes (1): Phase 6.1 — Daily Stock Scan Script.  Run after market close (~3:45 PM IST) to s
+Nodes (1): Build equity curve and compute metrics from trade list.          Returns:
 
 ### Community 313 - "Community 313"
 Cohesion: 1.0
-Nodes (1): Load the filtered universe of stock symbols.      Returns:         List of NSE s
+Nodes (1): Run complete backtest for all models and configurations.      Args:         data
 
 ### Community 314 - "Community 314"
 Cohesion: 1.0
-Nodes (1): Get symbols that have OHLCV data downloaded.
+Nodes (1): Load a saved model by type.
 
 ### Community 315 - "Community 315"
 Cohesion: 1.0
-Nodes (1): Compute features for the most recent trading day across all symbols.      Args:
+Nodes (1): Phase 5.4 — Backtest Comparison Report.  Generates a side-by-side comparison of
 
 ### Community 316 - "Community 316"
 Cohesion: 1.0
-Nodes (1): Load a trained model and its metadata.      Args:         model_type: 'lightgbm'
+Nodes (1): Generate a comparison DataFrame from backtest results.      Args:         result
 
 ### Community 317 - "Community 317"
 Cohesion: 1.0
-Nodes (1): Predict probabilities and rank stocks.      Args:         features: DataFrame wi
+Nodes (1): Generate a full text comparison report.      Args:         results: Dict from ru
 
 ### Community 318 - "Community 318"
 Cohesion: 1.0
-Nodes (1): Save picks to CSV in the picks directory.      Args:         picks: DataFrame of
+Nodes (1): Generate and save comparison report.      Args:         results: Dict from run_f
 
 ### Community 319 - "Community 319"
 Cohesion: 1.0
-Nodes (1): Run the full daily scan pipeline.      Args:         model_type: Which model to
+Nodes (1): Save trade list to CSV.      Args:         trades: List of Trade objects.
 
 ### Community 320 - "Community 320"
 Cohesion: 1.0
-Nodes (1): Phase 6.2 — SHAP-Based Signal Explanation.  For each pick from the daily scan, g
+Nodes (1): Phase 6.3 — Monthly Model Retraining with Drift Detection.  Automates model retr
 
 ### Community 321 - "Community 321"
 Cohesion: 1.0
-Nodes (1): Compute SHAP values for the given features.      Args:         model: Trained mo
+Nodes (1): Retrain model on latest dataset.      Args:         model_type: 'lightgbm' or 'x
 
 ### Community 322 - "Community 322"
 Cohesion: 1.0
-Nodes (1): Generate human-readable description for a feature value.      Args:         feat
+Nodes (1): Append retrain event to retrain log.
 
 ### Community 323 - "Community 323"
 Cohesion: 1.0
-Nodes (1): Generate explanation for a single stock pick.      Args:         symbol: Stock s
+Nodes (1): Check for model drift by comparing backtest metrics to live performance.      Lo
 
 ### Community 324 - "Community 324"
 Cohesion: 1.0
-Nodes (1): Generate explanations for all picks.      Args:         picks: DataFrame of pick
+Nodes (1): Load retrain log entries.
 
 ### Community 325 - "Community 325"
 Cohesion: 1.0
-Nodes (1): Fallback explanations using feature values only (no SHAP).
+Nodes (1): Retrain model if enough time has passed since last retrain.      Args:         m
 
 ### Community 326 - "Community 326"
 Cohesion: 1.0
-Nodes (1): Format explanations as human-readable text.      Args:         explanations: Lis
+Nodes (1): Phase 6.1 — Daily Stock Scan Script.  Run after market close (~3:45 PM IST) to s
 
 ### Community 327 - "Community 327"
 Cohesion: 1.0
-Nodes (1): Step 1.2 — Historical OHLCV Download.  Downloads 2 years of daily OHLCV data for
+Nodes (1): Load the filtered universe of stock symbols.      Returns:         List of NSE s
 
 ### Community 328 - "Community 328"
 Cohesion: 1.0
-Nodes (1): Load yfinance symbols from the filtered universe CSV.
+Nodes (1): Get symbols that have OHLCV data downloaded.
 
 ### Community 329 - "Community 329"
 Cohesion: 1.0
-Nodes (1): Determine start/end dates for download.      If symbol_file exists (incremental
+Nodes (1): Compute features for the most recent trading day across all symbols.      Args:
 
 ### Community 330 - "Community 330"
 Cohesion: 1.0
-Nodes (1): Download OHLCV data for a batch of symbols.      Returns a dict mapping symbol -
+Nodes (1): Load a trained model and its metadata.      Args:         model_type: 'lightgbm'
 
 ### Community 331 - "Community 331"
 Cohesion: 1.0
-Nodes (1): Save OHLCV data to Parquet file. Merges with existing if incremental.
+Nodes (1): Predict probabilities and rank stocks.      Args:         features: DataFrame wi
 
 ### Community 332 - "Community 332"
 Cohesion: 1.0
-Nodes (1): Main entry point: download OHLCV for all filtered stocks.      Args:         inc
+Nodes (1): Save picks to CSV in the picks directory.      Args:         picks: DataFrame of
 
 ### Community 333 - "Community 333"
 Cohesion: 1.0
-Nodes (1): Step 1.3 + 1.4 — Supplementary NSE Data & Index Benchmarks.  Fetches delivery %,
+Nodes (1): Run the full daily scan pipeline.      Args:         model_type: Which model to
 
 ### Community 334 - "Community 334"
 Cohesion: 1.0
-Nodes (1): Format datetime as dd-mm-yyyy for nselib API.
+Nodes (1): Phase 6.2 — SHAP-Based Signal Explanation.  For each pick from the daily scan, g
 
 ### Community 335 - "Community 335"
 Cohesion: 1.0
-Nodes (1): Wrap nselib call with error handling and rate-limit delay.
+Nodes (1): Compute SHAP values for the given features.      Args:         model: Trained mo
 
 ### Community 336 - "Community 336"
 Cohesion: 1.0
-Nodes (1): Fetch delivery percentage data for a date range.      Args:         from_date: S
+Nodes (1): Generate human-readable description for a feature value.      Args:         feat
 
 ### Community 337 - "Community 337"
 Cohesion: 1.0
-Nodes (1): Fetch bulk deal data.
+Nodes (1): Generate explanation for a single stock pick.      Args:         symbol: Stock s
 
 ### Community 338 - "Community 338"
 Cohesion: 1.0
-Nodes (1): Fetch block deal data.
+Nodes (1): Generate explanations for all picks.      Args:         picks: DataFrame of pick
 
 ### Community 339 - "Community 339"
 Cohesion: 1.0
-Nodes (1): Fetch FII/DII trading activity data.      Note: nselib may not expose fii_dii_tr
+Nodes (1): Fallback explanations using feature values only (no SHAP).
 
 ### Community 340 - "Community 340"
 Cohesion: 1.0
-Nodes (1): Fetch all supplementary NSE data for the last N days.      Args:         days_ba
+Nodes (1): Format explanations as human-readable text.      Args:         explanations: Lis
 
 ### Community 341 - "Community 341"
 Cohesion: 1.0
-Nodes (1): Download historical OHLCV for benchmark indices.      Returns dict mapping index
+Nodes (1): Step 1.2 — Historical OHLCV Download.  Downloads 2 years of daily OHLCV data for
 
 ### Community 342 - "Community 342"
 Cohesion: 1.0
-Nodes (1): Step 1.1 — Stock Universe Fetcher.  Fetches all NSE-listed equities, filters to
+Nodes (1): Load yfinance symbols from the filtered universe CSV.
 
 ### Community 343 - "Community 343"
 Cohesion: 1.0
-Nodes (1): Fetch the full list of NSE-listed equities via nselib.
+Nodes (1): Determine start/end dates for download.      If symbol_file exists (incremental
 
 ### Community 344 - "Community 344"
 Cohesion: 1.0
-Nodes (1): Keep only regular equity (EQ) series.
+Nodes (1): Download OHLCV data for a batch of symbols.      Returns a dict mapping symbol -
 
 ### Community 345 - "Community 345"
 Cohesion: 1.0
-Nodes (1): Add yfinance-compatible symbol column (SYMBOL.NS).
+Nodes (1): Save OHLCV data to Parquet file. Merges with existing if incremental.
 
 ### Community 346 - "Community 346"
 Cohesion: 1.0
-Nodes (1): Filter out stocks with avg daily volume < threshold over 90 days.      Downloads
+Nodes (1): Main entry point: download OHLCV for all filtered stocks.      Args:         inc
 
 ### Community 347 - "Community 347"
 Cohesion: 1.0
-Nodes (1): Main entry point: fetch, filter, and save stock universe.      Returns (full_uni
+Nodes (1): Step 1.3 + 1.4 — Supplementary NSE Data & Index Benchmarks.  Fetches delivery %,
 
 ### Community 348 - "Community 348"
 Cohesion: 1.0
-Nodes (1): Extract fold predictions for BacktestEngine.
+Nodes (1): Format datetime as dd-mm-yyyy for nselib API.
 
 ### Community 349 - "Community 349"
 Cohesion: 1.0
-Nodes (1): Check if AlphaForge backend is running.
+Nodes (1): Wrap nselib call with error handling and rate-limit delay.
 
 ### Community 350 - "Community 350"
 Cohesion: 1.0
-Nodes (1): Push screener picks to AlphaForge backend.
+Nodes (1): Fetch delivery percentage data for a date range.      Args:         from_date: S
 
 ### Community 351 - "Community 351"
 Cohesion: 1.0
-Nodes (1): Retrieve screener picks from AlphaForge backend.
+Nodes (1): Fetch bulk deal data.
 
 ### Community 352 - "Community 352"
 Cohesion: 1.0
-Nodes (1): Tracks current consumption for a single provider.
+Nodes (1): Fetch block deal data.
 
 ### Community 353 - "Community 353"
 Cohesion: 1.0
-Nodes (1): In-memory per-provider rate limiter with auto-resetting counters.
+Nodes (1): Fetch FII/DII trading activity data.      Note: nselib may not expose fii_dii_tr
 
 ### Community 354 - "Community 354"
 Cohesion: 1.0
-Nodes (1): Check if a request is allowed. Returns False if rate-limited.
+Nodes (1): Fetch all supplementary NSE data for the last N days.      Args:         days_ba
 
 ### Community 355 - "Community 355"
 Cohesion: 1.0
-Nodes (1): Update token counters after a response with actual usage.
+Nodes (1): Download historical OHLCV for benchmark indices.      Returns dict mapping index
 
 ### Community 356 - "Community 356"
 Cohesion: 1.0
-Nodes (1): Return remaining quota for a provider.
+Nodes (1): Step 1.1 — Stock Universe Fetcher.  Fetches all NSE-listed equities, filters to
 
 ### Community 357 - "Community 357"
 Cohesion: 1.0
-Nodes (1): Return the highest utilization percentage across all limit dimensions.
+Nodes (1): Fetch the full list of NSE-listed equities via nselib.
 
 ### Community 358 - "Community 358"
 Cohesion: 1.0
-Nodes (1): Dynamically update limits for a provider (e.g., from Groq response headers).
+Nodes (1): Keep only regular equity (EQ) series.
 
 ### Community 359 - "Community 359"
 Cohesion: 1.0
-Nodes (1): Supported LLM providers.
+Nodes (1): Add yfinance-compatible symbol column (SYMBOL.NS).
 
 ### Community 360 - "Community 360"
 Cohesion: 1.0
-Nodes (1): Categories of queries for smart routing.
+Nodes (1): Filter out stocks with avg daily volume < threshold over 90 days.      Downloads
 
 ### Community 361 - "Community 361"
 Cohesion: 1.0
-Nodes (1): Rate limit configuration for a provider.
+Nodes (1): Main entry point: fetch, filter, and save stock universe.      Returns (full_uni
 
 ### Community 362 - "Community 362"
 Cohesion: 1.0
-Nodes (1): Configuration for a single LLM provider.
+Nodes (1): Extract fold predictions for BacktestEngine.
 
 ### Community 363 - "Community 363"
 Cohesion: 1.0
-Nodes (1): Unified response from any LLM provider.
+Nodes (1): Check if AlphaForge backend is running.
 
 ### Community 364 - "Community 364"
 Cohesion: 1.0
-Nodes (1): Raised when a request would incur cost (non-free model or tier).
+Nodes (1): Push screener picks to AlphaForge backend.
 
 ### Community 365 - "Community 365"
 Cohesion: 1.0
-Nodes (1): Interface every LLM provider adapter must implement.
+Nodes (1): Retrieve screener picks from AlphaForge backend.
 
 ### Community 366 - "Community 366"
 Cohesion: 1.0
-Nodes (1): Return the provider's default model.
+Nodes (1): Tracks current consumption for a single provider.
 
 ### Community 367 - "Community 367"
 Cohesion: 1.0
-Nodes (1): Shared OpenAI-compatible completion call used by all providers.
+Nodes (1): In-memory per-provider rate limiter with auto-resetting counters.
 
 ### Community 368 - "Community 368"
 Cohesion: 1.0
-Nodes (1): OpenRouter with hard filter to $0 models only — never incurs cost.
+Nodes (1): Check if a request is allowed. Returns False if rate-limited.
 
 ### Community 369 - "Community 369"
 Cohesion: 1.0
-Nodes (1): Fetch model list from OpenRouter and filter to strictly $0 models.
+Nodes (1): Update token counters after a response with actual usage.
 
 ### Community 370 - "Community 370"
 Cohesion: 1.0
-Nodes (1): Raise CostGuardError if the requested model is not in the free list.
+Nodes (1): Return remaining quota for a provider.
 
 ### Community 371 - "Community 371"
 Cohesion: 1.0
-Nodes (1): Check if a model is in the verified free list.
+Nodes (1): Return the highest utilization percentage across all limit dimensions.
 
 ### Community 372 - "Community 372"
 Cohesion: 1.0
-Nodes (1): Google Gemini free tier via the generativelanguage OpenAI-compatible endpoint.
+Nodes (1): Dynamically update limits for a provider (e.g., from Groq response headers).
 
 ### Community 373 - "Community 373"
 Cohesion: 1.0
-Nodes (1): Groq free tier — fastest inference for open-source models.
+Nodes (1): Supported LLM providers.
 
 ### Community 374 - "Community 374"
 Cohesion: 1.0
-Nodes (1): HuggingFace serverless inference — free tier with large open models.
+Nodes (1): Categories of queries for smart routing.
 
 ### Community 375 - "Community 375"
 Cohesion: 1.0
-Nodes (1): Ollama provider — local, private, unlimited inference.
+Nodes (1): Rate limit configuration for a provider.
 
 ### Community 376 - "Community 376"
 Cohesion: 1.0
-Nodes (1): Local Ollama — private, unlimited, works offline.
+Nodes (1): Configuration for a single LLM provider.
 
 ### Community 377 - "Community 377"
 Cohesion: 1.0
-Nodes (1): Auto-detect available models via Ollama's /api/tags endpoint.
+Nodes (1): Unified response from any LLM provider.
 
 ### Community 378 - "Community 378"
 Cohesion: 1.0
-Nodes (1): CSV parsing helpers shared by every CSV broker source.
+Nodes (1): Raised when a request would incur cost (non-free model or tier).
 
 ### Community 379 - "Community 379"
 Cohesion: 1.0
-Nodes (1): Forgiving float parser — handles empty, currency symbols, commas.
+Nodes (1): Interface every LLM provider adapter must implement.
 
 ### Community 380 - "Community 380"
 Cohesion: 1.0
-Nodes (1): Decode + parse a CSV stream into a list of header-keyed dicts.
+Nodes (1): Return the provider's default model.
 
 ### Community 381 - "Community 381"
 Cohesion: 1.0
-Nodes (1): Return the first non-empty value among `aliases` (case-insensitive).
+Nodes (1): Shared OpenAI-compatible completion call used by all providers.
 
 ### Community 382 - "Community 382"
 Cohesion: 1.0
-Nodes (1): Raise RuntimeError if base_url is not on the approved list in dev mode.
+Nodes (1): OpenRouter with hard filter to $0 models only — never incurs cost.
 
 ### Community 383 - "Community 383"
 Cohesion: 1.0
-Nodes (1): Free cash sitting inside a broker wallet (not deployed in holdings).
+Nodes (1): Fetch model list from OpenRouter and filter to strictly $0 models.
 
 ### Community 384 - "Community 384"
 Cohesion: 1.0
-Nodes (1): Return (current_value, invested, pnl, count) across this broker's holdings.
+Nodes (1): Raise CostGuardError if the requested model is not in the free list.
 
 ### Community 385 - "Community 385"
 Cohesion: 1.0
-Nodes (1): Return tradingsymbol→instrument_type (EQ/ETF) map.
+Nodes (1): Check if a model is in the verified free list.
 
 ### Community 386 - "Community 386"
 Cohesion: 1.0
-Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
+Nodes (1): Google Gemini free tier via the generativelanguage OpenAI-compatible endpoint.
 
 ### Community 387 - "Community 387"
 Cohesion: 1.0
-Nodes (1): GET /oms/user/margins → equity available cash for the Kite account.
+Nodes (1): Groq free tier — fastest inference for open-source models.
 
 ### Community 388 - "Community 388"
 Cohesion: 1.0
-Nodes (1): GET /api/mf/holdings → COIN mutual fund holdings (empty list if not subscribed).
+Nodes (1): HuggingFace serverless inference — free tier with large open models.
 
 ### Community 389 - "Community 389"
 Cohesion: 1.0
-Nodes (1): DFS through arbitrary JSON, returning the first cash-shaped value found.
+Nodes (1): Ollama provider — local, private, unlimited inference.
 
 ### Community 390 - "Community 390"
 Cohesion: 1.0
-Nodes (1): Open a fresh Groww tab, capture balance from the first matching XHR, close it.
+Nodes (1): Local Ollama — private, unlimited, works offline.
 
 ### Community 391 - "Community 391"
 Cohesion: 1.0
-Nodes (1): If the page is on /login, wait for the user to complete login.
+Nodes (1): Auto-detect available models via Ollama's /api/tags endpoint.
 
 ### Community 392 - "Community 392"
 Cohesion: 1.0
-Nodes (1): Drill into common Groww response shapes to find the holdings list.
+Nodes (1): CSV parsing helpers shared by every CSV broker source.
 
 ### Community 393 - "Community 393"
 Cohesion: 1.0
-Nodes (1): First non-None value across `keys` — handles camelCase/snake_case drift.
+Nodes (1): Forgiving float parser — handles empty, currency symbols, commas.
 
 ### Community 394 - "Community 394"
 Cohesion: 1.0
-Nodes (1): Return first non-empty value from `keys` in **rupees**, scaling paise fields by
+Nodes (1): Decode + parse a CSV stream into a list of header-keyed dicts.
 
 ### Community 395 - "Community 395"
 Cohesion: 1.0
-Nodes (1): Map a Groww holdings row to the shared dict shape used by dump.py.
+Nodes (1): Return the first non-empty value among `aliases` (case-insensitive).
 
 ### Community 396 - "Community 396"
 Cohesion: 1.0
-Nodes (1): Reload the holdings page and capture the holdings + LTP responses.      Groww's
+Nodes (1): Raise RuntimeError if base_url is not on the approved list in dev mode.
 
 ### Community 397 - "Community 397"
 Cohesion: 1.0
-Nodes (1): Attach to Chrome, reload Groww's holdings page, capture the response.
+Nodes (1): Free cash sitting inside a broker wallet (not deployed in holdings).
 
 ### Community 398 - "Community 398"
 Cohesion: 1.0
-Nodes (1): Drill into the superportfolio response to pull out HoldingDetail rows.
+Nodes (1): Return (current_value, invested, pnl, count) across this broker's holdings.
 
 ### Community 399 - "Community 399"
 Cohesion: 1.0
-Nodes (1): Map a superportfolio HoldingDetail row to the shared dict shape.
+Nodes (1): Return tradingsymbol→instrument_type (EQ/ETF) map.
 
 ### Community 400 - "Community 400"
 Cohesion: 1.0
-Nodes (1): Wint Wealth holdings CSV cache.  TTL controlled by WINTWEALTH_REFETCH_SECONDS (r
+Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
 
 ### Community 401 - "Community 401"
 Cohesion: 1.0
-Nodes (1): Wint Wealth — CDP browser fetch (no public API).  Probe-confirmed endpoint: api.
+Nodes (1): GET /oms/user/margins → equity available cash for the Kite account.
 
 ### Community 402 - "Community 402"
 Cohesion: 1.0
-Nodes (1): Pydantic schemas for LLM Gateway routes.
+Nodes (1): GET /api/mf/holdings → COIN mutual fund holdings (empty list if not subscribed).
 
 ### Community 403 - "Community 403"
 Cohesion: 1.0
-Nodes (1): Benchmark endpoints — kicks off a background run, exposes the latest result.
+Nodes (1): DFS through arbitrary JSON, returning the first cash-shaped value found.
 
 ### Community 404 - "Community 404"
 Cohesion: 1.0
-Nodes (1): Thin wrapper around alphaforge-llm-gateway for backend use.  Follows the same pa
+Nodes (1): Open a fresh Groww tab, capture balance from the first matching XHR, close it.
 
 ### Community 405 - "Community 405"
 Cohesion: 1.0
-Nodes (1): Return the singleton LLMGateway instance, initialized from settings.
+Nodes (1): If the page is on /login, wait for the user to complete login.
 
 ### Community 406 - "Community 406"
 Cohesion: 1.0
-Nodes (1): Screener endpoints — push/pull ML screener picks.  Disclaimer: Not SEBI register
+Nodes (1): Drill into common Groww response shapes to find the holdings list.
 
 ### Community 407 - "Community 407"
 Cohesion: 1.0
-Nodes (1): Pydantic schemas for screener endpoints.
+Nodes (1): First non-None value across `keys` — handles camelCase/snake_case drift.
 
 ### Community 408 - "Community 408"
 Cohesion: 1.0
-Nodes (1): Background tasks for screener: embed pushed picks + backfill from disk.
+Nodes (1): Return first non-empty value from `keys` in **rupees**, scaling paise fields by
 
 ### Community 409 - "Community 409"
 Cohesion: 1.0
-Nodes (1): Screener service — manages screener picks storage and retrieval.  Bridges the st
+Nodes (1): Map a Groww holdings row to the shared dict shape used by dump.py.
 
 ### Community 410 - "Community 410"
 Cohesion: 1.0
-Nodes (1): Manage screener pick results for the AlphaForge API.
+Nodes (1): Reload the holdings page and capture the holdings + LTP responses.      Groww's
 
 ### Community 411 - "Community 411"
 Cohesion: 1.0
-Nodes (1): Save screener picks from a scan run.
+Nodes (1): Attach to Chrome, reload Groww's holdings page, capture the response.
 
 ### Community 412 - "Community 412"
 Cohesion: 1.0
-Nodes (1): Retrieve picks for a given date (or latest available).
+Nodes (1): Drill into the superportfolio response to pull out HoldingDetail rows.
 
 ### Community 413 - "Community 413"
 Cohesion: 1.0
-Nodes (1): List all available scan dates.
+Nodes (1): Map a superportfolio HoldingDetail row to the shared dict shape.
 
 ### Community 414 - "Community 414"
 Cohesion: 1.0
-Nodes (1): Raw pgvector SQL for semantic search — picks + conversation memory.
+Nodes (1): Wint Wealth holdings CSV cache.  TTL controlled by WINTWEALTH_REFETCH_SECONDS (r
 
 ### Community 415 - "Community 415"
 Cohesion: 1.0
-Nodes (1): Pure helper for building screener-pick explanation strings.
+Nodes (1): Wint Wealth — CDP browser fetch (no public API).  Probe-confirmed endpoint: api.
 
 ### Community 416 - "Community 416"
 Cohesion: 1.0
-Nodes (1): Build a rich, embeddable text description of a screener pick (case-tolerant).
+Nodes (1): Pydantic schemas for LLM Gateway routes.
 
 ### Community 417 - "Community 417"
 Cohesion: 1.0
-Nodes (1): Gemini embedding service for vector memory.
+Nodes (1): Benchmark endpoints — kicks off a background run, exposes the latest result.
 
 ### Community 418 - "Community 418"
 Cohesion: 1.0
-Nodes (1): float32[768] embeddings via Gemini text-embedding-004 (free tier).      Falls ba
+Nodes (1): Thin wrapper around alphaforge-llm-gateway for backend use.  Follows the same pa
 
 ### Community 419 - "Community 419"
 Cohesion: 1.0
-Nodes (1): Indexing helpers — pick → ScreenerPickEmbedding record builder.
+Nodes (1): Return the singleton LLMGateway instance, initialized from settings.
 
 ### Community 420 - "Community 420"
 Cohesion: 1.0
-Nodes (1): Memory service — vector store interface for picks and conversation history.
+Nodes (1): Screener endpoints — push/pull ML screener picks.  Disclaimer: Not SEBI register
 
 ### Community 421 - "Community 421"
 Cohesion: 1.0
-Nodes (1): Pure helpers for memory pick parsing.
+Nodes (1): Pydantic schemas for screener endpoints.
 
 ### Community 422 - "Community 422"
 Cohesion: 1.0
-Nodes (1): Pull symbol, probability, rank, raw_features from a pick dict (case-tolerant).
+Nodes (1): Background tasks for screener: embed pushed picks + backfill from disk.
 
 ### Community 423 - "Community 423"
 Cohesion: 1.0
-Nodes (1): Sync any API source whose cached data is missing or older than _STALE_SECONDS.
+Nodes (1): Screener service — manages screener picks storage and retrieval.  Bridges the st
 
 ### Community 424 - "Community 424"
 Cohesion: 1.0
-Nodes (1): Market data service — fetches quotes, history, indices from Indian exchanges.
+Nodes (1): Manage screener pick results for the AlphaForge API.
 
 ### Community 425 - "Community 425"
 Cohesion: 1.0
-Nodes (1): Aggregates market data from NSE, BSE, and third-party providers.
+Nodes (1): Save screener picks from a scan run.
 
 ### Community 426 - "Community 426"
 Cohesion: 1.0
-Nodes (1): Fetch real-time quote for a symbol.
+Nodes (1): Retrieve picks for a given date (or latest available).
 
 ### Community 427 - "Community 427"
 Cohesion: 1.0
-Nodes (1): Fetch major Indian indices — NIFTY 50, SENSEX, BANK NIFTY, NIFTY IT, etc.
+Nodes (1): List all available scan dates.
 
 ### Community 428 - "Community 428"
 Cohesion: 1.0
-Nodes (1): Fetch historical OHLCV candles.
+Nodes (1): Raw pgvector SQL for semantic search — picks + conversation memory.
 
 ### Community 429 - "Community 429"
 Cohesion: 1.0
-Nodes (1): Search instrument master for stocks, ETFs, MFs by name/symbol.
+Nodes (1): Pure helper for building screener-pick explanation strings.
 
 ### Community 430 - "Community 430"
 Cohesion: 1.0
-Nodes (1): # TODO: integrate with data provider (NSE API / broker feed / third-party)
+Nodes (1): Build a rich, embeddable text description of a screener pick (case-tolerant).
 
 ### Community 431 - "Community 431"
 Cohesion: 1.0
-Nodes (1): # TODO: scrape/fetch from NSE/BSE
+Nodes (1): Gemini embedding service for vector memory.
 
 ### Community 432 - "Community 432"
 Cohesion: 1.0
-Nodes (1): # TODO: implement historical data fetch
+Nodes (1): float32[768] embeddings via Gemini text-embedding-004 (free tier).      Falls ba
 
 ### Community 433 - "Community 433"
 Cohesion: 1.0
-Nodes (1): # TODO: search static instrument list (updated daily)
+Nodes (1): Indexing helpers — pick → ScreenerPickEmbedding record builder.
 
 ### Community 434 - "Community 434"
 Cohesion: 1.0
-Nodes (1): Market data endpoints — quotes, charts, screeners, indices.
+Nodes (1): Memory service — vector store interface for picks and conversation history.
 
 ### Community 435 - "Community 435"
 Cohesion: 1.0
-Nodes (1): # TODO: integrate with market data provider
+Nodes (1): Pure helpers for memory pick parsing.
 
 ### Community 436 - "Community 436"
 Cohesion: 1.0
-Nodes (1): Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.
+Nodes (1): Pull symbol, probability, rank, raw_features from a pick dict (case-tolerant).
 
 ### Community 437 - "Community 437"
 Cohesion: 1.0
-Nodes (1): Search stocks, ETFs, mutual funds by name or symbol.
+Nodes (1): Sync any API source whose cached data is missing or older than _STALE_SECONDS.
 
 ### Community 438 - "Community 438"
 Cohesion: 1.0
-Nodes (1): Fetch OHLCV price history for charting.
+Nodes (1): Market data service — fetches quotes, history, indices from Indian exchanges.
 
 ### Community 439 - "Community 439"
 Cohesion: 1.0
-Nodes (1): # TODO: integrate with market data provider
+Nodes (1): Aggregates market data from NSE, BSE, and third-party providers.
 
 ### Community 440 - "Community 440"
 Cohesion: 1.0
-Nodes (1): # TODO: fetch live index data
+Nodes (1): Fetch real-time quote for a symbol.
 
 ### Community 441 - "Community 441"
 Cohesion: 1.0
-Nodes (1): # TODO: search against instrument master
+Nodes (1): Fetch major Indian indices — NIFTY 50, SENSEX, BANK NIFTY, NIFTY IT, etc.
 
 ### Community 442 - "Community 442"
 Cohesion: 1.0
-Nodes (1): # TODO: fetch historical data
+Nodes (1): Fetch historical OHLCV candles.
 
 ### Community 443 - "Community 443"
 Cohesion: 1.0
-Nodes (1): Clear cached holdings between tests.
+Nodes (1): Search instrument master for stocks, ETFs, MFs by name/symbol.
 
 ### Community 444 - "Community 444"
 Cohesion: 1.0
-Nodes (1): Parse the fixture and apply it onto the registered Kite source's cache.      The
+Nodes (1): # TODO: integrate with data provider (NSE API / broker feed / third-party)
 
 ### Community 445 - "Community 445"
 Cohesion: 1.0
-Nodes (1): Client with zerodha holdings pre-loaded via CSV upload.
+Nodes (1): # TODO: scrape/fetch from NSE/BSE
 
 ### Community 446 - "Community 446"
 Cohesion: 1.0
-Nodes (1): Pretty-print a JSON-serializable response body.
+Nodes (1): # TODO: implement historical data fetch
 
 ### Community 447 - "Community 447"
 Cohesion: 1.0
-Nodes (1): Raise RuntimeError if base_url is not on the approved list in dev mode.
+Nodes (1): # TODO: search static instrument list (updated daily)
 
 ### Community 448 - "Community 448"
 Cohesion: 1.0
-Nodes (1): Build tradingsymbol→name map from cached CSV (EQ instruments only).
+Nodes (1): Market data endpoints — quotes, charts, screeners, indices.
 
 ### Community 449 - "Community 449"
 Cohesion: 1.0
-Nodes (1): Return tradingsymbol→name map, refreshing the on-disk cache if stale.
+Nodes (1): # TODO: integrate with market data provider
 
 ### Community 450 - "Community 450"
 Cohesion: 1.0
-Nodes (1): Synchronous lookup using the on-disk cache only — never triggers a fetch.
+Nodes (1): Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.
 
 ### Community 451 - "Community 451"
 Cohesion: 1.0
-Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
+Nodes (1): Search stocks, ETFs, mutual funds by name or symbol.
 
 ### Community 452 - "Community 452"
 Cohesion: 1.0
-Nodes (1): GET /oms/user/margins → equity available cash for the Kite account.
+Nodes (1): Fetch OHLCV price history for charting.
 
 ### Community 453 - "Community 453"
 Cohesion: 1.0
-Nodes (1): GET /user/v1/getRMS → risk-management snapshot incl. available cash.
+Nodes (1): # TODO: integrate with market data provider
 
 ### Community 454 - "Community 454"
 Cohesion: 1.0
-Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
+Nodes (1): # TODO: fetch live index data
 
 ### Community 455 - "Community 455"
 Cohesion: 1.0
-Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample.
+Nodes (1): # TODO: search against instrument master
 
 ### Community 456 - "Community 456"
 Cohesion: 1.0
-Nodes (1): Raise ValueError for oversized or missing-column CSV files.
+Nodes (1): # TODO: fetch historical data
 
 ### Community 457 - "Community 457"
 Cohesion: 1.0
-Nodes (1): Map a Groww holdings row to the shared dict shape used by dump.py.
+Nodes (1): Clear cached holdings between tests.
 
 ### Community 458 - "Community 458"
 Cohesion: 1.0
-Nodes (1): Reload the holdings page and capture the holdings + LTP responses.      Groww's
+Nodes (1): Parse the fixture and apply it onto the registered Kite source's cache.      The
 
 ### Community 459 - "Community 459"
 Cohesion: 1.0
-Nodes (1): Attach to Chrome, reload Groww's holdings page, capture the response.
+Nodes (1): Client with zerodha holdings pre-loaded via CSV upload.
 
 ### Community 460 - "Community 460"
 Cohesion: 1.0
-Nodes (1): Return (page, browser, playwright, is_cdp) ready for use.
+Nodes (1): Pretty-print a JSON-serializable response body.
 
 ### Community 461 - "Community 461"
 Cohesion: 1.0
-Nodes (1): Sync any API source whose cached data is missing or older than _STALE_SECONDS.
+Nodes (1): Raise RuntimeError if base_url is not on the approved list in dev mode.
 
 ### Community 462 - "Community 462"
 Cohesion: 1.0
-Nodes (1): Fetch real-time quote for a given NSE/BSE symbol.
+Nodes (1): Build tradingsymbol→name map from cached CSV (EQ instruments only).
 
 ### Community 463 - "Community 463"
 Cohesion: 1.0
-Nodes (1): Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.
+Nodes (1): Return tradingsymbol→name map, refreshing the on-disk cache if stale.
 
 ### Community 464 - "Community 464"
 Cohesion: 1.0
-Nodes (1): Search stocks, ETFs, mutual funds by name or symbol.
+Nodes (1): Synchronous lookup using the on-disk cache only — never triggers a fetch.
 
 ### Community 465 - "Community 465"
 Cohesion: 1.0
-Nodes (1): Fetch OHLCV price history for charting.
+Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
 
 ### Community 466 - "Community 466"
 Cohesion: 1.0
-Nodes (1): # TODO: fetch live index data
+Nodes (1): GET /oms/user/margins → equity available cash for the Kite account.
 
 ### Community 467 - "Community 467"
 Cohesion: 1.0
-Nodes (1): # TODO: search against instrument master
+Nodes (1): GET /user/v1/getRMS → risk-management snapshot incl. available cash.
 
 ### Community 468 - "Community 468"
 Cohesion: 1.0
-Nodes (1): # TODO: fetch historical data
+Nodes (1): Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us
 
 ### Community 469 - "Community 469"
 Cohesion: 1.0
 Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample.
 
+### Community 470 - "Community 470"
+Cohesion: 1.0
+Nodes (1): Raise ValueError for oversized or missing-column CSV files.
+
+### Community 471 - "Community 471"
+Cohesion: 1.0
+Nodes (1): Map a Groww holdings row to the shared dict shape used by dump.py.
+
+### Community 472 - "Community 472"
+Cohesion: 1.0
+Nodes (1): Reload the holdings page and capture the holdings + LTP responses.      Groww's
+
+### Community 473 - "Community 473"
+Cohesion: 1.0
+Nodes (1): Attach to Chrome, reload Groww's holdings page, capture the response.
+
+### Community 474 - "Community 474"
+Cohesion: 1.0
+Nodes (1): Return (page, browser, playwright, is_cdp) ready for use.
+
+### Community 475 - "Community 475"
+Cohesion: 1.0
+Nodes (1): Sync any API source whose cached data is missing or older than _STALE_SECONDS.
+
+### Community 476 - "Community 476"
+Cohesion: 1.0
+Nodes (1): Fetch real-time quote for a given NSE/BSE symbol.
+
+### Community 477 - "Community 477"
+Cohesion: 1.0
+Nodes (1): Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.
+
+### Community 478 - "Community 478"
+Cohesion: 1.0
+Nodes (1): Search stocks, ETFs, mutual funds by name or symbol.
+
+### Community 479 - "Community 479"
+Cohesion: 1.0
+Nodes (1): Fetch OHLCV price history for charting.
+
+### Community 480 - "Community 480"
+Cohesion: 1.0
+Nodes (1): # TODO: fetch live index data
+
+### Community 481 - "Community 481"
+Cohesion: 1.0
+Nodes (1): # TODO: search against instrument master
+
+### Community 482 - "Community 482"
+Cohesion: 1.0
+Nodes (1): # TODO: fetch historical data
+
+### Community 483 - "Community 483"
+Cohesion: 1.0
+Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample.
+
 ## Knowledge Gaps
-- **518 isolated node(s):** `Portfolio filter probe — verifies asset-class chips, sort, PnL filter, and text`, `Attach to existing CDP Chrome, intercept Gullak dashboard XHRs.  Run while logge`, `Compact preview: top-level keys + first list-of-dict path with sample.`, `Capture screenshots of the terminal, portfolio, and preferences pages.  Attaches`, `Get a token from the API and stash it in localStorage so AuthGuard lets us in.` (+513 more)
+- **519 isolated node(s):** `Portfolio filter probe — verifies asset-class chips, sort, PnL filter, and text`, `Attach to existing CDP Chrome, intercept Gullak dashboard XHRs.  Run while logge`, `Compact preview: top-level keys + first list-of-dict path with sample.`, `Capture screenshots of the terminal, portfolio, and preferences pages.  Attaches`, `Get a token from the API and stash it in localStorage so AuthGuard lets us in.` (+514 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Community 18`** (12 nodes): `useAddTickerItem()`, `useAddWatchlistItem()`, `useDashboardBrief()`, `useDashboardRisk()`, `useDashboardStats()`, `useDashboardTicker()`, `useDashboardWatchlist()`, `useDeleteTickerItem()`, `useDeleteWatchlistItem()`, `TerminalStats.tsx`, `TerminalStats()`, `dashboard.query.ts`
+- **Thin community `Community 19`** (12 nodes): `useAddTickerItem()`, `useAddWatchlistItem()`, `useDashboardBrief()`, `useDashboardRisk()`, `useDashboardStats()`, `useDashboardTicker()`, `useDashboardWatchlist()`, `useDeleteTickerItem()`, `useDeleteWatchlistItem()`, `TerminalStats.tsx`, `TerminalStats()`, `dashboard.query.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 20`** (9 nodes): `ChatProvider()`, `loadChoice()`, `useChat()`, `ChatContext.tsx`, `useChatStream.ts`, `getToken()`, `nanoid()`, `sanitizeContent()`, `useChatStream()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 27`** (6 nodes): `useAuthStore.ts`, `applyHeader()`, `errorMessage()`, `errorStatus()`, `requestPath()`, `skipRefreshRetry()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 28`** (6 nodes): `fmtDateTime()`, `fmtTime()`, `Notification()`, `severityIcon()`, `Notification.tsx`, `notifications.icons.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (5 nodes): `autoGrow()`, `handleKeyDown()`, `handleSubmit()`, `onKey()`, `ChatRail.tsx`
+- **Thin community `Community 29`** (5 nodes): `useVoice.ts`, `webspeech.types.ts`, `pickMimeType()`, `useVoice()`, `getSRCtor()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (5 nodes): `useVoice.ts`, `webspeech.types.ts`, `pickMimeType()`, `useVoice()`, `getSRCtor()`
+- **Thin community `Community 30`** (5 nodes): `autoGrow()`, `handleKeyDown()`, `handleSubmit()`, `onKey()`, `ChatRail.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (4 nodes): `main.py`, `__main__.py`, `create_app()`, `FastAPI application factory.`
+- **Thin community `Community 32`** (5 nodes): `ThemeProvider.tsx`, `readPersisted()`, `ThemeProvider()`, `useTheme()`, `writePersisted()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 42`** (3 nodes): `TerminalTopBar.tsx`, `isActive()`, `TerminalTopBar()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -1869,664 +1941,692 @@ Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 127`** (1 nodes): `Strip query-string from URL for dedup purposes.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 148`** (1 nodes): `Request/response schemas for the Alpha chat endpoint.`
+- **Thin community `Community 148`** (1 nodes): `Emit GRAPH_REPORT.md — summary, node-type mix, and god nodes.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 149`** (1 nodes): `Resolved model choice from the frontend ModelPicker.      The frontend already a`
+- **Thin community `Community 149`** (1 nodes): `fux build — assemble the merged graph and write all outputs ($0).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 150`** (1 nodes): `Chat routes — SSE streaming endpoint for Alpha conversation rail.`
+- **Thin community `Community 150`** (1 nodes): `File discovery with an ignore list. stdlib only.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 151`** (1 nodes): `Return (encoded_jwt, expires_in_seconds).`
+- **Thin community `Community 151`** (1 nodes): `Emit INDEX.md (compact Tier-1) and rules.json (machine) from doc nodes.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 152`** (1 nodes): `Pull all secrets for this app's namespace into os.environ.      Returns the numb`
+- **Thin community `Community 152`** (1 nodes): `fux check — schema, dead code_refs, staleness. Honors strictness (default fix).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 153`** (1 nodes): `Raise ValueError for oversized or missing-column CSV files.`
+- **Thin community `Community 153`** (1 nodes): `fux CLI — build · check · context · init.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 154`** (1 nodes): `Extract the list of holding rows from the holdings XHR payload.`
+- **Thin community `Community 154`** (1 nodes): `Build the code graph from all sources; group into communities by directory.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 155`** (1 nodes): `Map an INDmoney holding row to the shared dict shape.`
+- **Thin community `Community 155`** (1 nodes): `Python AST -> graph nodes/edges for one file. Deterministic, $0.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 156`** (1 nodes): `Open a fresh INDmoney tab, capture `/account/basic`, return USD cash.`
+- **Thin community `Community 156`** (1 nodes): `Lightweight TS/TSX extraction (top-level exports) via regex. $0.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 157`** (1 nodes): `Kite instrument-master cache → tradingsymbol→name lookup for Zerodha holdings.`
+- **Thin community `Community 157`** (1 nodes): `Knowledge nodes (rule/memory/narrative/glossary) from markdown.  This is the doc`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 158`** (1 nodes): `Return tradingsymbol→instrument_type (EQ/ETF) map.`
+- **Thin community `Community 158`** (1 nodes): `Fux config — defaults + optional .fux/config.json override.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 159`** (1 nodes): `Zerodha holdings CSV cache — fetches via CDP, caches to CSV.  TTL controlled by`
+- **Thin community `Community 159`** (1 nodes): `Render the interactive graph.html UI from a template + embedded graph JSON.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 160`** (1 nodes): `Zerodha Kite — manual CDP login + enctoken cache + holdings fetch.  Login flow:`
+- **Thin community `Community 160`** (1 nodes): `Minimal YAML-frontmatter parser (scalars + simple lists). stdlib only.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 161`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
+- **Thin community `Community 161`** (1 nodes): `Return (meta dict, body str). No frontmatter -> ({}, text).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 162`** (1 nodes): `GET /oms/user/margins → equity available cash for the Kite account.`
+- **Thin community `Community 162`** (1 nodes): `Request/response schemas for the Alpha chat endpoint.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 163`** (1 nodes): `GET /api/mf/holdings → COIN mutual fund holdings (empty list if not subscribed).`
+- **Thin community `Community 163`** (1 nodes): `Resolved model choice from the frontend ModelPicker.      The frontend already a`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 164`** (1 nodes): `Convert profile/v2 + price response into a single holding dict.`
+- **Thin community `Community 164`** (1 nodes): `Chat routes — SSE streaming endpoint for Alpha conversation rail.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 165`** (1 nodes): `If the page is on /login, wait for the user to complete login.`
+- **Thin community `Community 165`** (1 nodes): `Return (encoded_jwt, expires_in_seconds).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 166`** (1 nodes): `Drill into common Groww response shapes to find the holdings list.`
+- **Thin community `Community 166`** (1 nodes): `Pull all secrets for this app's namespace into os.environ.      Returns the numb`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 167`** (1 nodes): `First non-None value across `keys` — handles camelCase/snake_case drift.`
+- **Thin community `Community 167`** (1 nodes): `Raise ValueError for oversized or missing-column CSV files.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 168`** (1 nodes): `Return first non-empty value from `keys` in **rupees**, scaling paise fields by`
+- **Thin community `Community 168`** (1 nodes): `Extract the list of holding rows from the holdings XHR payload.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 169`** (1 nodes): `Map a Groww holdings row to the shared dict shape used by dump.py.`
+- **Thin community `Community 169`** (1 nodes): `Map an INDmoney holding row to the shared dict shape.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 170`** (1 nodes): `Reload the holdings page and capture the holdings + LTP responses.      Groww's`
+- **Thin community `Community 170`** (1 nodes): `Open a fresh INDmoney tab, capture `/account/basic`, return USD cash.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 171`** (1 nodes): `Attach to Chrome, reload Groww's holdings page, capture the response.`
+- **Thin community `Community 171`** (1 nodes): `Kite instrument-master cache → tradingsymbol→name lookup for Zerodha holdings.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 172`** (1 nodes): `GET /api/mf/holdings → COIN mutual fund holdings list.`
+- **Thin community `Community 172`** (1 nodes): `Return tradingsymbol→instrument_type (EQ/ETF) map.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 173`** (1 nodes): `Drill into the superportfolio response to pull out HoldingDetail rows.`
+- **Thin community `Community 173`** (1 nodes): `Zerodha holdings CSV cache — fetches via CDP, caches to CSV.  TTL controlled by`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 174`** (1 nodes): `Map a superportfolio HoldingDetail row to the shared dict shape.`
+- **Thin community `Community 174`** (1 nodes): `Zerodha Kite — manual CDP login + enctoken cache + holdings fetch.  Login flow:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 175`** (1 nodes): `Auth endpoints — token login only.`
+- **Thin community `Community 175`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 176`** (1 nodes): `Sync any API source whose cached data is missing or older than _STALE_SECONDS.`
+- **Thin community `Community 176`** (1 nodes): `GET /oms/user/margins → equity available cash for the Kite account.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 177`** (1 nodes): `Current FX rates used to roll up cross-currency totals (1-hour CSV cache).`
+- **Thin community `Community 177`** (1 nodes): `GET /api/mf/holdings → COIN mutual fund holdings (empty list if not subscribed).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 178`** (1 nodes): `Configure and return the application root logger.`
+- **Thin community `Community 178`** (1 nodes): `Convert profile/v2 + price response into a single holding dict.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 179`** (1 nodes): `Return a child logger under the ``alphaforge`` namespace.`
+- **Thin community `Community 179`** (1 nodes): `If the page is on /login, wait for the user to complete login.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 180`** (1 nodes): `Raise RuntimeError if base_url is not on the approved list in dev mode.`
+- **Thin community `Community 180`** (1 nodes): `Drill into common Groww response shapes to find the holdings list.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 181`** (1 nodes): `Raise ValueError for oversized or missing-column CSV files.`
+- **Thin community `Community 181`** (1 nodes): `First non-None value across `keys` — handles camelCase/snake_case drift.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 182`** (1 nodes): `Encrypted secrets vault — PBKDF2-derived Fernet key, in-memory state.  On-disk l`
+- **Thin community `Community 182`** (1 nodes): `Return first non-empty value from `keys` in **rupees**, scaling paise fields by`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 183`** (1 nodes): `Create vault from scratch. Overwrites any existing vault.`
+- **Thin community `Community 183`** (1 nodes): `Map a Groww holdings row to the shared dict shape used by dump.py.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 184`** (1 nodes): `Decrypt vault and load secrets into memory. Raises InvalidToken on bad password.`
+- **Thin community `Community 184`** (1 nodes): `Reload the holdings page and capture the holdings + LTP responses.      Groww's`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 185`** (1 nodes): `Return copy of in-memory secrets (vault must be unlocked).`
+- **Thin community `Community 185`** (1 nodes): `Attach to Chrome, reload Groww's holdings page, capture the response.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 186`** (1 nodes): `Re-encrypt vault with updated secrets dict (vault must be unlocked).`
+- **Thin community `Community 186`** (1 nodes): `GET /api/mf/holdings → COIN mutual fund holdings list.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 187`** (1 nodes): `Return raw encrypted blob for backup.`
+- **Thin community `Community 187`** (1 nodes): `Drill into the superportfolio response to pull out HoldingDetail rows.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 188`** (1 nodes): `Validate blob against password and replace current vault.`
+- **Thin community `Community 188`** (1 nodes): `Map a superportfolio HoldingDetail row to the shared dict shape.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 189`** (1 nodes): `Push unlocked secrets into os.environ (vault values win over .env files).`
+- **Thin community `Community 189`** (1 nodes): `Auth endpoints — token login only.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 190`** (1 nodes): `Read key=value pairs from .env.cred.local for vault init pre-population.`
+- **Thin community `Community 190`** (1 nodes): `Sync any API source whose cached data is missing or older than _STALE_SECONDS.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 191`** (1 nodes): `Vault API — manage encrypted secrets at runtime.`
+- **Thin community `Community 191`** (1 nodes): `Current FX rates used to roll up cross-currency totals (1-hour CSV cache).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 192`** (1 nodes): `Return key/value pairs from .env.cred.local to pre-fill the init form.`
+- **Thin community `Community 192`** (1 nodes): `Configure and return the application root logger.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 193`** (1 nodes): `Return all key-value pairs (values in plaintext). Use sparingly.`
+- **Thin community `Community 193`** (1 nodes): `Return a child logger under the ``alphaforge`` namespace.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 194`** (1 nodes): `Pydantic schemas for the vault API.`
+- **Thin community `Community 194`** (1 nodes): `Raise RuntimeError if base_url is not on the approved list in dev mode.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 195`** (1 nodes): `Keys found in .env.cred.local that can be pre-populated into the vault.`
+- **Thin community `Community 195`** (1 nodes): `Raise ValueError for oversized or missing-column CSV files.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 196`** (1 nodes): `Attach to existing CDP Chrome, intercept Wint Wealth portfolio-page XHRs.  Run w`
+- **Thin community `Community 196`** (1 nodes): `Encrypted secrets vault — PBKDF2-derived Fernet key, in-memory state.  On-disk l`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 197`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
+- **Thin community `Community 197`** (1 nodes): `Create vault from scratch. Overwrites any existing vault.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 198`** (1 nodes): `Phase 3.1 — Target Variable Labeler.  Computes forward-looking labels for the ML`
+- **Thin community `Community 198`** (1 nodes): `Decrypt vault and load secrets into memory. Raises InvalidToken on bad password.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 199`** (1 nodes): `Compute the N-day forward return from Adjusted Close prices.      Forward return`
+- **Thin community `Community 199`** (1 nodes): `Return copy of in-memory secrets (vault must be unlocked).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 200`** (1 nodes): `Convert forward return to binary classification label.      1 = stock returned >`
+- **Thin community `Community 200`** (1 nodes): `Re-encrypt vault with updated secrets dict (vault must be unlocked).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 201`** (1 nodes): `Compute all labels for a single stock's OHLCV DataFrame.      Args:         df:`
+- **Thin community `Community 201`** (1 nodes): `Return raw encrypted blob for backup.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 202`** (1 nodes): `Compute labels for a single stock by loading its OHLCV parquet.      Args:`
+- **Thin community `Community 202`** (1 nodes): `Validate blob against password and replace current vault.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 203`** (1 nodes): `Phase 3.2 — Dataset Assembly.  Combines features (Phase 2) + labels (Phase 3.1)`
+- **Thin community `Community 203`** (1 nodes): `Push unlocked secrets into os.environ (vault values win over .env files).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 204`** (1 nodes): `Get symbols that have OHLCV parquet files downloaded.`
+- **Thin community `Community 204`** (1 nodes): `Read key=value pairs from .env.cred.local for vault init pre-population.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 205`** (1 nodes): `Build a complete feature + label row-set for one stock.      Args:         symbo`
+- **Thin community `Community 205`** (1 nodes): `Vault API — manage encrypted secrets at runtime.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 206`** (1 nodes): `Apply data quality rules to the assembled dataset.      Rules:     1. Drop rows`
+- **Thin community `Community 206`** (1 nodes): `Return key/value pairs from .env.cred.local to pre-fill the init form.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 207`** (1 nodes): `Compute and format dataset statistics as a text report.`
+- **Thin community `Community 207`** (1 nodes): `Return all key-value pairs (values in plaintext). Use sparingly.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 208`** (1 nodes): `Build the full ML dataset for all available stocks.      Args:         symbols:`
+- **Thin community `Community 208`** (1 nodes): `Pydantic schemas for the vault API.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 209`** (1 nodes): `Phase 2.5 — Feature Orchestrator.  Combines all feature groups (technical, relat`
+- **Thin community `Community 209`** (1 nodes): `Keys found in .env.cred.local that can be pre-populated into the vault.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 210`** (1 nodes): `Compute derived/interaction features from existing features.      These capture`
+- **Thin community `Community 210`** (1 nodes): `Attach to existing CDP Chrome, intercept Wint Wealth portfolio-page XHRs.  Run w`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 211`** (1 nodes): `Build all features for a single stock.      Args:         symbol: NSE symbol (e.`
+- **Thin community `Community 211`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 212`** (1 nodes): `Build features for all stocks in the filtered universe.      Args:         max_s`
+- **Thin community `Community 212`** (1 nodes): `Phase 3.1 — Target Variable Labeler.  Computes forward-looking labels for the ML`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 213`** (1 nodes): `Phase 2.1 — Technical Indicators.  Computes ~30 technical indicators per stock u`
+- **Thin community `Community 213`** (1 nodes): `Compute the N-day forward return from Adjusted Close prices.      Forward return`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 214`** (1 nodes): `Momentum indicators: RSI, Stochastic, Williams %R, ROC.`
+- **Thin community `Community 214`** (1 nodes): `Convert forward return to binary classification label.      1 = stock returned >`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 215`** (1 nodes): `Trend indicators: MACD, ADX, Aroon, SMA crossovers.`
+- **Thin community `Community 215`** (1 nodes): `Compute all labels for a single stock's OHLCV DataFrame.      Args:         df:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 216`** (1 nodes): `Volatility indicators: Bollinger Bands, ATR, Keltner Channel.`
+- **Thin community `Community 216`** (1 nodes): `Compute labels for a single stock by loading its OHLCV parquet.      Args:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 217`** (1 nodes): `Volume indicators: OBV, Volume ratio, A/D, MFI.`
+- **Thin community `Community 217`** (1 nodes): `Phase 3.2 — Dataset Assembly.  Combines features (Phase 2) + labels (Phase 3.1)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 218`** (1 nodes): `Price action features: 52w high/low distance, consecutive days, gaps, candle bod`
+- **Thin community `Community 218`** (1 nodes): `Get symbols that have OHLCV parquet files downloaded.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 219`** (1 nodes): `Compute all technical indicators for a single stock's OHLCV DataFrame.      Args`
+- **Thin community `Community 219`** (1 nodes): `Build a complete feature + label row-set for one stock.      Args:         symbo`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 220`** (1 nodes): `Phase 2.3 — Fundamental Features.  Fetches PE, PB, market cap, 52-week return, a`
+- **Thin community `Community 220`** (1 nodes): `Apply data quality rules to the assembled dataset.      Rules:     1. Drop rows`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 221`** (1 nodes): `Fetch fundamental data for a single stock from yfinance.      Returns a dict wit`
+- **Thin community `Community 221`** (1 nodes): `Compute and format dataset statistics as a text report.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 222`** (1 nodes): `Compute rolling 252-day (52-week) return from Close prices.`
+- **Thin community `Community 222`** (1 nodes): `Build the full ML dataset for all available stocks.      Args:         symbols:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 223`** (1 nodes): `Compute fundamental features for a stock.      Args:         df: OHLCV DataFrame`
+- **Thin community `Community 223`** (1 nodes): `Phase 2.5 — Feature Orchestrator.  Combines all feature groups (technical, relat`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 224`** (1 nodes): `Clear the cached fundamental data.`
+- **Thin community `Community 224`** (1 nodes): `Compute derived/interaction features from existing features.      These capture`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 225`** (1 nodes): `Phase 2.2 — Relative Strength Features.  Computes stock returns relative to benc`
+- **Thin community `Community 225`** (1 nodes): `Build all features for a single stock.      Args:         symbol: NSE symbol (e.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 226`** (1 nodes): `Load and cache the Close price series for a benchmark index.`
+- **Thin community `Community 226`** (1 nodes): `Build features for all stocks in the filtered universe.      Args:         max_s`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 227`** (1 nodes): `Compute rolling percentage return over N days.`
+- **Thin community `Community 227`** (1 nodes): `Phase 2.1 — Technical Indicators.  Computes ~30 technical indicators per stock u`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 228`** (1 nodes): `Compute relative strength of a stock vs a benchmark index.      Args:         st`
+- **Thin community `Community 228`** (1 nodes): `Momentum indicators: RSI, Stochastic, Williams %R, ROC.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 229`** (1 nodes): `Compute relative strength vs all available benchmarks.      Args:         stock_`
+- **Thin community `Community 229`** (1 nodes): `Trend indicators: MACD, ADX, Aroon, SMA crossovers.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 230`** (1 nodes): `Clear the cached index data (e.g., between runs).`
+- **Thin community `Community 230`** (1 nodes): `Volatility indicators: Bollinger Bands, ATR, Keltner Channel.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 231`** (1 nodes): `Phase 2.4 — NSE-Specific Features.  Computes features from delivery %, bulk/bloc`
+- **Thin community `Community 231`** (1 nodes): `Volume indicators: OBV, Volume ratio, A/D, MFI.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 232`** (1 nodes): `Load and cache delivery percentage data.`
+- **Thin community `Community 232`** (1 nodes): `Price action features: 52w high/low distance, consecutive days, gaps, candle bod`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 233`** (1 nodes): `Load and cache bulk deals data.`
+- **Thin community `Community 233`** (1 nodes): `Compute all technical indicators for a single stock's OHLCV DataFrame.      Args`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 234`** (1 nodes): `Load and cache block deals data.`
+- **Thin community `Community 234`** (1 nodes): `Phase 2.3 — Fundamental Features.  Fetches PE, PB, market cap, 52-week return, a`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 235`** (1 nodes): `Compute delivery percentage features for a stock.      Args:         stock_dates`
+- **Thin community `Community 235`** (1 nodes): `Fetch fundamental data for a single stock from yfinance.      Returns a dict wit`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 236`** (1 nodes): `Compute bulk/block deal presence features.      Args:         stock_dates: Datet`
+- **Thin community `Community 236`** (1 nodes): `Compute rolling 252-day (52-week) return from Close prices.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 237`** (1 nodes): `Compute all NSE-specific features for a stock.      Args:         df: OHLCV Data`
+- **Thin community `Community 237`** (1 nodes): `Compute fundamental features for a stock.      Args:         df: OHLCV DataFrame`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 238`** (1 nodes): `Clear cached NSE supplementary data.`
+- **Thin community `Community 238`** (1 nodes): `Clear the cached fundamental data.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 239`** (1 nodes): `Phase 4.1 — Baseline Technical Rules Strategy.  Simple rule-based screener for c`
+- **Thin community `Community 239`** (1 nodes): `Phase 2.2 — Relative Strength Features.  Computes stock returns relative to benc`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 240`** (1 nodes): `RSI(14) < 35 — stock is oversold territory.`
+- **Thin community `Community 240`** (1 nodes): `Load and cache the Close price series for a benchmark index.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 241`** (1 nodes): `Volume > 2× 20-day average (VOL_SMA_RATIO > 2.0).`
+- **Thin community `Community 241`** (1 nodes): `Compute rolling percentage return over N days.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 242`** (1 nodes): `MACD histogram is positive (bullish momentum).`
+- **Thin community `Community 242`** (1 nodes): `Compute relative strength of a stock vs a benchmark index.      Args:         st`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 243`** (1 nodes): `Price is above SMA(50) — uptrend confirmation.`
+- **Thin community `Community 243`** (1 nodes): `Compute relative strength vs all available benchmarks.      Args:         stock_`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 244`** (1 nodes): `Apply a named rule-based strategy to generate signals.      Args:         df: Da`
+- **Thin community `Community 244`** (1 nodes): `Clear the cached index data (e.g., between runs).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 245`** (1 nodes): `Run baseline strategy on dataset and compute performance metrics.      Args:`
+- **Thin community `Community 245`** (1 nodes): `Phase 2.4 — NSE-Specific Features.  Computes features from delivery %, bulk/bloc`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 246`** (1 nodes): `Phase 4.2 — LightGBM Classifier for Stock Screener.  Primary ML model. Trains a`
+- **Thin community `Community 246`** (1 nodes): `Load and cache delivery percentage data.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 247`** (1 nodes): `Compute scale_pos_weight for class imbalance.      ratio = n_negative / n_positi`
+- **Thin community `Community 247`** (1 nodes): `Load and cache bulk deals data.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 248`** (1 nodes): `Create a LightGBM classifier instance.      Args:         params: Custom hyperpa`
+- **Thin community `Community 248`** (1 nodes): `Load and cache block deals data.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 249`** (1 nodes): `Train LightGBM with walk-forward CV and optionally save final model.      Args:`
+- **Thin community `Community 249`** (1 nodes): `Compute delivery percentage features for a stock.      Args:         stock_dates`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 250`** (1 nodes): `Save trained model + metadata to models/saved/.      Saves:     - lightgbm_model`
+- **Thin community `Community 250`** (1 nodes): `Compute bulk/block deal presence features.      Args:         stock_dates: Datet`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 251`** (1 nodes): `Load a saved LightGBM model + metadata.      Returns:         Tuple of (model, m`
+- **Thin community `Community 251`** (1 nodes): `Compute all NSE-specific features for a stock.      Args:         df: OHLCV Data`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 252`** (1 nodes): `Phase 4.5 — Feature Importance & Selection.  Analyzes feature importance from tr`
+- **Thin community `Community 252`** (1 nodes): `Clear cached NSE supplementary data.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 253`** (1 nodes): `Load feature importance CSV from a saved model directory.`
+- **Thin community `Community 253`** (1 nodes): `Phase 4.1 — Baseline Technical Rules Strategy.  Simple rule-based screener for c`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 254`** (1 nodes): `Compare feature importance across LightGBM and XGBoost.      Returns:         Da`
+- **Thin community `Community 254`** (1 nodes): `RSI(14) < 35 — stock is oversold territory.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 255`** (1 nodes): `Compute SHAP values for feature importance.      Args:         model: Trained mo`
+- **Thin community `Community 255`** (1 nodes): `Volume > 2× 20-day average (VOL_SMA_RATIO > 2.0).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 256`** (1 nodes): `Select features above a minimum importance threshold.      Args:         importa`
+- **Thin community `Community 256`** (1 nodes): `MACD histogram is positive (bullish momentum).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 257`** (1 nodes): `Generate a text report of feature importance analysis.      Args:         compar`
+- **Thin community `Community 257`** (1 nodes): `Price is above SMA(50) — uptrend confirmation.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 258`** (1 nodes): `Phase 4.4 — Walk-Forward Cross-Validation Engine.  ⚠️ CRITICAL: Never use random`
+- **Thin community `Community 258`** (1 nodes): `Apply a named rule-based strategy to generate signals.      Args:         df: Da`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 259`** (1 nodes): `Results from a single walk-forward fold.`
+- **Thin community `Community 259`** (1 nodes): `Run baseline strategy on dataset and compute performance metrics.      Args:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 260`** (1 nodes): `Walk-forward cross-validation splitter for time-series data.      Expanding wind`
+- **Thin community `Community 260`** (1 nodes): `Phase 4.2 — LightGBM Classifier for Stock Screener.  Primary ML model. Trains a`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 261`** (1 nodes): `Generate walk-forward train/test index splits.          Args:             df: Da`
+- **Thin community `Community 261`** (1 nodes): `Compute scale_pos_weight for class imbalance.      ratio = n_negative / n_positi`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 262`** (1 nodes): `Get human-readable info about each fold.`
+- **Thin community `Community 262`** (1 nodes): `Create a LightGBM classifier instance.      Args:         params: Custom hyperpa`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 263`** (1 nodes): `Compute classification + trading metrics for one fold.      Args:         y_true`
+- **Thin community `Community 263`** (1 nodes): `Train LightGBM with walk-forward CV and optionally save final model.      Args:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 264`** (1 nodes): `Run walk-forward cross-validation with a model.      Args:         df: Full data`
+- **Thin community `Community 264`** (1 nodes): `Save trained model + metadata to models/saved/.      Saves:     - lightgbm_model`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 265`** (1 nodes): `Get feature column names from dataset (everything except metadata/target).`
+- **Thin community `Community 265`** (1 nodes): `Load a saved LightGBM model + metadata.      Returns:         Tuple of (model, m`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 266`** (1 nodes): `Drop feature columns that are entirely NaN.`
+- **Thin community `Community 266`** (1 nodes): `Phase 4.5 — Feature Importance & Selection.  Analyzes feature importance from tr`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 267`** (1 nodes): `Phase 4.3 — XGBoost Classifier for Stock Screener.  Comparison model against Lig`
+- **Thin community `Community 267`** (1 nodes): `Load feature importance CSV from a saved model directory.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 268`** (1 nodes): `Compute scale_pos_weight for class imbalance.`
+- **Thin community `Community 268`** (1 nodes): `Compare feature importance across LightGBM and XGBoost.      Returns:         Da`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 269`** (1 nodes): `Create an XGBoost classifier instance.`
+- **Thin community `Community 269`** (1 nodes): `Compute SHAP values for feature importance.      Args:         model: Trained mo`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 270`** (1 nodes): `Train XGBoost with walk-forward CV and optionally save final model.      Args:`
+- **Thin community `Community 270`** (1 nodes): `Select features above a minimum importance threshold.      Args:         importa`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 271`** (1 nodes): `Save trained model + metadata to models/saved/xgboost/.`
+- **Thin community `Community 271`** (1 nodes): `Generate a text report of feature importance analysis.      Args:         compar`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 272`** (1 nodes): `Load a saved XGBoost model + metadata.`
+- **Thin community `Community 272`** (1 nodes): `Phase 4.4 — Walk-Forward Cross-Validation Engine.  ⚠️ CRITICAL: Never use random`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 273`** (1 nodes): `Phase 5.3 — Portfolio & Trading Performance Metrics.  Computes comprehensive per`
+- **Thin community `Community 273`** (1 nodes): `Results from a single walk-forward fold.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 274`** (1 nodes): `Compute trade-level performance metrics.      Args:         trades: DataFrame wi`
+- **Thin community `Community 274`** (1 nodes): `Walk-forward cross-validation splitter for time-series data.      Expanding wind`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 275`** (1 nodes): `Return zeroed trade metrics when no trades exist.`
+- **Thin community `Community 275`** (1 nodes): `Generate walk-forward train/test index splits.          Args:             df: Da`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 276`** (1 nodes): `Compute annualized Sharpe ratio.      Args:         returns: Array of periodic r`
+- **Thin community `Community 276`** (1 nodes): `Get human-readable info about each fold.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 277`** (1 nodes): `Compute maximum drawdown from an equity curve.      Args:         equity_curve:`
+- **Thin community `Community 277`** (1 nodes): `Compute classification + trading metrics for one fold.      Args:         y_true`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 278`** (1 nodes): `Compute Compound Annual Growth Rate.      Args:         initial_value: Starting`
+- **Thin community `Community 278`** (1 nodes): `Run walk-forward cross-validation with a model.      Args:         df: Full data`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 279`** (1 nodes): `Compute Calmar ratio (CAGR / Max Drawdown).      Args:         cagr: Compound an`
+- **Thin community `Community 279`** (1 nodes): `Get feature column names from dataset (everything except metadata/target).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 280`** (1 nodes): `Compute portfolio-level performance metrics from equity curve.      Args:`
+- **Thin community `Community 280`** (1 nodes): `Drop feature columns that are entirely NaN.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 281`** (1 nodes): `Compute Sortino ratio (like Sharpe but only downside volatility).`
+- **Thin community `Community 281`** (1 nodes): `Phase 4.3 — XGBoost Classifier for Stock Screener.  Comparison model against Lig`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 282`** (1 nodes): `Return zeroed portfolio metrics.`
+- **Thin community `Community 282`** (1 nodes): `Compute scale_pos_weight for class imbalance.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 283`** (1 nodes): `Compute all trade-level + portfolio-level metrics.      Args:         trades: Da`
+- **Thin community `Community 283`** (1 nodes): `Create an XGBoost classifier instance.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 284`** (1 nodes): `Format metrics dict as a human-readable text table.      Args:         metrics:`
+- **Thin community `Community 284`** (1 nodes): `Train XGBoost with walk-forward CV and optionally save final model.      Args:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 285`** (1 nodes): `Check metrics against target benchmarks.      Args:         metrics: Output from`
+- **Thin community `Community 285`** (1 nodes): `Save trained model + metadata to models/saved/xgboost/.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 286`** (1 nodes): `Phase 5.1 + 5.2 — Backtest Engine with Indian Market Cost Model.  Simulates trad`
+- **Thin community `Community 286`** (1 nodes): `Load a saved XGBoost model + metadata.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 287`** (1 nodes): `Indian equities delivery cost model.      All rates as fractions (e.g., 0.001 =`
+- **Thin community `Community 287`** (1 nodes): `Phase 5.3 — Portfolio & Trading Performance Metrics.  Computes comprehensive per`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 288`** (1 nodes): `Compute detailed trading costs for a round-trip trade.          Args:`
+- **Thin community `Community 288`** (1 nodes): `Compute trade-level performance metrics.      Args:         trades: DataFrame wi`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 289`** (1 nodes): `Compute approximate round-trip cost as a percentage.          Assumes entry_valu`
+- **Thin community `Community 289`** (1 nodes): `Return zeroed trade metrics when no trades exist.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 290`** (1 nodes): `Record of a single simulated trade.`
+- **Thin community `Community 290`** (1 nodes): `Compute annualized Sharpe ratio.      Args:         returns: Array of periodic r`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 291`** (1 nodes): `Walk-forward backtest engine for stock screener strategies.      Modes:     1. M`
+- **Thin community `Community 291`** (1 nodes): `Compute maximum drawdown from an equity curve.      Args:         equity_curve:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 292`** (1 nodes): `Initialize backtest engine.          Args:             top_n: Number of top pick`
+- **Thin community `Community 292`** (1 nodes): `Compute Compound Annual Growth Rate.      Args:         initial_value: Starting`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 293`** (1 nodes): `Load and cache OHLCV data for a symbol.`
+- **Thin community `Community 293`** (1 nodes): `Compute Calmar ratio (CAGR / Max Drawdown).      Args:         cagr: Compound an`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 294`** (1 nodes): `Get trade return, entry/exit dates and prices.          Returns:             (gr`
+- **Thin community `Community 294`** (1 nodes): `Compute portfolio-level performance metrics from equity curve.      Args:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 295`** (1 nodes): `Run backtest from pre-computed predictions.          Args:             dataset:`
+- **Thin community `Community 295`** (1 nodes): `Compute Sortino ratio (like Sharpe but only downside volatility).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 296`** (1 nodes): `Run backtest using FoldResult objects from walk-forward CV.          Args:`
+- **Thin community `Community 296`** (1 nodes): `Return zeroed portfolio metrics.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 297`** (1 nodes): `Run backtest for a rule-based strategy.          Args:             dataset: Full`
+- **Thin community `Community 297`** (1 nodes): `Compute all trade-level + portfolio-level metrics.      Args:         trades: Da`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 298`** (1 nodes): `Build equity curve and compute metrics from trade list.          Returns:`
+- **Thin community `Community 298`** (1 nodes): `Format metrics dict as a human-readable text table.      Args:         metrics:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 299`** (1 nodes): `Run complete backtest for all models and configurations.      Args:         data`
+- **Thin community `Community 299`** (1 nodes): `Check metrics against target benchmarks.      Args:         metrics: Output from`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 300`** (1 nodes): `Load a saved model by type.`
+- **Thin community `Community 300`** (1 nodes): `Phase 5.1 + 5.2 — Backtest Engine with Indian Market Cost Model.  Simulates trad`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 301`** (1 nodes): `Phase 5.4 — Backtest Comparison Report.  Generates a side-by-side comparison of`
+- **Thin community `Community 301`** (1 nodes): `Indian equities delivery cost model.      All rates as fractions (e.g., 0.001 =`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 302`** (1 nodes): `Generate a comparison DataFrame from backtest results.      Args:         result`
+- **Thin community `Community 302`** (1 nodes): `Compute detailed trading costs for a round-trip trade.          Args:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 303`** (1 nodes): `Generate a full text comparison report.      Args:         results: Dict from ru`
+- **Thin community `Community 303`** (1 nodes): `Compute approximate round-trip cost as a percentage.          Assumes entry_valu`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 304`** (1 nodes): `Generate and save comparison report.      Args:         results: Dict from run_f`
+- **Thin community `Community 304`** (1 nodes): `Record of a single simulated trade.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 305`** (1 nodes): `Save trade list to CSV.      Args:         trades: List of Trade objects.`
+- **Thin community `Community 305`** (1 nodes): `Walk-forward backtest engine for stock screener strategies.      Modes:     1. M`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 306`** (1 nodes): `Phase 6.3 — Monthly Model Retraining with Drift Detection.  Automates model retr`
+- **Thin community `Community 306`** (1 nodes): `Initialize backtest engine.          Args:             top_n: Number of top pick`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 307`** (1 nodes): `Retrain model on latest dataset.      Args:         model_type: 'lightgbm' or 'x`
+- **Thin community `Community 307`** (1 nodes): `Load and cache OHLCV data for a symbol.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 308`** (1 nodes): `Append retrain event to retrain log.`
+- **Thin community `Community 308`** (1 nodes): `Get trade return, entry/exit dates and prices.          Returns:             (gr`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 309`** (1 nodes): `Check for model drift by comparing backtest metrics to live performance.      Lo`
+- **Thin community `Community 309`** (1 nodes): `Run backtest from pre-computed predictions.          Args:             dataset:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 310`** (1 nodes): `Load retrain log entries.`
+- **Thin community `Community 310`** (1 nodes): `Run backtest using FoldResult objects from walk-forward CV.          Args:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 311`** (1 nodes): `Retrain model if enough time has passed since last retrain.      Args:         m`
+- **Thin community `Community 311`** (1 nodes): `Run backtest for a rule-based strategy.          Args:             dataset: Full`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 312`** (1 nodes): `Phase 6.1 — Daily Stock Scan Script.  Run after market close (~3:45 PM IST) to s`
+- **Thin community `Community 312`** (1 nodes): `Build equity curve and compute metrics from trade list.          Returns:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 313`** (1 nodes): `Load the filtered universe of stock symbols.      Returns:         List of NSE s`
+- **Thin community `Community 313`** (1 nodes): `Run complete backtest for all models and configurations.      Args:         data`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 314`** (1 nodes): `Get symbols that have OHLCV data downloaded.`
+- **Thin community `Community 314`** (1 nodes): `Load a saved model by type.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 315`** (1 nodes): `Compute features for the most recent trading day across all symbols.      Args:`
+- **Thin community `Community 315`** (1 nodes): `Phase 5.4 — Backtest Comparison Report.  Generates a side-by-side comparison of`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 316`** (1 nodes): `Load a trained model and its metadata.      Args:         model_type: 'lightgbm'`
+- **Thin community `Community 316`** (1 nodes): `Generate a comparison DataFrame from backtest results.      Args:         result`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 317`** (1 nodes): `Predict probabilities and rank stocks.      Args:         features: DataFrame wi`
+- **Thin community `Community 317`** (1 nodes): `Generate a full text comparison report.      Args:         results: Dict from ru`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 318`** (1 nodes): `Save picks to CSV in the picks directory.      Args:         picks: DataFrame of`
+- **Thin community `Community 318`** (1 nodes): `Generate and save comparison report.      Args:         results: Dict from run_f`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 319`** (1 nodes): `Run the full daily scan pipeline.      Args:         model_type: Which model to`
+- **Thin community `Community 319`** (1 nodes): `Save trade list to CSV.      Args:         trades: List of Trade objects.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 320`** (1 nodes): `Phase 6.2 — SHAP-Based Signal Explanation.  For each pick from the daily scan, g`
+- **Thin community `Community 320`** (1 nodes): `Phase 6.3 — Monthly Model Retraining with Drift Detection.  Automates model retr`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 321`** (1 nodes): `Compute SHAP values for the given features.      Args:         model: Trained mo`
+- **Thin community `Community 321`** (1 nodes): `Retrain model on latest dataset.      Args:         model_type: 'lightgbm' or 'x`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 322`** (1 nodes): `Generate human-readable description for a feature value.      Args:         feat`
+- **Thin community `Community 322`** (1 nodes): `Append retrain event to retrain log.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 323`** (1 nodes): `Generate explanation for a single stock pick.      Args:         symbol: Stock s`
+- **Thin community `Community 323`** (1 nodes): `Check for model drift by comparing backtest metrics to live performance.      Lo`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 324`** (1 nodes): `Generate explanations for all picks.      Args:         picks: DataFrame of pick`
+- **Thin community `Community 324`** (1 nodes): `Load retrain log entries.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 325`** (1 nodes): `Fallback explanations using feature values only (no SHAP).`
+- **Thin community `Community 325`** (1 nodes): `Retrain model if enough time has passed since last retrain.      Args:         m`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 326`** (1 nodes): `Format explanations as human-readable text.      Args:         explanations: Lis`
+- **Thin community `Community 326`** (1 nodes): `Phase 6.1 — Daily Stock Scan Script.  Run after market close (~3:45 PM IST) to s`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 327`** (1 nodes): `Step 1.2 — Historical OHLCV Download.  Downloads 2 years of daily OHLCV data for`
+- **Thin community `Community 327`** (1 nodes): `Load the filtered universe of stock symbols.      Returns:         List of NSE s`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 328`** (1 nodes): `Load yfinance symbols from the filtered universe CSV.`
+- **Thin community `Community 328`** (1 nodes): `Get symbols that have OHLCV data downloaded.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 329`** (1 nodes): `Determine start/end dates for download.      If symbol_file exists (incremental`
+- **Thin community `Community 329`** (1 nodes): `Compute features for the most recent trading day across all symbols.      Args:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 330`** (1 nodes): `Download OHLCV data for a batch of symbols.      Returns a dict mapping symbol -`
+- **Thin community `Community 330`** (1 nodes): `Load a trained model and its metadata.      Args:         model_type: 'lightgbm'`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 331`** (1 nodes): `Save OHLCV data to Parquet file. Merges with existing if incremental.`
+- **Thin community `Community 331`** (1 nodes): `Predict probabilities and rank stocks.      Args:         features: DataFrame wi`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 332`** (1 nodes): `Main entry point: download OHLCV for all filtered stocks.      Args:         inc`
+- **Thin community `Community 332`** (1 nodes): `Save picks to CSV in the picks directory.      Args:         picks: DataFrame of`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 333`** (1 nodes): `Step 1.3 + 1.4 — Supplementary NSE Data & Index Benchmarks.  Fetches delivery %,`
+- **Thin community `Community 333`** (1 nodes): `Run the full daily scan pipeline.      Args:         model_type: Which model to`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 334`** (1 nodes): `Format datetime as dd-mm-yyyy for nselib API.`
+- **Thin community `Community 334`** (1 nodes): `Phase 6.2 — SHAP-Based Signal Explanation.  For each pick from the daily scan, g`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 335`** (1 nodes): `Wrap nselib call with error handling and rate-limit delay.`
+- **Thin community `Community 335`** (1 nodes): `Compute SHAP values for the given features.      Args:         model: Trained mo`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 336`** (1 nodes): `Fetch delivery percentage data for a date range.      Args:         from_date: S`
+- **Thin community `Community 336`** (1 nodes): `Generate human-readable description for a feature value.      Args:         feat`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 337`** (1 nodes): `Fetch bulk deal data.`
+- **Thin community `Community 337`** (1 nodes): `Generate explanation for a single stock pick.      Args:         symbol: Stock s`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 338`** (1 nodes): `Fetch block deal data.`
+- **Thin community `Community 338`** (1 nodes): `Generate explanations for all picks.      Args:         picks: DataFrame of pick`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 339`** (1 nodes): `Fetch FII/DII trading activity data.      Note: nselib may not expose fii_dii_tr`
+- **Thin community `Community 339`** (1 nodes): `Fallback explanations using feature values only (no SHAP).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 340`** (1 nodes): `Fetch all supplementary NSE data for the last N days.      Args:         days_ba`
+- **Thin community `Community 340`** (1 nodes): `Format explanations as human-readable text.      Args:         explanations: Lis`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 341`** (1 nodes): `Download historical OHLCV for benchmark indices.      Returns dict mapping index`
+- **Thin community `Community 341`** (1 nodes): `Step 1.2 — Historical OHLCV Download.  Downloads 2 years of daily OHLCV data for`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 342`** (1 nodes): `Step 1.1 — Stock Universe Fetcher.  Fetches all NSE-listed equities, filters to`
+- **Thin community `Community 342`** (1 nodes): `Load yfinance symbols from the filtered universe CSV.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 343`** (1 nodes): `Fetch the full list of NSE-listed equities via nselib.`
+- **Thin community `Community 343`** (1 nodes): `Determine start/end dates for download.      If symbol_file exists (incremental`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 344`** (1 nodes): `Keep only regular equity (EQ) series.`
+- **Thin community `Community 344`** (1 nodes): `Download OHLCV data for a batch of symbols.      Returns a dict mapping symbol -`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 345`** (1 nodes): `Add yfinance-compatible symbol column (SYMBOL.NS).`
+- **Thin community `Community 345`** (1 nodes): `Save OHLCV data to Parquet file. Merges with existing if incremental.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 346`** (1 nodes): `Filter out stocks with avg daily volume < threshold over 90 days.      Downloads`
+- **Thin community `Community 346`** (1 nodes): `Main entry point: download OHLCV for all filtered stocks.      Args:         inc`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 347`** (1 nodes): `Main entry point: fetch, filter, and save stock universe.      Returns (full_uni`
+- **Thin community `Community 347`** (1 nodes): `Step 1.3 + 1.4 — Supplementary NSE Data & Index Benchmarks.  Fetches delivery %,`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 348`** (1 nodes): `Extract fold predictions for BacktestEngine.`
+- **Thin community `Community 348`** (1 nodes): `Format datetime as dd-mm-yyyy for nselib API.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 349`** (1 nodes): `Check if AlphaForge backend is running.`
+- **Thin community `Community 349`** (1 nodes): `Wrap nselib call with error handling and rate-limit delay.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 350`** (1 nodes): `Push screener picks to AlphaForge backend.`
+- **Thin community `Community 350`** (1 nodes): `Fetch delivery percentage data for a date range.      Args:         from_date: S`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 351`** (1 nodes): `Retrieve screener picks from AlphaForge backend.`
+- **Thin community `Community 351`** (1 nodes): `Fetch bulk deal data.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 352`** (1 nodes): `Tracks current consumption for a single provider.`
+- **Thin community `Community 352`** (1 nodes): `Fetch block deal data.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 353`** (1 nodes): `In-memory per-provider rate limiter with auto-resetting counters.`
+- **Thin community `Community 353`** (1 nodes): `Fetch FII/DII trading activity data.      Note: nselib may not expose fii_dii_tr`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 354`** (1 nodes): `Check if a request is allowed. Returns False if rate-limited.`
+- **Thin community `Community 354`** (1 nodes): `Fetch all supplementary NSE data for the last N days.      Args:         days_ba`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 355`** (1 nodes): `Update token counters after a response with actual usage.`
+- **Thin community `Community 355`** (1 nodes): `Download historical OHLCV for benchmark indices.      Returns dict mapping index`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 356`** (1 nodes): `Return remaining quota for a provider.`
+- **Thin community `Community 356`** (1 nodes): `Step 1.1 — Stock Universe Fetcher.  Fetches all NSE-listed equities, filters to`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 357`** (1 nodes): `Return the highest utilization percentage across all limit dimensions.`
+- **Thin community `Community 357`** (1 nodes): `Fetch the full list of NSE-listed equities via nselib.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 358`** (1 nodes): `Dynamically update limits for a provider (e.g., from Groq response headers).`
+- **Thin community `Community 358`** (1 nodes): `Keep only regular equity (EQ) series.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 359`** (1 nodes): `Supported LLM providers.`
+- **Thin community `Community 359`** (1 nodes): `Add yfinance-compatible symbol column (SYMBOL.NS).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 360`** (1 nodes): `Categories of queries for smart routing.`
+- **Thin community `Community 360`** (1 nodes): `Filter out stocks with avg daily volume < threshold over 90 days.      Downloads`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 361`** (1 nodes): `Rate limit configuration for a provider.`
+- **Thin community `Community 361`** (1 nodes): `Main entry point: fetch, filter, and save stock universe.      Returns (full_uni`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 362`** (1 nodes): `Configuration for a single LLM provider.`
+- **Thin community `Community 362`** (1 nodes): `Extract fold predictions for BacktestEngine.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 363`** (1 nodes): `Unified response from any LLM provider.`
+- **Thin community `Community 363`** (1 nodes): `Check if AlphaForge backend is running.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 364`** (1 nodes): `Raised when a request would incur cost (non-free model or tier).`
+- **Thin community `Community 364`** (1 nodes): `Push screener picks to AlphaForge backend.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 365`** (1 nodes): `Interface every LLM provider adapter must implement.`
+- **Thin community `Community 365`** (1 nodes): `Retrieve screener picks from AlphaForge backend.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 366`** (1 nodes): `Return the provider's default model.`
+- **Thin community `Community 366`** (1 nodes): `Tracks current consumption for a single provider.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 367`** (1 nodes): `Shared OpenAI-compatible completion call used by all providers.`
+- **Thin community `Community 367`** (1 nodes): `In-memory per-provider rate limiter with auto-resetting counters.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 368`** (1 nodes): `OpenRouter with hard filter to $0 models only — never incurs cost.`
+- **Thin community `Community 368`** (1 nodes): `Check if a request is allowed. Returns False if rate-limited.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 369`** (1 nodes): `Fetch model list from OpenRouter and filter to strictly $0 models.`
+- **Thin community `Community 369`** (1 nodes): `Update token counters after a response with actual usage.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 370`** (1 nodes): `Raise CostGuardError if the requested model is not in the free list.`
+- **Thin community `Community 370`** (1 nodes): `Return remaining quota for a provider.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 371`** (1 nodes): `Check if a model is in the verified free list.`
+- **Thin community `Community 371`** (1 nodes): `Return the highest utilization percentage across all limit dimensions.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 372`** (1 nodes): `Google Gemini free tier via the generativelanguage OpenAI-compatible endpoint.`
+- **Thin community `Community 372`** (1 nodes): `Dynamically update limits for a provider (e.g., from Groq response headers).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 373`** (1 nodes): `Groq free tier — fastest inference for open-source models.`
+- **Thin community `Community 373`** (1 nodes): `Supported LLM providers.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 374`** (1 nodes): `HuggingFace serverless inference — free tier with large open models.`
+- **Thin community `Community 374`** (1 nodes): `Categories of queries for smart routing.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 375`** (1 nodes): `Ollama provider — local, private, unlimited inference.`
+- **Thin community `Community 375`** (1 nodes): `Rate limit configuration for a provider.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 376`** (1 nodes): `Local Ollama — private, unlimited, works offline.`
+- **Thin community `Community 376`** (1 nodes): `Configuration for a single LLM provider.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 377`** (1 nodes): `Auto-detect available models via Ollama's /api/tags endpoint.`
+- **Thin community `Community 377`** (1 nodes): `Unified response from any LLM provider.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 378`** (1 nodes): `CSV parsing helpers shared by every CSV broker source.`
+- **Thin community `Community 378`** (1 nodes): `Raised when a request would incur cost (non-free model or tier).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 379`** (1 nodes): `Forgiving float parser — handles empty, currency symbols, commas.`
+- **Thin community `Community 379`** (1 nodes): `Interface every LLM provider adapter must implement.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 380`** (1 nodes): `Decode + parse a CSV stream into a list of header-keyed dicts.`
+- **Thin community `Community 380`** (1 nodes): `Return the provider's default model.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 381`** (1 nodes): `Return the first non-empty value among `aliases` (case-insensitive).`
+- **Thin community `Community 381`** (1 nodes): `Shared OpenAI-compatible completion call used by all providers.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 382`** (1 nodes): `Raise RuntimeError if base_url is not on the approved list in dev mode.`
+- **Thin community `Community 382`** (1 nodes): `OpenRouter with hard filter to $0 models only — never incurs cost.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 383`** (1 nodes): `Free cash sitting inside a broker wallet (not deployed in holdings).`
+- **Thin community `Community 383`** (1 nodes): `Fetch model list from OpenRouter and filter to strictly $0 models.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 384`** (1 nodes): `Return (current_value, invested, pnl, count) across this broker's holdings.`
+- **Thin community `Community 384`** (1 nodes): `Raise CostGuardError if the requested model is not in the free list.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 385`** (1 nodes): `Return tradingsymbol→instrument_type (EQ/ETF) map.`
+- **Thin community `Community 385`** (1 nodes): `Check if a model is in the verified free list.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 386`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
+- **Thin community `Community 386`** (1 nodes): `Google Gemini free tier via the generativelanguage OpenAI-compatible endpoint.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 387`** (1 nodes): `GET /oms/user/margins → equity available cash for the Kite account.`
+- **Thin community `Community 387`** (1 nodes): `Groq free tier — fastest inference for open-source models.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 388`** (1 nodes): `GET /api/mf/holdings → COIN mutual fund holdings (empty list if not subscribed).`
+- **Thin community `Community 388`** (1 nodes): `HuggingFace serverless inference — free tier with large open models.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 389`** (1 nodes): `DFS through arbitrary JSON, returning the first cash-shaped value found.`
+- **Thin community `Community 389`** (1 nodes): `Ollama provider — local, private, unlimited inference.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 390`** (1 nodes): `Open a fresh Groww tab, capture balance from the first matching XHR, close it.`
+- **Thin community `Community 390`** (1 nodes): `Local Ollama — private, unlimited, works offline.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 391`** (1 nodes): `If the page is on /login, wait for the user to complete login.`
+- **Thin community `Community 391`** (1 nodes): `Auto-detect available models via Ollama's /api/tags endpoint.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 392`** (1 nodes): `Drill into common Groww response shapes to find the holdings list.`
+- **Thin community `Community 392`** (1 nodes): `CSV parsing helpers shared by every CSV broker source.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 393`** (1 nodes): `First non-None value across `keys` — handles camelCase/snake_case drift.`
+- **Thin community `Community 393`** (1 nodes): `Forgiving float parser — handles empty, currency symbols, commas.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 394`** (1 nodes): `Return first non-empty value from `keys` in **rupees**, scaling paise fields by`
+- **Thin community `Community 394`** (1 nodes): `Decode + parse a CSV stream into a list of header-keyed dicts.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 395`** (1 nodes): `Map a Groww holdings row to the shared dict shape used by dump.py.`
+- **Thin community `Community 395`** (1 nodes): `Return the first non-empty value among `aliases` (case-insensitive).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 396`** (1 nodes): `Reload the holdings page and capture the holdings + LTP responses.      Groww's`
+- **Thin community `Community 396`** (1 nodes): `Raise RuntimeError if base_url is not on the approved list in dev mode.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 397`** (1 nodes): `Attach to Chrome, reload Groww's holdings page, capture the response.`
+- **Thin community `Community 397`** (1 nodes): `Free cash sitting inside a broker wallet (not deployed in holdings).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 398`** (1 nodes): `Drill into the superportfolio response to pull out HoldingDetail rows.`
+- **Thin community `Community 398`** (1 nodes): `Return (current_value, invested, pnl, count) across this broker's holdings.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 399`** (1 nodes): `Map a superportfolio HoldingDetail row to the shared dict shape.`
+- **Thin community `Community 399`** (1 nodes): `Return tradingsymbol→instrument_type (EQ/ETF) map.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 400`** (1 nodes): `Wint Wealth holdings CSV cache.  TTL controlled by WINTWEALTH_REFETCH_SECONDS (r`
+- **Thin community `Community 400`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 401`** (1 nodes): `Wint Wealth — CDP browser fetch (no public API).  Probe-confirmed endpoint: api.`
+- **Thin community `Community 401`** (1 nodes): `GET /oms/user/margins → equity available cash for the Kite account.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 402`** (1 nodes): `Pydantic schemas for LLM Gateway routes.`
+- **Thin community `Community 402`** (1 nodes): `GET /api/mf/holdings → COIN mutual fund holdings (empty list if not subscribed).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 403`** (1 nodes): `Benchmark endpoints — kicks off a background run, exposes the latest result.`
+- **Thin community `Community 403`** (1 nodes): `DFS through arbitrary JSON, returning the first cash-shaped value found.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 404`** (1 nodes): `Thin wrapper around alphaforge-llm-gateway for backend use.  Follows the same pa`
+- **Thin community `Community 404`** (1 nodes): `Open a fresh Groww tab, capture balance from the first matching XHR, close it.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 405`** (1 nodes): `Return the singleton LLMGateway instance, initialized from settings.`
+- **Thin community `Community 405`** (1 nodes): `If the page is on /login, wait for the user to complete login.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 406`** (1 nodes): `Screener endpoints — push/pull ML screener picks.  Disclaimer: Not SEBI register`
+- **Thin community `Community 406`** (1 nodes): `Drill into common Groww response shapes to find the holdings list.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 407`** (1 nodes): `Pydantic schemas for screener endpoints.`
+- **Thin community `Community 407`** (1 nodes): `First non-None value across `keys` — handles camelCase/snake_case drift.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 408`** (1 nodes): `Background tasks for screener: embed pushed picks + backfill from disk.`
+- **Thin community `Community 408`** (1 nodes): `Return first non-empty value from `keys` in **rupees**, scaling paise fields by`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 409`** (1 nodes): `Screener service — manages screener picks storage and retrieval.  Bridges the st`
+- **Thin community `Community 409`** (1 nodes): `Map a Groww holdings row to the shared dict shape used by dump.py.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 410`** (1 nodes): `Manage screener pick results for the AlphaForge API.`
+- **Thin community `Community 410`** (1 nodes): `Reload the holdings page and capture the holdings + LTP responses.      Groww's`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 411`** (1 nodes): `Save screener picks from a scan run.`
+- **Thin community `Community 411`** (1 nodes): `Attach to Chrome, reload Groww's holdings page, capture the response.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 412`** (1 nodes): `Retrieve picks for a given date (or latest available).`
+- **Thin community `Community 412`** (1 nodes): `Drill into the superportfolio response to pull out HoldingDetail rows.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 413`** (1 nodes): `List all available scan dates.`
+- **Thin community `Community 413`** (1 nodes): `Map a superportfolio HoldingDetail row to the shared dict shape.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 414`** (1 nodes): `Raw pgvector SQL for semantic search — picks + conversation memory.`
+- **Thin community `Community 414`** (1 nodes): `Wint Wealth holdings CSV cache.  TTL controlled by WINTWEALTH_REFETCH_SECONDS (r`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 415`** (1 nodes): `Pure helper for building screener-pick explanation strings.`
+- **Thin community `Community 415`** (1 nodes): `Wint Wealth — CDP browser fetch (no public API).  Probe-confirmed endpoint: api.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 416`** (1 nodes): `Build a rich, embeddable text description of a screener pick (case-tolerant).`
+- **Thin community `Community 416`** (1 nodes): `Pydantic schemas for LLM Gateway routes.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 417`** (1 nodes): `Gemini embedding service for vector memory.`
+- **Thin community `Community 417`** (1 nodes): `Benchmark endpoints — kicks off a background run, exposes the latest result.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 418`** (1 nodes): `float32[768] embeddings via Gemini text-embedding-004 (free tier).      Falls ba`
+- **Thin community `Community 418`** (1 nodes): `Thin wrapper around alphaforge-llm-gateway for backend use.  Follows the same pa`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 419`** (1 nodes): `Indexing helpers — pick → ScreenerPickEmbedding record builder.`
+- **Thin community `Community 419`** (1 nodes): `Return the singleton LLMGateway instance, initialized from settings.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 420`** (1 nodes): `Memory service — vector store interface for picks and conversation history.`
+- **Thin community `Community 420`** (1 nodes): `Screener endpoints — push/pull ML screener picks.  Disclaimer: Not SEBI register`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 421`** (1 nodes): `Pure helpers for memory pick parsing.`
+- **Thin community `Community 421`** (1 nodes): `Pydantic schemas for screener endpoints.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 422`** (1 nodes): `Pull symbol, probability, rank, raw_features from a pick dict (case-tolerant).`
+- **Thin community `Community 422`** (1 nodes): `Background tasks for screener: embed pushed picks + backfill from disk.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 423`** (1 nodes): `Sync any API source whose cached data is missing or older than _STALE_SECONDS.`
+- **Thin community `Community 423`** (1 nodes): `Screener service — manages screener picks storage and retrieval.  Bridges the st`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 424`** (1 nodes): `Market data service — fetches quotes, history, indices from Indian exchanges.`
+- **Thin community `Community 424`** (1 nodes): `Manage screener pick results for the AlphaForge API.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 425`** (1 nodes): `Aggregates market data from NSE, BSE, and third-party providers.`
+- **Thin community `Community 425`** (1 nodes): `Save screener picks from a scan run.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 426`** (1 nodes): `Fetch real-time quote for a symbol.`
+- **Thin community `Community 426`** (1 nodes): `Retrieve picks for a given date (or latest available).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 427`** (1 nodes): `Fetch major Indian indices — NIFTY 50, SENSEX, BANK NIFTY, NIFTY IT, etc.`
+- **Thin community `Community 427`** (1 nodes): `List all available scan dates.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 428`** (1 nodes): `Fetch historical OHLCV candles.`
+- **Thin community `Community 428`** (1 nodes): `Raw pgvector SQL for semantic search — picks + conversation memory.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 429`** (1 nodes): `Search instrument master for stocks, ETFs, MFs by name/symbol.`
+- **Thin community `Community 429`** (1 nodes): `Pure helper for building screener-pick explanation strings.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 430`** (1 nodes): `# TODO: integrate with data provider (NSE API / broker feed / third-party)`
+- **Thin community `Community 430`** (1 nodes): `Build a rich, embeddable text description of a screener pick (case-tolerant).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 431`** (1 nodes): `# TODO: scrape/fetch from NSE/BSE`
+- **Thin community `Community 431`** (1 nodes): `Gemini embedding service for vector memory.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 432`** (1 nodes): `# TODO: implement historical data fetch`
+- **Thin community `Community 432`** (1 nodes): `float32[768] embeddings via Gemini text-embedding-004 (free tier).      Falls ba`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 433`** (1 nodes): `# TODO: search static instrument list (updated daily)`
+- **Thin community `Community 433`** (1 nodes): `Indexing helpers — pick → ScreenerPickEmbedding record builder.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 434`** (1 nodes): `Market data endpoints — quotes, charts, screeners, indices.`
+- **Thin community `Community 434`** (1 nodes): `Memory service — vector store interface for picks and conversation history.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 435`** (1 nodes): `# TODO: integrate with market data provider`
+- **Thin community `Community 435`** (1 nodes): `Pure helpers for memory pick parsing.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 436`** (1 nodes): `Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.`
+- **Thin community `Community 436`** (1 nodes): `Pull symbol, probability, rank, raw_features from a pick dict (case-tolerant).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 437`** (1 nodes): `Search stocks, ETFs, mutual funds by name or symbol.`
+- **Thin community `Community 437`** (1 nodes): `Sync any API source whose cached data is missing or older than _STALE_SECONDS.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 438`** (1 nodes): `Fetch OHLCV price history for charting.`
+- **Thin community `Community 438`** (1 nodes): `Market data service — fetches quotes, history, indices from Indian exchanges.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 439`** (1 nodes): `# TODO: integrate with market data provider`
+- **Thin community `Community 439`** (1 nodes): `Aggregates market data from NSE, BSE, and third-party providers.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 440`** (1 nodes): `# TODO: fetch live index data`
+- **Thin community `Community 440`** (1 nodes): `Fetch real-time quote for a symbol.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 441`** (1 nodes): `# TODO: search against instrument master`
+- **Thin community `Community 441`** (1 nodes): `Fetch major Indian indices — NIFTY 50, SENSEX, BANK NIFTY, NIFTY IT, etc.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 442`** (1 nodes): `# TODO: fetch historical data`
+- **Thin community `Community 442`** (1 nodes): `Fetch historical OHLCV candles.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 443`** (1 nodes): `Clear cached holdings between tests.`
+- **Thin community `Community 443`** (1 nodes): `Search instrument master for stocks, ETFs, MFs by name/symbol.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 444`** (1 nodes): `Parse the fixture and apply it onto the registered Kite source's cache.      The`
+- **Thin community `Community 444`** (1 nodes): `# TODO: integrate with data provider (NSE API / broker feed / third-party)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 445`** (1 nodes): `Client with zerodha holdings pre-loaded via CSV upload.`
+- **Thin community `Community 445`** (1 nodes): `# TODO: scrape/fetch from NSE/BSE`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 446`** (1 nodes): `Pretty-print a JSON-serializable response body.`
+- **Thin community `Community 446`** (1 nodes): `# TODO: implement historical data fetch`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 447`** (1 nodes): `Raise RuntimeError if base_url is not on the approved list in dev mode.`
+- **Thin community `Community 447`** (1 nodes): `# TODO: search static instrument list (updated daily)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 448`** (1 nodes): `Build tradingsymbol→name map from cached CSV (EQ instruments only).`
+- **Thin community `Community 448`** (1 nodes): `Market data endpoints — quotes, charts, screeners, indices.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 449`** (1 nodes): `Return tradingsymbol→name map, refreshing the on-disk cache if stale.`
+- **Thin community `Community 449`** (1 nodes): `# TODO: integrate with market data provider`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 450`** (1 nodes): `Synchronous lookup using the on-disk cache only — never triggers a fetch.`
+- **Thin community `Community 450`** (1 nodes): `Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 451`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
+- **Thin community `Community 451`** (1 nodes): `Search stocks, ETFs, mutual funds by name or symbol.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 452`** (1 nodes): `GET /oms/user/margins → equity available cash for the Kite account.`
+- **Thin community `Community 452`** (1 nodes): `Fetch OHLCV price history for charting.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 453`** (1 nodes): `GET /user/v1/getRMS → risk-management snapshot incl. available cash.`
+- **Thin community `Community 453`** (1 nodes): `# TODO: integrate with market data provider`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 454`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
+- **Thin community `Community 454`** (1 nodes): `# TODO: fetch live index data`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 455`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
+- **Thin community `Community 455`** (1 nodes): `# TODO: search against instrument master`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 456`** (1 nodes): `Raise ValueError for oversized or missing-column CSV files.`
+- **Thin community `Community 456`** (1 nodes): `# TODO: fetch historical data`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 457`** (1 nodes): `Map a Groww holdings row to the shared dict shape used by dump.py.`
+- **Thin community `Community 457`** (1 nodes): `Clear cached holdings between tests.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 458`** (1 nodes): `Reload the holdings page and capture the holdings + LTP responses.      Groww's`
+- **Thin community `Community 458`** (1 nodes): `Parse the fixture and apply it onto the registered Kite source's cache.      The`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 459`** (1 nodes): `Attach to Chrome, reload Groww's holdings page, capture the response.`
+- **Thin community `Community 459`** (1 nodes): `Client with zerodha holdings pre-loaded via CSV upload.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 460`** (1 nodes): `Return (page, browser, playwright, is_cdp) ready for use.`
+- **Thin community `Community 460`** (1 nodes): `Pretty-print a JSON-serializable response body.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 461`** (1 nodes): `Sync any API source whose cached data is missing or older than _STALE_SECONDS.`
+- **Thin community `Community 461`** (1 nodes): `Raise RuntimeError if base_url is not on the approved list in dev mode.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 462`** (1 nodes): `Fetch real-time quote for a given NSE/BSE symbol.`
+- **Thin community `Community 462`** (1 nodes): `Build tradingsymbol→name map from cached CSV (EQ instruments only).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 463`** (1 nodes): `Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.`
+- **Thin community `Community 463`** (1 nodes): `Return tradingsymbol→name map, refreshing the on-disk cache if stale.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 464`** (1 nodes): `Search stocks, ETFs, mutual funds by name or symbol.`
+- **Thin community `Community 464`** (1 nodes): `Synchronous lookup using the on-disk cache only — never triggers a fetch.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 465`** (1 nodes): `Fetch OHLCV price history for charting.`
+- **Thin community `Community 465`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 466`** (1 nodes): `# TODO: fetch live index data`
+- **Thin community `Community 466`** (1 nodes): `GET /oms/user/margins → equity available cash for the Kite account.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 467`** (1 nodes): `# TODO: search against instrument master`
+- **Thin community `Community 467`** (1 nodes): `GET /user/v1/getRMS → risk-management snapshot incl. available cash.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 468`** (1 nodes): `# TODO: fetch historical data`
+- **Thin community `Community 468`** (1 nodes): `Acquire enctoken from an already-running Chrome (CDP, port 9299).      If the us`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 469`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 470`** (1 nodes): `Raise ValueError for oversized or missing-column CSV files.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 471`** (1 nodes): `Map a Groww holdings row to the shared dict shape used by dump.py.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 472`** (1 nodes): `Reload the holdings page and capture the holdings + LTP responses.      Groww's`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 473`** (1 nodes): `Attach to Chrome, reload Groww's holdings page, capture the response.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 474`** (1 nodes): `Return (page, browser, playwright, is_cdp) ready for use.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 475`** (1 nodes): `Sync any API source whose cached data is missing or older than _STALE_SECONDS.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 476`** (1 nodes): `Fetch real-time quote for a given NSE/BSE symbol.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 477`** (1 nodes): `Fetch major Indian market indices — NIFTY 50, SENSEX, BANK NIFTY, etc.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 478`** (1 nodes): `Search stocks, ETFs, mutual funds by name or symbol.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 479`** (1 nodes): `Fetch OHLCV price history for charting.`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 480`** (1 nodes): `# TODO: fetch live index data`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 481`** (1 nodes): `# TODO: search against instrument master`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 482`** (1 nodes): `# TODO: fetch historical data`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 483`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `get()` connect `Community 4` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 19`?**
-  _High betweenness centrality (0.169) - this node is a cross-community bridge._
-- **Why does `alphaforge-logger — Structured rotating-file + console logger.` connect `Community 3` to `Community 0`, `Community 1`, `Community 2`, `Community 5`, `Community 7`, `Community 8`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
-- **Why does `Text()` connect `Community 11` to `Community 2`, `Community 7`?**
-  _High betweenness centrality (0.049) - this node is a cross-community bridge._
-- **Are the 123 inferred relationships involving `get()` (e.g. with `_fetch_holdings()` and `run()`) actually correct?**
-  _`get()` has 123 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 92 inferred relationships involving `str` (e.g. with `run()` and `_shape_summary()`) actually correct?**
-  _`str` has 92 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `get()` connect `Community 2` to `Community 0`, `Community 1`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 17`?**
+  _High betweenness centrality (0.129) - this node is a cross-community bridge._
+- **Why does `alphaforge-logger — Structured rotating-file + console logger.` connect `Community 3` to `Community 0`, `Community 1`, `Community 4`, `Community 5`, `Community 6`, `Community 8`, `Community 9`?**
+  _High betweenness centrality (0.061) - this node is a cross-community bridge._
+- **Why does `BrokerSource` connect `Community 1` to `Community 0`, `Community 3`, `Community 4`, `Community 14`?**
+  _High betweenness centrality (0.050) - this node is a cross-community bridge._
+- **Are the 117 inferred relationships involving `get()` (e.g. with `_fetch_holdings()` and `run()`) actually correct?**
+  _`get()` has 117 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 91 inferred relationships involving `str` (e.g. with `run()` and `_shape_summary()`) actually correct?**
+  _`str` has 91 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 41 inferred relationships involving `alphaforge-logger — Structured rotating-file + console logger.` (e.g. with `CostGuard` and `CostGuardError`) actually correct?**
   _`alphaforge-logger — Structured rotating-file + console logger.` has 41 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 46 inferred relationships involving `QueryType` (e.g. with `LLMGateway` and `LLMGateway — main entry point that ties providers, router, rate limiter, and cos`) actually correct?**

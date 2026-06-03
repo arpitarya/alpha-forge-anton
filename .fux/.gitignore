@@ -1,0 +1,4 @@
+# Generated derived views — rebuilt by `fux build` ($0).
+out/
+# Personal-scope memory (scope: personal) stays local.
+memory/personal/

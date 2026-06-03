@@ -230,3 +230,10 @@ clean-frontend:
 # Nuclear clean — removes everything (run 'just setup' to restore)
 clean-all:
     bash clean.sh --all
+
+# ── Fux knowledge gate (plan §10.9) ───────────────────────────────
+# Fail a PR on dead refs, schema errors, conflicts, or failed invariants.
+fux-check:
+    fux build
+    fux check
+    fux verify
