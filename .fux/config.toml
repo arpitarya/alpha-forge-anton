@@ -18,3 +18,5 @@ ignore_globs = [
 
 # Phase-2 local embedding re-rank for recall (no API). Off by default.
 recall_rerank = false
+
+parity_stay = ["fux-plan","comparison.guide","guide.guide","global-rules-home.compare","recall-engine.compare","graphify"]
