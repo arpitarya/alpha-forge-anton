@@ -42,24 +42,7 @@ export function TerminalTopBar() {
 
   return (
     <TopBar
-      brand={
-        <>
-          <div
-            className="grid h-5 w-5 place-items-center"
-            style={{ filter: "drop-shadow(0 0 8px var(--glow))" }}
-          >
-            <Logo variant="icon" size="xs" />
-          </div>
-          <div className="flex flex-col gap-[2px] leading-none">
-            <span className="font-[700] tracking-[0.2em] text-[10.5px] text-[color:var(--fg)]">
-              ALPHA
-            </span>
-            <span className="font-[500] tracking-[0.32em] text-[7.5px] text-[color:var(--fg-3)]">
-              FORGE
-            </span>
-          </div>
-        </>
-      }
+      brand={<Logo variant="lockup" size="xs" />}
       nav={nav}
       right={
         <>

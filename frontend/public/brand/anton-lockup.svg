@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#FFB454"/>
+      <stop offset="55%"  stop-color="#F38A2B"/>
+      <stop offset="100%" stop-color="#D45A1A"/>
+    </linearGradient>
+    <linearGradient id="rule" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="rgba(255,255,255,0)"/>
+      <stop offset="50%"  stop-color="rgba(255,255,255,.14)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- mark: 56 × 56, vertically centred in 80px → y offset = 12 -->
+  <g transform="translate(0, 12) scale(0.875)">
+    <rect x="9"    y="52.5" width="46"  height="2.6"  rx="1.3" fill="#000" opacity=".22"/>
+    <rect x="11"   y="40"   width="9"   height="12.5" rx="1.6" fill="url(#g)"/>
+    <rect x="27.5" y="30"   width="9"   height="22.5" rx="1.6" fill="url(#g)"/>
+    <rect x="44"   y="21"   width="9"   height="31.5" rx="1.6" fill="url(#g)"/>
+    <path d="M41.5 22 L55.5 22 L48.5 9 Z"                      fill="url(#g)"/>
+    <rect x="44"   y="21"   width="2.6" height="31.5" rx="1.3" fill="#fff" opacity=".2"/>
+    <rect x="27.5" y="30"   width="2.4" height="22.5" rx="1.2" fill="#fff" opacity=".14"/>
+  </g>
+
+  <!-- vertical rule -->
+  <rect x="74" y="14" width="1" height="52" fill="url(#rule)"/>
+
+  <!-- text block: x=92 -->
+  <!-- eyebrow: ALPHA FORGE -->
+  <text x="92" y="28"
+        font-family="monospace" font-size="10" letter-spacing="3.4"
+        fill="#7a756b">ALPHA FORGE</text>
+  <!-- product name: ANTON -->
+  <text x="92" y="54"
+        font-family="sans-serif" font-weight="700" font-size="26" letter-spacing="4"
+        fill="#f2efe9">ANTON</text>
+  <!-- role: TRADING TERMINAL -->
+  <text x="92" y="70"
+        font-family="monospace" font-size="9" letter-spacing="2.6"
+        fill="#ff8f00">TRADING TERMINAL</text>
+</svg>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Logo } from "@alphaforge-anton/solar-ui";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -41,11 +42,9 @@ export default function LoginPage() {
         className="flex w-80 flex-col gap-5 rounded border border-white/10 bg-black/80 p-8"
         style={{ backdropFilter: "blur(12px)" }}
       >
-        <div className="flex flex-col gap-1">
-          <span className="font-mono text-xs" style={{ color: "var(--accent)" }}>
-            ALPHAFORGE
-          </span>
-          <h1 className="font-mono text-lg" style={{ color: "var(--fg)" }}>
+        <div className="flex flex-col gap-3">
+          <Logo variant="lockup" size="sm" />
+          <h1 className="font-mono text-base" style={{ color: "var(--fg-2)" }}>
             Terminal Access
           </h1>
         </div>
