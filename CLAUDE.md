@@ -16,6 +16,7 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 | Graphify knowledge graph | [docs/graphify.md](docs/graphify.md) |
 | Vault-backed secrets (alpha-forge-bach) | [docs/vault.md](docs/vault.md) |
 | Orff concierge AI implementation docs | [concierge/README.md](concierge/README.md) |
+| Probes — how to write & run CDP verification probes | [probes/Probes.md](probes/Probes.md) |
 
 ## Must-Know Rules
 

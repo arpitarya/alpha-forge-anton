@@ -196,3 +196,6 @@ screenshots/*.png
 
 # start/stop script pids
 .dev.pids
+
+# fux
+!.fux/out/

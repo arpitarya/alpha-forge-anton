@@ -1,5 +1,5 @@
 # Generated derived views — rebuilt by `fux build` ($0).
-out/
+# out/ tracked intentionally — see project .gitignore
 # Machine-local runtime ledgers (usage + cumulative cost tracking).
 usage.json
 cost.json
