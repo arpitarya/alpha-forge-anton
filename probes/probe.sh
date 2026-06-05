@@ -21,6 +21,9 @@ Available probes:
     ui-notif-time        ui_notification_time_probe.py
     ui-voice             ui_voice_probe.py
 
+  Fux probes (standalone, no CDP required):
+    fux-graph            ui_fux_graph_probe.py
+
   Broker XHR probes (require CDP :9299):
     zerodha              zerodha_probe.py
     zerodha-coin         zerodha_coin_probe.py
@@ -57,6 +60,7 @@ case "$NAME" in
     ui-model-picker)   SCRIPT="ui_model_picker_probe.py" ;;
     ui-notif-time)     SCRIPT="ui_notification_time_probe.py" ;;
     ui-voice)          SCRIPT="ui_voice_probe.py" ;;
+    fux-graph)         SCRIPT="ui_fux_graph_probe.py" ;;
     zerodha)           SCRIPT="zerodha_probe.py" ;;
     zerodha-coin)      SCRIPT="zerodha_coin_probe.py" ;;
     zerodha-cash)      SCRIPT="zerodha_cash_probe.py" ;;
