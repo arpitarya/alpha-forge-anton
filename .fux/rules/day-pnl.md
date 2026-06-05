@@ -16,6 +16,7 @@ examples:
     expect: "true"
   - given: "₹1,00,000 holding up 2% today → ₹2,000 day P&L"
     expect: "₹2,000"
+seal: 4669fe7da358d347
 ---
 **Rule:** Today's P&L is computed on *current* INR value, not invested cost:
 `day_pnl = Σ (inr_value(h) × day_change_pct(h) / 100)`.

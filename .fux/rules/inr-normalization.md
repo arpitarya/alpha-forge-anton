@@ -11,6 +11,7 @@ code_refs:
 related: [portfolio-valuation, day-pnl]
 aliases: [forex, currency conversion, usd, to_inr]
 keywords: [normalize, currency, fx, base-unit]
+seal: 1f8a6dda8246a604
 ---
 **Rule:** Every holding's monetary fields are converted to INR via `to_inr(value,
 currency)` **before** any aggregation — sums, allocation, treemap, P&L.

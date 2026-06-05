@@ -1,4 +1,7 @@
 # Generated derived views — rebuilt by `fux build` ($0).
 out/
+# Machine-local runtime ledgers (usage + cumulative cost tracking).
+usage.json
+cost.json
 # Personal-scope memory (scope: personal) stays local.
 memory/personal/

@@ -14,9 +14,19 @@ important_globs = ["backend/app/modules/brokers/**/*.py"]
 ignore_globs = [
   "**/node_modules/**", "**/.venv/**", "**/__pycache__/**",
   "graphify-out/**", "**/dist/**", "**/build/**",
+  # Build output / minified bundles — keep them out of the graph and `fux mine`.
+  "**/.next/**", "**/*.min.js", "**/coverage/**",
 ]
 
 # Phase-2 local embedding re-rank for recall (no API). Off by default.
 recall_rerank = false
 
+# Deterministic query expansion (glossary synonyms + 1-hop graph neighbours, $0).
+recall_expand = true
+# Record which rules recall/why serve → usage-weighted memory decay ($0).
+usage_tracking = true
+
 parity_stay = ["fux-plan","comparison.guide","guide.guide","global-rules-home.compare","recall-engine.compare","graphify"]
+
+# Accumulate each lookup's token savings into .fux/cost.json ($0).
+cost_tracking = true

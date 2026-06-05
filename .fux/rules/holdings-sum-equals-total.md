@@ -12,6 +12,7 @@ aliases: [conservation, sum equals total, roll-up integrity]
 keywords: [invariant, total, holdings, sum, parity]
 check: "abs(sum(inr_values) - current_value) < 0.01"
 verify_cmd: "cd backend && uv run python ../probes/fux_totals_probe.py 2>/dev/null"
+seal: 4669fe7da358d347
 ---
 **Invariant:** The portfolio's `current_value` total **must equal** the sum of
 its per-holding INR values: `Σ inr_value(h) == totals.current_value` (to ₹0.01).

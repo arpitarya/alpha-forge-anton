@@ -10,6 +10,7 @@ code_refs:
 related: [inr-normalization, day-pnl]
 aliases: [totals, current value, invested, pnl]
 keywords: [valuation, roll-up, holdings, total]
+seal: 4669fe7da358d347
 ---
 **Rule:** Portfolio totals are computed over INR-normalised holdings:
 `invested = Σ inr_invested(h)`, `current = Σ inr_value(h)`, `pnl = current −
