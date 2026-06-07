@@ -13,5 +13,12 @@
       "database": "alphaforge_anton",
       "username": "alphaforge_anton"
     }
+  ],
+  "python.analysis.exclude": [
+    ".fux/**",
+    "probes/**",
+    "**/notebooks/**",
+    "mcp/**",
+    "concierge/llm/playground/server.py",
   ]
 }

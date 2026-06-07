@@ -7,7 +7,9 @@ license = { text = "MIT" }
 authors = [{ name = "Arpit Arya" }]
 
 # The root project has no runtime deps; member projects own their own.
-dependencies = []
+dependencies = [
+    "fux-engine>=0.1.1",
+]
 
 [tool.uv.workspace]
 members = [
