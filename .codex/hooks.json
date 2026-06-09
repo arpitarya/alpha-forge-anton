@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/arpitarya/.claude/fux/hooks/session_start.sh"
+            "command": "fux context"
           }
         ]
       }
@@ -23,13 +23,13 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/arpitarya/.claude/fux/hooks/post_tool_use.sh"
+            "command": "fux hook-touch"
           }
-        ]
+        ],
+        "matcher": "Edit|Write"
       }
     ],
     "Stop": [
@@ -37,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/arpitarya/.claude/fux/hooks/stop.sh"
+            "command": "fux hook-check"
           }
         ]
       }
@@ -47,7 +47,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/arpitarya/.claude/fux/hooks/user_prompt_submit.sh"
+            "command": "fux hook-recall"
           }
         ]
       }
