@@ -199,3 +199,4 @@ screenshots/*.png
 
 # fux
 !.fux/out/
+.fux/out/.session-*.json
