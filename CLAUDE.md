@@ -50,10 +50,42 @@ Rules:
 <!-- fux:start -->
 ## Fux knowledge engine
 
-This project's rules, memory, narrative, and graph live in `.fux/` (one substrate).
+This project's rules, memory, narrative, and graph live in `.fux/` (one substrate). **SessionStart auto-injects the INDEX** — no manual setup needed.
 
-- SessionStart injects the compact INDEX automatically — no manual read needed.
-- Look up a rule: `fux why <id>` · what governs a file: `fux refs <path>`
-- Rebuild derived views ($0): `fux build` · check for drift: `fux check`
-- Author a new entry: `fux new <type> <id>`
+### Core commands
+
+| Command | Purpose |
+|---------|---------|
+| `fux why <id>` | Retrieve a rule's decision, context, and code refs — use before answering "why" questions |
+| `fux refs <path>` | See which rules & ADRs govern a file — start here when modifying code |
+| `fux check` | Verify no drift between config + rules + code — run before distilling |
+| `fux build` | Rebuild INDEX + derived views ($0, AST-only) — run after manual edits to `.fux/` |
+| `/fux distill "<focus>"` | Capture this session's durable decisions → `memory` / `adr` entries (user-confirmed) |
+
+### Copilot hooks (auto-enabled)
+
+1. **SessionStart** — `.fux/out/INDEX.md` injected; skim if session modifies ruled files  
+2. **UserPromptSubmit** — `fux hook-recall` injects only the rules relevant to the prompt  
+3. **Pre-answer** — On questions about architecture, decisions, or file governance, call `fux why <id>` or `fux refs <path>` first  
+4. **SessionEnd** — Consider `/fux distill` to convert session insights into version-controlled knowledge (only user-confirmed writes)  
+
+### When to reach for Fux
+
+- ✅ "Why does the code do X?" — `fux why <rule-id>` (captures intent + consequences)  
+- ✅ "What governs my changes to file Y?" — `fux refs <path>` (avoids breakage)  
+- ✅ "How do modules A and B relate?" — `fux explain "<concept>"` (traverses EXTRACTED + INFERRED edges)  
+- ✅ "I need to capture this session's decision" — `/fux distill` (durable, code-linked, searchable)  
+- ❌ "Find all imports of X" — use grep (faster, one-off)  
+- ❌ "Show me the code in file Y" — use semantic search (returns full context)  
+
+### Distillation workflow
+
+At session end, if you made non-obvious decisions:
+1. Run `/fux distill` → lists candidates (memory / adr / rule)  
+2. **Confirm or trim** — user decides what's durable  
+3. **Author** — each confirmed entry gets `type`, `id`, `scope`, `code_refs`  
+4. **Link** — add `edges:` to neighbouring entries so knowledge joins the graph  
+5. **Verify** — `fux build && fux check` before closing session  
+
+**Guardrail:** A distilled entry must be reusable next month — skip transient debugging steps, one-off file paths, or facts already in rules.
 <!-- fux:end -->

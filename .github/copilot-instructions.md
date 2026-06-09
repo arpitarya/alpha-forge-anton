@@ -24,6 +24,30 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 - Never commit `.env` files or API keys
 - Type `/graphify` in Copilot Chat to build or update the knowledge graph
 
+## Fux Knowledge Engine
+
+**Status:** Rules, memory, narrative & graph live in `.fux/` (one substrate). SessionStart injects the compact INDEX automatically.
+
+### When to use Fux
+
+- **Look up a rule:** `fux why <id>` — retrieve durable decisions & gotchas  
+- **Understand file governance:** `fux refs <path>` — see which rules apply to a file  
+- **Capture decisions:** `/fux distill "<focus>"` — turn this session's conclusions into versioned memory/adr entries  
+- **Verify drift:** `fux check` — ensure config and rules are aligned  
+- **Rebuild cache:** `fux build` — update all derived views ($0, AST-only)  
+
+### Copilot hooks
+
+- On **SessionStart**: Fux INDEX is auto-injected; skim `.fux/out/INDEX.md` if code changes involve ruled files  
+- On **question about rules or why** a decision was made: Call `fux why <id>` or `fux refs <path>` before answering  
+- On **session end**: Consider `/fux distill` to capture non-obvious decisions (user confirms before writing)  
+
+### Prefer Fux over grep for
+
+- Cross-module "how does X relate to Y" questions — Fux traverses EXTRACTED + INFERRED edges  
+- Understanding the *why* behind a rule, not just the code pattern  
+- Decisions that span files and need context (use `fux explain "<concept>"`)  
+
 ## graphify
 
 Before answering architecture or codebase questions, read `graphify-out/GRAPH_REPORT.md` if it exists.

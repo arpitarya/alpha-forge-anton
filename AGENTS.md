@@ -33,6 +33,26 @@ Probes are Python scripts that attach to the existing AlphaForge Chrome via CDP 
 
 See [probes/WHY_PROBES_NOT_MCP.md](probes/WHY_PROBES_NOT_MCP.md) for the full rationale. When adding a new feature or broker, create a probe and a `just` recipe before marking it verified.
 
+## Fux knowledge engine
+
+This project's rules, memory, narrative, and graph live in `.fux/` (one substrate).
+The Codex hooks in [.codex/hooks.json](.codex/hooks.json) wire it automatically:
+
+| Event | Runs | Purpose |
+|-------|------|---------|
+| SessionStart | `fux context` | Inject the compact Tier-1 INDEX |
+| UserPromptSubmit | `fux hook-recall` | Inject only the rules relevant to the prompt |
+| PostToolUse(Edit/Write) | `fux hook-touch` | Flag when an edited file's governing rule drifted |
+| Stop | `fux hook-check` | Validate schema/refs/staleness/conflicts |
+
+Use it instead of grep for *why*-questions and cross-module relationships:
+
+- **Look up a rule:** `fux why <id>` — durable decision + context + code refs
+- **File governance:** `fux refs <path>` — which rules govern a file (run before editing)
+- **Cross-module "how does X relate to Y":** `fux explain "<concept>"` — traverses EXTRACTED + INFERRED edges
+- **Rebuild views / check drift:** `fux build` then `fux check` ($0, AST-only)
+- **Capture this session's decisions:** `/fux distill` (user confirms before any write)
+
 ## graphify
 
 This project has a graphify knowledge graph at graphify-out/.

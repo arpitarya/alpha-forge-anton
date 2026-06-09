@@ -29,6 +29,18 @@ Named after Carl Orff, in keeping with the project's composer naming convention 
 - **Prompt assembly**: stable system, intent, memory, holdings, news, history, and current-message blocks are composed server-side
 - **Model routing**: `auto` resolves to the gateway's free-provider route for the detected intent; reasoning-capable routes are added through the roadmap work
 
+## On-the-fly UI composition (Fux-governed)
+
+Orff can build UI on the fly without executing generated code. `POST /concierge/compose`
+( [compose_service.py](../backend/app/modules/concierge/compose_service.py) ) runs:
+`fux components` (the allowed vocabulary) → LLM emits a **declarative UISpec** (JSON
+tree, never code) → `fux validate-spec` rejects/repairs anything off-registry (1 retry)
+→ `<DynamicRenderer>` ( [frontend](../frontend/src/modules/concierge/DynamicRenderer.tsx) )
+mounts it from a fixed whitelist → `fux feedback` records the outcome. The
+`ui-component-contract` rule (`.fux/`) governs it; the brain is reached over the `fux`
+CLI via [fux_bridge.py](../backend/app/modules/concierge/fux_bridge.py). Safe by
+construction — no path renders anything outside the design-system whitelist.
+
 ## Implementation entry point
 
 Start with the implementation order in [4-news-llm-architecture.md section 16](4-news-llm-architecture.md#16-implementation-order).

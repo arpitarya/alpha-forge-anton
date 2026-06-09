@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 24,
+  "count": 25,
   "rules": [
     {
       "id": "async-everywhere",
@@ -343,6 +343,29 @@
       "updated": "2026-06-03"
     },
     {
+      "id": "ui-component-contract",
+      "type": "convention",
+      "domain": "frontend",
+      "status": "active",
+      "title": "A UI Orff generates on the fly is a declarative UISpec — a JSON",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/ui-component-contract.md",
+      "code_refs": [
+        "frontend/src/modules/concierge/DynamicRenderer.tsx",
+        "frontend/src/modules/concierge/compose.registry.ts",
+        "backend/app/modules/concierge/compose_service.py"
+      ],
+      "related": [
+        "files-max-100-lines",
+        "async-everywhere"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
       "id": "what",
       "type": "narrative",
       "domain": "general",
@@ -395,7 +418,7 @@
       "type": "memory",
       "domain": "project",
       "status": "active",
-      "title": "Fux is a new sibling tool (beside wagner/bach/orff), implemented 2026-06-02 at",
+      "title": "Fux is a sibling tool (beside wagner/bach/orff) at `~/my_programs/fux` (remote",
       "layer": "project",
       "path": "/Users/arpitarya/my_programs/anton/.fux/memory/shared/project-fux.md",
       "code_refs": [],
@@ -404,7 +427,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-02",
-      "updated": "2026-06-03"
+      "updated": "2026-06-09"
     },
     {
       "id": "project-wagner-dante",
