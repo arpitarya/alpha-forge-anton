@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 25,
+  "count": 38,
   "rules": [
     {
       "id": "async-everywhere",
@@ -153,6 +153,30 @@
       "updated": "2026-06-04"
     },
     {
+      "id": "broker-source-contract",
+      "type": "convention",
+      "domain": "brokers",
+      "status": "active",
+      "title": "Every holdings provider is a `BrokerSource` subclass",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/broker-source-contract.md",
+      "code_refs": [
+        "backend/app/modules/brokers/base.py",
+        "backend/app/modules/brokers/registry.py"
+      ],
+      "related": [
+        "broker-source-integration",
+        "dump-utils-single-source",
+        "holdings-sum-equals-total",
+        "files-max-100-lines"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
       "id": "broker-source-integration",
       "type": "narrative",
       "domain": "general",
@@ -213,6 +237,28 @@
       ],
       "created": "2026-06-03",
       "updated": "2026-06-03"
+    },
+    {
+      "id": "dump-utils-single-source",
+      "type": "convention",
+      "domain": "brokers",
+      "status": "active",
+      "title": "All broker CSV I/O goes through",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/dump-utils-single-source.md",
+      "code_refs": [
+        "backend/app/modules/brokers/dump_utils.py"
+      ],
+      "related": [
+        "broker-source-contract",
+        "broker-csv-dumps",
+        "inr-normalization"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
     },
     {
       "id": "getting-started",
@@ -343,6 +389,29 @@
       "updated": "2026-06-03"
     },
     {
+      "id": "probe-cdp-not-playwright",
+      "type": "convention",
+      "domain": "brokers",
+      "status": "active",
+      "title": "UI and broker verification is done with scripts in `probes/` that",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/probe-cdp-not-playwright.md",
+      "code_refs": [
+        "probes/Probes.md",
+        "probes/WHY_PROBES_NOT_MCP.md",
+        "backend/app/modules/brokers/_cdp.py"
+      ],
+      "related": [
+        "broker-source-contract",
+        "broker-source-integration"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
       "id": "ui-component-contract",
       "type": "convention",
       "domain": "frontend",
@@ -358,6 +427,28 @@
       "related": [
         "files-max-100-lines",
         "async-everywhere"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
+      "id": "vault-only-credentials",
+      "type": "convention",
+      "domain": "security",
+      "status": "active",
+      "title": "Broker credentials — user IDs, client IDs, API keys — live only",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/vault-only-credentials.md",
+      "code_refs": [
+        "backend/app/modules/brokers/broker_env.py"
+      ],
+      "related": [
+        "no-secrets-in-vcs",
+        "broker-source-contract",
+        "project-wagner-dante"
       ],
       "edges": {},
       "check": null,
@@ -398,6 +489,184 @@
       "updated": "2026-06-04"
     },
     {
+      "id": "afbach-vault",
+      "type": "glossary",
+      "domain": "security",
+      "status": "active",
+      "title": "afbach vault (alpha-forge-bach)",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/glossary/afbach-vault.md",
+      "code_refs": [
+        "backend/app/core/vault_client.py"
+      ],
+      "related": [
+        "vault-only-credentials",
+        "no-secrets-in-vcs",
+        "project-wagner-dante"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
+      "id": "broker-source",
+      "type": "glossary",
+      "domain": "brokers",
+      "status": "active",
+      "title": "BrokerSource",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/glossary/broker-source.md",
+      "code_refs": [
+        "backend/app/modules/brokers/base.py"
+      ],
+      "related": [
+        "broker-source-contract",
+        "holdings-aggregator",
+        "source-kind-status"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
+      "id": "cdp-chrome",
+      "type": "glossary",
+      "domain": "brokers",
+      "status": "active",
+      "title": "CDP Chrome (port 9299)",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/glossary/cdp-chrome.md",
+      "code_refs": [
+        "backend/app/modules/brokers/_cdp.py"
+      ],
+      "related": [
+        "probe-cdp-not-playwright",
+        "enctoken",
+        "broker-source-integration"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
+      "id": "enctoken",
+      "type": "glossary",
+      "domain": "brokers",
+      "status": "active",
+      "title": "enctoken",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/glossary/enctoken.md",
+      "code_refs": [
+        "backend/app/modules/brokers/_http.py"
+      ],
+      "related": [
+        "cdp-chrome",
+        "broker-source-integration"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
+      "id": "holding",
+      "type": "glossary",
+      "domain": "brokers",
+      "status": "active",
+      "title": "Holding",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/glossary/holding.md",
+      "code_refs": [
+        "backend/app/modules/brokers/broker_schemas.py"
+      ],
+      "related": [
+        "portfolio-valuation",
+        "inr-normalization",
+        "holdings-sum-equals-total",
+        "source-kind-status",
+        "broker-source"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
+      "id": "holdings-aggregator",
+      "type": "glossary",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "HoldingsAggregator",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/glossary/holdings-aggregator.md",
+      "code_refs": [
+        "backend/app/modules/brokers/aggregator.py"
+      ],
+      "related": [
+        "portfolio-valuation",
+        "holdings-sum-equals-total",
+        "inr-normalization",
+        "broker-source"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
+      "id": "orff",
+      "type": "glossary",
+      "domain": "concierge",
+      "status": "active",
+      "title": "Orff",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/glossary/orff.md",
+      "code_refs": [
+        "concierge/README.md"
+      ],
+      "related": [
+        "ui-component-contract",
+        "project-fux"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
+      "id": "source-kind-status",
+      "type": "glossary",
+      "domain": "brokers",
+      "status": "active",
+      "title": "SourceKind / SourceStatus",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/glossary/source-kind-status.md",
+      "code_refs": [
+        "backend/app/modules/brokers/broker_schemas.py"
+      ],
+      "related": [
+        "broker-source",
+        "broker-source-contract",
+        "project-broker-prime",
+        "holding"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
+    },
+    {
       "id": "project-broker-prime",
       "type": "memory",
       "domain": "project",
@@ -412,6 +681,26 @@
       "examples": [],
       "created": "2026-05-25",
       "updated": "2026-06-03"
+    },
+    {
+      "id": "project-cdp-prerequisite",
+      "type": "memory",
+      "domain": "project",
+      "status": "active",
+      "title": "Every API-kind broker sync (and every probe) depends on an externally launched",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/memory/shared/project-cdp-prerequisite.md",
+      "code_refs": [],
+      "related": [
+        "cdp-chrome",
+        "probe-cdp-not-playwright",
+        "project-broker-prime"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-09",
+      "updated": "2026-06-09"
     },
     {
       "id": "project-fux",
