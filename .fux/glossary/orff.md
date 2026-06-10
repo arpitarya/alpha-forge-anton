@@ -4,12 +4,23 @@ domain: concierge
 type: glossary
 status: active
 created: 2026-06-09
-updated: 2026-06-09
+updated: 2026-06-10
+aliases:
+  - concierge
+  - assistant
+  - AI layer
+keywords:
+  - orff
+  - concierge
+  - llm
+  - gateway
+  - compose
+  - uispec
 code_refs:
   - concierge/README.md
-related: [ui-component-contract, project-fux]
-aliases: [concierge, assistant, AI layer]
-keywords: [orff, concierge, llm, gateway, compose, uispec]
+related:
+  - ui-component-contract
+  - project-fux
 ---
 **Term:** Orff
 

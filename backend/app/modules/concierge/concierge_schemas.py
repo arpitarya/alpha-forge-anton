@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, get_args
 
+from alphaforge_anton_llm import registry
 from pydantic import BaseModel
 
 
@@ -12,6 +13,9 @@ class ChatMessage(BaseModel):
     content: str
 
 
+# Pydantic needs a static type, so the slugs are spelled out — but they must mirror
+# the registry manifest (single source of truth). The assertion below fails loudly
+# at import if a provider is added/removed there without updating this Literal.
 ProviderSlug = Literal[
     "auto",
     "gemini",
@@ -22,6 +26,11 @@ ProviderSlug = Literal[
     "huggingface",
     "claude-sdk",
 ]
+
+assert set(get_args(ProviderSlug)) == registry.provider_slugs() | {"auto"}, (
+    "ProviderSlug drifted from registry/providers.json — "
+    "regenerate after editing the manifest (see concierge-registry-single-source)"
+)
 
 AutoLevel = Literal["top", "provider", "none"]
 
@@ -39,16 +48,3 @@ class ChatRequest(BaseModel):
     provider: ProviderSlug = "auto"
     model_id: str | None = None
     auto_level: AutoLevel = "top"
-
-
-# Provider slug -> default QueryType slug (used for chain selection when the
-# user is on Auto / provider-Auto and the gateway picks the chain).
-PROVIDER_TO_QUERY_TYPE: dict[str, str] = {
-    "claude-sdk":   "investment_plan",
-    "openrouter":   "investment_plan",
-    "gemini":       "portfolio_overview",
-    "mistral":      "investment_plan",
-    "groq":         "factoid",
-    "cerebras":     "factoid",
-    "huggingface":  "factoid",
-}

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 38,
+  "count": 40,
   "rules": [
     {
       "id": "async-everywhere",
@@ -207,6 +207,59 @@
       "examples": [],
       "created": "2026-06-04",
       "updated": "2026-06-04"
+    },
+    {
+      "id": "concierge-default-model",
+      "type": "convention",
+      "domain": "concierge",
+      "status": "active",
+      "title": "A fresh Orff session pins a derived default model, never the",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/concierge-default-model.md",
+      "code_refs": [
+        "frontend/src/modules/concierge/concierge.defaults.ts",
+        "frontend/src/modules/concierge/ChatContext.tsx",
+        "frontend/src/modules/concierge/concierge.routing.ts",
+        "concierge/llm/src/alphaforge_anton_llm/registry/routing.json"
+      ],
+      "related": [
+        "concierge-registry-single-source",
+        "orff",
+        "ui-component-contract",
+        "files-max-100-lines"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-10",
+      "updated": "2026-06-10"
+    },
+    {
+      "id": "concierge-registry-single-source",
+      "type": "convention",
+      "domain": "concierge",
+      "status": "active",
+      "title": "The concierge provider/model registry, intent→provider routing,",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/concierge-registry-single-source.md",
+      "code_refs": [
+        "concierge/llm/src/alphaforge_anton_llm/registry/providers.json",
+        "concierge/llm/src/alphaforge_anton_llm/registry/routing.json",
+        "concierge/llm/src/alphaforge_anton_llm/registry.py",
+        "frontend/scripts/gen-concierge-registry.mjs",
+        "frontend/src/modules/concierge/concierge.registry.generated.ts"
+      ],
+      "related": [
+        "concierge-default-model",
+        "orff",
+        "ui-component-contract",
+        "files-max-100-lines"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-10",
+      "updated": "2026-06-10"
     },
     {
       "id": "day-pnl",
@@ -641,7 +694,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-09"
+      "updated": "2026-06-10"
     },
     {
       "id": "source-kind-status",

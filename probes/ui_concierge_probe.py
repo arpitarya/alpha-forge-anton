@@ -3,6 +3,7 @@
 Attaches to the existing Chrome CDP session (port 9299), injects a dev JWT,
 and exercises:
   1. Reaching the app (not redirected to /login)
+  1b. Default model is pinned (Gemini Flash) and stays stable while typing
   2. Opening the chat rail via the CHAT tab
   3. Model picker popup — renders, stays within viewport, footer visible
   4. Provider column hover — focused provider switches model list
@@ -82,6 +83,7 @@ async def _inject_auth_and_navigate(page, base: str, token: str) -> bool:
         localStorage.setItem('af_token', {json.dumps(token)});
         localStorage.setItem('af-auth', {json.dumps(auth_state)});
         localStorage.removeItem('af_refresh_token');
+        localStorage.removeItem('af-model-choice');
         localStorage.setItem('af-mode', 'chat');
         sessionStorage.setItem('af-booted', '1');
     }}""")
@@ -100,16 +102,26 @@ async def _rail_is_open(page) -> bool:
 
 
 async def _ensure_rail_open(page) -> bool:
-    """Open the chat rail if not already interactive."""
+    """Open the chat rail if not already interactive.
+
+    New flow (Command Console redesign): clicking the Chat tab only shows the
+    footer textarea — the rail opens only after the user submits a message.
+    We therefore: click Chat tab → type a seed query in #chatinput-bar → Enter.
+    """
     if await _rail_is_open(page):
         return True
     chat_tab = page.get_by_role("tab", name="Chat mode")
     try:
         await chat_tab.click()
+        await page.wait_for_timeout(300)
+        # Type a seed query in the footer textarea and submit to open the rail
+        footer_ta = page.locator("#chatinput-bar")
+        await footer_ta.fill("What is my portfolio worth?")
+        await footer_ta.press("Enter")
         await page.wait_for_function("""() => {
             const aside = document.querySelector('[aria-label="Alpha chat"]');
             return aside && window.getComputedStyle(aside).pointerEvents !== 'none';
-        }""", timeout=5_000)
+        }""", timeout=6_000)
         await page.wait_for_timeout(500)
         return True
     except Exception as e:
@@ -141,6 +153,29 @@ async def run(base: str, cdp_port: int) -> bool:
             await page.screenshot(path=str(SHOT_DIR / "ci-login-fail.png"))
             return False
         await page.wait_for_timeout(800)
+
+        # ── 1b. Default model pinned + stable while typing ────────────────────
+        # Regression guard: the default is a pinned model (Gemini Flash), NOT the
+        # Auto router — so the pill must not flicker as the user types. See Fux
+        # rules concierge-default-model + concierge-registry-single-source.
+        print("\n── Default model stability")
+        pill_default = await page.locator('[aria-haspopup="dialog"]').first.inner_text()
+        _record(
+            "Default model pill is Gemini Flash (pinned, not Auto)",
+            "Gemini" in pill_default and "Auto" not in pill_default,
+            f"pill={pill_default!r}",
+        )
+        footer_ta = page.locator("#chatinput-bar")
+        await footer_ta.fill("how much portfolio risk and drawdown do I carry")
+        await page.wait_for_timeout(250)
+        pill_typed = await page.locator('[aria-haspopup="dialog"]').first.inner_text()
+        _record(
+            "Model pill stays stable while typing (no flicker)",
+            pill_typed == pill_default,
+            f"{pill_default!r} → {pill_typed!r}",
+        )
+        await footer_ta.fill("")
+        await page.wait_for_timeout(150)
 
         # ── 2. Open chat rail ─────────────────────────────────────────────────
         print("\n── Chat rail")

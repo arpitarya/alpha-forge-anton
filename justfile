@@ -121,6 +121,16 @@ llm:
     -lsof -ti :${LLM_PLAYGROUND_PORT} | xargs kill -9 2>/dev/null || true
     cd llm && uv run uvicorn playground.server:app --host 127.0.0.1 --port ${LLM_PLAYGROUND_PORT} --reload
 
+# ── Concierge ────────────────────────────────────
+
+# Regenerate the frontend registry from the manifest (concierge/llm/.../registry/*.json)
+gen-concierge:
+    cd frontend && pnpm gen:concierge
+
+# Verify the committed generated registry is in sync with the manifest (CI guard)
+gen-concierge-check:
+    cd frontend && pnpm gen:concierge:check
+
 # ── Database / Infrastructure ────────────────────
 
 # Setup PostgreSQL & Redis via Homebrew (macOS, no Docker)
@@ -175,9 +185,9 @@ test: test-backend test-frontend
 test-backend:
     cd backend && uv run pytest -v --tb=short
 
-# Run frontend lint + type-check
+# Run frontend lint + type-check (incl. registry-in-sync guard)
 test-frontend:
-    cd frontend && pnpm lint && pnpm type-check
+    cd frontend && pnpm gen:concierge:check && pnpm lint && pnpm type-check
 
 # ── Security ─────────────────────────────────────
 

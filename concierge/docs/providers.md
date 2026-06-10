@@ -3,6 +3,15 @@
 Consolidated reference for every inference provider and model wired into `alphaforge_anton_llm.gateway`.
 For decision rationale see [compare/02-claude-model-routing.md](compare/02-claude-model-routing.md) and [compare/16-reasoning-model.md](compare/16-reasoning-model.md).
 
+> **Single source of truth:** the provider/model registry, intent routing, and
+> default-model policy are authored in the manifest
+> [`src/alphaforge_anton_llm/registry/providers.json`](../llm/src/alphaforge_anton_llm/registry/providers.json)
+> + [`routing.json`](../llm/src/alphaforge_anton_llm/registry/routing.json). Python reads
+> it via `registry.py`; the frontend regenerates `concierge.registry.generated.ts`
+> with `pnpm gen:concierge`. **Edit the manifest, not this doc or any `.ts`/`.py`.**
+> The tables below are a human-readable view of that manifest. See the consolidation
+> plan ([6](6-registry-consolidation-plan.md)) and Fux rule `concierge-registry-single-source`.
+
 ---
 
 ## Provider Registry
@@ -17,10 +26,11 @@ For decision rationale see [compare/02-claude-model-routing.md](compare/02-claud
 | `huggingface` | `HuggingFaceAdapter` | `HF_API_KEY` | `mistralai/Mistral-7B-Instruct-v0.3` | Yes (Inference API) | Fallback / experimental |
 | `claude-sdk` | `ClaudeSdkAdapter` | `ANTHROPIC_API_KEY` | `claude-sonnet-4-6` | **No — paid** | Gated by CostGuard + confirmation |
 
-The frontend mirrors this registry in [frontend/src/modules/chat/chat.providers.ts](../frontend/src/modules/chat/chat.providers.ts).
-The two-pane ModelPicker (providers × models) consumes it directly; selecting a provider sends
-`{ provider, model_id, auto_level }` to `POST /api/v1/chat`, where `auto_level` is `top` (full Auto),
-`provider` (provider Auto), or `none` (pinned).
+The frontend does **not** maintain this registry by hand — it is generated from the manifest into
+[frontend/src/modules/concierge/concierge.registry.generated.ts](../../frontend/src/modules/concierge/concierge.registry.generated.ts)
+(re-exported by `concierge.providers.ts`). The two-pane ModelPicker (providers × models) consumes it;
+selecting a provider sends `{ provider, model_id, auto_level }` to `POST /api/v1/concierge`, where
+`auto_level` is `top` (full Auto), `provider` (provider Auto), or `none` (pinned).
 
 ### Streaming support
 
@@ -44,7 +54,9 @@ the final transcript through the same `POST /api/v1/chat` path. No paid voice se
 
 ## Intent → Provider Routing
 
-Defined in `router.py`. First available provider in the chain wins; next takes over on failure.
+Authored in [`routing.json`](../llm/src/alphaforge_anton_llm/registry/routing.json) (`intents`
+text→`QueryType`, `chains` `QueryType`→providers); `router.py` and the backend classifier read it
+via `registry.py`. First available provider in the chain wins; next takes over on failure.
 
 | Intent (`QueryType`) | Primary chain | Typical model used |
 |---|---|---|

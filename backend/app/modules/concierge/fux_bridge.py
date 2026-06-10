@@ -5,6 +5,7 @@ talks to the same brain Claude Code does, across venvs. $0, deterministic."""
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import json
 import os
 import shutil
@@ -47,9 +48,19 @@ async def validate(spec: dict) -> tuple[bool, list[str]]:
         os.unlink(tmp)
 
 
+async def recall(prompt: str, *, max_chars: int = 2000) -> str:
+    """Retrieve project knowledge (rules / glossary / memory) relevant to a user
+    prompt — the §18 runtime grounding for Orff's replies, same brain Claude Code
+    queries. Best-effort: returns "" on any failure so chat never breaks."""
+    try:
+        code, out = await _run("hook-recall", stdin=json.dumps({"prompt": prompt}).encode())
+        text = out.strip()
+        return text[:max_chars] if code == 0 and text else ""
+    except Exception:  # grounding is additive — never block a reply
+        return ""
+
+
 async def record_feedback(outcome: dict) -> None:
     """Append a compose outcome to the brain's learning loop (§18.4). Best-effort."""
-    try:
+    with contextlib.suppress(Exception):  # telemetry must never break a response
         await _run("feedback", "--record", "-", stdin=json.dumps(outcome).encode())
-    except Exception:  # telemetry must never break a response
-        pass
