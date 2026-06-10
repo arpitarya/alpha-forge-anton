@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { createContext, type ReactNode, useCallback, useContext, useRef, useState } from "react";
 import { AlphaBar } from "./AlphaBar";
 import { ChatRail } from "./ChatRail";
+import { pickDefaultChoice } from "./concierge.defaults";
 import type { ModelChoice } from "./concierge.types";
 import { useChatStream } from "./useChatStream";
 
@@ -22,14 +23,17 @@ const Ctx = createContext<ChatCtx>({
 const STORAGE_KEY = "af-model-choice";
 
 function loadChoice(): ModelChoice {
-  if (typeof window === "undefined") return { provider: "auto" };
+  // A fresh session pins a derived default (see `pickDefaultChoice`) rather than
+  // `auto`, so the model label stays stable while typing instead of re-routing
+  // per keystroke. An explicit prior pick — including Auto — is always honoured.
+  if (typeof window === "undefined") return pickDefaultChoice();
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { provider: "auto" };
+    if (!raw) return pickDefaultChoice();
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed === "object" && "provider" in parsed) return parsed as ModelChoice;
   } catch {}
-  return { provider: "auto" };
+  return pickDefaultChoice();
 }
 
 export function ChatProvider({ children }: { children: ReactNode }) {
@@ -61,9 +65,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           <AlphaBar
             onSubmit={handleSubmit}
             choice={choice}
-            footerModelRef={footerModelRef}
+            onChoiceChange={handleChoiceChange}
             railOpen={open}
             onChatModeOpen={handleChatModeOpen}
+            onClose={() => setOpen(false)}
           />
         </div>
         <ChatRail

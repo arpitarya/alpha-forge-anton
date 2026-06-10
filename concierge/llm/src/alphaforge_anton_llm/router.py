@@ -6,27 +6,25 @@ import json
 import logging
 from pathlib import Path
 
+from alphaforge_anton_llm import registry
 from alphaforge_anton_llm.types import QueryType
 
 logger = logging.getLogger(__name__)
 
 # Default chains: first available provider wins; next takes over on error/rate-limit.
-_DEFAULT_CHAINS: dict[QueryType, list[str]] = {
-    QueryType.NEWS_LOOKUP:        ["cerebras", "groq", "gemini", "openrouter"],
-    QueryType.FACTOID:            ["cerebras", "gemini", "groq", "openrouter"],
-    QueryType.PORTFOLIO_OVERVIEW: ["gemini", "groq"],
-    QueryType.STOCK_PICK:         ["gemini", "openrouter", "groq"],
-    QueryType.INVESTMENT_PLAN:    ["mistral", "gemini", "openrouter"],
-    QueryType.INDUSTRY_NEWS:      ["groq", "gemini", "openrouter"],
-    QueryType.MULTI_TURN:         ["gemini", "groq"],
-}
+# Authored in the registry manifest (`registry/routing.json`), not here — see Fux
+# rule `concierge-registry-single-source`. Eval overrides still layer on top below.
 
 _EVAL_RESULTS = Path(__file__).parent.parent.parent / "eval" / "results" / "latest.json"
 
 
+def _default_chains() -> dict[QueryType, list[str]]:
+    return {QueryType(slug): chain for slug, chain in registry.chains().items()}
+
+
 class QueryRouter:
     def __init__(self) -> None:
-        self._chains = dict(_DEFAULT_CHAINS)
+        self._chains = _default_chains()
         self._load_eval_overrides()
 
     def _load_eval_overrides(self) -> None:

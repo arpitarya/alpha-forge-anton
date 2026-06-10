@@ -1,39 +1,38 @@
-import { PROVIDERS, type ProviderId } from "./concierge.providers";
+import {
+  CHAINS,
+  FALLBACK_QUERY_TYPE,
+  INTENT_PATTERNS,
+  PROVIDERS,
+  type ProviderId,
+} from "./concierge.registry.generated";
 
 export interface Resolved {
   provider: ProviderId;
   modelId: string;
 }
 
-const PROVIDER_DEFAULT: Record<ProviderId, string> = {
-  gemini: "gemini-flash-latest",
-  groq: "llama-3.3-70b-versatile",
-  cerebras: "llama3.1-8b",
-  mistral: "mistral-small-latest",
-  openrouter: "google/gemma-4-26b-a4b-it:free",
-  huggingface: "mistralai/Mistral-7B-Instruct-v0.3",
-  "claude-sdk": "claude-sonnet-4-6",
-};
+// Intent classification + the QueryType→provider chains are authored in the
+// registry manifest (single source of truth). The gateway is the real router, so
+// the Auto preview shows the true chain head — see Fux concierge-registry-single-source.
+function classifyIntent(q: string): string {
+  const s = (q || "").toLowerCase();
+  for (const { pattern, queryType } of INTENT_PATTERNS) {
+    if (new RegExp(pattern, "i").test(s)) return queryType;
+  }
+  return FALLBACK_QUERY_TYPE;
+}
+
+/** A provider's default model — the first entry in its model list. */
+function providerDefault(provider: ProviderId): string {
+  return PROVIDERS[provider].models[0].id;
+}
 
 export function resolveTopAuto(q: string): Resolved {
-  const s = (q || "").toLowerCase();
-  if (!s) return { provider: "gemini", modelId: PROVIDER_DEFAULT.gemini };
-  if (
-    /risk|drawdown|var|simulat|scenario|stress|exposure|rebalanc|hedge|tax|optim|portfolio/.test(s)
-  )
-    return { provider: "gemini", modelId: PROVIDER_DEFAULT.gemini };
-  if (/news|today|latest|breaking|happening|sector|industry|earning|result/.test(s))
-    return { provider: "cerebras", modelId: PROVIDER_DEFAULT.cerebras };
-  if (/screen|scan|breakout|filter|quote|ltp|price of|list|ticker|search/.test(s))
-    return { provider: "cerebras", modelId: PROVIDER_DEFAULT.cerebras };
-  if (/json|schema|structured/.test(s))
-    return { provider: "mistral", modelId: PROVIDER_DEFAULT.mistral };
-  return { provider: "groq", modelId: PROVIDER_DEFAULT.groq };
+  const chain = CHAINS[classifyIntent(q)] ?? ["gemini"];
+  const provider = chain[0];
+  return { provider, modelId: providerDefault(provider) };
 }
 
 export function resolveProviderAuto(provider: ProviderId, _q: string): string {
-  const list = PROVIDERS[provider].models;
-  return PROVIDER_DEFAULT[provider] && list.some((m) => m.id === PROVIDER_DEFAULT[provider])
-    ? PROVIDER_DEFAULT[provider]
-    : list[0].id;
+  return providerDefault(provider);
 }

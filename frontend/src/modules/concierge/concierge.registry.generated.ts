@@ -1,0 +1,242 @@
+// GENERATED — do not edit. Source: concierge/llm/src/alphaforge_anton_llm/registry/{providers,routing}.json
+// Regenerate: pnpm gen:concierge  (Fux: concierge-registry-single-source)
+
+export type ProviderId = "gemini" | "groq" | "cerebras" | "mistral" | "openrouter" | "huggingface" | "claude-sdk";
+
+export interface ModelMeta {
+  id: string;
+  name: string;
+  tag: string;
+  ctx: string;
+  cost: string;
+  desc: string;
+}
+
+export interface ProviderMeta {
+  id: ProviderId;
+  name: string;
+  vendor: string;
+  glyph: string;
+  desc: string;
+  models: ModelMeta[];
+}
+
+export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
+  "gemini": {
+    "id": "gemini",
+    "name": "Gemini",
+    "vendor": "Google · AI Studio",
+    "glyph": "G",
+    "desc": "Multimodal, long context, generous free tier.",
+    "models": [
+      {
+        "id": "gemini-flash-latest",
+        "name": "Gemini Flash",
+        "tag": "fast",
+        "ctx": "1M ctx",
+        "cost": "free",
+        "desc": "Default — vision + PDF native, fast."
+      },
+      {
+        "id": "gemini-2.5-pro",
+        "name": "Gemini 2.5 Pro",
+        "tag": "deep",
+        "ctx": "2M ctx",
+        "cost": "free*",
+        "desc": "Deep reasoning, free-tier limits apply."
+      }
+    ]
+  },
+  "groq": {
+    "id": "groq",
+    "name": "Groq",
+    "vendor": "groq.com · LPU",
+    "glyph": "Gq",
+    "desc": "Llama on LPUs — extreme low-latency.",
+    "models": [
+      {
+        "id": "llama-3.3-70b-versatile",
+        "name": "Llama 3.3 70B",
+        "tag": "fast",
+        "ctx": "128k ctx",
+        "cost": "free",
+        "desc": "~200 tok/s, default workhorse for factoid."
+      }
+    ]
+  },
+  "cerebras": {
+    "id": "cerebras",
+    "name": "Cerebras",
+    "vendor": "cerebras.ai · WSE",
+    "glyph": "Cb",
+    "desc": "Wafer-scale inference, fastest free tier.",
+    "models": [
+      {
+        "id": "llama3.1-8b",
+        "name": "Llama 3.1 8B",
+        "tag": "ultra-fast",
+        "ctx": "128k ctx",
+        "cost": "free",
+        "desc": "~2000 tok/s, ideal for news + lookups."
+      }
+    ]
+  },
+  "mistral": {
+    "id": "mistral",
+    "name": "Mistral",
+    "vendor": "mistral.ai · EU",
+    "glyph": "M",
+    "desc": "Structured output + JSON mode.",
+    "models": [
+      {
+        "id": "mistral-small-latest",
+        "name": "Mistral Small",
+        "tag": "balanced",
+        "ctx": "128k ctx",
+        "cost": "free*",
+        "desc": "Strong at JSON schema + finance reasoning."
+      }
+    ]
+  },
+  "openrouter": {
+    "id": "openrouter",
+    "name": "OpenRouter",
+    "vendor": "openrouter.ai · aggregator",
+    "glyph": "OR",
+    "desc": "Aggregator — many free-tier models behind one key.",
+    "models": [
+      {
+        "id": "google/gemma-4-26b-a4b-it:free",
+        "name": "Gemma 4 26B",
+        "tag": "free",
+        "ctx": "128k ctx",
+        "cost": "free",
+        "desc": "Default :free model — broad capability."
+      }
+    ]
+  },
+  "huggingface": {
+    "id": "huggingface",
+    "name": "HuggingFace",
+    "vendor": "hf.co · Inference",
+    "glyph": "Hf",
+    "desc": "Open-source serverless inference.",
+    "models": [
+      {
+        "id": "mistralai/Mistral-7B-Instruct-v0.3",
+        "name": "Mistral 7B",
+        "tag": "open",
+        "ctx": "32k ctx",
+        "cost": "free",
+        "desc": "Fallback / experimental open-weights."
+      }
+    ]
+  },
+  "claude-sdk": {
+    "id": "claude-sdk",
+    "name": "Claude",
+    "vendor": "Anthropic · paid",
+    "glyph": "C",
+    "desc": "Strongest reasoning — gated by CostGuard.",
+    "models": [
+      {
+        "id": "claude-sonnet-4-6",
+        "name": "Claude Sonnet 4.6",
+        "tag": "paid",
+        "ctx": "200k ctx",
+        "cost": "$3/M",
+        "desc": "Confirmation required before each call."
+      }
+    ]
+  }
+};
+
+export const PROVIDER_ORDER: ProviderId[] = [
+  "gemini",
+  "groq",
+  "cerebras",
+  "mistral",
+  "openrouter",
+  "huggingface",
+  "claude-sdk"
+];
+
+export interface IntentPattern {
+  pattern: string;
+  queryType: string;
+}
+
+export const INTENT_PATTERNS: IntentPattern[] = [
+  {
+    "pattern": "risk|drawdown|var|simulat|stress|exposure|rebalanc|hedge|tax|optim",
+    "queryType": "investment_plan"
+  },
+  {
+    "pattern": "news|today|latest|breaking|happening|sector|industry|earning|result|quarterly",
+    "queryType": "news_lookup"
+  },
+  {
+    "pattern": "screen|scan|breakout|filter|quote|ltp|price of|ticker|list|search",
+    "queryType": "factoid"
+  },
+  {
+    "pattern": "portfolio|holding|allocation|weight|sleeve",
+    "queryType": "portfolio_overview"
+  }
+];
+
+export const FALLBACK_QUERY_TYPE = "multi_turn";
+
+export const CHAINS: Record<string, ProviderId[]> = {
+  "news_lookup": [
+    "cerebras",
+    "groq",
+    "gemini",
+    "openrouter"
+  ],
+  "factoid": [
+    "cerebras",
+    "gemini",
+    "groq",
+    "openrouter"
+  ],
+  "portfolio_overview": [
+    "gemini",
+    "groq"
+  ],
+  "stock_pick": [
+    "gemini",
+    "openrouter",
+    "groq"
+  ],
+  "investment_plan": [
+    "mistral",
+    "gemini",
+    "openrouter"
+  ],
+  "industry_news": [
+    "groq",
+    "gemini",
+    "openrouter"
+  ],
+  "multi_turn": [
+    "gemini",
+    "groq"
+  ]
+};
+
+export const DEFAULT_POLICY = {
+  "costScore": {
+    "free": 3,
+    "free*": 2
+  },
+  "tagScore": {
+    "fast": 3,
+    "balanced": 3,
+    "ultra-fast": 2,
+    "deep": 1,
+    "open": 1,
+    "free": 1,
+    "paid": 0
+  }
+} as const;

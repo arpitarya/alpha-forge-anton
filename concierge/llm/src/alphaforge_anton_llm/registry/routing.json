@@ -1,0 +1,51 @@
+{
+  "intents": [
+    {
+      "pattern": "risk|drawdown|var|simulat|stress|exposure|rebalanc|hedge|tax|optim",
+      "query_type": "investment_plan"
+    },
+    {
+      "pattern": "news|today|latest|breaking|happening|sector|industry|earning|result|quarterly",
+      "query_type": "news_lookup"
+    },
+    {
+      "pattern": "screen|scan|breakout|filter|quote|ltp|price of|ticker|list|search",
+      "query_type": "factoid"
+    },
+    {
+      "pattern": "portfolio|holding|allocation|weight|sleeve",
+      "query_type": "portfolio_overview"
+    }
+  ],
+  "fallback_query_type": "multi_turn",
+  "chains": {
+    "news_lookup": ["cerebras", "groq", "gemini", "openrouter"],
+    "factoid": ["cerebras", "gemini", "groq", "openrouter"],
+    "portfolio_overview": ["gemini", "groq"],
+    "stock_pick": ["gemini", "openrouter", "groq"],
+    "investment_plan": ["mistral", "gemini", "openrouter"],
+    "industry_news": ["groq", "gemini", "openrouter"],
+    "multi_turn": ["gemini", "groq"]
+  },
+  "provider_query_type": {
+    "claude-sdk": "investment_plan",
+    "openrouter": "investment_plan",
+    "gemini": "portfolio_overview",
+    "mistral": "investment_plan",
+    "groq": "factoid",
+    "cerebras": "factoid",
+    "huggingface": "factoid"
+  },
+  "default_policy": {
+    "cost_score": { "free": 3, "free*": 2 },
+    "tag_score": {
+      "fast": 3,
+      "balanced": 3,
+      "ultra-fast": 2,
+      "deep": 1,
+      "open": 1,
+      "free": 1,
+      "paid": 0
+    }
+  }
+}

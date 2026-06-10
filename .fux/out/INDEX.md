@@ -1,6 +1,6 @@
 # Fux INDEX
 
-_27 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_29 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
 
 ## brokers
 - **broker-source** (glossary) — BrokerSource
@@ -17,6 +17,8 @@ _27 active entries across 10 domains. Read this first; open a rule (`fux why <id
 - **files-max-100-lines** (convention) — Source files stay ≤ 100 lines (≤ 50 for files whose name _[global]_
 
 ## concierge
+- **concierge-default-model** (convention) — A fresh Orff session pins a derived default model, never the
+- **concierge-registry-single-source** (convention) — The concierge provider/model registry, intent→provider routing,
 - **orff** (glossary) — Orff
 
 ## frontend

@@ -42,7 +42,7 @@ export function ModelPicker({ value, query, onChange, footerRef }: Props) {
     const MENU_WIDTH = 560;
     const right = Math.min(
       window.innerWidth - r.right,
-      window.innerWidth - MENU_WIDTH - 117,  // keep left edge ≥ 8px from viewport
+      window.innerWidth - MENU_WIDTH - 117, // keep left edge ≥ 8px from viewport
     );
     setPos({ bottom: window.innerHeight - r.top + 8, right, maxHeight: Math.max(160, r.top - 16) });
     if (value.provider !== "auto") setFocused(value.provider);
@@ -70,7 +70,10 @@ export function ModelPicker({ value, query, onChange, footerRef }: Props) {
   const topAuto = resolveTopAuto(query);
 
   return (
-    <div style={{ position: "relative", display: "flex", alignItems: "center", flexShrink: 0 }}>
+    <div
+      data-component="ModelPicker"
+      style={{ position: "relative", display: "flex", alignItems: "center", flexShrink: 0 }}
+    >
       <button
         ref={btnRef}
         type="button"
@@ -169,7 +172,12 @@ export function ModelPicker({ value, query, onChange, footerRef }: Props) {
             ref={menuRef}
             role="dialog"
             aria-label="Model"
-            style={{ ...styles.menu, bottom: pos.bottom, right: pos.right, maxHeight: pos.maxHeight }}
+            style={{
+              ...styles.menu,
+              bottom: pos.bottom,
+              right: pos.right,
+              maxHeight: pos.maxHeight,
+            }}
           >
             <div style={styles.grid}>
               <div style={styles.col}>

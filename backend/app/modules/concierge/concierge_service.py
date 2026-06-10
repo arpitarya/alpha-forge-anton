@@ -6,10 +6,12 @@ import json
 import re
 import time
 
+from alphaforge_anton_llm import registry
 from alphaforge_anton_llm.gateway import create_gateway
 from alphaforge_anton_llm.types import Message, QueryType
 
-from app.modules.concierge.concierge_schemas import PROVIDER_TO_QUERY_TYPE, ChatMessage, ChatRequest
+from app.modules.concierge.concierge_schemas import ChatMessage, ChatRequest
+from app.modules.concierge.fux_bridge import recall as fux_recall
 
 _SYSTEM = (
     "You are Orff, the AI financial concierge inside AlphaForge Anton — a personal investment "
@@ -19,36 +21,47 @@ _SYSTEM = (
     "explicitly requested."
 )
 
-_QUERY_TYPE_BY_INTENT: list[tuple[str, QueryType]] = [
-    (r"risk|drawdown|var|simulat|stress|exposure|rebalanc|hedge|tax", QueryType.INVESTMENT_PLAN),
-    (r"screen|scan|breakout|filter|quote|ltp|price of|ticker", QueryType.FACTOID),
-    (r"news|sector|industry|earning|result|quarterly", QueryType.NEWS_LOOKUP),
-    (r"portfolio|holding|allocation|weight|sleeve", QueryType.PORTFOLIO_OVERVIEW),
-]
+_GROUNDING_PREAMBLE = (
+    "Authoritative project knowledge from Fux (Anton's knowledge brain). Treat these "
+    "rules, formulas, and definitions as ground truth when they apply; cite the figures "
+    "and logic they prescribe rather than inventing your own:\n\n"
+)
 
 _gateway = create_gateway()
 
 
 def _resolve(req: ChatRequest, last_user_msg: str) -> tuple[QueryType, str | None]:
+    # Intent classification + provider→QueryType both live in the registry manifest
+    # (single source of truth) — see Fux rule `concierge-registry-single-source`.
     if req.provider == "auto":
-        for pattern, qt in _QUERY_TYPE_BY_INTENT:
-            if re.search(pattern, last_user_msg, re.IGNORECASE):
-                return qt, None
-        return QueryType.MULTI_TURN, None
-    qt_slug = PROVIDER_TO_QUERY_TYPE.get(req.provider, "factoid")
-    return QueryType(qt_slug), req.provider
+        return registry.classify_intent(last_user_msg), None
+    return registry.provider_query_type(req.provider), req.provider
 
 
 def _sse(payload: dict) -> bytes:
     return f"data: {json.dumps(payload)}\n\n".encode()
 
 
+# Upstream provider errors embed the request URL, which carries the API key as a
+# `?key=…`/`?api_key=…` query param. Never forward a live secret to the browser.
+_SECRET_RE = re.compile(r"(?i)([?&](?:api[_-]?key|key|token|access_token)=)[^&\s\"']+")
+
+
+def _redact(msg: str) -> str:
+    return _SECRET_RE.sub(r"\1<redacted>", msg)
+
+
 async def stream_chat(req: ChatRequest):
     """Async generator yielding SSE-formatted bytes per token snapshot."""
     msgs = [Message(role="system", content=_SYSTEM)]
-    msgs.extend(Message(role=m.role, content=m.content) for m in req.messages)
 
     last_user = next((m.content for m in reversed(req.messages) if m.role == "user"), "")
+    grounding = await fux_recall(last_user) if last_user else ""
+    if grounding:
+        msgs.append(Message(role="system", content=_GROUNDING_PREAMBLE + grounding))
+
+    msgs.extend(Message(role=m.role, content=m.content) for m in req.messages)
+
     qt, preferred = _resolve(req, last_user)
     confirmed = req.provider == "claude-sdk"
 
@@ -67,7 +80,7 @@ async def stream_chat(req: ChatRequest):
                 "auto_level": req.auto_level,
             })
     except Exception as exc:
-        yield _sse({"error": str(exc), "elapsed_s": round(time.perf_counter() - t0, 2)})
+        yield _sse({"error": _redact(str(exc)), "elapsed_s": round(time.perf_counter() - t0, 2)})
     finally:
         yield b"data: [DONE]\n\n"
 

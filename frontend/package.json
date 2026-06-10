@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port ${FRONTEND_PORT:-3000} --experimental-https",
-    "build": "next build",
+    "gen:concierge": "node scripts/gen-concierge-registry.mjs",
+    "gen:concierge:check": "node scripts/gen-concierge-registry.mjs --check",
+    "dev": "pnpm gen:concierge && next dev --port ${FRONTEND_PORT:-3000} --experimental-https",
+    "build": "pnpm gen:concierge && next build",
     "start": "next start --port ${FRONTEND_PORT:-3000}",
     "lint": "next lint",
     "lint:biome": "biome check .",
