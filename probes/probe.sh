@@ -17,6 +17,7 @@ Available probes:
     ui-screens           ui_screens.py
     ui-pref-tabs         ui_pref_tabs.py
     ui-concierge         ui_concierge_probe.py
+    ui-footer-chat       ui_footer_chat_probe.py
     ui-model-picker      ui_model_picker_probe.py
     ui-notif-time        ui_notification_time_probe.py
     ui-voice             ui_voice_probe.py
@@ -57,6 +58,7 @@ case "$NAME" in
     ui-screens)        SCRIPT="ui_screens.py" ;;
     ui-pref-tabs)      SCRIPT="ui_pref_tabs.py" ;;
     ui-concierge)      SCRIPT="ui_concierge_probe.py" ;;
+    ui-footer-chat)    SCRIPT="ui_footer_chat_probe.py" ;;
     ui-model-picker)   SCRIPT="ui_model_picker_probe.py" ;;
     ui-notif-time)     SCRIPT="ui_notification_time_probe.py" ;;
     ui-voice)          SCRIPT="ui_voice_probe.py" ;;
