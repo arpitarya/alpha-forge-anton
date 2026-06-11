@@ -12,11 +12,18 @@ from alphaforge_anton_llm.types import Message, ProviderResponse, ToolCall, Tool
 logger = logging.getLogger(__name__)
 
 
-def build_body(model: str, messages: list[Message], tools: list[ToolSchema] | None) -> dict:
+def build_body(
+    model: str,
+    messages: list[Message],
+    tools: list[ToolSchema] | None,
+    max_tokens: int | None = None,
+) -> dict:
     body: dict = {
         "model": model,
         "messages": [m.model_dump(exclude_none=True) for m in messages],
     }
+    if max_tokens:
+        body["max_tokens"] = max_tokens
     if tools:
         body["tools"] = [{"type": "function", "function": t.model_dump()} for t in tools]
     return body
@@ -34,9 +41,10 @@ async def openai_complete(
     provider_name: str,
     messages: list[Message],
     tools: list[ToolSchema] | None = None,
+    max_tokens: int | None = None,
     timeout: float = 30.0,
 ) -> ProviderResponse:
-    body = build_body(model, messages, tools)
+    body = build_body(model, messages, tools, max_tokens)
     async with httpx.AsyncClient(timeout=timeout) as c:
         resp = await c.post(f"{base_url}/chat/completions", json=body, headers=headers(api_key))
         if resp.status_code == 429:

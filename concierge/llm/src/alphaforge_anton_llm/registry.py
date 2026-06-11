@@ -78,6 +78,25 @@ def provider_query_type(slug: str) -> QueryType:
     return QueryType(_routing()["provider_query_type"].get(slug, "factoid"))
 
 
+def _private() -> dict:
+    return _routing().get("private", {})
+
+
+def private_query_types() -> set[str]:
+    """QueryTypes that touch the user's real holdings — see `secure-holdings-plan`."""
+    return set(_private().get("query_types", []))
+
+
+def trusted_providers() -> set[str]:
+    """The only providers allowed to receive a private (holdings-bearing) query."""
+    return set(_private().get("trusted_providers", []))
+
+
+def is_private(qt: QueryType) -> bool:
+    """True when a query touches real holdings → trusted-provider floor + disclosure."""
+    return qt.value in private_query_types()
+
+
 def chains() -> dict[str, list[str]]:
     """All QueryType→chain mappings."""
     return {k: list(v) for k, v in _routing()["chains"].items()}

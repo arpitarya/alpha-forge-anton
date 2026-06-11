@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 40,
+  "count": 43,
   "rules": [
     {
       "id": "async-everywhere",
@@ -232,7 +232,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-10",
-      "updated": "2026-06-10"
+      "updated": "2026-06-11"
     },
     {
       "id": "concierge-registry-single-source",
@@ -246,6 +246,9 @@
         "concierge/llm/src/alphaforge_anton_llm/registry/providers.json",
         "concierge/llm/src/alphaforge_anton_llm/registry/routing.json",
         "concierge/llm/src/alphaforge_anton_llm/registry.py",
+        "concierge/llm/src/alphaforge_anton_llm/pricing.py",
+        "concierge/llm/src/alphaforge_anton_llm/cost_guard.py",
+        "concierge/llm/src/alphaforge_anton_llm/providers/base.py",
         "frontend/scripts/gen-concierge-registry.mjs",
         "frontend/src/modules/concierge/concierge.registry.generated.ts"
       ],
@@ -259,7 +262,23 @@
       "check": null,
       "examples": [],
       "created": "2026-06-10",
-      "updated": "2026-06-10"
+      "updated": "2026-06-12"
+    },
+    {
+      "id": "core-allocation",
+      "type": "narrative",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "Core allocation — default portfolio plan",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/core-allocation.plan.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-11",
+      "updated": "2026-06-11"
     },
     {
       "id": "day-pnl",
@@ -421,6 +440,22 @@
       "updated": "2026-06-04"
     },
     {
+      "id": "portfolio-plan-template",
+      "type": "narrative",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "Portfolio plan — template (git-safe instance shape)",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/portfolio-plan-template.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-11",
+      "updated": "2026-06-11"
+    },
+    {
       "id": "portfolio-valuation",
       "type": "formula",
       "domain": "portfolio",
@@ -463,6 +498,22 @@
       "examples": [],
       "created": "2026-06-09",
       "updated": "2026-06-09"
+    },
+    {
+      "id": "secure-holdings-plan",
+      "type": "narrative",
+      "domain": "security",
+      "status": "active",
+      "title": "Secure holdings access for Orff + the plan→drift→advise workflow",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/secure-holdings-plan.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-11",
+      "updated": "2026-06-11"
     },
     {
       "id": "ui-component-contract",

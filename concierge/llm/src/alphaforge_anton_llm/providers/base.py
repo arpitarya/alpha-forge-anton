@@ -7,6 +7,7 @@ from typing import AsyncIterator
 
 from pydantic import BaseModel
 
+from alphaforge_anton_llm import registry
 from alphaforge_anton_llm.types import Message, ProviderResponse, ToolSchema
 
 
@@ -29,14 +30,16 @@ class ProviderAdapter(ABC):
         messages: list[Message],
         tools: list[ToolSchema] | None = None,
         stream: bool = False,
+        model: str | None = None,
     ) -> ProviderResponse | AsyncIterator[str]: ...
 
     @abstractmethod
     async def health(self) -> ProviderHealth: ...
 
     @classmethod
-    @abstractmethod
-    def default_model(cls) -> str: ...
+    def default_model(cls) -> str:
+        """The provider's default model id — the first entry in `providers.json`."""
+        return registry.default_model(cls.name)
 
     def _ok(self) -> ProviderHealth:
         return ProviderHealth(available=True, model=self.default_model())

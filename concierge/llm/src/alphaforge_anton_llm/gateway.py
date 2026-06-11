@@ -26,14 +26,15 @@ class LLMGateway:
         self._handover = Handover()
 
     async def _select(
-        self, qt: QueryType, preferred: str | None, confirmed: bool,
+        self, qt: QueryType, preferred: str | None, confirmed: bool, model: str | None,
     ) -> tuple[str, set[str]]:
         available = await self._available_providers()
         pick = self._router.pick(qt, available)
         name = preferred if preferred and preferred in available else pick
         if not name:
             raise RuntimeError("No providers available — check API keys")
-        self._guard.check(name, confirmed=confirmed)
+        # A pinned model only gates the guard when its provider is the one we picked.
+        self._guard.check(name, model=model if name == preferred else None, confirmed=confirmed)
         await self._rate.acquire(name)
         return name, available
 
@@ -41,13 +42,16 @@ class LLMGateway:
         self, messages: list[Message], *,
         query_type: QueryType = QueryType.FACTOID,
         preferred_provider: str | None = None,
+        model: str | None = None,
         tools: list[ToolSchema] | None = None,
         confirmed: bool = False,
     ) -> ProviderResponse:
-        name, available = await self._select(query_type, preferred_provider, confirmed)
+        name, available = await self._select(query_type, preferred_provider, confirmed, model)
+        # The pinned model id only applies to its own provider; a fallback uses its default.
+        picked_model = model if name == preferred_provider else None
         prepared = self._handover.prepare(messages)
         try:
-            r = await self._registry[name].complete(prepared, tools=tools)
+            r = await self._registry[name].complete(prepared, tools=tools, model=picked_model)
             assert isinstance(r, ProviderResponse)
             return r
         except CostGuardError:
@@ -71,17 +75,19 @@ class LLMGateway:
         self, messages: list[Message], *,
         query_type: QueryType = QueryType.FACTOID,
         preferred_provider: str | None = None,
+        model: str | None = None,
         confirmed: bool = False,
     ) -> AsyncIterator[ProviderResponse]:
         """Stream ProviderResponse snapshots; one-shot when provider can't stream."""
-        name, _ = await self._select(query_type, preferred_provider, confirmed)
+        name, _ = await self._select(query_type, preferred_provider, confirmed, model)
+        picked_model = model if name == preferred_provider else None
         adapter = self._registry[name]
         prepared = self._handover.prepare(messages)
         if getattr(adapter, "supports_streaming", False) and hasattr(adapter, "astream"):
-            async for snapshot in adapter.astream(prepared):
+            async for snapshot in adapter.astream(prepared, model=picked_model):
                 yield snapshot
             return
-        result = await adapter.complete(prepared)
+        result = await adapter.complete(prepared, model=picked_model)
         assert isinstance(result, ProviderResponse)
         yield result
 

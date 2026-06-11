@@ -21,11 +21,12 @@ async def openai_stream(
     model: str,
     provider_name: str,
     messages: list[Message],
+    max_tokens: int | None = None,
     timeout: float = 60.0,
 ) -> AsyncIterator[ProviderResponse]:
     """Yield ProviderResponse snapshots with progressively-growing content."""
     body = {
-        **build_body(model, messages, None),
+        **build_body(model, messages, None, max_tokens),
         "stream": True,
         "stream_options": {"include_usage": True},
     }

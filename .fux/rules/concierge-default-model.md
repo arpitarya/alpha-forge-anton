@@ -4,14 +4,26 @@ domain: concierge
 type: convention
 status: active
 created: 2026-06-10
-updated: 2026-06-10
+updated: 2026-06-11
+keywords:
+  - model-picker
+  - default
+  - auto
+  - routing
+  - gemini
+  - provider
+  - flicker
+  - pinned
 code_refs:
   - frontend/src/modules/concierge/concierge.defaults.ts
   - frontend/src/modules/concierge/ChatContext.tsx
   - frontend/src/modules/concierge/concierge.routing.ts
   - concierge/llm/src/alphaforge_anton_llm/registry/routing.json
-related: [concierge-registry-single-source, orff, ui-component-contract, files-max-100-lines]
-keywords: [model-picker, default, auto, routing, gemini, provider, flicker, pinned]
+related:
+  - concierge-registry-single-source
+  - orff
+  - ui-component-contract
+  - files-max-100-lines
 ---
 **Convention:** A fresh Orff session pins a **derived default model**, never the
 `auto` router. The default is computed by `pickDefaultChoice()` in

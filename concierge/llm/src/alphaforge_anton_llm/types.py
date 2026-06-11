@@ -12,6 +12,9 @@ class QueryType(str, Enum):
     NEWS_LOOKUP = "news_lookup"
     FACTOID = "factoid"
     PORTFOLIO_OVERVIEW = "portfolio_overview"
+    # Touches the user's *actual* holdings — routed only to trusted providers and
+    # injected with disclosed (percentage-only) context. See Fux `secure-holdings-plan`.
+    PORTFOLIO_PRIVATE = "portfolio_private"
     STOCK_PICK = "stock_pick"
     INVESTMENT_PLAN = "investment_plan"
     INDUSTRY_NEWS = "industry_news"

@@ -53,8 +53,11 @@ def test_provider_slug_literal_matches_registry():
 @pytest.mark.parametrize(
     "text,expected",
     [
-        ("show my risk exposure and rebalance", QueryType.INVESTMENT_PLAN),
-        ("portfolio allocation by sleeve", QueryType.PORTFOLIO_OVERVIEW),
+        # Anything touching the user's real holdings classifies private (→ trusted floor).
+        ("show my risk exposure and rebalance", QueryType.PORTFOLIO_PRIVATE),
+        ("portfolio allocation by sleeve", QueryType.PORTFOLIO_PRIVATE),
+        # Educational / analytical, not holdings-bearing → free providers are fine.
+        ("how does tax-loss harvesting work", QueryType.INVESTMENT_PLAN),
         ("latest sector news today", QueryType.NEWS_LOOKUP),
         ("screen breakouts under 500", QueryType.FACTOID),
         ("hello, how are you", QueryType.MULTI_TURN),
@@ -63,3 +66,13 @@ def test_provider_slug_literal_matches_registry():
 )
 def test_classify_intent(text: str, expected: QueryType):
     assert registry.classify_intent(text) == expected
+
+
+def test_private_queries_route_only_to_trusted_providers():
+    """The security floor: every private query-type's whole chain is a trusted provider."""
+    trusted = registry.trusted_providers()
+    assert trusted, "no trusted providers configured for private routing"
+    for qt_slug in registry.private_query_types():
+        chain = registry.chains().get(qt_slug, [])
+        assert chain, f"private query-type {qt_slug} has no chain"
+        assert set(chain) <= trusted, f"{qt_slug} chain {chain} escapes the trusted floor"
