@@ -8,7 +8,7 @@ updated: 2026-06-11
 ---
 # Secure holdings access for Orff + the plan→drift→advise workflow
 
-**Status:** _Design plan — drives the focused PRs below._
+**Status:** _Build in progress — step 1 (plan plane + git-safety guard) shipped._
 **Why this exists:** Orff routes to **free external LLM providers** (Groq, Mistral,
 Gemini, OpenRouter, HuggingFace — see `concierge/.../registry/routing.json`). Today
 `concierge_service.stream_chat` injects Fux grounding but **no holdings**, so nothing
@@ -76,10 +76,12 @@ is a convention, not a guarantee.
 
 ## Build order
 
-1. Plan schema + one example plan entry ([[portfolio-plan-template]]) + the git-safety guard probe.
+1. ✅ **Shipped** — Plan schema ([[portfolio-plan-template]]) + first plan ([[core-allocation]])
+   + `plan_loader.py` (parses the committed plan → `AssetClass` targets/bands)
+   + `plan_safety_probe.py` git-safety guard (`just probe plan-safety`).
 2. `portfolio_private` intent + provider floor in the registry.
 3. Server-side holdings tools + `disclose()` redaction chokepoint.
-4. Wire `get_drift(plan)` to the existing `aggregator.rebalance()` engine.
+4. Wire `get_drift(plan)` to the existing `aggregator.rebalance()` engine (pass plan targets/bands).
 5. Probe + `just` recipe (per `probe-cdp-not-playwright` — a feature isn't verified without one).
 
 ## Files this will touch (sketch)

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 42,
+  "count": 43,
   "rules": [
     {
       "id": "async-everywhere",
@@ -260,6 +260,22 @@
       "examples": [],
       "created": "2026-06-10",
       "updated": "2026-06-10"
+    },
+    {
+      "id": "core-allocation",
+      "type": "narrative",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "Core allocation — default portfolio plan",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/core-allocation.plan.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-11",
+      "updated": "2026-06-11"
     },
     {
       "id": "day-pnl",

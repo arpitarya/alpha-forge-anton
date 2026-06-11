@@ -1,6 +1,6 @@
 # Fux narrative
 
-_13 narrative entries — the long-form prose absorbed into the substrate (plan §11)._
+_14 narrative entries — the long-form prose absorbed into the substrate (plan §11)._
 
 ## Contents
 
@@ -9,6 +9,7 @@ _13 narrative entries — the long-form prose absorbed into the substrate (plan 
 - [Broker CSV Dump Convention](#broker-csv-dumps)
 - [Broker Source Integration Guide](#broker-source-integration)
 - [AlphaForge Anton — Commands](#commands)
+- [Core allocation — default portfolio plan](#core-allocation)
 - [Getting Started — Developer Setup](#getting-started)
 - [How AlphaForge Anton Works](#how)
 - [Live prices — design plan](#live-prices-plan)
@@ -1157,6 +1158,53 @@ alphaforge-anton-repo-context-mcp                                      # Same se
 ./clean.sh --all          # Nuclear clean — removes everything (run setup.sh to restore)
 ```
 
+## Core allocation — default portfolio plan
+<a id="core-allocation"></a>
+_`core-allocation` · portfolio_
+
+# Core allocation — default portfolio plan
+
+The project's default rebalance plan. **Strategy only — zero personal figures**, so it
+is safe in this public repo (the git-safety guard probe enforces it). Live holdings
+never appear here; drift is computed at runtime against the data plane. Shape and rules
+follow [[portfolio-plan-template]]; rationale for the design is in [[secure-holdings-plan]].
+
+`plan_loader.load_plan("core-allocation")` reads the `targets` / `bands` below;
+`aggregator.rebalance()` joins them against live actuals → `RebalanceDrift`.
+
+## Targets (machine-read)
+
+```yaml
+plan_id: core-allocation
+horizon: long-term
+targets:                        # must sum to 100
+  equity: 60
+  mutual_fund: 15
+  bond: 15
+  gold: 5
+  crypto: 3
+  cash: 2
+bands:                          # drift tolerance, in percentage points
+  default: 5
+  crypto: 1.5
+rules:
+  - trim any class > target + its band
+  - top up any class < target - its band
+  - prefer adding new capital over selling when drift is one-sided
+```
+
+## Goals (the *why*)
+
+- **Equity 60%** — primary growth engine; the long horizon absorbs drawdowns.
+- **Mutual funds 15%** — diversified core that needs no per-name attention.
+- **Bonds + cash 17%** — stability plus dry powder that funds rebalancing without forced equity sales.
+- **Gold 5%** — inflation / currency hedge, lightly held.
+- **Crypto 3%, ±1.5pt band** — deliberately small and tightly banded; it drifts fast.
+
+## Related
+
+[[portfolio-plan-template]] · [[secure-holdings-plan]] · [[holdings-aggregator]] · [[portfolio-valuation]]
+
 ## Getting Started — Developer Setup
 <a id="getting-started"></a>
 _`getting-started` · general_
@@ -2219,7 +2267,7 @@ _`secure-holdings-plan` · security_
 
 # Secure holdings access for Orff + the plan→drift→advise workflow
 
-**Status:** _Design plan — drives the focused PRs below._
+**Status:** _Build in progress — step 1 (plan plane + git-safety guard) shipped._
 **Why this exists:** Orff routes to **free external LLM providers** (Groq, Mistral,
 Gemini, OpenRouter, HuggingFace — see `concierge/.../registry/routing.json`). Today
 `concierge_service.stream_chat` injects Fux grounding but **no holdings**, so nothing
@@ -2287,10 +2335,12 @@ is a convention, not a guarantee.
 
 ## Build order
 
-1. Plan schema + one example plan entry ([[portfolio-plan-template]]) + the git-safety guard probe.
+1. ✅ **Shipped** — Plan schema ([[portfolio-plan-template]]) + first plan ([[core-allocation]])
+   + `plan_loader.py` (parses the committed plan → `AssetClass` targets/bands)
+   + `plan_safety_probe.py` git-safety guard (`just probe plan-safety`).
 2. `portfolio_private` intent + provider floor in the registry.
 3. Server-side holdings tools + `disclose()` redaction chokepoint.
-4. Wire `get_drift(plan)` to the existing `aggregator.rebalance()` engine.
+4. Wire `get_drift(plan)` to the existing `aggregator.rebalance()` engine (pass plan targets/bands).
 5. Probe + `just` recipe (per `probe-cdp-not-playwright` — a feature isn't verified without one).
 
 ## Files this will touch (sketch)
