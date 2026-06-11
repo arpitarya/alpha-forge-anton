@@ -76,7 +76,7 @@
       "type": "code-file",
       "file": "backend/alembic/versions/640eee61bc50_initial_schema_with_pgvector_memory.py",
       "community": 2,
-      "centrality": 0.000799
+      "centrality": 0.000798
     },
     {
       "id": "backend/alembic/versions/640eee61bc50_initial_schema_with_pgvector_memory.py::upgrade",
@@ -102,7 +102,7 @@
       "type": "code-file",
       "file": "backend/alembic/versions/a3c9f2e1b4d7_iam_tables.py",
       "community": 2,
-      "centrality": 0.000799
+      "centrality": 0.000798
     },
     {
       "id": "backend/alembic/versions/a3c9f2e1b4d7_iam_tables.py::upgrade",
@@ -128,7 +128,7 @@
       "type": "code-file",
       "file": "backend/alembic/versions/b3d6f8a2c9e1_remove_iam_tables.py",
       "community": 2,
-      "centrality": 0.000799
+      "centrality": 0.000798
     },
     {
       "id": "backend/alembic/versions/b3d6f8a2c9e1_remove_iam_tables.py::upgrade",
@@ -275,7 +275,7 @@
       "file": "backend/app/core/env_loader.py",
       "line": 33,
       "community": 8,
-      "centrality": 0.000454
+      "centrality": 0.000453
     },
     {
       "id": "backend/app/core/env_loader.py::get_env_files",
@@ -318,7 +318,7 @@
       "file": "backend/app/core/logging.py",
       "line": 23,
       "community": 10,
-      "centrality": 0.000683
+      "centrality": 0.000682
     },
     {
       "id": "backend/app/core/logging.py::get_logger",
@@ -456,7 +456,7 @@
       "file": "backend/app/modules/brokers/_cdp.py",
       "line": 63,
       "community": 11,
-      "centrality": 0.001038
+      "centrality": 0.001037
     },
     {
       "id": "backend/app/modules/brokers/_cdp.py::cookie_value",
@@ -580,7 +580,7 @@
       "file": "backend/app/modules/brokers/aggregator.py",
       "line": 27,
       "community": 11,
-      "centrality": 0.00063
+      "centrality": 0.000629
     },
     {
       "id": "backend/app/modules/brokers/aggregator.py::all_holdings",
@@ -642,7 +642,7 @@
       "file": "backend/app/modules/brokers/aggregator_types.py",
       "line": 11,
       "community": 15,
-      "centrality": 0.000398
+      "centrality": 0.000397
     },
     {
       "id": "backend/app/modules/brokers/aggregator_types.py::AllocationSlice",
@@ -694,7 +694,7 @@
       "file": "backend/app/modules/brokers/angelone/angelone_cash_helper.py",
       "line": 35,
       "community": 11,
-      "centrality": 0.000343
+      "centrality": 0.000342
     },
     {
       "id": "backend/app/modules/brokers/angelone/angelone_cash_helper.py::_pick_cash",
@@ -729,7 +729,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/angelone/angelone_dump.py",
       "community": 11,
-      "centrality": 0.001341
+      "centrality": 0.00134
     },
     {
       "id": "backend/app/modules/brokers/angelone/angelone_dump.py::_ttl",
@@ -783,7 +783,7 @@
       "file": "backend/app/modules/brokers/angelone/angelone_dump.py",
       "line": 45,
       "community": 11,
-      "centrality": 0.000709
+      "centrality": 0.000708
     },
     {
       "id": "backend/app/modules/brokers/angelone/angelone_dump.py::main",
@@ -934,7 +934,7 @@
       "file": "backend/app/modules/brokers/angelone/angelone_source_helper.py",
       "line": 107,
       "community": 11,
-      "centrality": 0.000446
+      "centrality": 0.000445
     },
     {
       "id": "backend/app/modules/brokers/base.py",
@@ -942,7 +942,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/base.py",
       "community": 11,
-      "centrality": 0.001932
+      "centrality": 0.001931
     },
     {
       "id": "backend/app/modules/brokers/base.py::BrokerSource",
@@ -978,7 +978,7 @@
       "file": "backend/app/modules/brokers/base.py",
       "line": 53,
       "community": 11,
-      "centrality": 0.000394
+      "centrality": 0.000393
     },
     {
       "id": "backend/app/modules/brokers/base.py::cash",
@@ -1023,7 +1023,7 @@
       "file": "backend/app/modules/brokers/base.py",
       "line": 83,
       "community": 11,
-      "centrality": 0.004189
+      "centrality": 0.004188
     },
     {
       "id": "backend/app/modules/brokers/base.py::reset",
@@ -1057,7 +1057,7 @@
       "file": "backend/app/modules/brokers/binance/binance_cash_helper.py",
       "line": 24,
       "community": 11,
-      "centrality": 0.000404
+      "centrality": 0.000403
     },
     {
       "id": "backend/app/modules/brokers/binance/binance_cash_helper.py::_pick_cash",
@@ -1092,7 +1092,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/binance/binance_dump.py",
       "community": 11,
-      "centrality": 0.001341
+      "centrality": 0.00134
     },
     {
       "id": "backend/app/modules/brokers/binance/binance_dump.py::_ttl",
@@ -1146,7 +1146,7 @@
       "file": "backend/app/modules/brokers/binance/binance_dump.py",
       "line": 45,
       "community": 11,
-      "centrality": 0.000709
+      "centrality": 0.000708
     },
     {
       "id": "backend/app/modules/brokers/binance/binance_dump.py::main",
@@ -1243,7 +1243,7 @@
       "file": "backend/app/modules/brokers/binance/binance_source_helper.py",
       "line": 35,
       "community": 11,
-      "centrality": 0.000343
+      "centrality": 0.000342
     },
     {
       "id": "backend/app/modules/brokers/binance/binance_source_helper.py::_btc_usd",
@@ -1270,7 +1270,7 @@
       "file": "backend/app/modules/brokers/binance/binance_source_helper.py",
       "line": 55,
       "community": 11,
-      "centrality": 0.000661
+      "centrality": 0.00066
     },
     {
       "id": "backend/app/modules/brokers/binance/binance_source_helper.py::_capture",
@@ -1472,7 +1472,7 @@
       "file": "backend/app/modules/brokers/cash_dump.py",
       "line": 31,
       "community": 11,
-      "centrality": 0.000579
+      "centrality": 0.000578
     },
     {
       "id": "backend/app/modules/brokers/cash_dump.py::_write_all",
@@ -1490,7 +1490,7 @@
       "file": "backend/app/modules/brokers/cash_dump.py",
       "line": 48,
       "community": 11,
-      "centrality": 0.00051
+      "centrality": 0.000509
     },
     {
       "id": "backend/app/modules/brokers/cash_dump.py::load_cached_cash",
@@ -1517,7 +1517,7 @@
       "file": "backend/app/modules/brokers/cash_dump.py",
       "line": 87,
       "community": 11,
-      "centrality": 0.00046
+      "centrality": 0.000459
     },
     {
       "id": "backend/app/modules/brokers/cash_dump.py::cached_sync_cash",
@@ -1587,7 +1587,7 @@
       "file": "backend/app/modules/brokers/dump_utils.py",
       "line": 18,
       "community": 11,
-      "centrality": 0.000289
+      "centrality": 0.000288
     },
     {
       "id": "backend/app/modules/brokers/dump_utils.py::dump_dir",
@@ -1614,7 +1614,7 @@
       "file": "backend/app/modules/brokers/dump_utils.py",
       "line": 53,
       "community": 11,
-      "centrality": 0.000667
+      "centrality": 0.000666
     },
     {
       "id": "backend/app/modules/brokers/dump_utils.py::is_csv_fresh",
@@ -1694,7 +1694,7 @@
       "file": "backend/app/modules/brokers/fx.py",
       "line": 43,
       "community": 21,
-      "centrality": 0.000505
+      "centrality": 0.000504
     },
     {
       "id": "backend/app/modules/brokers/fx.py::_write_row",
@@ -1799,7 +1799,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/groww/groww_dump.py",
       "community": 11,
-      "centrality": 0.001341
+      "centrality": 0.00134
     },
     {
       "id": "backend/app/modules/brokers/groww/groww_dump.py::_ttl",
@@ -1853,7 +1853,7 @@
       "file": "backend/app/modules/brokers/groww/groww_dump.py",
       "line": 45,
       "community": 11,
-      "centrality": 0.000709
+      "centrality": 0.000708
     },
     {
       "id": "backend/app/modules/brokers/groww/groww_dump.py::main",
@@ -1950,7 +1950,7 @@
       "file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "line": 38,
       "community": 11,
-      "centrality": 0.000342
+      "centrality": 0.000341
     },
     {
       "id": "backend/app/modules/brokers/groww/groww_source_helper.py::_looks_like_holding",
@@ -1986,7 +1986,7 @@
       "file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "line": 132,
       "community": 11,
-      "centrality": 0.000476
+      "centrality": 0.000475
     },
     {
       "id": "backend/app/modules/brokers/groww/groww_source_helper.py::normalize",
@@ -1995,7 +1995,7 @@
       "file": "backend/app/modules/brokers/groww/groww_source_helper.py",
       "line": 143,
       "community": 11,
-      "centrality": 0.001189
+      "centrality": 0.001188
     },
     {
       "id": "backend/app/modules/brokers/groww/groww_source_helper.py::_to_float",
@@ -2100,7 +2100,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/indmoney/indmoney_dump.py",
       "community": 11,
-      "centrality": 0.001341
+      "centrality": 0.00134
     },
     {
       "id": "backend/app/modules/brokers/indmoney/indmoney_dump.py::_ttl",
@@ -2154,7 +2154,7 @@
       "file": "backend/app/modules/brokers/indmoney/indmoney_dump.py",
       "line": 45,
       "community": 11,
-      "centrality": 0.000709
+      "centrality": 0.000708
     },
     {
       "id": "backend/app/modules/brokers/indmoney/indmoney_dump.py::main",
@@ -2331,7 +2331,7 @@
       "file": "backend/app/modules/brokers/refetch.py",
       "line": 55,
       "community": 18,
-      "centrality": 0.000433
+      "centrality": 0.000432
     },
     {
       "id": "backend/app/modules/brokers/refetch.py::_prime_unsynced",
@@ -2400,7 +2400,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/tickertape/tickertape_dump.py",
       "community": 11,
-      "centrality": 0.001341
+      "centrality": 0.00134
     },
     {
       "id": "backend/app/modules/brokers/tickertape/tickertape_dump.py::_ttl",
@@ -2454,7 +2454,7 @@
       "file": "backend/app/modules/brokers/tickertape/tickertape_dump.py",
       "line": 45,
       "community": 11,
-      "centrality": 0.000709
+      "centrality": 0.000708
     },
     {
       "id": "backend/app/modules/brokers/tickertape/tickertape_dump.py::main",
@@ -2471,7 +2471,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/tickertape/tickertape_source.py",
       "community": 11,
-      "centrality": 0.001055
+      "centrality": 0.001054
     },
     {
       "id": "backend/app/modules/brokers/tickertape/tickertape_source.py::_holding_from_row",
@@ -2515,7 +2515,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/tickertape/tickertape_source_helper.py",
       "community": 11,
-      "centrality": 0.00125
+      "centrality": 0.001249
     },
     {
       "id": "backend/app/modules/brokers/tickertape/tickertape_source_helper.py::env",
@@ -2533,7 +2533,7 @@
       "file": "backend/app/modules/brokers/tickertape/tickertape_source_helper.py",
       "line": 40,
       "community": 11,
-      "centrality": 0.000483
+      "centrality": 0.000482
     },
     {
       "id": "backend/app/modules/brokers/tickertape/tickertape_source_helper.py::_ensure_logged_in",
@@ -2569,7 +2569,7 @@
       "file": "backend/app/modules/brokers/tickertape/tickertape_source_helper.py",
       "line": 125,
       "community": 11,
-      "centrality": 0.00122
+      "centrality": 0.001219
     },
     {
       "id": "backend/app/modules/brokers/tickertape/tickertape_source_helper.py::on_response",
@@ -2639,7 +2639,7 @@
       "file": "backend/app/modules/brokers/wallet_aggregator.py",
       "line": 53,
       "community": 27,
-      "centrality": 0.000797
+      "centrality": 0.000796
     },
     {
       "id": "backend/app/modules/brokers/wallet_aggregator.py::list_wallets",
@@ -2675,7 +2675,7 @@
       "file": "backend/app/modules/brokers/wallet_aggregator.py",
       "line": 95,
       "community": 17,
-      "centrality": 0.000379
+      "centrality": 0.000378
     },
     {
       "id": "backend/app/modules/brokers/zerodha_coin/__init__.py",
@@ -2691,7 +2691,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_dump.py",
       "community": 11,
-      "centrality": 0.001348
+      "centrality": 0.001347
     },
     {
       "id": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_dump.py::_ttl",
@@ -2807,7 +2807,7 @@
       "file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source.py",
       "line": 107,
       "community": 11,
-      "centrality": 0.000692
+      "centrality": 0.000691
     },
     {
       "id": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source.py::fetch",
@@ -2816,7 +2816,7 @@
       "file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source.py",
       "line": 113,
       "community": 11,
-      "centrality": 0.003046
+      "centrality": 0.003045
     },
     {
       "id": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source_helper.py",
@@ -2824,7 +2824,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source_helper.py",
       "community": 11,
-      "centrality": 0.000578
+      "centrality": 0.000577
     },
     {
       "id": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source_helper.py::env",
@@ -2842,7 +2842,7 @@
       "file": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source_helper.py",
       "line": 39,
       "community": 11,
-      "centrality": 0.000527
+      "centrality": 0.000526
     },
     {
       "id": "backend/app/modules/brokers/zerodha_coin/zerodha_coin_source_helper.py::acquire_token",
@@ -2876,7 +2876,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_dump.py",
       "community": 11,
-      "centrality": 0.001348
+      "centrality": 0.001347
     },
     {
       "id": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_dump.py::_ttl",
@@ -2947,7 +2947,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_instruments.py",
       "community": 11,
-      "centrality": 0.00118
+      "centrality": 0.001179
     },
     {
       "id": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_instruments.py::_cache_path",
@@ -3063,7 +3063,7 @@
       "type": "code-file",
       "file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "community": 11,
-      "centrality": 0.001415
+      "centrality": 0.001414
     },
     {
       "id": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py::_asset_class",
@@ -3126,7 +3126,7 @@
       "file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source.py",
       "line": 154,
       "community": 11,
-      "centrality": 0.000672
+      "centrality": 0.000671
     },
     {
       "id": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
@@ -3179,7 +3179,7 @@
       "file": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py",
       "line": 100,
       "community": 11,
-      "centrality": 0.000329
+      "centrality": 0.000328
     },
     {
       "id": "backend/app/modules/brokers/zerodha_kite/zerodha_kite_source_helper.py::fetch_holdings_json",
@@ -3274,7 +3274,7 @@
       "file": "backend/app/modules/concierge/compose_service.py",
       "line": 29,
       "community": 11,
-      "centrality": 0.002085
+      "centrality": 0.002084
     },
     {
       "id": "backend/app/modules/concierge/concierge_routes.py",
@@ -3343,7 +3343,7 @@
       "type": "code-file",
       "file": "backend/app/modules/concierge/concierge_service.py",
       "community": 11,
-      "centrality": 0.000572
+      "centrality": 0.000571
     },
     {
       "id": "backend/app/modules/concierge/concierge_service.py::_resolve",
@@ -3352,7 +3352,7 @@
       "file": "backend/app/modules/concierge/concierge_service.py",
       "line": 33,
       "community": 11,
-      "centrality": 0.000472
+      "centrality": 0.000471
     },
     {
       "id": "backend/app/modules/concierge/concierge_service.py::_sse",
@@ -3652,7 +3652,7 @@
       "file": "backend/app/modules/dashboard/dashboard_routes.py",
       "line": 70,
       "community": 36,
-      "centrality": 0.00057
+      "centrality": 0.000569
     },
     {
       "id": "backend/app/modules/dashboard/dashboard_routes.py::delete_watchlist",
@@ -3697,7 +3697,7 @@
       "file": "backend/app/modules/dashboard/dashboard_routes.py",
       "line": 108,
       "community": 36,
-      "centrality": 0.000827
+      "centrality": 0.000826
     },
     {
       "id": "backend/app/modules/dashboard/dashboard_schemas.py",
@@ -3943,7 +3943,7 @@
       "file": "backend/app/modules/health/health_routes.py",
       "line": 54,
       "community": 18,
-      "centrality": 0.000552
+      "centrality": 0.000551
     },
     {
       "id": "backend/app/modules/health/health_routes.py::generate",
@@ -4186,7 +4186,7 @@
       "file": "backend/app/modules/portfolio/portfolio_routes.py",
       "line": 84,
       "community": 11,
-      "centrality": 0.000355
+      "centrality": 0.000354
     },
     {
       "id": "backend/app/modules/portfolio/portfolio_routes.py::get_wallets",
@@ -4213,7 +4213,7 @@
       "file": "backend/app/modules/portfolio/portfolio_routes.py",
       "line": 108,
       "community": 17,
-      "centrality": 0.000371
+      "centrality": 0.00037
     },
     {
       "id": "backend/app/modules/portfolio/portfolio_routes.py::force_refresh",
@@ -4257,7 +4257,7 @@
       "file": "backend/notebooks/portfolio_dev.py",
       "line": 52,
       "community": 11,
-      "centrality": 0.013579
+      "centrality": 0.013577
     },
     {
       "id": "backend/notebooks/portfolio_dev.py::post",
@@ -4266,7 +4266,7 @@
       "file": "backend/notebooks/portfolio_dev.py",
       "line": 57,
       "community": 11,
-      "centrality": 0.004036
+      "centrality": 0.004035
     },
     {
       "id": "backend/notebooks/portfolio_dev.py::pp",
@@ -4380,7 +4380,7 @@
       "type": "code-file",
       "file": "backend/tests/test_brokers.py",
       "community": 11,
-      "centrality": 0.003544
+      "centrality": 0.003543
     },
     {
       "id": "backend/tests/test_brokers.py::reset_sources",
@@ -4398,7 +4398,7 @@
       "file": "backend/tests/test_brokers.py",
       "line": 37,
       "community": 46,
-      "centrality": 0.000808
+      "centrality": 0.000807
     },
     {
       "id": "backend/tests/test_brokers.py::_seed_zerodha",
@@ -4709,7 +4709,7 @@
       "type": "code-file",
       "file": "concierge/llm/notebooks/llm_playground.py",
       "community": 11,
-      "centrality": 0.001017
+      "centrality": 0.001016
     },
     {
       "id": "concierge/llm/notebooks/llm_playground.py::msg",
@@ -4743,7 +4743,7 @@
       "file": "concierge/llm/playground/probe.py",
       "line": 24,
       "community": 11,
-      "centrality": 0.000953
+      "centrality": 0.000952
     },
     {
       "id": "concierge/llm/playground/probe.py::main",
@@ -4760,7 +4760,7 @@
       "type": "code-file",
       "file": "concierge/llm/playground/server.py",
       "community": 11,
-      "centrality": 0.001093
+      "centrality": 0.001092
     },
     {
       "id": "concierge/llm/playground/server.py::CompleteIn",
@@ -4839,7 +4839,7 @@
       "type": "code-file",
       "file": "concierge/llm/src/alphaforge_anton_llm/cost_guard.py",
       "community": 11,
-      "centrality": 0.000931
+      "centrality": 0.00093
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/cost_guard.py::CostGuardError",
@@ -4875,7 +4875,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/cost_guard.py",
       "line": 22,
       "community": 11,
-      "centrality": 0.000455
+      "centrality": 0.000454
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/gateway.py",
@@ -5051,7 +5051,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/_openai_compat.py",
       "line": 29,
       "community": 11,
-      "centrality": 0.001192
+      "centrality": 0.001191
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/_openai_stream.py",
@@ -5068,7 +5068,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/_openai_stream.py",
       "line": 17,
       "community": 11,
-      "centrality": 0.001174
+      "centrality": 0.001173
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/base.py",
@@ -5165,7 +5165,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/cerebras.py",
       "line": 26,
       "community": 11,
-      "centrality": 0.000625
+      "centrality": 0.000624
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/cerebras.py::default_model",
@@ -5201,7 +5201,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/cerebras.py",
       "line": 68,
       "community": 11,
-      "centrality": 0.000788
+      "centrality": 0.000787
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/claude_sdk.py",
@@ -5209,7 +5209,7 @@
       "type": "code-file",
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/claude_sdk.py",
       "community": 11,
-      "centrality": 0.001614
+      "centrality": 0.001613
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/claude_sdk.py::ClaudeSdkAdapter",
@@ -5262,7 +5262,7 @@
       "type": "code-file",
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/gemini.py",
       "community": 11,
-      "centrality": 0.0017
+      "centrality": 0.001699
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/gemini.py::_to_gemini_contents",
@@ -5342,7 +5342,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/groq.py",
       "line": 26,
       "community": 11,
-      "centrality": 0.000625
+      "centrality": 0.000624
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/groq.py::default_model",
@@ -5378,7 +5378,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/groq.py",
       "line": 68,
       "community": 11,
-      "centrality": 0.000788
+      "centrality": 0.000787
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/huggingface.py",
@@ -5466,7 +5466,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/mistral.py",
       "line": 26,
       "community": 11,
-      "centrality": 0.000625
+      "centrality": 0.000624
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/mistral.py::default_model",
@@ -5502,7 +5502,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/mistral.py",
       "line": 68,
       "community": 11,
-      "centrality": 0.000788
+      "centrality": 0.000787
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/openrouter.py",
@@ -5510,7 +5510,7 @@
       "type": "code-file",
       "file": "concierge/llm/src/alphaforge_anton_llm/providers/openrouter.py",
       "community": 11,
-      "centrality": 0.001776
+      "centrality": 0.001775
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/providers/openrouter.py::OpenRouterAdapter",
@@ -5652,7 +5652,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/registry.py",
       "line": 21,
       "community": 11,
-      "centrality": 0.000361
+      "centrality": 0.00036
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/registry.py::_providers",
@@ -5769,7 +5769,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/registry.py",
       "line": 91,
       "community": 11,
-      "centrality": 0.001404
+      "centrality": 0.001403
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/registry.py::ctx_score",
@@ -5804,7 +5804,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/router.py",
       "line": 25,
       "community": 11,
-      "centrality": 0.000257
+      "centrality": 0.000256
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/router.py::__init__",
@@ -5831,7 +5831,7 @@
       "file": "concierge/llm/src/alphaforge_anton_llm/router.py",
       "line": 44,
       "community": 11,
-      "centrality": 0.000552
+      "centrality": 0.000551
     },
     {
       "id": "concierge/llm/src/alphaforge_anton_llm/router.py::pick",
@@ -6061,7 +6061,7 @@
       "type": "code-file",
       "file": "frontend/src/app/login/page.tsx",
       "community": 57,
-      "centrality": 0.000418
+      "centrality": 0.000417
     },
     {
       "id": "frontend/src/app/login/page.tsx::LoginPage",
@@ -6104,7 +6104,7 @@
       "type": "code-file",
       "file": "frontend/src/app/portfolio/page.tsx",
       "community": 59,
-      "centrality": 0.00115
+      "centrality": 0.001149
     },
     {
       "id": "frontend/src/app/portfolio/page.tsx::PortfolioPage",
@@ -6200,7 +6200,7 @@
       "type": "code-file",
       "file": "frontend/src/lib/apiError.ts",
       "community": 62,
-      "centrality": 0.001271
+      "centrality": 0.00127
     },
     {
       "id": "frontend/src/lib/apiError.ts::ApiError",
@@ -6305,7 +6305,7 @@
       "file": "frontend/src/lib/providers.tsx",
       "line": 17,
       "community": 62,
-      "centrality": 0.000809
+      "centrality": 0.000808
     },
     {
       "id": "frontend/src/lib/providers.tsx::Register",
@@ -6534,7 +6534,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/auth/auth.query.ts",
       "community": 66,
-      "centrality": 0.000625
+      "centrality": 0.000624
     },
     {
       "id": "frontend/src/modules/auth/auth.query.ts::useSessions",
@@ -6569,7 +6569,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/auth/auth.types.ts",
       "community": 68,
-      "centrality": 0.002699
+      "centrality": 0.002698
     },
     {
       "id": "frontend/src/modules/auth/auth.types.ts::IamUser",
@@ -6649,7 +6649,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/auth/useAuthStore.ts",
       "community": 69,
-      "centrality": 0.001617
+      "centrality": 0.001616
     },
     {
       "id": "frontend/src/modules/auth/useAuthStore.ts::AuthState",
@@ -6711,7 +6711,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/concierge/AlphaBar.tsx",
       "community": 70,
-      "centrality": 0.004419
+      "centrality": 0.004418
     },
     {
       "id": "frontend/src/modules/concierge/AlphaBar.tsx::Props",
@@ -6765,7 +6765,7 @@
       "file": "frontend/src/modules/concierge/AlphaBar.tsx",
       "line": 92,
       "community": 70,
-      "centrality": 0.000546
+      "centrality": 0.000545
     },
     {
       "id": "frontend/src/modules/concierge/AlphaBar.tsx::ModeSegment",
@@ -6872,7 +6872,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/concierge/ChatContext.tsx",
       "community": 71,
-      "centrality": 0.001037
+      "centrality": 0.001036
     },
     {
       "id": "frontend/src/modules/concierge/ChatContext.tsx::ChatCtx",
@@ -6890,7 +6890,7 @@
       "file": "frontend/src/modules/concierge/ChatContext.tsx",
       "line": 25,
       "community": 71,
-      "centrality": 0.00045
+      "centrality": 0.000449
     },
     {
       "id": "frontend/src/modules/concierge/ChatContext.tsx::ChatProvider",
@@ -6916,7 +6916,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/concierge/ChatRail.tsx",
       "community": 72,
-      "centrality": 0.005283
+      "centrality": 0.005282
     },
     {
       "id": "frontend/src/modules/concierge/ChatRail.tsx::Props",
@@ -6934,7 +6934,7 @@
       "file": "frontend/src/modules/concierge/ChatRail.tsx",
       "line": 108,
       "community": 72,
-      "centrality": 0.000672
+      "centrality": 0.000671
     },
     {
       "id": "frontend/src/modules/concierge/ChatRail.tsx::onKey",
@@ -7033,7 +7033,7 @@
       "file": "frontend/src/modules/concierge/ChatRail.tsx",
       "line": 794,
       "community": 72,
-      "centrality": 0.000346
+      "centrality": 0.000345
     },
     {
       "id": "frontend/src/modules/concierge/ChatRail.tsx::Kbd",
@@ -7069,7 +7069,7 @@
       "file": "frontend/src/modules/concierge/ChatRail.tsx",
       "line": 1003,
       "community": 72,
-      "centrality": 0.00067
+      "centrality": 0.000669
     },
     {
       "id": "frontend/src/modules/concierge/ChatRail.tsx::TurnPair",
@@ -7078,7 +7078,7 @@
       "file": "frontend/src/modules/concierge/ChatRail.tsx",
       "line": 1013,
       "community": 72,
-      "centrality": 0.00067
+      "centrality": 0.000669
     },
     {
       "id": "frontend/src/modules/concierge/ChatRail.tsx::TypingIndicator",
@@ -7139,7 +7139,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/concierge/ModelPicker.rows.tsx",
       "community": 74,
-      "centrality": 0.002699
+      "centrality": 0.002698
     },
     {
       "id": "frontend/src/modules/concierge/ModelPicker.rows.tsx::AutoRowProps",
@@ -7236,7 +7236,7 @@
       "file": "frontend/src/modules/concierge/ModelPicker.tsx",
       "line": 11,
       "community": 76,
-      "centrality": 0.000312
+      "centrality": 0.000311
     },
     {
       "id": "frontend/src/modules/concierge/ModelPicker.tsx::ModelPicker",
@@ -7254,7 +7254,7 @@
       "file": "frontend/src/modules/concierge/ModelPicker.tsx",
       "line": 52,
       "community": 76,
-      "centrality": 0.000312
+      "centrality": 0.000311
     },
     {
       "id": "frontend/src/modules/concierge/ModelPicker.tsx::onKey",
@@ -7357,7 +7357,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/concierge/concierge.defaults.ts",
       "community": 79,
-      "centrality": 0.000996
+      "centrality": 0.000995
     },
     {
       "id": "frontend/src/modules/concierge/concierge.defaults.ts::DefaultChoice",
@@ -7611,7 +7611,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/concierge/useVoice.ts",
       "community": 11,
-      "centrality": 0.000761
+      "centrality": 0.00076
     },
     {
       "id": "frontend/src/modules/concierge/useVoice.ts::VoiceState",
@@ -7655,7 +7655,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/concierge/webspeech.types.ts",
       "community": 83,
-      "centrality": 0.002111
+      "centrality": 0.00211
     },
     {
       "id": "frontend/src/modules/concierge/webspeech.types.ts::SRResult",
@@ -7717,7 +7717,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/dashboard/AlphaBriefCard.tsx",
       "community": 84,
-      "centrality": 0.000374
+      "centrality": 0.000373
     },
     {
       "id": "frontend/src/modules/dashboard/AlphaBriefCard.tsx::AlphaBriefCard",
@@ -7788,7 +7788,7 @@
       "file": "frontend/src/modules/dashboard/BootGate.tsx",
       "line": 60,
       "community": 85,
-      "centrality": 0.000924
+      "centrality": 0.000923
     },
     {
       "id": "frontend/src/modules/dashboard/BootGate.tsx::announce",
@@ -7945,7 +7945,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/dashboard/TerminalStats.tsx",
       "community": 90,
-      "centrality": 0.000374
+      "centrality": 0.000373
     },
     {
       "id": "frontend/src/modules/dashboard/TerminalStats.tsx::TerminalStats",
@@ -7997,7 +7997,7 @@
       "file": "frontend/src/modules/dashboard/TerminalTopBar.tsx",
       "line": 22,
       "community": 92,
-      "centrality": 0.000565
+      "centrality": 0.000564
     },
     {
       "id": "frontend/src/modules/dashboard/TerminalTopBar.tsx::handleLogout",
@@ -8006,7 +8006,7 @@
       "file": "frontend/src/modules/dashboard/TerminalTopBar.tsx",
       "line": 36,
       "community": 92,
-      "centrality": 0.000378
+      "centrality": 0.000377
     },
     {
       "id": "frontend/src/modules/dashboard/TerminalVoice.tsx",
@@ -8031,7 +8031,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/dashboard/Watchlist.tsx",
       "community": 94,
-      "centrality": 0.000465
+      "centrality": 0.000464
     },
     {
       "id": "frontend/src/modules/dashboard/Watchlist.tsx::Watchlist",
@@ -8136,7 +8136,7 @@
       "file": "frontend/src/modules/dashboard/boot.diagnose.ts",
       "line": 75,
       "community": 85,
-      "centrality": 0.001026
+      "centrality": 0.001025
     },
     {
       "id": "frontend/src/modules/dashboard/boot.diagnose.ts::groupByReason",
@@ -8190,7 +8190,7 @@
       "file": "frontend/src/modules/dashboard/boot.diagnose.ts",
       "line": 122,
       "community": 11,
-      "centrality": 0.001288
+      "centrality": 0.001287
     },
     {
       "id": "frontend/src/modules/dashboard/boot.diagnose.ts::copyAndConfirm",
@@ -8250,7 +8250,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/dashboard/dashboard.query.ts",
       "community": 95,
-      "centrality": 0.002012
+      "centrality": 0.002011
     },
     {
       "id": "frontend/src/modules/dashboard/dashboard.query.ts::useDashboardTicker",
@@ -8286,7 +8286,7 @@
       "file": "frontend/src/modules/dashboard/dashboard.query.ts",
       "line": 38,
       "community": 84,
-      "centrality": 0.000564
+      "centrality": 0.000563
     },
     {
       "id": "frontend/src/modules/dashboard/dashboard.query.ts::useAddTickerItem",
@@ -8331,7 +8331,7 @@
       "file": "frontend/src/modules/dashboard/dashboard.query.ts",
       "line": 79,
       "community": 90,
-      "centrality": 0.000564
+      "centrality": 0.000563
     },
     {
       "id": "frontend/src/modules/dashboard/dashboard.types.ts",
@@ -8339,7 +8339,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/dashboard/dashboard.types.ts",
       "community": 97,
-      "centrality": 0.002405
+      "centrality": 0.002404
     },
     {
       "id": "frontend/src/modules/dashboard/dashboard.types.ts::TickerItemDTO",
@@ -8427,7 +8427,7 @@
       "file": "frontend/src/modules/portfolio/AssetClassFilter.tsx",
       "line": 12,
       "community": 99,
-      "centrality": 0.00042
+      "centrality": 0.000419
     },
     {
       "id": "frontend/src/modules/portfolio/AssetClassFilter.tsx::AssetClassFilter",
@@ -8436,7 +8436,7 @@
       "file": "frontend/src/modules/portfolio/AssetClassFilter.tsx",
       "line": 23,
       "community": 99,
-      "centrality": 0.00042
+      "centrality": 0.000419
     },
     {
       "id": "frontend/src/modules/portfolio/AssetClassFilter.tsx::ChipGroupProps",
@@ -8445,7 +8445,7 @@
       "file": "frontend/src/modules/portfolio/AssetClassFilter.tsx",
       "line": 58,
       "community": 99,
-      "centrality": 0.00042
+      "centrality": 0.000419
     },
     {
       "id": "frontend/src/modules/portfolio/AssetClassFilter.tsx::ChipGroup",
@@ -8454,7 +8454,7 @@
       "file": "frontend/src/modules/portfolio/AssetClassFilter.tsx",
       "line": 70,
       "community": 99,
-      "centrality": 0.00042
+      "centrality": 0.000419
     },
     {
       "id": "frontend/src/modules/portfolio/FilterBar.tsx",
@@ -8689,7 +8689,7 @@
       "file": "frontend/src/modules/portfolio/SortMenu.tsx",
       "line": 28,
       "community": 104,
-      "centrality": 0.000573
+      "centrality": 0.000572
     },
     {
       "id": "frontend/src/modules/portfolio/SourceActions.tsx",
@@ -8984,7 +8984,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/portfolio/ledger.utils.ts",
       "community": 101,
-      "centrality": 0.000327
+      "centrality": 0.000326
     },
     {
       "id": "frontend/src/modules/portfolio/ledger.utils.ts::primaryLabel",
@@ -9009,7 +9009,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/portfolio/portfolio.filter.ts",
       "community": 59,
-      "centrality": 0.001696
+      "centrality": 0.001695
     },
     {
       "id": "frontend/src/modules/portfolio/portfolio.filter.ts::FilterState",
@@ -9098,7 +9098,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/portfolio/portfolio.query.ts",
       "community": 112,
-      "centrality": 0.00296
+      "centrality": 0.002959
     },
     {
       "id": "frontend/src/modules/portfolio/portfolio.query.ts::useHoldings",
@@ -9107,7 +9107,7 @@
       "file": "frontend/src/modules/portfolio/portfolio.query.ts",
       "line": 15,
       "community": 59,
-      "centrality": 0.000629
+      "centrality": 0.000628
     },
     {
       "id": "frontend/src/modules/portfolio/portfolio.query.ts::useTreemap",
@@ -9250,7 +9250,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/portfolio/portfolio.types.ts",
       "community": 113,
-      "centrality": 0.003581
+      "centrality": 0.00358
     },
     {
       "id": "frontend/src/modules/portfolio/portfolio.types.ts::HoldingDTO",
@@ -9410,7 +9410,7 @@
       "file": "frontend/src/modules/portfolio/treemap.utils.ts",
       "line": 9,
       "community": 114,
-      "centrality": 0.000448
+      "centrality": 0.000447
     },
     {
       "id": "frontend/src/modules/portfolio/treemap.utils.ts::worstAspect",
@@ -9604,7 +9604,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/preferences/AccountSection.tsx",
       "community": 116,
-      "centrality": 0.000948
+      "centrality": 0.000947
     },
     {
       "id": "frontend/src/modules/preferences/AccountSection.tsx::AccountSectionProps",
@@ -9613,7 +9613,7 @@
       "file": "frontend/src/modules/preferences/AccountSection.tsx",
       "line": 7,
       "community": 116,
-      "centrality": 0.000365
+      "centrality": 0.000364
     },
     {
       "id": "frontend/src/modules/preferences/AccountSection.tsx::AccountSection",
@@ -9631,7 +9631,7 @@
       "file": "frontend/src/modules/preferences/AccountSection.tsx",
       "line": 129,
       "community": 116,
-      "centrality": 0.000365
+      "centrality": 0.000364
     },
     {
       "id": "frontend/src/modules/preferences/AlphaSection.tsx",
@@ -9805,7 +9805,7 @@
       "file": "frontend/src/modules/preferences/PreferencesScreen.tsx",
       "line": 121,
       "community": 17,
-      "centrality": 0.001301
+      "centrality": 0.0013
     },
     {
       "id": "frontend/src/modules/preferences/PreferencesScreen.tsx::onKey",
@@ -9822,7 +9822,7 @@
       "type": "code-file",
       "file": "frontend/src/modules/preferences/PreferencesSidebar.tsx",
       "community": 117,
-      "centrality": 0.000638
+      "centrality": 0.000637
     },
     {
       "id": "frontend/src/modules/preferences/PreferencesSidebar.tsx::PreferencesSidebarProps",
@@ -10031,7 +10031,7 @@
       "file": "frontend/src/modules/preferences/usePrefStore.ts",
       "line": 7,
       "community": 17,
-      "centrality": 0.000262
+      "centrality": 0.000261
     },
     {
       "id": "frontend/src/modules/preferences/usePrefStore.ts::usePrefStore",
@@ -10049,7 +10049,7 @@
       "file": "frontend/src/modules/preferences/usePrefStore.ts",
       "line": 113,
       "community": 17,
-      "centrality": 0.002133
+      "centrality": 0.002132
     },
     {
       "id": "frontend/src/modules/preferences/usePrefStore.ts::reset",
@@ -10099,7 +10099,7 @@
       "type": "code-file",
       "file": "mcp/src/alphaforge_anton_repo_context/chunker.py",
       "community": 125,
-      "centrality": 0.001036
+      "centrality": 0.001035
     },
     {
       "id": "mcp/src/alphaforge_anton_repo_context/chunker.py::Chunk",
@@ -10117,7 +10117,7 @@
       "file": "mcp/src/alphaforge_anton_repo_context/chunker.py",
       "line": 49,
       "community": 125,
-      "centrality": 0.000358
+      "centrality": 0.000357
     },
     {
       "id": "mcp/src/alphaforge_anton_repo_context/chunker.py::chunk_file",
@@ -10135,7 +10135,7 @@
       "file": "mcp/src/alphaforge_anton_repo_context/chunker.py",
       "line": 69,
       "community": 125,
-      "centrality": 0.000888
+      "centrality": 0.000887
     },
     {
       "id": "mcp/src/alphaforge_anton_repo_context/chunker.py::_chunk_ts_like",
@@ -10215,7 +10215,7 @@
       "file": "mcp/src/alphaforge_anton_repo_context/config.py",
       "line": 93,
       "community": 11,
-      "centrality": 0.001534
+      "centrality": 0.001533
     },
     {
       "id": "mcp/src/alphaforge_anton_repo_context/db.py",
@@ -10241,7 +10241,7 @@
       "file": "mcp/src/alphaforge_anton_repo_context/db.py",
       "line": 26,
       "community": 11,
-      "centrality": 0.000335
+      "centrality": 0.000334
     },
     {
       "id": "mcp/src/alphaforge_anton_repo_context/db.py::get_engine",
@@ -10276,7 +10276,7 @@
       "type": "code-file",
       "file": "mcp/src/alphaforge_anton_repo_context/embeddings.py",
       "community": 11,
-      "centrality": 0.001214
+      "centrality": 0.001213
     },
     {
       "id": "mcp/src/alphaforge_anton_repo_context/embeddings.py::EmbeddingClient",
@@ -10285,7 +10285,7 @@
       "file": "mcp/src/alphaforge_anton_repo_context/embeddings.py",
       "line": 25,
       "community": 11,
-      "centrality": 0.000352
+      "centrality": 0.000351
     },
     {
       "id": "mcp/src/alphaforge_anton_repo_context/embeddings.py::__init__",
@@ -10339,7 +10339,7 @@
       "file": "mcp/src/alphaforge_anton_repo_context/embeddings.py",
       "line": 76,
       "community": 11,
-      "centrality": 0.001904
+      "centrality": 0.001903
     },
     {
       "id": "mcp/src/alphaforge_anton_repo_context/indexer.py",
@@ -10472,7 +10472,7 @@
       "file": "mcp/src/alphaforge_anton_repo_context/server.py",
       "line": 76,
       "community": 11,
-      "centrality": 0.000962
+      "centrality": 0.000961
     },
     {
       "id": "mcp/src/alphaforge_anton_repo_context/tools/__init__.py",
@@ -10670,7 +10670,7 @@
       "file": "news/src/alphaforge_anton_news/aggregator.py",
       "line": 60,
       "community": 11,
-      "centrality": 0.000661
+      "centrality": 0.00066
     },
     {
       "id": "news/src/alphaforge_anton_news/base.py",
@@ -10756,7 +10756,7 @@
       "type": "code-file",
       "file": "news/src/alphaforge_anton_news/sources/brave.py",
       "community": 11,
-      "centrality": 0.001364
+      "centrality": 0.001363
     },
     {
       "id": "news/src/alphaforge_anton_news/sources/brave.py::BraveSource",
@@ -10774,7 +10774,7 @@
       "file": "news/src/alphaforge_anton_news/sources/brave.py",
       "line": 26,
       "community": 11,
-      "centrality": 0.000623
+      "centrality": 0.000622
     },
     {
       "id": "news/src/alphaforge_anton_news/sources/brave.py::search",
@@ -10844,7 +10844,7 @@
       "type": "code-file",
       "file": "news/src/alphaforge_anton_news/sources/gnews.py",
       "community": 11,
-      "centrality": 0.001364
+      "centrality": 0.001363
     },
     {
       "id": "news/src/alphaforge_anton_news/sources/gnews.py::GnewsSource",
@@ -10862,7 +10862,7 @@
       "file": "news/src/alphaforge_anton_news/sources/gnews.py",
       "line": 26,
       "community": 11,
-      "centrality": 0.000623
+      "centrality": 0.000622
     },
     {
       "id": "news/src/alphaforge_anton_news/sources/gnews.py::search",
@@ -10888,7 +10888,7 @@
       "type": "code-file",
       "file": "news/src/alphaforge_anton_news/sources/newsdata.py",
       "community": 11,
-      "centrality": 0.001364
+      "centrality": 0.001363
     },
     {
       "id": "news/src/alphaforge_anton_news/sources/newsdata.py::NewsdataSource",
@@ -10906,7 +10906,7 @@
       "file": "news/src/alphaforge_anton_news/sources/newsdata.py",
       "line": 26,
       "community": 11,
-      "centrality": 0.000623
+      "centrality": 0.000622
     },
     {
       "id": "news/src/alphaforge_anton_news/sources/newsdata.py::search",
@@ -11012,7 +11012,7 @@
       "file": "news/src/alphaforge_anton_news/sources/reddit.py",
       "line": 83,
       "community": 11,
-      "centrality": 0.000732
+      "centrality": 0.000731
     },
     {
       "id": "news/src/alphaforge_anton_news/sources/rss.py",
@@ -11090,7 +11090,7 @@
       "type": "code-file",
       "file": "news/src/alphaforge_anton_news/sources/tavily.py",
       "community": 11,
-      "centrality": 0.001365
+      "centrality": 0.001364
     },
     {
       "id": "news/src/alphaforge_anton_news/sources/tavily.py::TavilySource",
@@ -11108,7 +11108,7 @@
       "file": "news/src/alphaforge_anton_news/sources/tavily.py",
       "line": 26,
       "community": 11,
-      "centrality": 0.000623
+      "centrality": 0.000622
     },
     {
       "id": "news/src/alphaforge_anton_news/sources/tavily.py::search",
@@ -11161,7 +11161,7 @@
       "file": "news/src/alphaforge_anton_news/sources/yfinance_news.py",
       "line": 64,
       "community": 11,
-      "centrality": 0.000731
+      "centrality": 0.00073
     },
     {
       "id": "news/src/alphaforge_anton_news/types.py",
@@ -11221,7 +11221,7 @@
       "type": "code-file",
       "file": "packages/logger-node/src/logger.ts",
       "community": 11,
-      "centrality": 0.000542
+      "centrality": 0.000541
     },
     {
       "id": "packages/logger-node/src/logger.ts::LoggerOptions",
@@ -11230,7 +11230,7 @@
       "file": "packages/logger-node/src/logger.ts",
       "line": 16,
       "community": 11,
-      "centrality": 0.000228
+      "centrality": 0.000227
     },
     {
       "id": "packages/logger-node/src/logger.ts::createLogger",
@@ -11239,7 +11239,7 @@
       "file": "packages/logger-node/src/logger.ts",
       "line": 39,
       "community": 11,
-      "centrality": 0.000384
+      "centrality": 0.000383
     },
     {
       "id": "packages/logger-node/src/logger.ts::getLogger",
@@ -11298,7 +11298,7 @@
       "type": "code-file",
       "file": "packages/logger-py/tests/test_logger.py",
       "community": 10,
-      "centrality": 0.000484
+      "centrality": 0.000483
     },
     {
       "id": "packages/logger-py/tests/test_logger.py::test_setup_logging_creates_dir",
@@ -11539,7 +11539,7 @@
       "file": "packages/solar-ui/src/components/Card.tsx",
       "line": 7,
       "community": 143,
-      "centrality": 0.00042
+      "centrality": 0.000419
     },
     {
       "id": "packages/solar-ui/src/components/Card.tsx::Card",
@@ -11548,7 +11548,7 @@
       "file": "packages/solar-ui/src/components/Card.tsx",
       "line": 26,
       "community": 143,
-      "centrality": 0.00042
+      "centrality": 0.000419
     },
     {
       "id": "packages/solar-ui/src/components/Card.tsx::CardHeaderProps",
@@ -11557,7 +11557,7 @@
       "file": "packages/solar-ui/src/components/Card.tsx",
       "line": 52,
       "community": 143,
-      "centrality": 0.00042
+      "centrality": 0.000419
     },
     {
       "id": "packages/solar-ui/src/components/Card.tsx::CardHeader",
@@ -11566,7 +11566,7 @@
       "file": "packages/solar-ui/src/components/Card.tsx",
       "line": 62,
       "community": 143,
-      "centrality": 0.00042
+      "centrality": 0.000419
     },
     {
       "id": "packages/solar-ui/src/components/Chip.tsx",
@@ -11887,7 +11887,7 @@
       "type": "code-file",
       "file": "packages/solar-ui/src/components/PrefControls.tsx",
       "community": 155,
-      "centrality": 0.003581
+      "centrality": 0.00358
     },
     {
       "id": "packages/solar-ui/src/components/PrefControls.tsx::PrefOption",
@@ -12272,7 +12272,7 @@
       "type": "code-file",
       "file": "packages/solar-ui/src/components/ThemeProvider.tsx",
       "community": 165,
-      "centrality": 0.001593
+      "centrality": 0.001592
     },
     {
       "id": "packages/solar-ui/src/components/ThemeProvider.tsx::ThemeState",
@@ -12361,7 +12361,7 @@
       "file": "packages/solar-ui/src/components/Ticker.tsx",
       "line": 13,
       "community": 11,
-      "centrality": 0.000269
+      "centrality": 0.000268
     },
     {
       "id": "packages/solar-ui/src/components/Ticker.tsx::Ticker",
@@ -12526,7 +12526,7 @@
       "type": "code-file",
       "file": "packages/solar-ui/src/components/notifications/Notification.tsx",
       "community": 170,
-      "centrality": 0.00143
+      "centrality": 0.001429
     },
     {
       "id": "packages/solar-ui/src/components/notifications/Notification.tsx::fmtTime",
@@ -12597,7 +12597,7 @@
       "type": "code-file",
       "file": "packages/solar-ui/src/components/notifications/NotificationsHost.tsx",
       "community": 171,
-      "centrality": 0.000685
+      "centrality": 0.000684
     },
     {
       "id": "packages/solar-ui/src/components/notifications/NotificationsHost.tsx::NotificationsHostProps",
@@ -12848,7 +12848,7 @@
       "file": "probes/_probe_auth.py",
       "line": 49,
       "community": 180,
-      "centrality": 0.000504
+      "centrality": 0.000503
     },
     {
       "id": "probes/angelone_cash_probe.py",
@@ -12891,7 +12891,7 @@
       "file": "probes/angelone_probe.py",
       "line": 61,
       "community": 11,
-      "centrality": 0.000443
+      "centrality": 0.000442
     },
     {
       "id": "probes/angelone_probe.py::main",
@@ -12909,7 +12909,7 @@
       "file": "probes/angelone_probe.py",
       "line": 64,
       "community": 11,
-      "centrality": 0.000492
+      "centrality": 0.000491
     },
     {
       "id": "probes/binance_cash_probe.py",
@@ -12970,7 +12970,7 @@
       "file": "probes/binance_probe.py",
       "line": 61,
       "community": 11,
-      "centrality": 0.000493
+      "centrality": 0.000492
     },
     {
       "id": "probes/fux_totals_probe.py",
@@ -13047,7 +13047,7 @@
       "type": "code-file",
       "file": "probes/gullak_probe.py",
       "community": 11,
-      "centrality": 0.000881
+      "centrality": 0.00088
     },
     {
       "id": "probes/gullak_probe.py::main",
@@ -13126,7 +13126,7 @@
       "file": "probes/indmoney_probe.py",
       "line": 62,
       "community": 11,
-      "centrality": 0.000493
+      "centrality": 0.000492
     },
     {
       "id": "probes/probe.sh",
@@ -13178,7 +13178,7 @@
       "file": "probes/tickertape_probe.py",
       "line": 63,
       "community": 11,
-      "centrality": 0.000493
+      "centrality": 0.000492
     },
     {
       "id": "probes/ui_concierge_probe.py",
@@ -13247,9 +13247,9 @@
       "label": "main",
       "type": "function",
       "file": "probes/ui_concierge_probe.py",
-      "line": 298,
+      "line": 323,
       "community": 11,
-      "centrality": 0.000637
+      "centrality": 0.000636
     },
     {
       "id": "probes/ui_footer_chat_probe.py",
@@ -13275,7 +13275,7 @@
       "file": "probes/ui_footer_chat_probe.py",
       "line": 62,
       "community": 11,
-      "centrality": 0.000238
+      "centrality": 0.000237
     },
     {
       "id": "probes/ui_footer_chat_probe.py::_inject_auth_and_navigate",
@@ -13425,7 +13425,7 @@
       "file": "probes/ui_notification_time_probe.py",
       "line": 35,
       "community": 11,
-      "centrality": 0.000505
+      "centrality": 0.000504
     },
     {
       "id": "probes/ui_notification_time_probe.py::run",
@@ -13487,7 +13487,7 @@
       "file": "probes/ui_portfolio_probe.py",
       "line": 71,
       "community": 11,
-      "centrality": 0.00213
+      "centrality": 0.002129
     },
     {
       "id": "probes/ui_portfolio_probe.py::main",
@@ -13645,7 +13645,7 @@
       "file": "probes/ui_voice_probe.py",
       "line": 281,
       "community": 11,
-      "centrality": 0.000636
+      "centrality": 0.000635
     },
     {
       "id": "probes/zerodha_cash_probe.py",
@@ -13697,7 +13697,7 @@
       "file": "probes/zerodha_coin_probe.py",
       "line": 66,
       "community": 11,
-      "centrality": 0.000746
+      "centrality": 0.000745
     },
     {
       "id": "probes/zerodha_probe.py",
@@ -13732,7 +13732,7 @@
       "file": "probes/zerodha_probe.py",
       "line": 63,
       "community": 11,
-      "centrality": 0.000679
+      "centrality": 0.000678
     },
     {
       "id": "probes/zerodha_probe.py::_shape_summary",
@@ -13764,7 +13764,7 @@
       "label": "start.sh",
       "type": "code-file",
       "file": "start.sh",
-      "community": 196,
+      "community": 198,
       "centrality": 9.6e-05
     },
     {
@@ -13772,7 +13772,7 @@
       "label": "stop.sh",
       "type": "code-file",
       "file": "stop.sh",
-      "community": 197,
+      "community": 199,
       "centrality": 9.6e-05
     },
     {
@@ -13903,7 +13903,7 @@
       "status": "active",
       "domain": "concierge",
       "community": 47,
-      "centrality": 0.001509
+      "centrality": 0.001508
     },
     {
       "id": "rule:concierge-registry-single-source",
@@ -13996,6 +13996,16 @@
       "centrality": 9.6e-05
     },
     {
+      "id": "rule:portfolio-plan-template",
+      "label": "portfolio-plan-template",
+      "type": "narrative",
+      "layer": "project",
+      "status": "active",
+      "domain": "portfolio",
+      "community": 194,
+      "centrality": 9.6e-05
+    },
+    {
       "id": "rule:portfolio-valuation",
       "label": "portfolio-valuation",
       "type": "formula",
@@ -14014,6 +14024,16 @@
       "domain": "brokers",
       "community": 179,
       "centrality": 0.00099
+    },
+    {
+      "id": "rule:secure-holdings-plan",
+      "label": "secure-holdings-plan",
+      "type": "narrative",
+      "layer": "project",
+      "status": "active",
+      "domain": "security",
+      "community": 195,
+      "centrality": 9.6e-05
     },
     {
       "id": "rule:ui-component-contract",
@@ -14042,7 +14062,7 @@
       "layer": "project",
       "status": "active",
       "domain": "general",
-      "community": 194,
+      "community": 196,
       "centrality": 9.6e-05
     },
     {
@@ -14052,7 +14072,7 @@
       "layer": "project",
       "status": "active",
       "domain": "general",
-      "community": 195,
+      "community": 197,
       "centrality": 9.6e-05
     },
     {
@@ -14093,7 +14113,7 @@
       "status": "active",
       "domain": "brokers",
       "community": 179,
-      "centrality": 0.000512
+      "centrality": 0.000511
     },
     {
       "id": "rule:holding",
@@ -14133,7 +14153,7 @@
       "status": "active",
       "domain": "brokers",
       "community": 15,
-      "centrality": 0.000771
+      "centrality": 0.00077
     },
     {
       "id": "rule:project-broker-prime",
@@ -14153,7 +14173,7 @@
       "status": "active",
       "domain": "project",
       "community": 179,
-      "centrality": 0.00046
+      "centrality": 0.000459
     },
     {
       "id": "rule:project-fux",
@@ -66480,8 +66500,8 @@
   ],
   "meta": {
     "code_files": 360,
-    "rules": 40,
-    "communities": 198,
+    "rules": 42,
+    "communities": 200,
     "extractor": {
       "non_python": "tree-sitter",
       "tree_sitter": "0.25.2",

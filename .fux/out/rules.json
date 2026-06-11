@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 40,
+  "count": 42,
   "rules": [
     {
       "id": "async-everywhere",
@@ -421,6 +421,22 @@
       "updated": "2026-06-04"
     },
     {
+      "id": "portfolio-plan-template",
+      "type": "narrative",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "Portfolio plan — template (git-safe instance shape)",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/portfolio-plan-template.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-11",
+      "updated": "2026-06-11"
+    },
+    {
       "id": "portfolio-valuation",
       "type": "formula",
       "domain": "portfolio",
@@ -463,6 +479,22 @@
       "examples": [],
       "created": "2026-06-09",
       "updated": "2026-06-09"
+    },
+    {
+      "id": "secure-holdings-plan",
+      "type": "narrative",
+      "domain": "security",
+      "status": "active",
+      "title": "Secure holdings access for Orff + the plan→drift→advise workflow",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/secure-holdings-plan.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-11",
+      "updated": "2026-06-11"
     },
     {
       "id": "ui-component-contract",

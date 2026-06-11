@@ -1,14 +1,14 @@
 # Fux GRAPH_REPORT
 
-_1615 nodes · 7465 edges · 360 code files · 40 rules · 198 communities._
+_1617 nodes · 7465 edges · 360 code files · 42 rules · 200 communities._
 
 ## Node types
 
 - function: 973
 - code-file: 360
 - class: 242
+- narrative: 13
 - convention: 11
-- narrative: 11
 - glossary: 8
 - memory: 4
 - regulatory: 2
