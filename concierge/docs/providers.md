@@ -16,7 +16,11 @@ For decision rationale see [compare/02-claude-model-routing.md](compare/02-claud
 
 ## Provider Registry
 
-| Slug | Adapter | Env key | Model (current) | Free tier | Notes |
+The **default model** is the first entry in each provider's `models` list in `providers.json`.
+Adapters no longer hardcode a model — `default_model()` reads the manifest — so adding a model (or
+making a new one the default by reordering) is a one-file edit.
+
+| Slug | Adapter | Env key | Default model | Free tier | Notes |
 |---|---|---|---|---|---|
 | `gemini` | `GeminiAdapter` | `GEMINI_API_KEY` | `gemini-flash-latest` | Yes — Google AI Studio | Vision + PDF native; 1M ctx |
 | `groq` | `GroqAdapter` | `GROQ_API_KEY` | `llama-3.3-70b-versatile` | Yes | ~200 tok/s; fastest free text |
@@ -24,13 +28,27 @@ For decision rationale see [compare/02-claude-model-routing.md](compare/02-claud
 | `mistral` | `MistralAdapter` | `MISTRAL_API_KEY` | `mistral-small-latest` | Yes (limited) | Structured output + JSON mode |
 | `openrouter` | `OpenRouterAdapter` | `OPENROUTER_API_KEY` | `google/gemma-4-26b-a4b-it:free` | Yes — :free models only | DeepSeek R1 full via this route |
 | `huggingface` | `HuggingFaceAdapter` | `HF_API_KEY` | `mistralai/Mistral-7B-Instruct-v0.3` | Yes (Inference API) | Fallback / experimental |
-| `claude-sdk` | `ClaudeSdkAdapter` | `ANTHROPIC_API_KEY` | `claude-sonnet-4-6` | **No — paid** | Gated by CostGuard + confirmation |
+| `claude-sdk` | `ClaudeSdkAdapter` | `ANTHROPIC_API_KEY` | `claude-sonnet-4-6` | **No — paid** | Also offers `claude-opus-4-8`, `claude-haiku-4-5-20251001`; all gated by CostGuard + confirmation |
 
 The frontend does **not** maintain this registry by hand — it is generated from the manifest into
 [frontend/src/modules/concierge/concierge.registry.generated.ts](../../frontend/src/modules/concierge/concierge.registry.generated.ts)
 (re-exported by `concierge.providers.ts`). The two-pane ModelPicker (providers × models) consumes it;
-selecting a provider sends `{ provider, model_id, auto_level }` to `POST /api/v1/concierge`, where
-`auto_level` is `top` (full Auto), `provider` (provider Auto), or `none` (pinned).
+selecting a model sends `{ provider, model_id, auto_level }` to `POST /api/v1/concierge`. The pinned
+`model_id` is **honoured end-to-end** — the gateway forwards it to the adapter, so the model shown is
+the model that runs — except when the privacy floor or Auto overrides the provider, which drops it.
+
+### Per-model consumption
+
+Every model carries a `consumption` block in `providers.json` — `input_per_m`, `output_per_m`
+(USD per 1M tokens), `max_tokens` (the output cap the adapter sends), and `paid`. This is the
+single place to **see and configure** what a model costs:
+
+- `pricing.is_paid(provider, model)` is what `CostGuard` gates on — no hardcoded paid-provider list.
+- `pricing.max_tokens(provider, model)` is the output cap every adapter applies.
+- `pricing.estimate_cost_usd(provider, model, prompt, completion)` turns a response's token counts
+  into real spend (e.g. Opus 1000 in + 500 out = $0.0525).
+
+To add/reprice a model, edit its `consumption` block; run `pnpm gen:concierge` then `just test-backend`.
 
 ### Streaming support
 
@@ -97,15 +115,16 @@ Fallback order for reasoning until `deepseek` slug is live:
 
 ---
 
-## Future / Paid Tier (Anthropic)
+## Paid Tier (Anthropic)
 
-Not active. Gated behind `claude-sdk` slug + `CostGuard` confirmation. Swap-in when paid usage is acceptable.
+All three Claude models are registered under the `claude-sdk` slug and gated behind `CostGuard`
+confirmation (`consumption.paid: true`). They appear in the ModelPicker and run when pinned + confirmed.
 
-| Intent | Planned model |
-|---|---|
-| Factoid / news | `claude-haiku-4-5-20251001` |
-| Portfolio / investment | `claude-sonnet-4-6` |
-| Deep research (explicit) | `claude-opus-4-7` |
+| Model | Intent fit | Pricing (in/out per 1M) |
+|---|---|---|
+| `claude-haiku-4-5-20251001` | Factoid / news — fast, cheapest | $1 / $5 |
+| `claude-sonnet-4-6` | Portfolio / investment — **default** | $3 / $15 |
+| `claude-opus-4-8` | Deep research — deepest, priciest | $15 / $75 |
 
 ---
 

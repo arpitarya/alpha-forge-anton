@@ -35,6 +35,13 @@ const content = `// GENERATED — do not edit. Source: concierge/llm/src/alphafo
 
 export type ProviderId = ${union};
 
+export interface ModelConsumption {
+  input_per_m: number;
+  output_per_m: number;
+  max_tokens: number;
+  paid: boolean;
+}
+
 export interface ModelMeta {
   id: string;
   name: string;
@@ -42,6 +49,7 @@ export interface ModelMeta {
   ctx: string;
   cost: string;
   desc: string;
+  consumption: ModelConsumption;
 }
 
 export interface ProviderMeta {

@@ -73,10 +73,14 @@ async def stream_chat(req: ChatRequest):
         qt, preferred = _resolve(req, last_user)
         confirmed, notice = req.provider == "claude-sdk", None
 
+    # Honour the pinned model id only when routing kept the user's provider (the privacy
+    # floor or Auto can override it; a foreign model id must not leak onto another provider).
+    model = req.model_id if preferred == req.provider and req.provider != "auto" else None
+
     t0 = time.perf_counter()
     try:
         async for snap in _gateway.stream(
-            msgs, query_type=qt, preferred_provider=preferred, confirmed=confirmed,
+            msgs, query_type=qt, preferred_provider=preferred, model=model, confirmed=confirmed,
         ):
             yield _sse({
                 "content": snap.content,

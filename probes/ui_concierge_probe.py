@@ -144,6 +144,24 @@ async def run(base: str, cdp_port: int) -> bool:
         body=json.dumps(FAKE_USER),
     ))
 
+    # Mock the BootGate report so the warm-up splash clears regardless of the host's
+    # live broker/Chrome state. The gate blocks the whole app on any `error` row
+    # (e.g. Zerodha "could not attach to Chrome"), so a hermetic all-OK report is
+    # what lets the footer mount. See frontend BootGate.tsx + boot.types.ts.
+    await page.route("**/api/v1/health/boot/sync-stream", lambda route: route.fulfill(
+        status=200, content_type="text/event-stream", body="",
+    ))
+    await page.route("**/api/v1/health/boot", lambda route: route.fulfill(
+        status=200,
+        content_type="application/json",
+        body=json.dumps({"services": [
+            {"key": "backend", "label": "Backend · FastAPI gateway", "status": "ok", "detail": "online"},
+            {"key": "vault", "label": "Secrets · afbach vault", "status": "ok", "detail": "loaded"},
+            {"key": "db", "label": "Database · Postgres", "status": "ok", "detail": "ready"},
+            {"key": "llm", "label": "AI Gateway · LLM routing", "status": "ok", "detail": "6 providers"},
+        ]}),
+    ))
+
     try:
         # ── 1. Auth bypass ────────────────────────────────────────────────────
         print("\n── Auth bypass + navigation")
@@ -159,13 +177,20 @@ async def run(base: str, cdp_port: int) -> bool:
         # Auto router — so the pill must not flicker as the user types. See Fux
         # rules concierge-default-model + concierge-registry-single-source.
         print("\n── Default model stability")
+        # Wait for the BootGate splash to clear and the footer ModelPicker to mount.
+        await page.wait_for_selector('[aria-haspopup="dialog"]', timeout=15_000)
         pill_default = await page.locator('[aria-haspopup="dialog"]').first.inner_text()
         _record(
             "Default model pill is Gemini Flash (pinned, not Auto)",
             "Gemini" in pill_default and "Auto" not in pill_default,
             f"pill={pill_default!r}",
         )
+        # The footer starts in voice mode (no textarea); switch to chat mode to get
+        # the #chatinput-bar, then type a "risk" query — a pinned default must not
+        # flicker (the old Auto default re-routed gemini→mistral per keystroke).
+        await page.get_by_role("tab", name="Chat mode").click()
         footer_ta = page.locator("#chatinput-bar")
+        await footer_ta.wait_for(state="visible", timeout=5_000)
         await footer_ta.fill("how much portfolio risk and drawdown do I carry")
         await page.wait_for_timeout(250)
         pill_typed = await page.locator('[aria-haspopup="dialog"]').first.inner_text()

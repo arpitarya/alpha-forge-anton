@@ -6,12 +6,11 @@ import logging
 import os
 from typing import AsyncIterator
 
+from alphaforge_anton_llm import pricing
 from alphaforge_anton_llm.providers.base import ProviderAdapter, ProviderHealth
 from alphaforge_anton_llm.types import Message, ProviderResponse, ToolSchema
 
 logger = logging.getLogger(__name__)
-
-_MODEL = "claude-sonnet-4-6"
 
 
 class ClaudeSdkAdapter(ProviderAdapter):
@@ -23,15 +22,12 @@ class ClaudeSdkAdapter(ProviderAdapter):
     def __init__(self) -> None:
         self._last_error: str | None = None
 
-    @classmethod
-    def default_model(cls) -> str:
-        return _MODEL
-
     async def complete(
         self,
         messages: list[Message],
         tools: list[ToolSchema] | None = None,
         stream: bool = False,
+        model: str | None = None,
     ) -> ProviderResponse | AsyncIterator[str]:
         try:
             import anthropic
@@ -42,10 +38,12 @@ class ClaudeSdkAdapter(ProviderAdapter):
         if not api_key:
             raise RuntimeError("ANTHROPIC_API_KEY not set")
 
+        model = model or self.default_model()
         client = anthropic.AsyncAnthropic(api_key=api_key)
         system = next((m.content for m in messages if m.role == "system"), None)
         turns = [{"role": m.role, "content": m.content} for m in messages if m.role != "system"]
-        kwargs: dict = {"model": _MODEL, "max_tokens": 4096, "messages": turns}
+        max_tokens = pricing.max_tokens(self.name, model)
+        kwargs: dict = {"model": model, "max_tokens": max_tokens, "messages": turns}
         if system:
             kwargs["system"] = system
         try:
@@ -58,7 +56,7 @@ class ClaudeSdkAdapter(ProviderAdapter):
 
         text = response.content[0].text if response.content else ""
         return ProviderResponse(
-            content=text, provider=self.name, model=_MODEL,
+            content=text, provider=self.name, model=model,
             prompt_tokens=response.usage.input_tokens,
             completion_tokens=response.usage.output_tokens,
         )

@@ -232,7 +232,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-10",
-      "updated": "2026-06-10"
+      "updated": "2026-06-11"
     },
     {
       "id": "concierge-registry-single-source",
@@ -246,6 +246,9 @@
         "concierge/llm/src/alphaforge_anton_llm/registry/providers.json",
         "concierge/llm/src/alphaforge_anton_llm/registry/routing.json",
         "concierge/llm/src/alphaforge_anton_llm/registry.py",
+        "concierge/llm/src/alphaforge_anton_llm/pricing.py",
+        "concierge/llm/src/alphaforge_anton_llm/cost_guard.py",
+        "concierge/llm/src/alphaforge_anton_llm/providers/base.py",
         "frontend/scripts/gen-concierge-registry.mjs",
         "frontend/src/modules/concierge/concierge.registry.generated.ts"
       ],
@@ -259,7 +262,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-10",
-      "updated": "2026-06-10"
+      "updated": "2026-06-12"
     },
     {
       "id": "core-allocation",

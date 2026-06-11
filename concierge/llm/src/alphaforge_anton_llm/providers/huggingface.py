@@ -8,13 +8,13 @@ from typing import AsyncIterator
 
 import httpx
 
+from alphaforge_anton_llm import pricing
 from alphaforge_anton_llm.providers.base import ProviderAdapter, ProviderHealth
 from alphaforge_anton_llm.types import Message, ProviderResponse, ToolSchema
 
 logger = logging.getLogger(__name__)
 
 _BASE = "https://api-inference.huggingface.co/models"
-_MODEL = "mistralai/Mistral-7B-Instruct-v0.3"
 
 
 def _build_prompt(messages: list[Message]) -> str:
@@ -38,24 +38,23 @@ class HuggingFaceAdapter(ProviderAdapter):
     def __init__(self) -> None:
         self._last_error: str | None = None
 
-    @classmethod
-    def default_model(cls) -> str:
-        return _MODEL
-
     async def complete(
         self,
         messages: list[Message],
         tools: list[ToolSchema] | None = None,
         stream: bool = False,
+        model: str | None = None,
     ) -> ProviderResponse | AsyncIterator[str]:
         api_key = os.getenv("HF_API_KEY", "")
         if not api_key:
             raise RuntimeError("HF_API_KEY not set")
+        model = model or self.default_model()
         headers = {"Authorization": f"Bearer {api_key}"}
-        body = {"inputs": _build_prompt(messages), "parameters": {"max_new_tokens": 512}}
+        max_new = pricing.max_tokens(self.name, model)
+        body = {"inputs": _build_prompt(messages), "parameters": {"max_new_tokens": max_new}}
         try:
             async with httpx.AsyncClient(timeout=60.0) as c:
-                resp = await c.post(f"{_BASE}/{_MODEL}", json=body, headers=headers)
+                resp = await c.post(f"{_BASE}/{model}", json=body, headers=headers)
                 resp.raise_for_status()
                 data = resp.json()
             self._last_error = None
@@ -66,7 +65,7 @@ class HuggingFaceAdapter(ProviderAdapter):
 
         text = data[0].get("generated_text", "") if isinstance(data, list) else str(data)
         return ProviderResponse(
-            content=text, provider=self.name, model=_MODEL, raw={"response": data},
+            content=text, provider=self.name, model=model, raw={"response": data},
         )
 
     async def health(self) -> ProviderHealth:

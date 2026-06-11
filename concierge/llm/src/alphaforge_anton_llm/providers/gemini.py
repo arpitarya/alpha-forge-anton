@@ -8,13 +8,13 @@ from typing import AsyncIterator
 
 import httpx
 
+from alphaforge_anton_llm import pricing
 from alphaforge_anton_llm.providers.base import ProviderAdapter, ProviderHealth
 from alphaforge_anton_llm.types import Message, ProviderResponse, ToolSchema
 
 logger = logging.getLogger(__name__)
 
 _BASE = "https://generativelanguage.googleapis.com/v1beta/models"
-_MODEL = "gemini-flash-latest"
 
 
 def _to_gemini_contents(messages: list[Message]) -> list[dict]:
@@ -34,24 +34,22 @@ class GeminiAdapter(ProviderAdapter):
     def __init__(self) -> None:
         self._last_error: str | None = None
 
-    @classmethod
-    def default_model(cls) -> str:
-        return _MODEL
-
     async def complete(
         self,
         messages: list[Message],
         tools: list[ToolSchema] | None = None,
         stream: bool = False,
+        model: str | None = None,
     ) -> ProviderResponse | AsyncIterator[str]:
         api_key = os.getenv("GEMINI_API_KEY", "")
         if not api_key:
             raise RuntimeError("GEMINI_API_KEY not set")
+        model = model or self.default_model()
         body = {
             "contents": _to_gemini_contents(messages),
-            "generationConfig": {"maxOutputTokens": 2048},
+            "generationConfig": {"maxOutputTokens": pricing.max_tokens(self.name, model)},
         }
-        url = f"{_BASE}/{_MODEL}:generateContent?key={api_key}"
+        url = f"{_BASE}/{model}:generateContent?key={api_key}"
         try:
             async with httpx.AsyncClient(timeout=30.0) as c:
                 resp = await c.post(url, json=body)
@@ -66,7 +64,7 @@ class GeminiAdapter(ProviderAdapter):
         text = data["candidates"][0]["content"]["parts"][0].get("text", "")
         usage = data.get("usageMetadata", {})
         return ProviderResponse(
-            content=text, provider=self.name, model=_MODEL,
+            content=text, provider=self.name, model=model,
             prompt_tokens=usage.get("promptTokenCount", 0),
             completion_tokens=usage.get("candidatesTokenCount", 0),
             raw=data,

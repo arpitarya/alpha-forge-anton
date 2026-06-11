@@ -71,4 +71,9 @@ def plan_targets(plan_id: str = "core-allocation") -> dict[AssetClass, float]:
     return load_plan(plan_id).targets
 
 
-__all__ = ["Plan", "load_plan", "plan_targets"]
+def available_plans() -> list[str]:
+    """Plan ids with a committed `.fux/rules/<id>.plan.md` entry."""
+    return sorted(p.name.removesuffix(".plan.md") for p in _PLANS_DIR.glob("*.plan.md"))
+
+
+__all__ = ["Plan", "available_plans", "load_plan", "plan_targets"]

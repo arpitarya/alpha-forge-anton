@@ -3,6 +3,13 @@
 
 export type ProviderId = "gemini" | "groq" | "cerebras" | "mistral" | "openrouter" | "huggingface" | "claude-sdk";
 
+export interface ModelConsumption {
+  input_per_m: number;
+  output_per_m: number;
+  max_tokens: number;
+  paid: boolean;
+}
+
 export interface ModelMeta {
   id: string;
   name: string;
@@ -10,6 +17,7 @@ export interface ModelMeta {
   ctx: string;
   cost: string;
   desc: string;
+  consumption: ModelConsumption;
 }
 
 export interface ProviderMeta {
@@ -35,7 +43,13 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "tag": "fast",
         "ctx": "1M ctx",
         "cost": "free",
-        "desc": "Default — vision + PDF native, fast."
+        "desc": "Default — vision + PDF native, fast.",
+        "consumption": {
+          "input_per_m": 0,
+          "output_per_m": 0,
+          "max_tokens": 2048,
+          "paid": false
+        }
       },
       {
         "id": "gemini-2.5-pro",
@@ -43,7 +57,13 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "tag": "deep",
         "ctx": "2M ctx",
         "cost": "free*",
-        "desc": "Deep reasoning, free-tier limits apply."
+        "desc": "Deep reasoning, free-tier limits apply.",
+        "consumption": {
+          "input_per_m": 0,
+          "output_per_m": 0,
+          "max_tokens": 2048,
+          "paid": false
+        }
       }
     ]
   },
@@ -60,7 +80,13 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "tag": "fast",
         "ctx": "128k ctx",
         "cost": "free",
-        "desc": "~200 tok/s, default workhorse for factoid."
+        "desc": "~200 tok/s, default workhorse for factoid.",
+        "consumption": {
+          "input_per_m": 0,
+          "output_per_m": 0,
+          "max_tokens": 2048,
+          "paid": false
+        }
       }
     ]
   },
@@ -77,7 +103,13 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "tag": "ultra-fast",
         "ctx": "128k ctx",
         "cost": "free",
-        "desc": "~2000 tok/s, ideal for news + lookups."
+        "desc": "~2000 tok/s, ideal for news + lookups.",
+        "consumption": {
+          "input_per_m": 0,
+          "output_per_m": 0,
+          "max_tokens": 2048,
+          "paid": false
+        }
       }
     ]
   },
@@ -94,7 +126,13 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "tag": "balanced",
         "ctx": "128k ctx",
         "cost": "free*",
-        "desc": "Strong at JSON schema + finance reasoning."
+        "desc": "Strong at JSON schema + finance reasoning.",
+        "consumption": {
+          "input_per_m": 0,
+          "output_per_m": 0,
+          "max_tokens": 2048,
+          "paid": false
+        }
       }
     ]
   },
@@ -111,7 +149,13 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "tag": "free",
         "ctx": "128k ctx",
         "cost": "free",
-        "desc": "Default :free model — broad capability."
+        "desc": "Default :free model — broad capability.",
+        "consumption": {
+          "input_per_m": 0,
+          "output_per_m": 0,
+          "max_tokens": 2048,
+          "paid": false
+        }
       }
     ]
   },
@@ -128,7 +172,13 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "tag": "open",
         "ctx": "32k ctx",
         "cost": "free",
-        "desc": "Fallback / experimental open-weights."
+        "desc": "Fallback / experimental open-weights.",
+        "consumption": {
+          "input_per_m": 0,
+          "output_per_m": 0,
+          "max_tokens": 512,
+          "paid": false
+        }
       }
     ]
   },
@@ -145,7 +195,41 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "tag": "paid",
         "ctx": "200k ctx",
         "cost": "$3/M",
-        "desc": "Confirmation required before each call."
+        "desc": "Balanced default — confirmation required before each call.",
+        "consumption": {
+          "input_per_m": 3,
+          "output_per_m": 15,
+          "max_tokens": 4096,
+          "paid": true
+        }
+      },
+      {
+        "id": "claude-opus-4-8",
+        "name": "Claude Opus 4.8",
+        "tag": "paid",
+        "ctx": "200k ctx",
+        "cost": "$15/M",
+        "desc": "Deepest reasoning — most expensive, confirmation required.",
+        "consumption": {
+          "input_per_m": 15,
+          "output_per_m": 75,
+          "max_tokens": 4096,
+          "paid": true
+        }
+      },
+      {
+        "id": "claude-haiku-4-5-20251001",
+        "name": "Claude Haiku 4.5",
+        "tag": "paid",
+        "ctx": "200k ctx",
+        "cost": "$1/M",
+        "desc": "Fast + cheapest paid tier, confirmation required.",
+        "consumption": {
+          "input_per_m": 1,
+          "output_per_m": 5,
+          "max_tokens": 4096,
+          "paid": true
+        }
       }
     ]
   }
