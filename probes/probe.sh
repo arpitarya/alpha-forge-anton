@@ -25,6 +25,7 @@ Available probes:
   Fux probes (standalone, no CDP required):
     fux-graph            ui_fux_graph_probe.py
     plan-safety          plan_safety_probe.py
+    holdings-disclosure  holdings_disclosure_probe.py
 
   Broker XHR probes (require CDP :9299):
     zerodha              zerodha_probe.py
@@ -65,6 +66,7 @@ case "$NAME" in
     ui-voice)          SCRIPT="ui_voice_probe.py" ;;
     fux-graph)         SCRIPT="ui_fux_graph_probe.py" ;;
     plan-safety)       SCRIPT="plan_safety_probe.py" ;;
+    holdings-disclosure) SCRIPT="holdings_disclosure_probe.py" ;;
     zerodha)           SCRIPT="zerodha_probe.py" ;;
     zerodha-coin)      SCRIPT="zerodha_coin_probe.py" ;;
     zerodha-cash)      SCRIPT="zerodha_cash_probe.py" ;;

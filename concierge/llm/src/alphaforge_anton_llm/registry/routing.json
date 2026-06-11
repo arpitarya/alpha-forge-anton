@@ -1,7 +1,11 @@
 {
   "intents": [
     {
-      "pattern": "risk|drawdown|var|simulat|stress|exposure|rebalanc|hedge|tax|optim",
+      "pattern": "my |portfolio|holding|allocation|rebalanc|drift|overweight|underweight|sleeve|net.?worth|exposure|do i own|i hold",
+      "query_type": "portfolio_private"
+    },
+    {
+      "pattern": "risk|drawdown|var|simulat|stress|hedge|tax|optim",
       "query_type": "investment_plan"
     },
     {
@@ -11,10 +15,6 @@
     {
       "pattern": "screen|scan|breakout|filter|quote|ltp|price of|ticker|list|search",
       "query_type": "factoid"
-    },
-    {
-      "pattern": "portfolio|holding|allocation|weight|sleeve",
-      "query_type": "portfolio_overview"
     }
   ],
   "fallback_query_type": "multi_turn",
@@ -22,10 +22,15 @@
     "news_lookup": ["cerebras", "groq", "gemini", "openrouter"],
     "factoid": ["cerebras", "gemini", "groq", "openrouter"],
     "portfolio_overview": ["gemini", "groq"],
+    "portfolio_private": ["claude-sdk"],
     "stock_pick": ["gemini", "openrouter", "groq"],
     "investment_plan": ["mistral", "gemini", "openrouter"],
     "industry_news": ["groq", "gemini", "openrouter"],
     "multi_turn": ["gemini", "groq"]
+  },
+  "private": {
+    "query_types": ["portfolio_private"],
+    "trusted_providers": ["claude-sdk"]
   },
   "provider_query_type": {
     "claude-sdk": "investment_plan",

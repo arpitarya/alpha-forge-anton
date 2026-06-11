@@ -168,7 +168,11 @@ export interface IntentPattern {
 
 export const INTENT_PATTERNS: IntentPattern[] = [
   {
-    "pattern": "risk|drawdown|var|simulat|stress|exposure|rebalanc|hedge|tax|optim",
+    "pattern": "my |portfolio|holding|allocation|rebalanc|drift|overweight|underweight|sleeve|net.?worth|exposure|do i own|i hold",
+    "queryType": "portfolio_private"
+  },
+  {
+    "pattern": "risk|drawdown|var|simulat|stress|hedge|tax|optim",
     "queryType": "investment_plan"
   },
   {
@@ -178,10 +182,6 @@ export const INTENT_PATTERNS: IntentPattern[] = [
   {
     "pattern": "screen|scan|breakout|filter|quote|ltp|price of|ticker|list|search",
     "queryType": "factoid"
-  },
-  {
-    "pattern": "portfolio|holding|allocation|weight|sleeve",
-    "queryType": "portfolio_overview"
   }
 ];
 
@@ -203,6 +203,9 @@ export const CHAINS: Record<string, ProviderId[]> = {
   "portfolio_overview": [
     "gemini",
     "groq"
+  ],
+  "portfolio_private": [
+    "claude-sdk"
   ],
   "stock_pick": [
     "gemini",

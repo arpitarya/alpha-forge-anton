@@ -12,6 +12,7 @@ from alphaforge_anton_llm.types import Message, QueryType
 
 from app.modules.concierge.concierge_schemas import ChatMessage, ChatRequest
 from app.modules.concierge.fux_bridge import recall as fux_recall
+from app.modules.concierge.holdings_private import disclosed_context, enforce_floor
 
 _SYSTEM = (
     "You are Orff, the AI financial concierge inside AlphaForge Anton — a personal investment "
@@ -62,8 +63,15 @@ async def stream_chat(req: ChatRequest):
 
     msgs.extend(Message(role=m.role, content=m.content) for m in req.messages)
 
-    qt, preferred = _resolve(req, last_user)
-    confirmed = req.provider == "claude-sdk"
+    # Classify on the text so a holdings query is caught even under an explicit pin:
+    # private → inject percentages-only context + force the trusted-provider floor.
+    intent_qt = registry.classify_intent(last_user)
+    if registry.is_private(intent_qt):
+        msgs.append(Message(role="system", content=disclosed_context()))
+        qt, preferred, confirmed, notice = enforce_floor(req.provider, intent_qt)
+    else:
+        qt, preferred = _resolve(req, last_user)
+        confirmed, notice = req.provider == "claude-sdk", None
 
     t0 = time.perf_counter()
     try:
@@ -78,6 +86,7 @@ async def stream_chat(req: ChatRequest):
                 "completion_tokens": snap.completion_tokens,
                 "elapsed_s": round(time.perf_counter() - t0, 2),
                 "auto_level": req.auto_level,
+                "notice": notice,
             })
     except Exception as exc:
         yield _sse({"error": _redact(str(exc)), "elapsed_s": round(time.perf_counter() - t0, 2)})

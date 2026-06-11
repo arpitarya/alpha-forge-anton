@@ -2267,7 +2267,9 @@ _`secure-holdings-plan` · security_
 
 # Secure holdings access for Orff + the plan→drift→advise workflow
 
-**Status:** _Build in progress — step 1 (plan plane + git-safety guard) shipped._
+**Status:** _Shipped (steps 1–5) — plan plane, trusted-provider floor, disclosure
+chokepoint, and both guard probes are live. Wiring holdings tools into Orff's
+**tool-calling** loop (vs the current system-message injection) remains future work._
 **Why this exists:** Orff routes to **free external LLM providers** (Groq, Mistral,
 Gemini, OpenRouter, HuggingFace — see `concierge/.../registry/routing.json`). Today
 `concierge_service.stream_chat` injects Fux grounding but **no holdings**, so nothing
@@ -2335,13 +2337,23 @@ is a convention, not a guarantee.
 
 ## Build order
 
-1. ✅ **Shipped** — Plan schema ([[portfolio-plan-template]]) + first plan ([[core-allocation]])
-   + `plan_loader.py` (parses the committed plan → `AssetClass` targets/bands)
-   + `plan_safety_probe.py` git-safety guard (`just probe plan-safety`).
-2. `portfolio_private` intent + provider floor in the registry.
-3. Server-side holdings tools + `disclose()` redaction chokepoint.
-4. Wire `get_drift(plan)` to the existing `aggregator.rebalance()` engine (pass plan targets/bands).
-5. Probe + `just` recipe (per `probe-cdp-not-playwright` — a feature isn't verified without one).
+1. ✅ Plan schema ([[portfolio-plan-template]]) + first plan ([[core-allocation]]) +
+   `plan_loader.py` (committed plan → `AssetClass` targets/bands) + `plan_safety_probe.py`
+   git-safety guard (`just probe plan-safety`).
+2. ✅ `portfolio_private` query-type + intent + a `private` manifest block
+   (`trusted_providers`, `query_types`) in `registry/routing.json`; `registry.is_private` /
+   `trusted_providers`; trusted-only chain. Frontend regenerated from the same manifest.
+3. ✅ `holdings_private.py` — `disclosed_context()` (percentages-only, safe by construction)
+   + `enforce_floor()` (overrides any free pin to the trusted floor, with a user notice).
+   Wired into `concierge_service.stream_chat`: classify on the text, inject + floor when private.
+4. ✅ `plan_drift.py` — `drift_for_plan()` joins plan targets/bands × live actuals via
+   `aggregator.rebalance()` → band-aware per-class drift in points only.
+5. ✅ `holdings_disclosure_probe.py` (`just probe holdings-disclosure`) — asserts disclosure is
+   leak-free even when populated, and every private route lands on a trusted provider.
+
+**Next (deferred):** move from system-message injection to real **tool-calling** so the model
+pulls `get_drift` / `get_allocation` on demand; add a local model to `trusted_providers` so the
+floor isn't paid-only; optional `<plan>.drift.md` history (redacted) for the save-for-later flow.
 
 ## Files this will touch (sketch)
 
