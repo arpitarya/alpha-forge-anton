@@ -1,30 +1,30 @@
 # Fux GRAPH_REPORT
 
-_1738 nodes · 8147 edges · 387 code files · 45 rules · 218 communities._
+_1749 nodes · 8177 edges · 387 code files · 56 rules · 219 communities._
 
 ## Node types
 
 - function: 1042
 - code-file: 387
 - class: 264
-- convention: 12
+- convention: 14
 - narrative: 12
 - glossary: 10
+- regulatory: 6
+- rule: 5
+- formula: 4
 - memory: 4
-- regulatory: 2
-- rule: 2
-- formula: 2
 - invariant: 1
 
 ## Edges
 
-_4443 of 8147 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_4443 of 8177 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
 - references: 4443
 - calls: 2298
 - contains: 1308
-- related: 63
-- governs: 35
+- related: 84
+- governs: 44
 
 ## God nodes (highest connectivity)
 
@@ -43,11 +43,11 @@ _4443 of 8147 are INFERRED (low-confidence `references`, down-weighted in cluste
 
 ## Chokepoints (PageRank centrality)
 
-- **get** (function) — 0.0141
+- **get** (function) — 0.0140
 - **ChatRail.tsx** (code-file) — 0.0049
 - **AlphaBar.tsx** (code-file) — 0.0041
 - **post** (function) — 0.0039
-- **info** (function) — 0.0039
+- **info** (function) — 0.0038
 - **portfolio.types.ts** (code-file) — 0.0033
 - **PrefControls.tsx** (code-file) — 0.0033
 - **test_brokers.py** (code-file) — 0.0033
@@ -66,9 +66,9 @@ _4443 of 8147 are INFERRED (low-confidence `references`, down-weighted in cluste
 - **community 7** (7 nodes): UserClaims, decode_access_token, deps.py, get_current_user, require_owner, security.py, user_from_jwt
 - **community 8** (4 nodes): _repo_root, env_loader.py, get_env_files, load_env_files
 - **community 10** (10 nodes): create_app, lifespan, logger.py, logging.py, main.py, setup_logging, setup_logging, test_log_writes_to_file, test_logger.py, test_setup_logging_creates_dir
-- **community 11** (724 nodes): AngelOneSource, AssetClass, Base, BinanceSource, BraveSource, BrokerSource, BseAnnouncementsSource, CerebrasAdapter, ClaudeSdkAdapter, CompleteIn, ComposeRequest, ComposeResponse
+- **community 11** (721 nodes): AngelOneSource, AssetClass, Base, BinanceSource, BraveSource, BrokerSource, BseAnnouncementsSource, CerebrasAdapter, ClaudeSdkAdapter, CompleteIn, ComposeRequest, ComposeResponse
 - **community 14** (6 nodes): _cache_root, _check_dev_host, _fernet, _http.py, load_session, save_session
-- **community 15** (49 nodes): AllocationSlice, ClassDrift, HoldingsAggregator, RebalanceDrift, RebalanceSuggestion, TreemapCell, TreemapCell, TreemapCell.tsx, TreemapCellProps, _inr_invested, _inr_value, aggregator.py
+- **community 15** (56 nodes): AllocationSlice, ClassDrift, HoldingsAggregator, RebalanceDrift, RebalanceSuggestion, TreemapCell, TreemapCell, TreemapCell.tsx, TreemapCellProps, _inr_invested, _inr_value, aggregator.py
 - **community 17** (38 nodes): AccountSection, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, DisplaySection, DisplaySection.tsx, DisplaySectionProps, MarketsSection, MarketsSection.tsx
 - **community 18** (13 nodes): _is_due, _prime_one, _prime_unsynced, _refetch_loop, _sync_one, _sync_one, boot_sync_stream, generate, health_routes.py, prime_in_background, refetch.py, start_refetch_loop
 - **community 20** (4 nodes): _as_cash, cash_routes.py, get_cash, sync_one_cash
@@ -89,7 +89,7 @@ _4443 of 8147 are INFERRED (low-confidence `references`, down-weighted in cluste
 - **community 48** (3 nodes): Order, Watchlist, portfolio_models.py
 - **community 50** (2 nodes): _make_holding, _seed_zerodha
 - **community 51** (6 nodes): provider_slugs, test_chains_reference_known_providers, test_classify_intent, test_concierge_registry.py, test_every_provider_has_at_least_one_model, test_provider_slug_literal_matches_registry
-- **community 52** (12 nodes): README.md, async-everywhere, compose.registry.ts, concierge-default-model, concierge-registry-single-source, doc-per-code-change, files-max-100-lines, orff, project-fux, providers.json, routing.json, ui-component-contract
+- **community 52** (13 nodes): README.md, async-everywhere, compose.registry.ts, concierge-default-model, concierge-registry-single-source, doc-per-code-change, files-max-100-lines, finance-feature-playbook, orff, project-fux, providers.json, routing.json
 - **community 60** (2 nodes): gen-concierge-registry.mjs, lit
 - **community 61** (2 nodes): RootLayout, layout.tsx
 - **community 62** (7 nodes): ChatProvider, LoginPage, WatchlistCard.tsx, getMe, handleSubmit, page.tsx, submit
@@ -209,3 +209,4 @@ _4443 of 8147 are INFERRED (low-confidence `references`, down-weighted in cluste
 - **community 198** (2 nodes): _record, run
 - **community 199** (2 nodes): _check_popup_fits, _record
 - **community 200** (4 nodes): afbach-vault, no-secrets-in-vcs, project-wagner-dante, vault-only-credentials
+- **community 205** (6 nodes): core-allocation, drawdown-recovery, emergency-fund-first, plan-store, position-concentration, rebalancing-policy

@@ -1,6 +1,6 @@
 # Fux INDEX
 
-_33 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_44 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
 
 ## brokers
 - **broker-source** (glossary) — BrokerSource
@@ -20,25 +20,33 @@ _33 active entries across 10 domains. Read this first; open a rule (`fux why <id
 - **concierge-default-model** (convention) — A fresh Orff session pins a derived default model, never the
 - **concierge-registry-single-source** (convention) — The concierge provider/model registry, intent→provider routing,
 - **orff** (glossary) — Orff
+- **projection-disclosure** (convention) — every forward projection Orff presents must satisfy four
 
 ## frontend
 - **ui-component-contract** (convention) — A UI Orff generates on the fly is a declarative UISpec — a JSON
 
 ## market-structure
 - **market-hours-nse** (regulatory) — NSE/BSE equity continuous trading runs 09:15–15:30 IST _[pack:indian-markets-tax]_
+- **transaction-costs** (regulatory) — Every Indian equity round-trip pays a stack of frictions _[pack:indian-markets-tax]_
 
 ## portfolio
 - **capital-market-assumptions** (rule) — Capital-market assumptions — expected returns used for projections
 - **core-allocation** (glossary) — core-allocation
 - **day-pnl** (formula) — Today's P&L is computed on current INR value, not invested cost:
+- **drawdown-recovery** (formula) — the gain required to recover a drawdown is convex in the loss:
+- **emergency-fund-first** (rule) — an emergency buffer of 6 months of expenses (12 if income is
 - **holdings-aggregator** (glossary) — HoldingsAggregator
 - **holdings-sum-equals-total** (invariant) — The portfolio's `current_value` total must equal the sum of
 - **inr-normalization** (rule) — Every holding's monetary fields are converted to INR via `to_inr(value,
 - **portfolio-plan-template** (glossary) — portfolio-plan-template
 - **portfolio-valuation** (formula) — Portfolio totals are computed over INR-normalised holdings:
+- **position-concentration** (rule) — Default concentration ceilings Orff applies when reviewing holdings
+- **rebalancing-policy** (rule) — Rebalancing is band-triggered, not calendar-triggered, and follows
+- **xirr-vs-cagr** (formula) — Use the return measure that matches the cash-flow shape:
 
 ## process
 - **doc-per-code-change** (convention) — Every code change ships with the knowledge update it implies in _[global]_
+- **finance-feature-playbook** (convention) — a new financial metric/insight ships through a fixed seven-step
 
 ## project
 - **project-broker-prime** (memory) — `backend/app/modules/brokers/refetch.py` exposes `prime_in_background`, which…
@@ -53,4 +61,7 @@ _33 active entries across 10 domains. Read this first; open a rule (`fux why <id
 - **vault-only-credentials** (convention) — Broker credentials — user IDs, client IDs, API keys — live only
 
 ## tax
+- **capital-gains-debt-gold** (regulatory) — Non-equity assets follow different holding-period and rate _[pack:indian-markets-tax]_
 - **capital-gains-equity** (regulatory) — For listed Indian equity / equity mutual funds, the holding _[pack:indian-markets-tax]_
+- **crypto-tax-vda** (regulatory) — Crypto and other Virtual Digital Assets (VDAs) have their _[pack:indian-markets-tax]_
+- **tax-loss-harvesting** (regulatory) — Capital losses offset capital gains under fixed asymmetric _[pack:indian-markets-tax]_

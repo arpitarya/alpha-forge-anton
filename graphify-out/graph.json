@@ -7872,9 +7872,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/brokers/refetch.py",
       "source_location": "L80",
-      "id": "refetch_rationale_80",
       "community": 0,
-      "norm_label": "fire-and-forget prime of ready, never-synced sources. called at startup, and"
+      "norm_label": "fire-and-forget prime of ready, never-synced sources. called at startup, and",
+      "id": "refetch_rationale_80"
     },
     {
       "label": "base.py",
@@ -11103,9 +11103,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/holdings_private.py",
       "source_location": "L51",
-      "id": "holdings_private_rationale_51",
       "community": 8,
-      "norm_label": "resolve routing for a query, forcing a trusted provider when it is private."
+      "norm_label": "resolve routing for a query, forcing a trusted provider when it is private.",
+      "id": "holdings_private_rationale_51"
     },
     {
       "label": "compose_schemas.py",
@@ -33439,11 +33439,11 @@
       "source_file": "backend/app/modules/concierge/holdings_private.py",
       "source_location": "L17",
       "weight": 0.8,
-      "_src": "holdings_private_rationale_51",
-      "_tgt": "types_querytype",
+      "_src": "types_querytype",
+      "_tgt": "holdings_private_rationale_51",
+      "confidence_score": 0.5,
       "source": "types_querytype",
-      "target": "holdings_private_rationale_51",
-      "confidence_score": 0.5
+      "target": "holdings_private_rationale_51"
     },
     {
       "relation": "uses",
@@ -42848,8 +42848,8 @@
       "source_file": "backend/app/modules/health/boot_probes.py",
       "source_location": "L48",
       "weight": 1.0,
-      "_src": "boot_probes_probe_vault",
-      "_tgt": "refetch_prime_in_background",
+      "_src": "refetch_prime_in_background",
+      "_tgt": "boot_probes_probe_vault",
       "source": "refetch_prime_in_background",
       "target": "boot_probes_probe_vault"
     },
@@ -42885,9 +42885,9 @@
       "weight": 0.8,
       "_src": "refetch_rationale_80",
       "_tgt": "base_brokersource",
+      "confidence_score": 0.5,
       "source": "refetch_rationale_80",
-      "target": "base_brokersource",
-      "confidence_score": 0.5
+      "target": "base_brokersource"
     },
     {
       "relation": "contains",

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 45,
+  "count": 56,
   "rules": [
     {
       "id": "async-everywhere",
@@ -69,6 +69,22 @@
       "updated": "2026-06-01"
     },
     {
+      "id": "capital-gains-debt-gold",
+      "type": "regulatory",
+      "domain": "tax",
+      "status": "active",
+      "title": "Non-equity assets follow different holding-period and rate",
+      "layer": "pack:indian-markets-tax",
+      "path": "/Users/arpitarya/.claude/fux/packs/indian-markets-tax/rules/capital-gains-debt-gold.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
+    },
+    {
       "id": "capital-gains-equity",
       "type": "regulatory",
       "domain": "tax",
@@ -85,6 +101,22 @@
       "updated": "2026-06-01"
     },
     {
+      "id": "crypto-tax-vda",
+      "type": "regulatory",
+      "domain": "tax",
+      "status": "active",
+      "title": "Crypto and other Virtual Digital Assets (VDAs) have their",
+      "layer": "pack:indian-markets-tax",
+      "path": "/Users/arpitarya/.claude/fux/packs/indian-markets-tax/rules/crypto-tax-vda.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
+    },
+    {
       "id": "market-hours-nse",
       "type": "regulatory",
       "domain": "market-structure",
@@ -99,6 +131,38 @@
       "examples": [],
       "created": "2026-06-01",
       "updated": "2026-06-01"
+    },
+    {
+      "id": "tax-loss-harvesting",
+      "type": "regulatory",
+      "domain": "tax",
+      "status": "active",
+      "title": "Capital losses offset capital gains under fixed asymmetric",
+      "layer": "pack:indian-markets-tax",
+      "path": "/Users/arpitarya/.claude/fux/packs/indian-markets-tax/rules/tax-loss-harvesting.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
+    },
+    {
+      "id": "transaction-costs",
+      "type": "regulatory",
+      "domain": "market-structure",
+      "status": "active",
+      "title": "Every Indian equity round-trip pays a stack of frictions",
+      "layer": "pack:indian-markets-tax",
+      "path": "/Users/arpitarya/.claude/fux/packs/indian-markets-tax/rules/transaction-costs.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
     },
     {
       "id": "anton-overview",
@@ -327,6 +391,35 @@
       "updated": "2026-06-03"
     },
     {
+      "id": "drawdown-recovery",
+      "type": "formula",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "the gain required to recover a drawdown is convex in the loss:",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/drawdown-recovery.md",
+      "code_refs": [],
+      "related": [
+        "capital-market-assumptions",
+        "position-concentration",
+        "core-allocation"
+      ],
+      "edges": {},
+      "check": "abs(recovery_pct - dd_pct / (1 - dd_pct)) < 1e-9",
+      "examples": [
+        {
+          "given": "{\"dd_pct\": 0.50, \"recovery_pct\": 1.00}",
+          "expect": "true"
+        },
+        {
+          "given": "a 50% drawdown needs a +100% gain to recover; 20% needs +25%",
+          "expect": "recovery = dd / (1 - dd)"
+        }
+      ],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
+    },
+    {
       "id": "dump-utils-single-source",
       "type": "convention",
       "domain": "brokers",
@@ -347,6 +440,51 @@
       "examples": [],
       "created": "2026-06-09",
       "updated": "2026-06-09"
+    },
+    {
+      "id": "emergency-fund-first",
+      "type": "rule",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "an emergency buffer of 6 months of expenses (12 if income is",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/emergency-fund-first.md",
+      "code_refs": [],
+      "related": [
+        "core-allocation",
+        "rebalancing-policy",
+        "plan-store"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
+    },
+    {
+      "id": "finance-feature-playbook",
+      "type": "convention",
+      "domain": "process",
+      "status": "active",
+      "title": "a new financial metric/insight ships through a fixed seven-step",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/finance-feature-playbook.md",
+      "code_refs": [
+        "backend/app/modules/plans/projection_service.py",
+        "backend/app/modules/concierge/compose_registry.py",
+        "frontend/src/modules/concierge/SpecHost.tsx"
+      ],
+      "related": [
+        "ui-component-contract",
+        "doc-per-code-change",
+        "files-max-100-lines",
+        "probe-cdp-not-playwright"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
     },
     {
       "id": "getting-started",
@@ -509,6 +647,27 @@
       "updated": "2026-06-03"
     },
     {
+      "id": "position-concentration",
+      "type": "rule",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "Default concentration ceilings Orff applies when reviewing holdings",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/position-concentration.md",
+      "code_refs": [
+        "backend/app/modules/brokers/aggregator.py"
+      ],
+      "related": [
+        "rebalancing-policy",
+        "core-allocation"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
+    },
+    {
       "id": "probe-cdp-not-playwright",
       "type": "convention",
       "domain": "brokers",
@@ -530,6 +689,52 @@
       "examples": [],
       "created": "2026-06-09",
       "updated": "2026-06-09"
+    },
+    {
+      "id": "projection-disclosure",
+      "type": "convention",
+      "domain": "concierge",
+      "status": "active",
+      "title": "every forward projection Orff presents must satisfy four",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/projection-disclosure.md",
+      "code_refs": [
+        "backend/app/modules/plans/projection_service.py",
+        "backend/app/modules/concierge/holdings_private.py"
+      ],
+      "related": [
+        "capital-market-assumptions",
+        "ui-component-contract",
+        "secure-holdings-plan"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
+    },
+    {
+      "id": "rebalancing-policy",
+      "type": "rule",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "Rebalancing is band-triggered, not calendar-triggered, and follows",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/rebalancing-policy.md",
+      "code_refs": [
+        "backend/app/modules/plans/plan_drift.py",
+        "backend/app/modules/plans/plan_loader.py"
+      ],
+      "related": [
+        "core-allocation",
+        "capital-market-assumptions",
+        "plan-store"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
     },
     {
       "id": "secure-holdings-plan",
@@ -623,6 +828,28 @@
       "examples": [],
       "created": "2026-06-04",
       "updated": "2026-06-04"
+    },
+    {
+      "id": "xirr-vs-cagr",
+      "type": "formula",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "Use the return measure that matches the cash-flow shape:",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/xirr-vs-cagr.md",
+      "code_refs": [
+        "backend/app/modules/plans/projection_service.py"
+      ],
+      "related": [
+        "capital-market-assumptions",
+        "day-pnl",
+        "portfolio-valuation"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
     },
     {
       "id": "afbach-vault",
