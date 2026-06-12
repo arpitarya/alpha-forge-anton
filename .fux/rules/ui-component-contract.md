@@ -4,13 +4,22 @@ domain: frontend
 type: convention
 status: active
 created: 2026-06-09
-updated: 2026-06-09
+updated: 2026-06-12
+keywords:
+  - orff
+  - compose
+  - uispec
+  - registry
+  - generated
+  - on-the-fly
+  - sandbox
 code_refs:
   - frontend/src/modules/concierge/DynamicRenderer.tsx
   - frontend/src/modules/concierge/compose.registry.ts
   - backend/app/modules/concierge/compose_service.py
-related: [files-max-100-lines, async-everywhere]
-keywords: [orff, compose, uispec, registry, generated, on-the-fly, sandbox]
+related:
+  - files-max-100-lines
+  - async-everywhere
 ---
 **Convention:** A UI Orff generates on the fly is a **declarative UISpec** — a JSON
 tree of `{component, props, data?, children?}` nodes — **never code**. Every node

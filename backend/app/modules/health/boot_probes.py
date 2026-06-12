@@ -17,7 +17,8 @@ from app.modules.health.boot_schemas import BootService, BootStatus
 _LLM_PRIORITY = ["gemini", "cerebras", "groq", "claude-sdk", "mistral", "openrouter", "huggingface"]
 
 
-_LLM_VAULT_KEYS = ("GEMINI_API_KEY", "GROQ_API_KEY", "HF_API_KEY", "OPENROUTER_API_KEY", "CEREBRAS_API_KEY", "MISTRAL_API_KEY")
+_LLM_VAULT_KEYS = ("GEMINI_API_KEY", "GROQ_API_KEY", "HF_API_KEY", "OPENROUTER_API_KEY",
+                   "CEREBRAS_API_KEY", "MISTRAL_API_KEY")
 
 
 async def probe_vault() -> BootService:
@@ -40,8 +41,11 @@ async def probe_vault() -> BootService:
                            status=BootStatus.ERROR,
                            detail="vault locked — run `afbach unlock`")
     if loaded_now:
-        # Newly loaded keys may unblock brokers that were UNCONFIGURED at boot.
-        refresh_unconfigured_sources()
+        # Newly loaded keys may unblock brokers that were UNCONFIGURED at boot;
+        # promoted sources missed the startup primer, so prime them here too.
+        if promoted := refresh_unconfigured_sources():
+            from app.modules.brokers.refetch import prime_in_background
+            prime_in_background({s: SOURCES[s] for s in promoted}, name="broker-prime-late")
     loaded = sum(1 for k in _LLM_VAULT_KEYS if os.getenv(k))
     if not loaded:
         return BootService(key="vault", label="Secrets · afbach vault",
@@ -71,7 +75,7 @@ async def probe_database() -> BootService:
             key="database", label="Database · Postgres ready",
             status=BootStatus.OK, detail=f"{ms}ms",
         )
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         return BootService(
             key="database", label="Database · Postgres",
             status=BootStatus.ERROR, detail=str(e)[:48],
@@ -93,7 +97,7 @@ async def probe_llm() -> BootService:
             key="llm", label="AI Gateway · LLM routing",
             status=BootStatus.OK, detail=f"{len(available)} providers · via {primary}",
         )
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         return BootService(
             key="llm", label="AI Gateway · LLM routing",
             status=BootStatus.ERROR, detail=str(e)[:48],

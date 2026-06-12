@@ -1,14 +1,10 @@
 """Background refetch loop — auto-syncs broker sources when their TTL expires.
 
-Each source exposes `refetch_seconds` (read from env at startup). The loop
-checks every POLL_INTERVAL seconds and calls `sync()` on any source whose
-last_synced_at is older than its TTL.
-
-On startup, every READY source that has never been synced is primed in the
-background (one attempt, fire-and-forget). This avoids the silent-empty bug
-where a broker stays invisible in the UI forever because the TTL refetch
-intentionally skips never-synced sources. Sources that fail to prime stay
-empty until the user manually triggers POST /portfolio/wallets/{slug}/sync.
+The loop polls every POLL_INTERVAL seconds and `sync()`s any source older than its
+`refetch_seconds` TTL. READY-but-never-synced sources are instead primed once in the
+background (at startup, and again when a mid-life vault unlock promotes sources) —
+otherwise a broker stays silently empty forever, since the TTL loop skips them.
+Failed primes stay empty until a manual POST /portfolio/wallets/{slug}/sync.
 """
 
 from __future__ import annotations
@@ -22,6 +18,7 @@ from app.modules.brokers.base import BrokerSource, SourceStatus
 logger = get_logger("brokers.refetch")
 
 POLL_INTERVAL = 60  # seconds between staleness checks
+_bg_tasks: set[asyncio.Task] = set()  # strong refs so the loop can't GC a running prime
 
 
 def _is_due(src: BrokerSource) -> bool:
@@ -30,9 +27,9 @@ def _is_due(src: BrokerSource) -> bool:
     if src._status in (SourceStatus.UNCONFIGURED, SourceStatus.SYNCING):
         return False
     if src._last_synced_at is None:
-        # Never-synced sources are handled by the one-shot startup primer
-        # (_prime_unsynced) — not by this recurring loop, to avoid retrying
-        # a broken source every POLL_INTERVAL.
+        # Never-synced sources are handled by the primer (prime_in_background)
+        # — not by this recurring loop, to avoid retrying a broken source
+        # every POLL_INTERVAL.
         return False
     age = (datetime.now(UTC) - src._last_synced_at).total_seconds()
     return age >= src.refetch_seconds
@@ -79,10 +76,20 @@ async def _prime_unsynced(sources: dict[str, BrokerSource]) -> None:
     )
 
 
+def prime_in_background(sources: dict[str, BrokerSource], name: str = "broker-prime") -> None:
+    """Fire-and-forget prime of READY, never-synced sources. Called at startup, and
+    again by the boot probe when a mid-life vault unlock promotes sources to READY —
+    the startup run has passed by then, so without a re-prime they would sit
+    'linked · not synced' with zero holdings until a manual sync."""
+    task = asyncio.create_task(_prime_unsynced(sources), name=name)
+    _bg_tasks.add(task)
+    task.add_done_callback(_bg_tasks.discard)
+
+
 async def start_refetch_loop(sources: dict[str, BrokerSource]) -> asyncio.Task:
-    # Fire-and-forget the startup primer so the app can accept requests
-    # immediately, even if some brokers' first sync takes minutes (CDP auth).
-    asyncio.create_task(_prime_unsynced(sources), name="broker-prime")
+    # Prime in the background so the app accepts requests immediately,
+    # even if some brokers' first sync takes minutes (CDP auth).
+    prime_in_background(sources)
     task = asyncio.create_task(_refetch_loop(sources), name="broker-refetch")
     active = [s for s in sources.values() if s.refetch_seconds > 0]
     logger.info(

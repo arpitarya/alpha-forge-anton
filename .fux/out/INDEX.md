@@ -41,7 +41,7 @@ _33 active entries across 10 domains. Read this first; open a rule (`fux why <id
 - **doc-per-code-change** (convention) — Every code change ships with the knowledge update it implies in _[global]_
 
 ## project
-- **project-broker-prime** (memory) — `backend/app/modules/brokers/refetch.py` runs a one-shot `_prime_unsynced` ta…
+- **project-broker-prime** (memory) — `backend/app/modules/brokers/refetch.py` exposes `prime_in_background`, which…
 - **project-cdp-prerequisite** (memory) — Every API-kind broker sync (and every probe) depends on an externally launched
 - **project-fux** (memory) — Fux is a sibling tool (beside wagner/bach/orff) at `~/my_programs/fux` (remote
 - **project-wagner-dante** (memory) — Wagner IAM and Dante security have been fully integrated as of 2026-05-25.

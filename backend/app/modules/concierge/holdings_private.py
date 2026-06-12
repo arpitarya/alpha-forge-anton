@@ -28,7 +28,11 @@ def disclosed_context(plan_id: str = "core-allocation") -> str:
     if not has_live_data(rows):
         return (
             "Holdings context: no live broker data is cached right now, so allocation "
-            "percentages are unavailable. Tell the user that plainly; do not invent figures."
+            "percentages are unavailable. Tell the user that plainly. Do NOT invent figures "
+            "and do NOT show a sample/demo/illustrative holdings table — fabricated rows in "
+            "a finance terminal read as real data. Instead, point the user to the broker "
+            "sources panel to sync a broker (the CDP Chrome tab must be logged in) or to "
+            "upload a holdings CSV, then continue the conversation."
         )
     lines = [
         f"- {r.asset_class}: target {r.target_pct:.0f}%, actual {r.actual_pct:.0f}%, "

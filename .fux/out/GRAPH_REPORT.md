@@ -1,10 +1,10 @@
 # Fux GRAPH_REPORT
 
-_1737 nodes · 8143 edges · 387 code files · 45 rules · 218 communities._
+_1738 nodes · 8147 edges · 387 code files · 45 rules · 218 communities._
 
 ## Node types
 
-- function: 1041
+- function: 1042
 - code-file: 387
 - class: 264
 - convention: 12
@@ -18,11 +18,11 @@ _1737 nodes · 8143 edges · 387 code files · 45 rules · 218 communities._
 
 ## Edges
 
-_4443 of 8143 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_4443 of 8147 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
 - references: 4443
-- calls: 2295
-- contains: 1307
+- calls: 2298
+- contains: 1308
 - related: 63
 - governs: 35
 
@@ -70,7 +70,7 @@ _4443 of 8143 are INFERRED (low-confidence `references`, down-weighted in cluste
 - **community 14** (6 nodes): _cache_root, _check_dev_host, _fernet, _http.py, load_session, save_session
 - **community 15** (49 nodes): AllocationSlice, ClassDrift, HoldingsAggregator, RebalanceDrift, RebalanceSuggestion, TreemapCell, TreemapCell, TreemapCell.tsx, TreemapCellProps, _inr_invested, _inr_value, aggregator.py
 - **community 17** (38 nodes): AccountSection, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, DisplaySection, DisplaySection.tsx, DisplaySectionProps, MarketsSection, MarketsSection.tsx
-- **community 18** (12 nodes): _is_due, _prime_one, _prime_unsynced, _refetch_loop, _sync_one, _sync_one, boot_sync_stream, generate, health_routes.py, refetch.py, start_refetch_loop, sync
+- **community 18** (13 nodes): _is_due, _prime_one, _prime_unsynced, _refetch_loop, _sync_one, _sync_one, boot_sync_stream, generate, health_routes.py, prime_in_background, refetch.py, start_refetch_loop
 - **community 20** (4 nodes): _as_cash, cash_routes.py, get_cash, sync_one_cash
 - **community 21** (7 nodes): _fetch_live_usd_inr, _load_cached, _path, _read_all, _write_row, fx.py, get_inr_per_usd
 - **community 24** (2 nodes): _to_float, normalize

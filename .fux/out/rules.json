@@ -248,7 +248,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-10",
-      "updated": "2026-06-11"
+      "updated": "2026-06-12"
     },
     {
       "id": "concierge-registry-single-source",
@@ -568,7 +568,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-09"
+      "updated": "2026-06-12"
     },
     {
       "id": "vault-only-credentials",
@@ -807,7 +807,7 @@
       "type": "memory",
       "domain": "project",
       "status": "active",
-      "title": "`backend/app/modules/brokers/refetch.py` runs a one-shot `_prime_unsynced` ta…",
+      "title": "`backend/app/modules/brokers/refetch.py` exposes `prime_in_background`, which…",
       "layer": "project",
       "path": "/Users/arpitarya/my_programs/anton/.fux/memory/shared/project-broker-prime.md",
       "code_refs": [],
@@ -816,7 +816,7 @@
       "check": null,
       "examples": [],
       "created": "2026-05-25",
-      "updated": "2026-06-03"
+      "updated": "2026-06-12"
     },
     {
       "id": "project-cdp-prerequisite",
