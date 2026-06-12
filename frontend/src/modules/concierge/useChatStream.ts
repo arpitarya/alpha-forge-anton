@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import type { UINode } from "./compose.types";
 import { activeModelFor, type ChatTurn, type ModelChoice } from "./concierge.types";
 
 interface StreamPayload {
@@ -11,6 +12,8 @@ interface StreamPayload {
   completion_tokens?: number;
   elapsed_s?: number;
   error?: string;
+  /** Compose follow-up event — a Fux-validated UISpec, separate from content. */
+  spec?: UINode;
 }
 
 function getToken(): string | null {
@@ -126,6 +129,9 @@ export function useChatStream() {
               const payload: StreamPayload = JSON.parse(raw);
               if (payload.error) {
                 patchTurn(id, { loading: false, error: payload.error });
+              } else if (payload.spec) {
+                // spec event carries no content — never clobber the streamed text
+                patchTurn(id, { spec: payload.spec, elapsed: payload.elapsed_s ?? null });
               } else {
                 patchTurn(id, {
                   response: payload.content != null ? sanitizeContent(payload.content) : null,

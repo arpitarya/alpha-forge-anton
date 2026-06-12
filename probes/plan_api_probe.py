@@ -1,4 +1,4 @@
-"""Plan API probe — verifies the /portfolio/plan surface and its leak-safety.
+"""Plan API probe — verifies the /plans surface and its leak-safety.
 
 Standalone (no CDP, no HTTP): imports the route handlers and runs them directly, so
 it exercises the real serialization path. Asserts the plan reads back consistently and
@@ -32,7 +32,7 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 
 
 async def _run() -> None:
-    from app.modules.portfolio.plan_routes import get_plan, get_plan_drift
+    from app.modules.plans.plan_routes import get_plan, get_plan_drift
 
     plan = await get_plan()
     check("plan reads back", plan["plan_id"] == "core-allocation")

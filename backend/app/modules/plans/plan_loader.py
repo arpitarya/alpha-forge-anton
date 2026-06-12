@@ -1,14 +1,16 @@
-"""Load a committed Fux plan entry into typed rebalance targets.
+"""Load a plan doc from the elgar store into typed rebalance targets.
 
-A plan lives at `.fux/rules/<plan_id>.plan.md` as **strategy only** — target
-percentages and drift bands, never personal figures (see the `secure-holdings-plan`
-Fux entry). This reads the fenced ```yaml block and maps it onto `AssetClass`, so the
-plan plane drives `HoldingsAggregator.rebalance()` without holdings ever leaving the
-machine. Config-load style (sync), matching `app.core.env_loader`.
+Plans live in the **elgar store** — a private git repo at `ELGAR_DIR` (default
+`~/.alphaforge-anton/elgar`), never in this public repo. Fux holds only
+`elgar://plan/<id>` links (see the `plan-store` Fux entry). This reads the fenced
+```yaml block of `<store>/plans/<plan_id>.plan.md` and maps it onto `AssetClass`,
+so the plan drives `HoldingsAggregator.rebalance()` without holdings ever leaving
+the machine. Config-load style (sync), matching `app.core.env_loader`.
 """
 
 from __future__ import annotations
 
+import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -17,8 +19,11 @@ import yaml
 
 from app.modules.brokers.base import AssetClass
 
-_PLANS_DIR = Path(__file__).resolve().parents[4] / ".fux" / "rules"
 _YAML_BLOCK = re.compile(r"```yaml\s*\n(.*?)\n```", re.DOTALL)
+
+
+def _plans_dir() -> Path:
+    return Path(os.environ.get("ELGAR_DIR", "~/.alphaforge-anton/elgar")).expanduser() / "plans"
 
 
 @dataclass
@@ -35,7 +40,7 @@ class Plan:
 
 
 def _plan_path(plan_id: str) -> Path:
-    return _PLANS_DIR / f"{plan_id}.plan.md"
+    return _plans_dir() / f"{plan_id}.plan.md"
 
 
 def _parse_targets(raw: dict) -> dict[AssetClass, float]:
@@ -49,10 +54,10 @@ def _parse_targets(raw: dict) -> dict[AssetClass, float]:
 
 
 def load_plan(plan_id: str = "core-allocation") -> Plan:
-    """Parse `.fux/rules/<plan_id>.plan.md` → Plan. Raises if missing/malformed."""
+    """Parse `<store>/plans/<plan_id>.plan.md` → Plan. Raises if missing/malformed."""
     path = _plan_path(plan_id)
     if not path.exists():
-        raise FileNotFoundError(f"no plan entry: {path}")
+        raise FileNotFoundError(f"no plan in elgar store: {path} (run `elgar init` / `elgar list`)")
     match = _YAML_BLOCK.search(path.read_text(encoding="utf-8"))
     if not match:
         raise ValueError(f"plan {plan_id}: no ```yaml targets block")
@@ -72,8 +77,8 @@ def plan_targets(plan_id: str = "core-allocation") -> dict[AssetClass, float]:
 
 
 def available_plans() -> list[str]:
-    """Plan ids with a committed `.fux/rules/<id>.plan.md` entry."""
-    return sorted(p.name.removesuffix(".plan.md") for p in _PLANS_DIR.glob("*.plan.md"))
+    """Plan ids present in the elgar store ([] when the store is absent)."""
+    return sorted(p.name.removesuffix(".plan.md") for p in _plans_dir().glob("*.plan.md"))
 
 
 __all__ = ["Plan", "available_plans", "load_plan", "plan_targets"]

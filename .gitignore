@@ -200,3 +200,5 @@ screenshots/*.png
 # fux
 !.fux/out/
 .fux/out/.session-*.json
+# compose-feedback capture holds raw user prompts — never commit
+.fux/capture/

@@ -1,10 +1,11 @@
-"""Git-safety guard — the enforcement behind the two-plane rule.
+"""Git-safety guard — the enforcement behind the plan-store rule.
 
-A committed plan / drift doc belongs to the *plan plane*: strategy only (target %,
-bands, rules). It must never carry *data-plane* figures — ₹ amounts, quantities,
-account/client IDs, or broker secrets. This scans every plan-plane doc under
-`.fux/rules/` and FAILS (exit 1) on the first leak, so "safe in a public repo" is a
-guarantee, not a convention. See the `secure-holdings-plan` Fux entry.
+Money documents live in the private elgar store (`elgar path`), never in this public
+repo. This FAILS (exit 1) if (a) any `*.plan.md` / `*.drift.md` is git-tracked here —
+those belong in the store — or (b) a committed plan-adjacent doc under `.fux/rules/`
+carries data-plane figures: ₹ amounts, quantities, account/client IDs, broker secrets.
+See the `plan-store` and `secure-holdings-plan` Fux entries. Dante's `pii` audit is the
+repo-wide sibling of this check.
 
 Standalone — no backend, no CDP. Run:  just probe plan-safety
 """
@@ -12,15 +13,17 @@ Standalone — no backend, no CDP. Run:  just probe plan-safety
 from __future__ import annotations
 
 import re
+import subprocess
 import sys
 from pathlib import Path
 
-_RULES = Path(__file__).resolve().parent.parent / ".fux" / "rules"
+ROOT = Path(__file__).resolve().parent.parent
+_RULES = ROOT / ".fux" / "rules"
 
-# Files that make up the plan plane: the design doc, the template, every instance.
-_EXPLICIT = ["secure-holdings-plan.md", "portfolio-plan-template.md"]
+# Committed docs that talk about plans/holdings and must stay strategy-only.
+_EXPLICIT = ["secure-holdings-plan.md", "plan-store.md", "core-allocation.md"]
 
-# Each pattern marks a data-plane leak that must never reach a committed plan doc.
+# Each pattern marks a data-plane leak that must never reach a committed doc.
 _LEAKS: dict[str, re.Pattern[str]] = {
     "currency amount": re.compile(r"(?:₹|Rs\.?|INR)\s*\d"),
     "grouped number (₹/qty)": re.compile(r"\d{1,3}(?:,\d{2,3})+"),
@@ -40,31 +43,35 @@ def scan_text(text: str) -> list[tuple[int, str, str]]:
     return hits
 
 
-def _plan_docs() -> list[Path]:
-    seen: dict[Path, None] = {}
-    for name in _EXPLICIT:
-        seen[_RULES / name] = None
-    for pattern in ("*.plan.md", "*.drift.md"):
-        for p in sorted(_RULES.glob(pattern)):
-            seen[p] = None
-    return [p for p in seen if p.exists()]
+def _tracked_plan_docs() -> list[str]:
+    out = subprocess.run(
+        ["git", "ls-files", "*.plan.md", "*.drift.md"],
+        cwd=ROOT, capture_output=True, text=True, check=True,
+    )
+    return [line for line in out.stdout.splitlines() if line]
 
 
 def main() -> int:
-    leaked = False
-    for path in _plan_docs():
+    failed = False
+    strays = _tracked_plan_docs()
+    for s in strays:
+        failed = True
+        print(f"✗ {s}  [plan doc tracked in repo — belongs in the elgar store]")
+    if not strays:
+        print("✓ no *.plan.md / *.drift.md tracked — store holds them all")
+    for path in (p for n in _EXPLICIT if (p := _RULES / n).exists()):
         hits = scan_text(path.read_text(encoding="utf-8"))
-        rel = path.relative_to(_RULES.parent.parent)
+        rel = path.relative_to(ROOT)
         if hits:
-            leaked = True
+            failed = True
             for line_no, label, snippet in hits:
                 print(f"✗ {rel}:{line_no}  [{label}]  {snippet}")
         else:
             print(f"✓ {rel}  clean")
-    if leaked:
-        print("\n❌ plan-plane leak — these docs are NOT safe for a public repo.", file=sys.stderr)
+    if failed:
+        print("\n❌ plan-store leak — this repo is NOT safe to publish.", file=sys.stderr)
         return 1
-    print("\n✅ all plan docs are strategy-only — safe to commit.")
+    print("\n✅ plan docs live in the store; committed docs are strategy-only.")
     return 0
 
 

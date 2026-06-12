@@ -1,6 +1,6 @@
 # Fux INDEX
 
-_29 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_33 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
 
 ## brokers
 - **broker-source** (glossary) — BrokerSource
@@ -28,10 +28,13 @@ _29 active entries across 10 domains. Read this first; open a rule (`fux why <id
 - **market-hours-nse** (regulatory) — NSE/BSE equity continuous trading runs 09:15–15:30 IST _[pack:indian-markets-tax]_
 
 ## portfolio
+- **capital-market-assumptions** (rule) — Capital-market assumptions — expected returns used for projections
+- **core-allocation** (glossary) — core-allocation
 - **day-pnl** (formula) — Today's P&L is computed on current INR value, not invested cost:
 - **holdings-aggregator** (glossary) — HoldingsAggregator
 - **holdings-sum-equals-total** (invariant) — The portfolio's `current_value` total must equal the sum of
 - **inr-normalization** (rule) — Every holding's monetary fields are converted to INR via `to_inr(value,
+- **portfolio-plan-template** (glossary) — portfolio-plan-template
 - **portfolio-valuation** (formula) — Portfolio totals are computed over INR-normalised holdings:
 
 ## process
@@ -46,6 +49,7 @@ _29 active entries across 10 domains. Read this first; open a rule (`fux why <id
 ## security
 - **afbach-vault** (glossary) — afbach vault (alpha-forge-bach)
 - **no-secrets-in-vcs** (convention) — Never commit secrets — `.env` files, API keys, tokens, private _[global]_
+- **plan-store** (convention) — Plan store (elgar) — money documents are linked, never stored
 - **vault-only-credentials** (convention) — Broker credentials — user IDs, client IDs, API keys — live only
 
 ## tax

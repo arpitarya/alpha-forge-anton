@@ -1,6 +1,6 @@
 # Fux narrative
 
-_14 narrative entries — the long-form prose absorbed into the substrate (plan §11)._
+_12 narrative entries — the long-form prose absorbed into the substrate (plan §11)._
 
 ## Contents
 
@@ -9,12 +9,10 @@ _14 narrative entries — the long-form prose absorbed into the substrate (plan 
 - [Broker CSV Dump Convention](#broker-csv-dumps)
 - [Broker Source Integration Guide](#broker-source-integration)
 - [AlphaForge Anton — Commands](#commands)
-- [Core allocation — default portfolio plan](#core-allocation)
 - [Getting Started — Developer Setup](#getting-started)
 - [How AlphaForge Anton Works](#how)
 - [Live prices — design plan](#live-prices-plan)
 - [Plan: Add LLM + Brokerage Sync to Boot Screen](#plan-boot-llm-brokerage)
-- [Portfolio plan — template (git-safe instance shape)](#portfolio-plan-template)
 - [Secure holdings access for Orff + the plan→drift→advise workflow](#secure-holdings-plan)
 - [What AlphaForge Anton Is](#what)
 - [Why AlphaForge Anton Exists](#why)
@@ -1158,53 +1156,6 @@ alphaforge-anton-repo-context-mcp                                      # Same se
 ./clean.sh --all          # Nuclear clean — removes everything (run setup.sh to restore)
 ```
 
-## Core allocation — default portfolio plan
-<a id="core-allocation"></a>
-_`core-allocation` · portfolio_
-
-# Core allocation — default portfolio plan
-
-The project's default rebalance plan. **Strategy only — zero personal figures**, so it
-is safe in this public repo (the git-safety guard probe enforces it). Live holdings
-never appear here; drift is computed at runtime against the data plane. Shape and rules
-follow [[portfolio-plan-template]]; rationale for the design is in [[secure-holdings-plan]].
-
-`plan_loader.load_plan("core-allocation")` reads the `targets` / `bands` below;
-`aggregator.rebalance()` joins them against live actuals → `RebalanceDrift`.
-
-## Targets (machine-read)
-
-```yaml
-plan_id: core-allocation
-horizon: long-term
-targets:                        # must sum to 100
-  equity: 60
-  mutual_fund: 15
-  bond: 15
-  gold: 5
-  crypto: 3
-  cash: 2
-bands:                          # drift tolerance, in percentage points
-  default: 5
-  crypto: 1.5
-rules:
-  - trim any class > target + its band
-  - top up any class < target - its band
-  - prefer adding new capital over selling when drift is one-sided
-```
-
-## Goals (the *why*)
-
-- **Equity 60%** — primary growth engine; the long horizon absorbs drawdowns.
-- **Mutual funds 15%** — diversified core that needs no per-name attention.
-- **Bonds + cash 17%** — stability plus dry powder that funds rebalancing without forced equity sales.
-- **Gold 5%** — inflation / currency hedge, lightly held.
-- **Crypto 3%, ±1.5pt band** — deliberately small and tightly banded; it drifts fast.
-
-## Related
-
-[[portfolio-plan-template]] · [[secure-holdings-plan]] · [[holdings-aggregator]] · [[portfolio-valuation]]
-
 ## Getting Started — Developer Setup
 <a id="getting-started"></a>
 _`getting-started` · general_
@@ -2200,67 +2151,6 @@ The `useEffect` animation already calls `onDoneRef.current()` after the last ste
 - `BootStatus` enum — `ok / warn / error / skip` covers all new states.
 - Broker rows for `UNCONFIGURED` sources — still show `"not linked"` with `warn`, no sync attempted.
 
-## Portfolio plan — template (git-safe instance shape)
-<a id="portfolio-plan-template"></a>
-_`portfolio-plan-template` · portfolio_
-
-# Portfolio plan — template (git-safe instance shape)
-
-**What this is:** the shape every committed investment plan follows. A plan is
-**strategy only** — target percentages, drift bands, rebalance rules, named goals,
-horizon. It carries **zero personal figures** (no ₹ amounts, no quantities, no account
-IDs, no holding symbols), so it is safe in a public repo. Live actuals live in the data
-plane; see [[secure-holdings-plan]].
-
-Orff reads `targets` / `bands` machine-side via `plan_loader.py`; the prose explains the
-*why* so the plan is referenceable later (`fux why <plan-id>`).
-
-## Targets (machine-read)
-
-```yaml
-plan_id: core-allocation        # one per strategy; this is the example
-horizon: long-term              # short | medium | long-term
-targets:                        # must sum to 100
-  equity: 60
-  mutual_fund: 15
-  bond: 15
-  gold: 5
-  crypto: 3
-  cash: 2
-bands:                          # drift tolerance, in percentage points
-  default: 5
-  crypto: 1.5                   # tighter band on the volatile sleeve
-rules:
-  - trim any class > target + its band
-  - top up any class < target − its band
-  - prefer adding new capital over selling when drift is one-sided
-```
-
-## Goals (prose — the *why*)
-
-- **Equity 60%** — primary growth engine; horizon is long enough to ride drawdowns.
-- **Bonds + cash 17%** — dry powder + a floor that funds rebalancing without forced equity sales.
-- **Crypto 3%, ±1.5pt band** — deliberately small and tightly banded; it drifts fast.
-
-## How drift is computed (no figures leave the machine)
-
-`get_drift(core-allocation)` →
-`aggregator.rebalance(targets)` → per class `RebalanceDrift(target_pct, actual_pct,
-drift_pct)`. Orff reports **points of drift and direction only** by default
-(`disclose-aggregate-only`). Example narration — *"equity is +4pts hot, crypto is
-−1pt; trim equity, add to bonds"* — no ₹, no symbols.
-
-## Saving a real plan
-
-1. Copy this entry to `.fux/rules/<plan-id>.plan.md`, edit `targets` / `bands` / goals.
-2. `fux build` — it joins the graph and becomes `fux why <plan-id>`.
-3. The git-safety guard probe must pass before commit (greps for ₹ / account IDs / symbols).
-
-## Related
-
-[[secure-holdings-plan]] · [[holdings-aggregator]] · [[portfolio-valuation]] ·
-[[holdings-sum-equals-total]]
-
 ## Secure holdings access for Orff + the plan→drift→advise workflow
 <a id="secure-holdings-plan"></a>
 _`secure-holdings-plan` · security_
@@ -2270,6 +2160,13 @@ _`secure-holdings-plan` · security_
 **Status:** _Shipped (steps 1–5) — plan plane, trusted-provider floor, disclosure
 chokepoint, and both guard probes are live. Wiring holdings tools into Orff's
 **tool-calling** loop (vs the current system-message injection) remains future work._
+
+> **Update 2026-06-12 — plan plane moved out of this repo.** Plan documents now live
+> in the private **elgar store** (`ELGAR_DIR`, its own git repo) and are only
+> *linked* from `.fux/` — see [[plan-store]]. `plan_loader` / `plan_drift` /
+> `plan_routes` were consolidated into `backend/app/modules/plans/` and read the
+> store. Where this doc says "committed `.fux/` plan entry", read "elgar store doc".
+> Enforcement: `plan_safety_probe` (no tracked plan docs) + Dante's `pii` audit.
 **Why this exists:** Orff routes to **free external LLM providers** (Groq, Mistral,
 Gemini, OpenRouter, HuggingFace — see `concierge/.../registry/routing.json`). Today
 `concierge_service.stream_chat` injects Fux grounding but **no holdings**, so nothing

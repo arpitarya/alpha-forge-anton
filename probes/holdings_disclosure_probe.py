@@ -35,8 +35,8 @@ def main() -> int:
     from alphaforge_anton_llm import registry
     from alphaforge_anton_llm.types import QueryType
 
-    from app.modules.brokers.plan_drift import ClassDrift
-    from app.modules.brokers.plan_loader import Plan
+    from app.modules.plans.plan_drift import ClassDrift
+    from app.modules.plans.plan_loader import Plan
     from app.modules.concierge import holdings_private as hp
 
     # 1. disclosure renders clean even with a *populated* portfolio

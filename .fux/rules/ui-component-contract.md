@@ -28,11 +28,15 @@ call. It also makes output born-compliant — every primitive is already functio
 themed, and ≤100 lines (see [[files-max-100-lines]]).
 
 **How to apply:** New presentational primitives become composable by exporting them
-from `@alphaforge-anton/solar-ui` *and* adding them to the client `WHITELIST`; new
-data sources by exposing a `use*` hook. Both then appear in `fux components`
-automatically — no prompt edit needed. Anything the model references that isn't in
-the registry is rejected, surfaced by `fux feedback` as a candidate gap, never
-rendered.
+from `@alphaforge-anton/solar-ui` *and* adding them to **both** halves of the curated
+vocabulary: the client `WHITELIST` (`compose.registry.ts`) and the backend
+`COMPOSABLE_COMPONENTS` (`compose_registry.py`); new data sources by a parameterless
+`use*` hook added to `COMPOSABLE_HOOKS` + `SpecHost.tsx`. The two halves are kept
+identical by `just probe compose-registry` — prompt = validator = whitelist. Anything
+the model references outside the vocabulary is rejected, surfaced by `fux feedback`
+as a candidate gap, never rendered. In chat, a turn matching the manifest's
+`compose.pattern` (routing.json — single source) also gets a spec via
+`compose_followup`, streamed as a separate SSE event and rendered by `SpecCard`.
 
 **Worked example** — "a live net-worth card" composes to:
 

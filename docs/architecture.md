@@ -15,6 +15,7 @@ alpha-forge-anton/
 │   │   ├── health/      /api/v1/* health endpoint
 │   │   ├── iam/         Wagner IAM proxy — forwards /api/v1/iam/* to Wagner service on :8001
 │   │   ├── portfolio/   routes + Holding/Order/Watchlist ORM
+│   │   ├── plans/       plan store plane — plan_loader (reads the private elgar store at ELGAR_DIR), plan_drift (targets × live actuals, %-only), /plans + /plans/drift routes. Money docs live in elgar (sibling tool, ~/my_programs/elgar), never in this repo — `fux why plan-store`
 │   │   ├── brokers/     pluggable BrokerSource adapters (Zerodha Kite/Coin, Groww, Angel One, IndMoney, TickerTape, Binance) + aggregator + registry. Used by portfolio routes. All CSV portfolio dumps share `dump_utils.py` — see broker-csv-dumps.md
 │   │   ├── trade/       routes (paper/live trade endpoints)
 │   │   └── dashboard/   routes (cross-module aggregation)
@@ -27,13 +28,15 @@ alpha-forge-anton/
 │   ├── logger-node/  Publishable Node/TS logger package (@alphaforge/logger)
 │   │   └── src/      createLogger(), getLogger() — pino-based
 │   └── solar-ui/ Publishable UI component library (@alphaforge-anton/solar-ui)
-│       ├── src/components/  Button, Input, Card, Badge, Icon, Text, SearchBox, PrefRow, PrefGroup, PrefControls
+│       ├── src/components/  Button, Input, Card, Badge, Icon, Text, SearchBox, PrefRow, PrefGroup, PrefControls + finance-composition primitives (LineChart, DonutChart, AllocationBar, DataTable, DeltaText, StatGrid — Orff-composable, see ui-component-contract)
 │       └── src/styles/      fonts.css, theme.css, base.css (design tokens + base styles)
 ├── frontend/         Next.js 15 (App Router) + React 19 + TypeScript + Tailwind v4
 │   ├── src/app/      Pages and layouts (Solar Terminal theme)
 │   ├── src/lib/      Cross-cutting infra: `api.ts` (axios client), `logger.ts`, `providers.tsx`, `store.ts`
 │   └── src/modules/  Feature modules — mirrors backend/app/modules layout
 │       ├── portfolio/   portfolio.{api,query,types}.ts + components (Ledger, Treemap, SourcesPanel, ...)
+│       ├── plans/       plans.{api,query,types}.ts — /plans client: plan, drift, projection, save-to-elgar
+│       ├── concierge/   Orff chat (ChatRail, AlphaBar) + composed UI: SpecCard/SpecHost render Fux-validated UISpecs from the chat stream; compose.registry.ts is the client whitelist (mirror of backend COMPOSABLE_COMPONENTS); SavePlanButton → POST /plans → elgar store
 │       ├── ai/          ai.{api,query}.ts + AIChat
 │       ├── trade/       trade.{api,query}.ts
 │       ├── screener/    ScreenerPanel (hardcoded stub — no live API)

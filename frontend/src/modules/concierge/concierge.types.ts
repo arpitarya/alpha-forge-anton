@@ -1,3 +1,4 @@
+import type { UINode } from "./compose.types";
 import { PROVIDERS, type ProviderId } from "./concierge.providers";
 import { resolveProviderAuto, resolveTopAuto } from "./concierge.routing";
 
@@ -77,4 +78,6 @@ export interface ChatTurn {
   error: string | null;
   loading: boolean;
   active: ActiveModel;
+  /** Fux-validated UISpec attached by the compose follow-up (§18.3). */
+  spec?: UINode | null;
 }

@@ -200,6 +200,11 @@ audit:
 dante-audit:
     uv run dante audit --repo .
 
+# Dante: personal-financial-info guard — money docs belong in the elgar store
+# (also runs in the pre-commit hook with DANTE_ENFORCE=true)
+dante-pii:
+    DANTE_ENFORCE=true uv run dante pii --repo .
+
 # Dante: full audit with JSON output (for CI / diff)
 dante-audit-deep:
     uv run dante audit --repo . --json > .dante-audit.json

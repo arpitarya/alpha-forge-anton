@@ -9,6 +9,8 @@ import {
   type ProviderId,
 } from "./concierge.types";
 import { ModelPicker } from "./ModelPicker";
+import { SavePlanButton } from "./SavePlanButton";
+import { SpecCard } from "./SpecCard";
 
 interface Props {
   open: boolean;
@@ -1127,7 +1129,13 @@ function TurnPair({ turn, thinking }: { turn: ChatTurn; thinking: boolean }) {
             ) : turn.error ? (
               <span style={{ color: "var(--red)", fontSize: 12 }}>Error: {turn.error}</span>
             ) : (
-              <ResponseBody text={turn.response ?? ""} />
+              <>
+                <ResponseBody text={turn.response ?? ""} />
+                {turn.spec && <SpecCard spec={turn.spec} />}
+                {!turn.loading && turn.response && (
+                  <SavePlanButton title={turn.query} content={turn.response} />
+                )}
+              </>
             )}
           </div>
         </div>

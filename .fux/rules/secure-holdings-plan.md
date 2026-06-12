@@ -11,6 +11,13 @@ updated: 2026-06-11
 **Status:** _Shipped (steps 1–5) — plan plane, trusted-provider floor, disclosure
 chokepoint, and both guard probes are live. Wiring holdings tools into Orff's
 **tool-calling** loop (vs the current system-message injection) remains future work._
+
+> **Update 2026-06-12 — plan plane moved out of this repo.** Plan documents now live
+> in the private **elgar store** (`ELGAR_DIR`, its own git repo) and are only
+> *linked* from `.fux/` — see [[plan-store]]. `plan_loader` / `plan_drift` /
+> `plan_routes` were consolidated into `backend/app/modules/plans/` and read the
+> store. Where this doc says "committed `.fux/` plan entry", read "elgar store doc".
+> Enforcement: `plan_safety_probe` (no tracked plan docs) + Dante's `pii` audit.
 **Why this exists:** Orff routes to **free external LLM providers** (Groq, Mistral,
 Gemini, OpenRouter, HuggingFace — see `concierge/.../registry/routing.json`). Today
 `concierge_service.stream_chat` injects Fux grounding but **no holdings**, so nothing

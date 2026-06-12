@@ -1,6 +1,6 @@
 """Plan-aware rebalance drift — joins a committed plan with live actuals.
 
-Bridges the **plan plane** (committed targets/bands via `plan_loader`) and the
+Bridges the **plan store** (elgar targets/bands via `plan_loader`) and the
 **data plane** (live holdings via `HoldingsAggregator`) into per-class drift expressed
 in *percentage points only* — no ₹, no symbols — so the result is safe to disclose to
 the concierge. Band-aware: each class is judged against its own tolerance. See the Fux
@@ -12,7 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from app.modules.brokers.aggregator import HoldingsAggregator
-from app.modules.brokers.plan_loader import Plan, load_plan
+from app.modules.plans.plan_loader import Plan, load_plan
 
 
 @dataclass
@@ -27,7 +27,7 @@ class ClassDrift:
 
 
 def drift_for_plan(plan_id: str = "core-allocation") -> tuple[Plan, list[ClassDrift]]:
-    """Return (plan, per-class band-aware drift) for a committed plan vs live holdings."""
+    """Return (plan, per-class band-aware drift) for a stored plan vs live holdings."""
     plan = load_plan(plan_id)
     agg = HoldingsAggregator(targets=plan.targets)
     rows, _ = agg.rebalance()

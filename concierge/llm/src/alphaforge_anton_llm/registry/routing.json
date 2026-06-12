@@ -52,5 +52,8 @@
       "free": 1,
       "paid": 0
     }
+  },
+  "compose": {
+    "pattern": "\\b(show|chart|graph|plot|visuali[sz]e|display|render|draw|breakdown|projection|compare)\\b"
   }
 }

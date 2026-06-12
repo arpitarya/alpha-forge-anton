@@ -13,6 +13,7 @@
 - Cloud LLM providers disabled in `APP_ENV=development` unless `ALLOW_CLOUD_LLM_IN_DEV=true`
 - Broker outbound HTTP guarded against unapproved hosts in dev mode via `BROKER_ALLOWED_HOSTS`
 - Run `just audit` to scan Python + Node dependencies for known CVEs
+- **Money documents never live in this repo.** Personal & strategy plan docs (`*.plan.md`, `*.drift.md`, anything with personal financial figures) belong in the private elgar store (`elgar save <id>`, default `~/.alphaforge-anton/elgar`); commit only `elgar://plan/<id>` links. Enforced by `just dante-pii` (also in the pre-commit hook with `DANTE_ENFORCE=true`) and `just probe plan-safety` — see `fux why plan-store`
 
 ## Documentation
 

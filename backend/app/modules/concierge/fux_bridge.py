@@ -30,10 +30,20 @@ async def _run(*args: str, stdin: bytes | None = None) -> tuple[int, str]:
 
 
 async def registry() -> dict:
+    """Composable vocabulary: solar-ui components + the repo's data hooks.
+
+    Components are scoped to `packages/solar-ui` (composition never reaches feature
+    components); hooks come from the whole repo — both then narrowed to the curated
+    sets in `compose_registry` so prompt = validator = client whitelist."""
+    code, out = await _run("components", "--scope", "packages/solar-ui", "--json")
+    if code != 0:
+        raise RuntimeError(f"fux components failed: {out[:200]}")
+    scoped = json.loads(out)
     code, out = await _run("components", "--json")
     if code != 0:
         raise RuntimeError(f"fux components failed: {out[:200]}")
-    return json.loads(out)
+    scoped["hooks"] = json.loads(out).get("hooks", [])
+    return scoped
 
 
 async def validate(spec: dict) -> tuple[bool, list[str]]:

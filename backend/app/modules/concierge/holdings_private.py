@@ -16,7 +16,7 @@ from __future__ import annotations
 from alphaforge_anton_llm import registry
 from alphaforge_anton_llm.types import QueryType
 
-from app.modules.brokers.plan_drift import drift_for_plan, has_live_data
+from app.modules.plans.plan_drift import drift_for_plan, has_live_data
 
 # Returned by enforce_floor: (query_type, preferred_provider, confirmed, user_notice).
 Floor = tuple[QueryType, str | None, bool, str | None]

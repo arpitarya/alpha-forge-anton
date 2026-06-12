@@ -68,6 +68,19 @@ def classify_intent(text: str) -> QueryType:
     return QueryType(_routing()["fallback_query_type"])
 
 
+@lru_cache(maxsize=1)
+def _compose_pattern() -> re.Pattern[str] | None:
+    raw = _routing().get("compose", {}).get("pattern")
+    return re.compile(raw, re.IGNORECASE) if raw else None
+
+
+def wants_compose(text: str) -> bool:
+    """True when a chat turn should *also* produce a UISpec (§18.3) — the trigger
+    vocabulary lives in the manifest, same single source as intent routing."""
+    pat = _compose_pattern()
+    return bool(pat and pat.search(text or ""))
+
+
 def chain_for(qt: QueryType) -> list[str]:
     """Provider fallback chain for a QueryType."""
     return list(_routing()["chains"].get(qt.value, ["gemini", "groq"]))

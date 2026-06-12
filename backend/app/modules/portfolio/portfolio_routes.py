@@ -16,7 +16,6 @@ from app.modules.brokers.dump_utils import clear_csv_cache
 from app.modules.brokers.fx import _TTL_SECONDS as _FX_TTL_SECONDS
 from app.modules.brokers.fx import get_inr_per_usd
 from app.modules.brokers.wallet_aggregator import list_wallets, sync_all, sync_one
-from app.modules.portfolio.plan_routes import router as plan_router
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
 aggregator = HoldingsAggregator()
@@ -141,4 +140,3 @@ async def force_refresh():
 
 router.include_router(sources_router, prefix="/sources")
 router.include_router(cash_router, prefix="/cash")
-router.include_router(plan_router, prefix="/plan")

@@ -35,6 +35,20 @@ export { ProgressBar } from "./components/ProgressBar";
 export { Sparkline } from "./components/Sparkline";
 export { Text } from "./components/Text";
 
+// Finance-composition primitives (Orff-composable — ui-component-contract)
+export { AllocationBar, CHART_PALETTE } from "./components/AllocationBar";
+export { DataTable } from "./components/DataTable";
+export { DeltaText } from "./components/DeltaText";
+export { DonutChart } from "./components/DonutChart";
+export { LineChart } from "./components/LineChart";
+export { StatGrid } from "./components/StatGrid";
+export type { AllocationBarProps, AllocationSegment } from "./components/AllocationBar";
+export type { DataTableColumn, DataTableProps } from "./components/DataTable";
+export type { DeltaTextProps } from "./components/DeltaText";
+export type { DonutChartProps, DonutSlice } from "./components/DonutChart";
+export type { LineChartProps } from "./components/LineChart";
+export type { StatGridProps } from "./components/StatGrid";
+
 // Settings primitives
 export { PrefGroup } from "./components/PrefGroup";
 export { PrefRow } from "./components/PrefRow";

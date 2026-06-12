@@ -15,6 +15,7 @@ from alphaforge_anton_llm.types import Message, QueryType
 
 from app.modules.concierge import fux_bridge
 from app.modules.concierge.compose_prompt import build_system
+from app.modules.concierge.compose_registry import composable_errors, narrow_registry
 from app.modules.concierge.compose_schemas import ComposeRequest, ComposeResponse
 
 _FENCE = re.compile(r"```(?:json)?\s*(.*?)```", re.DOTALL)
@@ -27,7 +28,7 @@ def _extract(text: str) -> dict:
 
 
 async def compose(req: ComposeRequest) -> ComposeResponse:
-    reg = await fux_bridge.registry()
+    reg = narrow_registry(await fux_bridge.registry())
     preferred = None if req.provider == "auto" else req.provider
     msgs = [Message(role="system", content=build_system(reg)),
             Message(role="user", content=req.prompt)]
@@ -43,6 +44,8 @@ async def compose(req: ComposeRequest) -> ComposeResponse:
                                    errors=["model did not return valid JSON"])
             continue
         ok, errs = await fux_bridge.validate(spec)
+        comp_errs = composable_errors(spec)  # narrower than the fux registry check
+        ok, errs = ok and not comp_errs, errs + comp_errs
         last = ComposeResponse(spec=spec, valid=ok, errors=errs, provider=r.provider,
                                model=r.model, attempts=attempt)
         if ok:
@@ -54,3 +57,18 @@ async def compose(req: ComposeRequest) -> ComposeResponse:
     await fux_bridge.record_feedback({"prompt": req.prompt, **last.model_dump(
         include={"valid", "errors", "attempts", "provider", "model"})})
     return last  # type: ignore[return-value]
+
+
+async def compose_followup(prompt: str) -> dict | None:
+    """Chat-stream hook: a `{spec, spec_provider}` SSE payload when the turn asks
+    for UI (`registry.wants_compose`, manifest-driven), else None. Best-effort —
+    failures and invalid specs return None; the text answer already streamed."""
+    from alphaforge_anton_llm import registry
+
+    if not registry.wants_compose(prompt):
+        return None
+    try:
+        r = await compose(ComposeRequest(prompt=prompt))
+    except Exception:
+        return None
+    return {"spec": r.spec, "spec_provider": r.provider} if r.valid and r.spec else None

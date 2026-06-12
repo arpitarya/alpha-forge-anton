@@ -27,6 +27,8 @@ Available probes:
     plan-safety          plan_safety_probe.py
     holdings-disclosure  holdings_disclosure_probe.py
     plan-api             plan_api_probe.py
+    compose-registry     compose_registry_probe.py
+    plan-projection      plan_projection_probe.py
 
   Broker XHR probes (require CDP :9299):
     zerodha              zerodha_probe.py
@@ -69,6 +71,8 @@ case "$NAME" in
     plan-safety)       SCRIPT="plan_safety_probe.py" ;;
     holdings-disclosure) SCRIPT="holdings_disclosure_probe.py" ;;
     plan-api)          SCRIPT="plan_api_probe.py" ;;
+    compose-registry)  SCRIPT="compose_registry_probe.py" ;;
+    plan-projection)   SCRIPT="plan_projection_probe.py" ;;
     zerodha)           SCRIPT="zerodha_probe.py" ;;
     zerodha-coin)      SCRIPT="zerodha_coin_probe.py" ;;
     zerodha-cash)      SCRIPT="zerodha_cash_probe.py" ;;

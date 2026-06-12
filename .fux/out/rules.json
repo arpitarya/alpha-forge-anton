@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 43,
+  "count": 45,
   "rules": [
     {
       "id": "async-everywhere",
@@ -193,6 +193,22 @@
       "updated": "2026-06-04"
     },
     {
+      "id": "capital-market-assumptions",
+      "type": "rule",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "Capital-market assumptions — expected returns used for projections",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/capital-market-assumptions.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
+    },
+    {
       "id": "commands",
       "type": "narrative",
       "domain": "general",
@@ -266,19 +282,19 @@
     },
     {
       "id": "core-allocation",
-      "type": "narrative",
+      "type": "glossary",
       "domain": "portfolio",
       "status": "active",
-      "title": "Core allocation — default portfolio plan",
+      "title": "core-allocation",
       "layer": "project",
-      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/core-allocation.plan.md",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/core-allocation.md",
       "code_refs": [],
       "related": [],
       "edges": {},
       "check": null,
       "examples": [],
       "created": "2026-06-11",
-      "updated": "2026-06-11"
+      "updated": "2026-06-12"
     },
     {
       "id": "day-pnl",
@@ -440,11 +456,27 @@
       "updated": "2026-06-04"
     },
     {
+      "id": "plan-store",
+      "type": "convention",
+      "domain": "security",
+      "status": "active",
+      "title": "Plan store (elgar) — money documents are linked, never stored",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/plan-store.md",
+      "code_refs": [],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-12",
+      "updated": "2026-06-12"
+    },
+    {
       "id": "portfolio-plan-template",
-      "type": "narrative",
+      "type": "glossary",
       "domain": "portfolio",
       "status": "active",
-      "title": "Portfolio plan — template (git-safe instance shape)",
+      "title": "portfolio-plan-template",
       "layer": "project",
       "path": "/Users/arpitarya/my_programs/anton/.fux/rules/portfolio-plan-template.md",
       "code_refs": [],
@@ -453,7 +485,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-11",
-      "updated": "2026-06-11"
+      "updated": "2026-06-12"
     },
     {
       "id": "portfolio-valuation",
