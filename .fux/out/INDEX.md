@@ -1,6 +1,6 @@
 # Fux INDEX
 
-_44 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_45 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
 
 ## brokers
 - **broker-source** (glossary) — BrokerSource
@@ -26,8 +26,8 @@ _44 active entries across 10 domains. Read this first; open a rule (`fux why <id
 - **ui-component-contract** (convention) — A UI Orff generates on the fly is a declarative UISpec — a JSON
 
 ## market-structure
-- **market-hours-nse** (regulatory) — NSE/BSE equity continuous trading runs 09:15–15:30 IST _[pack:indian-markets-tax]_
-- **transaction-costs** (regulatory) — Every Indian equity round-trip pays a stack of frictions _[pack:indian-markets-tax]_
+- **market-hours-nse** (regulatory) — NSE/BSE equity continuous trading runs 09:15–15:30 IST
+- **transaction-costs** (regulatory) — Every Indian equity round-trip pays a stack of frictions
 
 ## portfolio
 - **capital-market-assumptions** (rule) — Capital-market assumptions — expected returns used for projections
@@ -56,12 +56,13 @@ _44 active entries across 10 domains. Read this first; open a rule (`fux why <id
 
 ## security
 - **afbach-vault** (glossary) — afbach vault (alpha-forge-bach)
+- **knowledge-location** (convention) — every authored knowledge document lives in exactly one of two
 - **no-secrets-in-vcs** (convention) — Never commit secrets — `.env` files, API keys, tokens, private _[global]_
 - **plan-store** (convention) — Plan store (elgar) — money documents are linked, never stored
 - **vault-only-credentials** (convention) — Broker credentials — user IDs, client IDs, API keys — live only
 
 ## tax
-- **capital-gains-debt-gold** (regulatory) — Non-equity assets follow different holding-period and rate _[pack:indian-markets-tax]_
-- **capital-gains-equity** (regulatory) — For listed Indian equity / equity mutual funds, the holding _[pack:indian-markets-tax]_
-- **crypto-tax-vda** (regulatory) — Crypto and other Virtual Digital Assets (VDAs) have their _[pack:indian-markets-tax]_
-- **tax-loss-harvesting** (regulatory) — Capital losses offset capital gains under fixed asymmetric _[pack:indian-markets-tax]_
+- **capital-gains-debt-gold** (regulatory) — Non-equity assets follow different holding-period and rate
+- **capital-gains-equity** (regulatory) — For listed Indian equity / equity mutual funds, the holding
+- **crypto-tax-vda** (regulatory) — Crypto and other Virtual Digital Assets (VDAs) have their
+- **tax-loss-harvesting** (regulatory) — Capital losses offset capital gains under fixed asymmetric

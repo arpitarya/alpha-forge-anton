@@ -1,13 +1,13 @@
 # Fux GRAPH_REPORT
 
-_1749 nodes · 8177 edges · 387 code files · 56 rules · 219 communities._
+_1750 nodes · 8180 edges · 387 code files · 57 rules · 219 communities._
 
 ## Node types
 
 - function: 1042
 - code-file: 387
 - class: 264
-- convention: 14
+- convention: 15
 - narrative: 12
 - glossary: 10
 - regulatory: 6
@@ -18,12 +18,12 @@ _1749 nodes · 8177 edges · 387 code files · 56 rules · 219 communities._
 
 ## Edges
 
-_4443 of 8177 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_4443 of 8180 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
 - references: 4443
 - calls: 2298
 - contains: 1308
-- related: 84
+- related: 87
 - governs: 44
 
 ## God nodes (highest connectivity)
@@ -46,11 +46,11 @@ _4443 of 8177 are INFERRED (low-confidence `references`, down-weighted in cluste
 - **get** (function) — 0.0140
 - **ChatRail.tsx** (code-file) — 0.0049
 - **AlphaBar.tsx** (code-file) — 0.0041
-- **post** (function) — 0.0039
+- **post** (function) — 0.0038
 - **info** (function) — 0.0038
 - **portfolio.types.ts** (code-file) — 0.0033
 - **PrefControls.tsx** (code-file) — 0.0033
-- **test_brokers.py** (code-file) — 0.0033
+- **test_brokers.py** (code-file) — 0.0032
 - **fetch** (function) — 0.0029
 - **fetch** (function) — 0.0028
 - **portfolio.query.ts** (code-file) — 0.0027
@@ -208,5 +208,5 @@ _4443 of 8177 are INFERRED (low-confidence `references`, down-weighted in cluste
 - **community 196** (2 nodes): _run, check
 - **community 198** (2 nodes): _record, run
 - **community 199** (2 nodes): _check_popup_fits, _record
-- **community 200** (4 nodes): afbach-vault, no-secrets-in-vcs, project-wagner-dante, vault-only-credentials
+- **community 200** (5 nodes): afbach-vault, knowledge-location, no-secrets-in-vcs, project-wagner-dante, vault-only-credentials
 - **community 205** (6 nodes): core-allocation, drawdown-recovery, emergency-fund-first, plan-store, position-concentration, rebalancing-policy

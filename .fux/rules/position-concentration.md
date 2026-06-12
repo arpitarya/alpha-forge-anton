@@ -27,7 +27,7 @@ test — the limit targets idiosyncratic single-name risk.
 
 **Why:** single-name blowups are the one risk diversification eliminates for
 free. The thresholds are deliberately loose — tight limits force churn
-([[transaction-costs]] in the indian-markets-tax pack) and over-trading hurts
+([[transaction-costs]]) and over-trading hurts
 more than mild concentration. What matters is that the *check runs on every
 review* so concentration never grows silently.
 

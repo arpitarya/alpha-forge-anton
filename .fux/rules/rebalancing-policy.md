@@ -20,9 +20,8 @@ a fixed order of preference that minimises tax and friction:
 2. **New money first.** Direct fresh inflows/SIPs to the coldest class until it
    re-enters its band — adding triggers no tax event and no exit friction.
 3. **Sell hot classes last**, and when selling, prefer long-term lots over
-   short-term ones (see pack rules on capital-gains) and harvest available
-   losses in the same year ([[tax-loss-harvesting]] in the indian-markets-tax
-   pack).
+   short-term ones ([[capital-gains-equity]], [[capital-gains-debt-gold]]) and
+   harvest available losses in the same year ([[tax-loss-harvesting]]).
 4. **Crypto trims are the most expensive** — flat-taxed with no loss offset —
    so a hot crypto sleeve is trimmed by halting inflows before selling.
 

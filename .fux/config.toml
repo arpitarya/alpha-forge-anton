@@ -2,10 +2,13 @@
 # Enforcement: off | warn | fix (default) | strict  — see fux-plan.md §8
 mode = "fix"
 
-# Opt-in rule packs from ~/.claude/fux/packs/ (plan §5)
-packs = ["indian-markets-tax"]
+# No home-dir packs — all authored knowledge lives in this repo or the elgar
+# store (knowledge-location rule). The indian-markets-tax pack entries moved
+# into .fux/rules/ on 2026-06-12.
+packs = []
 
-# Inherit ~/.claude/fux/global/ best practices
+# Inherit ~/.claude/fux/global/ best practices (these are seeded from the fux
+# package's own repo — engine defaults, not authored documents).
 use_global = true
 
 # Pilot scope: the brokers domain the first rules govern. Widen as Fux adoption

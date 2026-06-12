@@ -8,116 +8,138 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-AlphaForge Anton is an open-source, self-hosted investment terminal for Indian markets (NSE/BSE + global crypto). It combines a FastAPI backend, a Next.js terminal-style frontend, a multi-broker portfolio aggregator, and an AI chat surface (Alpha).
+AlphaForge Anton is an open-source, self-hosted investment terminal for Indian markets
+(NSE/BSE + global crypto). It unifies holdings scattered across many brokers into one
+currency-correct view, and layers **Orff** — a multi-provider AI concierge that can
+compose live UI in chat — on top, **without your financial data ever leaving your machine
+for a third-party SaaS**.
 
 Built for personal use and research.
 
 ---
 
-## What Is New
+## The Ecosystem
 
-- **Zerodha Coin broker** added (mutual funds via Coin CSV dumps)
-- **Binance broker** added (global crypto holdings)
-- **IndMoney & Tickertape** brokers added (US stocks, mutual funds, watchlist)
-- **News module** added (`/news` backend routes + frontend feed)
-- **Alpha Chat** — streaming AI assistant (AlphaBar + ChatRail, JWT-gated, SSE)
-- **Boot screen** — animated per-service readiness check on every tab open
-- **Preferences** — full 8-section settings UI (Appearance, Display, Markets, Alpha AI, Notifications, Account, Privacy, About)
-- **Vault-backed secrets** via `alpha-forge-bach` (AFBACH environment)
-- **Env file refactor** — `.env`, `.env.port`, `.env.cred.local`, `.env.frontend.local`
+Anton is the terminal; four sibling tools own the concerns a finance app must get right:
+
+| Sibling | Repo | Owns |
+|---------|------|------|
+| **bach** (afbach) | `~/my_programs/bach` | Vault — every API key and broker credential, served over a local unlock daemon |
+| **wagner** | `~/my_programs/wagner` | IAM — multi-user auth, JWT/refresh tokens, API keys; Anton proxies to it |
+| **dante** | `~/my_programs/dante` | Security audit — 10 circles + a PII scanner wired into Anton's pre-commit |
+| **elgar** | `~/my_programs/elgar` | Private plan store — **every money document** lives there, never in this repo |
+| **fux** | `~/my_programs/fux` | Knowledge engine — `.fux/` rules/formulas/memory ground both Claude Code and Orff |
+
+### Where knowledge and money live (the two-place rule)
+
+- **This repo's `.fux/`** — public-safe knowledge only: conventions, formulas,
+  Indian tax/market rules, investment principles. Percentages and statutes, never
+  personal figures.
+- **The elgar store** (`~/.alphaforge-anton/elgar`, private git repo) — all personal
+  money documents: plans, targets, projections. Anton holds `elgar://plan/<id>`
+  links only; `just dante-pii` + pre-commit enforce it.
 
 ---
 
-## Monorepo Overview
+## Highlights
 
-| Module | Path | Purpose |
-|--------|------|---------|
-| Backend | `backend/` | FastAPI, auth, portfolio, brokers, chat, news, health, vault |
-| Frontend | `frontend/` | Next.js terminal UI — dashboard, portfolio, chat, preferences, news |
-| UI Library | `packages/ravel-ui/` | Shared design tokens and UI components (`@alphaforge-anton/ravel-ui`) |
-| Logger (Python) | `packages/logger-py/` | `alphaforge-logger` — rotating file + console |
-| Logger (Node) | `packages/logger-node/` | `@alphaforge/logger` — pino-based |
-| Repo Context MCP | `mcp/` | stdio MCP server for Claude/Copilot/Cursor — semantic + structural repo context |
-| Infra | `infra/` | Docker Compose and local setup scripts |
+- **Multi-broker aggregation** — seven sources rolled up read-only into one
+  INR-normalised portfolio (valuation, day P&L, treemap, allocation drift).
+- **Orff concierge** — SSE-streaming chat over a 7-provider registry (Gemini, Groq,
+  Cerebras, Mistral, OpenRouter, HuggingFace, Claude SDK) with intent-based routing
+  from a single JSON manifest.
+- **Privacy floor** — holdings questions are auto-detected and pinned to a trusted
+  provider; the model sees a percentages-only disclosure, never ₹ amounts or symbols.
+- **Generated UI, safe by construction** — Orff emits a declarative JSON UISpec over a
+  curated 19-component / 5-hook vocabulary, validated server-side by fux and rendered
+  only from a client whitelist. No eval, no dynamic code, ever.
+- **Plans & projections** — band-aware rebalance drift against your elgar-stored plan;
+  compound projections from committed capital-market assumptions, every response
+  citing its assumptions source. A **save plan** button writes any Orff answer
+  straight into the private store.
+- **Boot screen** — per-service readiness (vault, DB, LLM gateway, every broker) on
+  each tab open, with mid-life vault unlock re-priming brokers automatically.
 
 ---
 
 ## Quick Start
 
 ```bash
-# Clone
-git clone https://github.com/your-username/alpha-forge-anton.git
+git clone https://github.com/arpitarya/alpha-forge-anton.git
 cd alpha-forge-anton
 
-# Full setup (prereqs + venv + env files)
-./setup.sh
-
-# Start PostgreSQL + Redis (macOS)
-./setup.sh --db
-
-# Apply DB migrations
+./setup.sh            # prereqs + venv + deps + env scaffolding
+./setup.sh --db       # start PostgreSQL + Redis (macOS native)
 just db-migrate
-
-# Start backend + frontend
-just dev-local
+just dev-local        # backend :8000 + frontend :3000
 ```
 
-Frontend: http://localhost:3000  
-Backend API: http://localhost:8000  
-OpenAPI docs: http://localhost:8000/docs
+Frontend: https://localhost:3000 · API: http://localhost:8000 · OpenAPI: `/docs`
 
-### Alternate Setup Modes
-
-```bash
-./setup.sh --prereqs    # Homebrew packages + pyenv + nvm
-./setup.sh --venv       # Python venv + uv install
-./setup.sh --backend    # Backend deps only
-./setup.sh --frontend   # Frontend deps only
-./setup.sh --env        # Scaffold .env.cred.local + .env.frontend.local
-
-# Containers (OrbStack or Docker)
-docker compose -f infra/docker-compose.yml up --build
-```
+Broker syncs and probes need the CDP Chrome: `just zerodha-chrome` (port 9299),
+then log into your broker tabs there. Secrets come from the afbach vault —
+`afbach unlock` before first boot.
 
 ---
 
 ## Common Commands
 
 ```bash
-# Development
-just dev-local      # backend + frontend together
-just backend        # FastAPI only
-just frontend       # Next.js only
-
-# Quality
-just test
-just lint
-just format
-
-# DB
-just db-migrate
-just db-shell
-
-# MCP server (Repo Context)
-just mcp-install
-just mcp-start
+just dev-local        # backend + frontend together
+just backend          # FastAPI only        · just frontend — Next.js only
+just test             # backend pytest + frontend tests
+just lint             # ruff + Biome
+just probe <name>     # CDP verification probes (probes/probe.sh — the source of truth)
+just dante-pii        # money-document / PII scan (also runs in pre-commit)
+just fux-check        # knowledge-vs-code drift check
+just gen-concierge    # regenerate frontend registry from the JSON manifest
 ```
 
 ---
 
 ## Brokers
 
-| Broker | Slug | Data Source | Assets |
-|--------|------|-------------|--------|
-| Zerodha Kite | `zerodha` | Kite Connect API / CSV | Equity, F&O |
-| Zerodha Coin | `zerodha_coin` | Coin CSV dump | Mutual funds |
-| Groww | `groww` | CSV dump | Equity, MF |
-| Angel One | `angelone` | CSV dump | Equity |
-| IndMoney | `indmoney` | CSV dump | US stocks, MF |
-| Tickertape | `tickertape` | CSV dump | Watchlist, MF |
-| Binance | `binance` | CSV dump | Crypto |
+| Broker | Slug | Fetch | Assets |
+|--------|------|-------|--------|
+| Zerodha Kite | `zerodha` | enctoken API | Equity |
+| Zerodha Coin | `zerodha_coin` | Kite enctoken | Mutual funds |
+| Groww | `groww` | CDP browser fetch | Equity, MF |
+| Angel One | `angelone` | CDP browser fetch | Equity |
+| INDmoney | `indmoney` | CDP browser fetch | US stocks, MF |
+| Tickertape | `tickertape` | CDP browser fetch | Gold |
+| Binance | `binance` | CDP browser fetch | Crypto (USD) |
 
-All CSV-based brokers share `dump_utils.py` — see [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md).
+Every source is a `BrokerSource` subclass; CSV caching is shared through
+`dump_utils.py` — see [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md).
+Never-synced READY sources are primed automatically at startup.
+
+---
+
+## Project Structure
+
+```
+alpha-forge-anton/
+├── backend/app/
+│   ├── core/                 # config, DB, security, vault client, env loader
+│   └── modules/              # one module per domain: routes + service + schemas
+│       ├── brokers/          # BrokerSource adapters, aggregator, refetch/prime
+│       ├── portfolio/        # holdings, treemap, wallets
+│       ├── plans/            # plan loader (elgar), drift, projections, save-plan
+│       ├── concierge/        # Orff: SSE chat, privacy floor, UISpec compose
+│       ├── iam/              # proxy to wagner
+│       ├── news/ dashboard/ health/ vault/
+├── concierge/llm/            # gateway package — providers, registry manifest, routing
+├── frontend/src/modules/     # portfolio, concierge, plans, dashboard, preferences,
+│                             # screener, vault, auth
+├── packages/
+│   ├── solar-ui/             # @alphaforge-anton/solar-ui — design system +
+│   │                         # finance primitives (charts, stats, tables)
+│   ├── logger-py/ logger-node/ solar-orb-ball/
+├── probes/                   # CDP verification probes (never Playwright MCP)
+├── .fux/                     # knowledge substrate — rules, formulas, memory, graph
+├── docs/                     # architecture, conventions, commands, guardrails
+└── justfile                  # all dev commands
+```
 
 ---
 
@@ -128,58 +150,14 @@ All CSV-based brokers share `dump_utils.py` — see [docs/broker-csv-dumps.md](d
 | [docs/architecture.md](docs/architecture.md) | Repo structure, tech decisions, key files |
 | [docs/conventions.md](docs/conventions.md) | Python + TypeScript coding conventions |
 | [docs/commands.md](docs/commands.md) | CLI commands (setup, run, build, migrate, clean) |
-| [docs/guardrails.md](docs/guardrails.md) | Project rules and guardrails |
+| [docs/guardrails.md](docs/guardrails.md) | Project rules — incl. the money-documents guardrail |
 | [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md) | Broker CSV dump contract (shared `dump_utils`) |
 | [docs/vault.md](docs/vault.md) | Vault-backed secrets (`alpha-forge-bach`) |
+| [concierge/README.md](concierge/README.md) | Orff concierge implementation docs |
+| [probes/Probes.md](probes/Probes.md) | How to write & run CDP verification probes |
 
----
-
-## Project Structure
-
-```
-alpha-forge-anton/
-├── backend/                  # Python 3.14 + FastAPI
-│   ├── app/
-│   │   ├── core/             # Config, DB, security, env_loader
-│   │   └── modules/          # Feature modules (each owns routes + service + schemas)
-│   │       ├── auth/         # JWT auth + User ORM
-│   │       ├── brokers/      # BrokerSource adapters + aggregator + registry
-│   │       ├── portfolio/    # Holdings, orders, watchlist
-│   │       ├── chat/         # Alpha AI chat (SSE streaming)
-│   │       ├── news/         # News feed routes
-│   │       ├── dashboard/    # Cross-module aggregation
-│   │       ├── trade/        # Paper / live trade endpoints
-│   │       ├── health/       # /health + /health/boot (boot probes)
-│   │       └── vault/        # Vault-backed secret access
-│   ├── alembic/              # DB migrations
-│   └── tests/
-├── frontend/                 # Next.js 15 + React 19 + TypeScript + Tailwind v4
-│   └── src/
-│       ├── app/              # App Router pages (/, /portfolio, /preferences, /news)
-│       ├── lib/              # api.ts, logger.ts, store.ts, providers.tsx
-│       └── modules/
-│           ├── portfolio/    # Treemap, ledger, wallet strip, filter bar, compact bar
-│           ├── chat/         # AlphaBar, ChatRail, ModelPicker, useChatStream
-│           ├── dashboard/    # TerminalTopBar, BootScreen, BootGate
-│           ├── preferences/  # 8-section settings UI
-│           ├── news/         # News feed components
-│           ├── auth/         # Login + AuthGuard
-│           └── trade/        # Trade panel
-├── packages/
-│   ├── ravel-ui/             # @alphaforge-anton/ravel-ui (Button, Input, Card, Badge…)
-│   ├── logger-py/            # alphaforge-logger (Python)
-│   └── logger-node/          # @alphaforge/logger (Node/TS, pino)
-├── mcp/                      # Repo Context MCP server (Claude/Copilot/Cursor)
-├── infra/                    # docker-compose.yml + setup-local.sh
-├── probes/                   # UI smoke tests via CDP (ui_probe.py, ui_screens.py)
-├── design/                   # Hi-Fi HTML prototype + Claude Design transcripts
-├── docs/                     # Project documentation
-├── CLAUDE.md                 # Claude Code context
-├── pyproject.toml            # uv workspace root
-├── pnpm-workspace.yaml       # pnpm workspace root
-├── justfile                  # Dev commands
-└── LICENSE
-```
+The deeper knowledge layer — business rules, formulas, decisions — lives in `.fux/`
+(`fux why <id>`, `fux refs <path>`), kept drift-free against the code by `fux check`.
 
 ---
 
@@ -187,17 +165,14 @@ alpha-forge-anton/
 
 | Layer | Technology |
 |-------|-----------|
-| Backend API | Python 3.14 + FastAPI (async) |
-| Python tooling | uv (workspace, single lockfile) |
-| Frontend | Next.js 15 + React 19 + TypeScript |
-| Node tooling | pnpm |
-| Database | PostgreSQL 16 (asyncpg + SQLAlchemy) |
-| Cache / Pub-Sub | Redis 7 |
-| AI Chat | OpenAI + LangChain (SSE streaming, JWT-gated) |
-| Charts | Lightweight Charts (TradingView) |
+| Backend | Python 3.14 + FastAPI (async end-to-end) · uv workspace |
+| Frontend | Next.js 15 + React 19 + TypeScript (strict) · pnpm · Biome v2 |
+| Database | PostgreSQL 16 (asyncpg + SQLAlchemy) · Redis 7 |
+| AI gateway | Multi-provider registry (7 providers) · SSE streaming · cost guard |
+| Charts | Lightweight Charts (TradingView) + solar-ui SVG primitives |
 | Styling | Tailwind CSS v4 + Solar Terminal design tokens |
-| Local infra | Homebrew (native) or OrbStack |
-| Secrets | Vault-backed via `alpha-forge-bach` |
+| Secrets | afbach vault (local daemon, auto-lock) |
+| Verification | CDP probes (`probes/`, Chrome :9299) |
 
 ---
 
