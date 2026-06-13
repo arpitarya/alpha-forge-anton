@@ -11,7 +11,7 @@ import { useChatStream } from "./useChatStream";
 interface ChatCtx {
   open: boolean;
   setOpen: (v: boolean) => void;
-  submit: (q: string, choice: ModelChoice) => void;
+  submit: (q: string, choice: ModelChoice, images?: string[]) => void;
 }
 
 const Ctx = createContext<ChatCtx>({
@@ -37,7 +37,7 @@ function loadChoice(): ModelChoice {
 }
 
 export function ChatProvider({ children }: { children: ReactNode }) {
-  const { turns, open, setOpen, submit, clear } = useChatStream();
+  const { turns, open, setOpen, submit, editTurn, stop, clear, totals } = useChatStream();
   const footerModelRef = useRef<HTMLSpanElement>(null);
   const [choice, setChoice] = useState<ModelChoice>(loadChoice);
   const pathname = usePathname();
@@ -49,7 +49,19 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     } catch {}
   }, []);
 
-  const handleSubmit = useCallback((q: string, c: ModelChoice) => submit(q, c), [submit]);
+  const handleSubmit = useCallback(
+    (q: string, c: ModelChoice, images?: string[]) => submit(q, c, images),
+    [submit],
+  );
+
+  const handleSend = useCallback(
+    (q: string, images?: string[]) => submit(q, choice, images),
+    [submit, choice],
+  );
+  const handleEdit = useCallback(
+    (id: string, q: string) => editTurn(id, q, choice),
+    [editTurn, choice],
+  );
 
   const handleChatModeOpen = useCallback(() => setOpen(true), [setOpen]);
 
@@ -75,9 +87,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           open={open}
           turns={turns}
           choice={choice}
+          totals={totals}
           onClose={() => setOpen(false)}
           onClear={clear}
-          onSeed={(q) => handleSubmit(q, choice)}
+          onSend={handleSend}
+          onEdit={handleEdit}
+          onStop={stop}
           footerModelRef={footerModelRef}
           onChoiceChange={handleChoiceChange}
         />

@@ -199,6 +199,8 @@ screenshots/*.png
 
 # fux
 !.fux/out/
+# Per-session runtime state — its own subdir so it never clutters out/'s html/reports.
+.fux/out/sessions/
 .fux/out/.session-*.json
 # compose-feedback capture holds raw user prompts — never commit
 .fux/capture/

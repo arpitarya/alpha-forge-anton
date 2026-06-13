@@ -1,20 +1,8 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
-import type { UINode } from "./compose.types";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { reduceEvent, type StreamPayload } from "./chat.events";
 import { activeModelFor, type ChatTurn, type ModelChoice } from "./concierge.types";
-
-interface StreamPayload {
-  content?: string;
-  provider?: string;
-  model?: string;
-  prompt_tokens?: number;
-  completion_tokens?: number;
-  elapsed_s?: number;
-  error?: string;
-  /** Compose follow-up event — a Fux-validated UISpec, separate from content. */
-  spec?: UINode;
-}
 
 function getToken(): string | null {
   return typeof window !== "undefined" ? localStorage.getItem("af_token") : null;
@@ -24,22 +12,10 @@ function nanoid(): string {
   return Math.random().toString(36).slice(2, 10);
 }
 
-const MAX_RESPONSE_CHARS = 32_000;
-
-// Strip control chars, Unicode LS/PS, zero-width + BOM chars.
-function sanitizeContent(raw: string): string {
-  let out = "";
-  for (let i = 0; i < raw.length && out.length < MAX_RESPONSE_CHARS; i++) {
-    const cp = raw.charCodeAt(i);
-    if ((cp < 0x20 && cp !== 0x09 && cp !== 0x0a) || cp === 0x7f) continue;
-    if (cp === 0x2028 || cp === 0x2029) {
-      out += "\n";
-      continue;
-    }
-    if (cp === 0x200b || cp === 0x200c || cp === 0x200d || cp === 0xfeff) continue;
-    out += raw[i];
-  }
-  return out;
+export interface SessionTotals {
+  tokens: number;
+  costUsd: number;
+  turns: number;
 }
 
 export function useChatStream() {
@@ -51,43 +27,20 @@ export function useChatStream() {
     setTurns((prev) => prev.map((t) => (t.id === id ? { ...t, ...patch } : t)));
   }, []);
 
-  const submit = useCallback(
-    async (query: string, choice: ModelChoice) => {
-      if (!query.trim()) return;
-
-      const active = activeModelFor(choice, query);
-      const id = nanoid();
-      const newTurn: ChatTurn = {
-        id,
-        query,
-        response: null,
-        provider: null,
-        model: null,
-        elapsed: null,
-        tokens: null,
-        error: null,
-        loading: true,
-        active,
-      };
-
-      setOpen(true);
-      setTurns((prev) => [...prev, newTurn]);
-
-      const history = turns.slice(-6).flatMap((t) => {
-        const msgs: { role: "user" | "assistant"; content: string }[] = [
-          { role: "user", content: t.query },
-        ];
-        if (t.response) msgs.push({ role: "assistant", content: t.response });
-        return msgs;
-      });
-      history.push({ role: "user", content: query });
-
+  const run = useCallback(
+    async (
+      turn: ChatTurn,
+      history: { role: "user" | "assistant"; content: string }[],
+      images: string[],
+      active: ChatTurn["active"],
+    ) => {
       abortRef.current?.abort();
       const ctrl = new AbortController();
       abortRef.current = ctrl;
-
       try {
         const token = getToken();
+        const last = history[history.length - 1];
+        const body = history.map((m) => (m === last ? { ...m, images } : m));
         const res = await fetch("/api/v1/concierge", {
           method: "POST",
           headers: {
@@ -95,23 +48,20 @@ export function useChatStream() {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: JSON.stringify({
-            messages: history,
+            messages: body,
             provider: active.provider,
             model_id: active.modelId,
             auto_level: active.autoLevel,
           }),
           signal: ctrl.signal,
         });
-
         if (!res.ok || !res.body) {
-          patchTurn(id, { loading: false, error: `HTTP ${res.status}` });
+          patchTurn(turn.id, { loading: false, error: `HTTP ${res.status}` });
           return;
         }
-
         const reader = res.body.getReader();
         const dec = new TextDecoder();
         let buf = "";
-
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -122,26 +72,14 @@ export function useChatStream() {
             if (!line.startsWith("data: ")) continue;
             const raw = line.slice(6).trim();
             if (raw === "[DONE]") {
-              patchTurn(id, { loading: false });
+              patchTurn(turn.id, { loading: false });
               break;
             }
             try {
               const payload: StreamPayload = JSON.parse(raw);
-              if (payload.error) {
-                patchTurn(id, { loading: false, error: payload.error });
-              } else if (payload.spec) {
-                // spec event carries no content — never clobber the streamed text
-                patchTurn(id, { spec: payload.spec, elapsed: payload.elapsed_s ?? null });
-              } else {
-                patchTurn(id, {
-                  response: payload.content != null ? sanitizeContent(payload.content) : null,
-                  provider: payload.provider ?? null,
-                  model: payload.model ?? null,
-                  elapsed: payload.elapsed_s ?? null,
-                  tokens: (payload.prompt_tokens ?? 0) + (payload.completion_tokens ?? 0),
-                  loading: false,
-                });
-              }
+              setTurns((prev) =>
+                prev.map((t) => (t.id === turn.id ? { ...t, ...reduceEvent(t, payload) } : t)),
+              );
             } catch {
               // malformed SSE chunk — skip
             }
@@ -149,14 +87,111 @@ export function useChatStream() {
         }
       } catch (err: unknown) {
         if ((err as Error)?.name !== "AbortError") {
-          patchTurn(id, { loading: false, error: String(err) });
+          patchTurn(turn.id, { loading: false, error: String(err) });
         }
       }
     },
-    [turns, patchTurn],
+    [patchTurn],
   );
+
+  const submit = useCallback(
+    async (query: string, choice: ModelChoice, images: string[] = []) => {
+      if (!query.trim() && !images.length) return;
+      const active = activeModelFor(choice, query);
+      const id = nanoid();
+      setOpen(true);
+      setTurns((prev) => {
+        const next: ChatTurn = {
+          id,
+          query,
+          response: null,
+          provider: null,
+          model: null,
+          elapsed: null,
+          tokens: null,
+          error: null,
+          loading: true,
+          active,
+          images,
+          thinking: null,
+          tools: [],
+          confirm: null,
+          followups: [],
+          costUsd: null,
+        };
+        return [...prev, next];
+      });
+      const prior = turns.slice(-6).flatMap((t) => {
+        const msgs: { role: "user" | "assistant"; content: string }[] = [
+          { role: "user", content: t.query },
+        ];
+        if (t.response) msgs.push({ role: "assistant", content: t.response });
+        return msgs;
+      });
+      prior.push({ role: "user", content: query });
+      await run({ id } as ChatTurn, prior, images, active);
+    },
+    [turns, run],
+  );
+
+  // Edit a prior user turn: drop it and everything after, then resubmit (branch).
+  const editTurn = useCallback(
+    (id: string, newQuery: string, choice: ModelChoice) => {
+      const idx = turns.findIndex((t) => t.id === id);
+      if (idx < 0) return;
+      const kept = turns.slice(0, idx);
+      setTurns(kept);
+      const active = activeModelFor(choice, newQuery);
+      const prior = kept.slice(-6).flatMap((t) => {
+        const msgs: { role: "user" | "assistant"; content: string }[] = [
+          { role: "user", content: t.query },
+        ];
+        if (t.response) msgs.push({ role: "assistant", content: t.response });
+        return msgs;
+      });
+      prior.push({ role: "user", content: newQuery });
+      const newId = nanoid();
+      setTurns((prev) => [
+        ...prev,
+        {
+          id: newId,
+          query: newQuery,
+          response: null,
+          provider: null,
+          model: null,
+          elapsed: null,
+          tokens: null,
+          error: null,
+          loading: true,
+          active,
+          images: [],
+          thinking: null,
+          tools: [],
+          confirm: null,
+          followups: [],
+          costUsd: null,
+        },
+      ]);
+      void run({ id: newId } as ChatTurn, prior, [], active);
+    },
+    [turns, run],
+  );
+
+  const stop = useCallback(() => {
+    abortRef.current?.abort();
+    setTurns((prev) => prev.map((t) => (t.loading ? { ...t, loading: false } : t)));
+  }, []);
 
   const clear = useCallback(() => setTurns([]), []);
 
-  return { turns, open, setOpen, submit, clear };
+  const totals = useMemo<SessionTotals>(
+    () => ({
+      tokens: turns.reduce((s, t) => s + (t.tokens ?? 0), 0),
+      costUsd: turns.reduce((s, t) => s + (t.costUsd ?? 0), 0),
+      turns: turns.length,
+    }),
+    [turns],
+  );
+
+  return { turns, open, setOpen, submit, editTurn, stop, clear, totals };
 }

@@ -9,6 +9,7 @@ from typing import AsyncIterator
 import httpx
 
 from alphaforge_anton_llm import pricing
+from alphaforge_anton_llm.providers._vision import parse_data_url
 from alphaforge_anton_llm.providers.base import ProviderAdapter, ProviderHealth
 from alphaforge_anton_llm.types import Message, ProviderResponse, ToolSchema
 
@@ -17,10 +18,19 @@ logger = logging.getLogger(__name__)
 _BASE = "https://generativelanguage.googleapis.com/v1beta/models"
 
 
+def _parts(m: Message) -> list[dict]:
+    parts: list[dict] = [{"text": m.content}]
+    for img in m.images:
+        if parsed := parse_data_url(img):
+            mime, data = parsed
+            parts.append({"inline_data": {"mime_type": mime, "data": data}})
+    return parts
+
+
 def _to_gemini_contents(messages: list[Message]) -> list[dict]:
     role_map = {"user": "user", "assistant": "model", "system": "user"}
     return [
-        {"role": role_map.get(m.role, "user"), "parts": [{"text": m.content}]}
+        {"role": role_map.get(m.role, "user"), "parts": _parts(m)}
         for m in messages if m.role != "tool"
     ]
 

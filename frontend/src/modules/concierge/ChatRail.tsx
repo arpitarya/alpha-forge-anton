@@ -1,24 +1,45 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ApprovalCard } from "./ApprovalCard";
+import { ArtifactsPanel } from "./ArtifactsPanel";
+import { CommandMenu } from "./CommandMenu";
+import { CommandPalette } from "./CommandPalette";
+import { downloadThread } from "./chat.export";
+import { imagesFromClipboard, MAX_IMAGES } from "./chat.images";
+import { matchCommands, resolveCommand, type SlashCommand } from "./concierge.commands";
 import {
   type ChatTurn,
   formatChoiceLabel,
   type ModelChoice,
+  type PendingAction,
   PROVIDERS,
   type ProviderId,
 } from "./concierge.types";
+import { FollowupChips } from "./FollowupChips";
+import { ImageAttach } from "./ImageAttach";
+import { MemoryPanel } from "./MemoryPanel";
 import { ModelPicker } from "./ModelPicker";
 import { SavePlanButton } from "./SavePlanButton";
+import { SessionMeter } from "./SessionMeter";
 import { SpecCard } from "./SpecCard";
+import { ThinkingBlock } from "./ThinkingBlock";
+import { ToolTrail } from "./ToolTrail";
+import type { SessionTotals } from "./useChatStream";
+import { useVoice } from "./useVoice";
+
+type Panel = "none" | "artifacts" | "memory";
 
 interface Props {
   open: boolean;
   turns: ChatTurn[];
   choice: ModelChoice;
+  totals: SessionTotals;
   onClose: () => void;
   onClear: () => void;
-  onSeed: (q: string) => void;
+  onSend: (q: string, images?: string[]) => void;
+  onEdit: (id: string, q: string) => void;
+  onStop: () => void;
   onChoiceChange: (c: ModelChoice) => void;
   footerModelRef: React.RefObject<HTMLSpanElement | null>;
 }
@@ -111,20 +132,31 @@ export function ChatRail({
   open,
   turns,
   choice,
+  totals,
   onClose,
   onClear,
-  onSeed,
+  onSend,
+  onEdit,
+  onStop,
   onChoiceChange,
   footerModelRef,
 }: Props) {
   const [size, setSize] = useState<"md" | "lg">("md");
   const [inputValue, setInputValue] = useState("");
   const [lastSubmitted, setLastSubmitted] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+  const [panel, setPanel] = useState<Panel>("none");
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [cmdActive, setCmdActive] = useState(0);
+  const [speakReplies, setSpeakReplies] = useState(false);
   const threadRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const spokenRef = useRef<string | null>(null);
+  const voice = useVoice();
   const thinking = turns.some((t) => t.loading);
   const done = !thinking && turns.length > 0 && turns[turns.length - 1]?.response != null;
   const turnCount = turns.length;
+  const slashMatches = matchCommands(inputValue);
 
   // Scroll thread to bottom on new turns / streaming
   useEffect(() => {
@@ -140,28 +172,101 @@ export function ChatRail({
     }
   }, [open]);
 
-  // Escape closes
+  // Escape closes (rail), Cmd/Ctrl+K opens the command palette
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape" && open) onClose();
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setPaletteOpen((p) => !p);
+        return;
+      }
+      if (e.key === "Escape" && open && !paletteOpen) onClose();
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  }, [open, onClose, paletteOpen]);
+
+  // Speak the latest completed reply when readback is on (chat-app voice).
+  useEffect(() => {
+    if (!speakReplies) return;
+    const last = turns[turns.length - 1];
+    if (last && !last.loading && last.response && spokenRef.current !== last.id) {
+      spokenRef.current = last.id;
+      voice.speak(last.response);
+    }
+  }, [turns, speakReplies, voice]);
+
+  function runCommand(c: SlashCommand) {
+    setPaletteOpen(false);
+    setInputValue("");
+    if (c.body.kind === "send") {
+      onSend(c.body.prompt);
+      setLastSubmitted(c.body.prompt);
+      return;
+    }
+    switch (c.body.action) {
+      case "export":
+        downloadThread(turns);
+        break;
+      case "memory":
+        setPanel("memory");
+        break;
+      case "artifacts":
+        setPanel("artifacts");
+        break;
+      case "clear":
+        onClear();
+        break;
+      case "stop":
+        onStop();
+        break;
+      case "voice":
+        setSpeakReplies((s) => !s);
+        break;
+    }
+  }
 
   function handleSubmit() {
     const q = inputValue.trim();
-    if (!q) return;
-    onSeed(q);
+    const cmd = resolveCommand(q);
+    if (cmd) {
+      runCommand(cmd);
+      if (textareaRef.current) textareaRef.current.style.height = "auto";
+      return;
+    }
+    if (!q && !images.length) return;
+    onSend(q, images);
     setLastSubmitted(q);
     setInputValue("");
+    setImages([]);
     if (textareaRef.current) textareaRef.current.style.height = "auto";
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
+    if (slashMatches.length && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+      e.preventDefault();
+      setCmdActive((a) =>
+        e.key === "ArrowDown" ? Math.min(a + 1, slashMatches.length - 1) : Math.max(a - 1, 0),
+      );
+      return;
+    }
+    if (slashMatches.length && (e.key === "Tab" || (e.key === "Enter" && !e.shiftKey))) {
+      e.preventDefault();
+      const picked = slashMatches[Math.min(cmdActive, slashMatches.length - 1)];
+      if (picked) runCommand(picked);
+      return;
+    }
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
+    }
+  }
+
+  async function handlePaste(e: React.ClipboardEvent) {
+    const found = await imagesFromClipboard(e.clipboardData.items);
+    if (found.length) {
+      e.preventDefault();
+      setImages((prev) => [...prev, ...found].slice(0, MAX_IMAGES));
     }
   }
 
@@ -264,19 +369,37 @@ export function ChatRail({
               display: "block",
             }}
           />
-          <NavBtn active title="Chat">
+          <NavBtn active={panel === "none"} title="Chat" onClick={() => setPanel("none")}>
             <ChatNavIcon />
           </NavBtn>
-          <NavBtn title="Voice">
+          <NavBtn
+            active={panel === "artifacts"}
+            title="Artifacts"
+            onClick={() => setPanel((p) => (p === "artifacts" ? "none" : "artifacts"))}
+          >
+            <SparkIcon />
+          </NavBtn>
+          <NavBtn
+            active={panel === "memory"}
+            title="Memory"
+            onClick={() => setPanel((p) => (p === "memory" ? "none" : "memory"))}
+          >
+            <BrainIcon />
+          </NavBtn>
+          <NavBtn
+            active={speakReplies}
+            title={speakReplies ? "Voice readback on" : "Voice readback off"}
+            onClick={() => {
+              setSpeakReplies((s) => !s);
+              voice.cancelSpeaking();
+            }}
+          >
             <MicNavIcon />
           </NavBtn>
-          <NavBtn title="History">
-            <ClockIcon />
-          </NavBtn>
-          <NavBtn title="Screener">
+          <span style={{ flex: 1 }} />
+          <NavBtn title="Commands (⌘K)" onClick={() => setPaletteOpen(true)}>
             <SearchIcon />
           </NavBtn>
-          <span style={{ flex: 1 }} />
         </nav>
 
         {/* ── Main content column ── */}
@@ -421,7 +544,16 @@ export function ChatRail({
                 />
                 <span ref={footerModelRef}>Auto → Claude Sonnet 4.6</span>
               </span>
+              <SessionMeter totals={totals} />
               <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                {thinking && (
+                  <CrBtn title="Stop generating" onClick={onStop} danger>
+                    ◼
+                  </CrBtn>
+                )}
+                <CrBtn title="Export thread" onClick={() => downloadThread(turns)}>
+                  ⤓
+                </CrBtn>
                 <CrBtn
                   title={size === "lg" ? "Shrink" : "Expand"}
                   onClick={() => setSize((s) => (s === "md" ? "lg" : "md"))}
@@ -438,26 +570,44 @@ export function ChatRail({
             </div>
           </header>
 
-          {/* ── Thread ── */}
-          <div
-            ref={threadRef}
-            style={{
-              flex: 1,
-              overflowY: "auto",
-              padding: "20px 22px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 18,
-              scrollbarWidth: "thin",
-              scrollbarColor: "var(--line-hi) transparent",
-            }}
-          >
-            {turns.length === 0 ? (
-              <EmptyState onSeed={onSeed} />
-            ) : (
-              turns.map((turn) => <TurnPair key={turn.id} turn={turn} thinking={thinking} />)
-            )}
-          </div>
+          {/* ── Thread / side panel ── */}
+          {panel === "memory" ? (
+            <div style={{ flex: 1, minHeight: 0 }}>
+              <MemoryPanel onClose={() => setPanel("none")} />
+            </div>
+          ) : panel === "artifacts" ? (
+            <div style={{ flex: 1, minHeight: 0 }}>
+              <ArtifactsPanel turns={turns} onClose={() => setPanel("none")} />
+            </div>
+          ) : (
+            <div
+              ref={threadRef}
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                padding: "20px 22px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 18,
+                scrollbarWidth: "thin",
+                scrollbarColor: "var(--line-hi) transparent",
+              }}
+            >
+              {turns.length === 0 ? (
+                <EmptyState onSeed={(q) => onSend(q)} />
+              ) : (
+                turns.map((turn) => (
+                  <TurnPair
+                    key={turn.id}
+                    turn={turn}
+                    thinking={thinking}
+                    onEdit={onEdit}
+                    onPickFollowup={(q) => onSend(q)}
+                  />
+                ))
+              )}
+            </div>
+          )}
 
           {/* ── Docked composer ── */}
           <div
@@ -476,6 +626,7 @@ export function ChatRail({
             {/* composer card */}
             <div
               style={{
+                position: "relative",
                 display: "flex",
                 flexDirection: "column",
                 gap: 0,
@@ -487,6 +638,11 @@ export function ChatRail({
               }}
               className="cr-composer-card"
             >
+              <CommandMenu
+                commands={slashMatches}
+                active={Math.min(cmdActive, Math.max(slashMatches.length - 1, 0))}
+                onPick={runCommand}
+              />
               {/* Row 1: prefix + textarea */}
               <div style={{ display: "flex", alignItems: "flex-start", gap: 10, minWidth: 0 }}>
                 <span
@@ -510,10 +666,12 @@ export function ChatRail({
                   rows={2}
                   onChange={(e) => {
                     setInputValue(e.target.value);
+                    setCmdActive(0);
                     autoGrow(e.target);
                   }}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask Alpha — e.g. rebalance my equity sleeve toward defensives"
+                  onPaste={(e) => void handlePaste(e)}
+                  placeholder="Ask Alpha — “/” for commands, ⌘K palette, paste an image…"
                   autoComplete="off"
                   spellCheck={false}
                   style={{
@@ -552,6 +710,7 @@ export function ChatRail({
                 <div
                   style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0, flex: 1 }}
                 >
+                  <ImageAttach images={images} onChange={setImages} />
                   <ModelPicker
                     value={choice}
                     query={inputValue || lastSubmitted}
@@ -590,7 +749,11 @@ export function ChatRail({
                     <Kbd>⇧</Kbd>
                     <Kbd>↵</Kbd>
                   </div>
-                  <SendButton onClick={handleSubmit} />
+                  {thinking ? (
+                    <StopButton onClick={onStop} />
+                  ) : (
+                    <SendButton onClick={handleSubmit} />
+                  )}
                 </div>
               </div>
             </div>
@@ -623,26 +786,94 @@ export function ChatRail({
                 <span>streaming</span>
               </span>
               <span style={{ opacity: 0.6 }}>
-                <Kbd>↵</Kbd> send · <Kbd>⇧↵</Kbd> newline · Esc close
+                <Kbd>↵</Kbd> send · <Kbd>/</Kbd> commands · <Kbd>⌘K</Kbd> palette · Esc close
               </span>
             </div>
           </div>
         </div>
         {/* /main content column */}
       </aside>
+
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        onPick={runCommand}
+      />
     </>
   );
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────
 
+function MiniBtn({
+  label,
+  onClick,
+  primary,
+}: {
+  label: string;
+  onClick: () => void;
+  primary?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        padding: "5px 12px",
+        borderRadius: 6,
+        cursor: "pointer",
+        fontFamily: "Space Mono, monospace",
+        fontSize: 9,
+        letterSpacing: "0.12em",
+        textTransform: "uppercase",
+        border: primary ? "none" : "1px solid var(--line-hi)",
+        color: primary ? "var(--on-accent)" : "var(--fg-2)",
+        background: primary ? "var(--accent)" : "transparent",
+      }}
+    >
+      {label}
+    </button>
+  );
+}
+
+function StopButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      title="Stop generating"
+      aria-label="Stop generating"
+      onClick={onClick}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 5,
+        padding: "5px 12px",
+        borderRadius: 6,
+        background: "transparent",
+        color: "var(--fg-2)",
+        border: "1px solid var(--line-hi)",
+        cursor: "pointer",
+        fontFamily: "Space Mono, monospace",
+        fontSize: 10,
+        letterSpacing: "0.12em",
+        textTransform: "uppercase",
+      }}
+    >
+      <span style={{ fontSize: 9 }}>◼</span>
+      <span>Stop</span>
+    </button>
+  );
+}
+
 function NavBtn({
   active,
   title,
+  onClick,
   children,
 }: {
   active?: boolean;
   title: string;
+  onClick?: () => void;
   children: React.ReactNode;
 }) {
   const [hov, setHov] = useState(false);
@@ -650,6 +881,7 @@ function NavBtn({
     <button
       type="button"
       title={title}
+      onClick={onClick}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
@@ -712,7 +944,7 @@ function MicNavIcon() {
     </svg>
   );
 }
-function ClockIcon() {
+function SparkIcon() {
   return (
     <svg
       width={17}
@@ -725,8 +957,25 @@ function ClockIcon() {
       strokeLinejoin="round"
       aria-hidden="true"
     >
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3 2" />
+      <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
+    </svg>
+  );
+}
+function BrainIcon() {
+  return (
+    <svg
+      width={17}
+      height={17}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M9 3a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8A3 3 0 0 0 7 17a3 3 0 0 0 5 1 3 3 0 0 0 5-1 3 3 0 0 0 2-5.2A3 3 0 0 0 18 6a3 3 0 0 0-3-3 3 3 0 0 0-3 1.5A3 3 0 0 0 9 3z" />
+      <path d="M12 5v13" />
     </svg>
   );
 }
@@ -1012,9 +1261,21 @@ function resolveResponderLabel(turn: ChatTurn): string {
   return formatChoiceLabel(turn.active);
 }
 
-function TurnPair({ turn, thinking }: { turn: ChatTurn; thinking: boolean }) {
+function TurnPair({
+  turn,
+  thinking,
+  onEdit,
+  onPickFollowup,
+}: {
+  turn: ChatTurn;
+  thinking: boolean;
+  onEdit: (id: string, q: string) => void;
+  onPickFollowup: (q: string) => void;
+}) {
   const modelName = formatChoiceLabel(turn.active);
   const responderLabel = resolveResponderLabel(turn);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(turn.query);
 
   const now = new Date();
   const timeStr = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
@@ -1035,6 +1296,9 @@ function TurnPair({ turn, thinking }: { turn: ChatTurn; thinking: boolean }) {
       >
         <div
           style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
             fontFamily: "Space Mono, monospace",
             fontSize: 9,
             letterSpacing: "0.22em",
@@ -1042,25 +1306,94 @@ function TurnPair({ turn, thinking }: { turn: ChatTurn; thinking: boolean }) {
             color: "var(--fg-4)",
           }}
         >
-          YOU · <b style={{ color: "var(--fg-3)", fontWeight: 400 }}>{timeStr}</b>
+          <span>
+            YOU · <b style={{ color: "var(--fg-3)", fontWeight: 400 }}>{timeStr}</b>
+          </span>
+          {!editing && (
+            <button
+              type="button"
+              title="Edit & branch"
+              onClick={() => {
+                setDraft(turn.query);
+                setEditing(true);
+              }}
+              style={{
+                border: "none",
+                background: "transparent",
+                color: "var(--fg-4)",
+                cursor: "pointer",
+                fontSize: 11,
+                padding: 0,
+              }}
+            >
+              ✎
+            </button>
+          )}
         </div>
-        <div
-          style={{
-            padding: "11px 16px",
-            borderRadius: "14px 14px 4px 14px",
-            background:
-              "color-mix(in srgb, var(--accent) 12%, color-mix(in srgb, var(--surface-hi) 80%, transparent))",
-            border: "1px solid color-mix(in srgb, var(--accent) 32%, var(--line-hi))",
-            color: "var(--fg)",
-            fontSize: 13.5,
-            lineHeight: 1.55,
-            letterSpacing: "0.005em",
-            fontFamily: "Space Grotesk, sans-serif",
-            boxShadow: "0 6px 18px -10px color-mix(in srgb, var(--accent) 25%, transparent)",
-          }}
-        >
-          {turn.query}
-        </div>
+        {turn.images && turn.images.length > 0 && (
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
+            {turn.images.map((src) => (
+              // biome-ignore lint/performance/noImgElement: local data URL preview, not remote
+              <img
+                key={src.slice(-32)}
+                src={src}
+                alt="attachment"
+                style={{ width: 64, height: 64, borderRadius: 8, objectFit: "cover" }}
+              />
+            ))}
+          </div>
+        )}
+        {editing ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, width: "100%" }}>
+            <textarea
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              rows={2}
+              style={{
+                width: "100%",
+                resize: "none",
+                padding: "10px 14px",
+                borderRadius: 12,
+                border: "1px solid color-mix(in srgb, var(--accent) 40%, var(--line-hi))",
+                background: "var(--surface-lo)",
+                color: "var(--fg)",
+                fontFamily: "Space Grotesk, sans-serif",
+                fontSize: 13.5,
+                outline: "none",
+              }}
+            />
+            <div style={{ display: "flex", gap: 6, justifyContent: "flex-end" }}>
+              <MiniBtn label="Cancel" onClick={() => setEditing(false)} />
+              <MiniBtn
+                primary
+                label="Send"
+                onClick={() => {
+                  const q = draft.trim();
+                  setEditing(false);
+                  if (q && q !== turn.query) onEdit(turn.id, q);
+                }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div
+            style={{
+              padding: "11px 16px",
+              borderRadius: "14px 14px 4px 14px",
+              background:
+                "color-mix(in srgb, var(--accent) 12%, color-mix(in srgb, var(--surface-hi) 80%, transparent))",
+              border: "1px solid color-mix(in srgb, var(--accent) 32%, var(--line-hi))",
+              color: "var(--fg)",
+              fontSize: 13.5,
+              lineHeight: 1.55,
+              letterSpacing: "0.005em",
+              fontFamily: "Space Grotesk, sans-serif",
+              boxShadow: "0 6px 18px -10px color-mix(in srgb, var(--accent) 25%, transparent)",
+            }}
+          >
+            {turn.query}
+          </div>
+        )}
       </div>
 
       {/* alpha reply — orb avatar + card */}
@@ -1124,7 +1457,11 @@ function TurnPair({ turn, thinking }: { turn: ChatTurn; thinking: boolean }) {
               fontFamily: "Space Grotesk, sans-serif",
             }}
           >
-            {turn.loading && !turn.response ? (
+            {turn.tools && turn.tools.length > 0 && <ToolTrail steps={turn.tools} />}
+            {turn.thinking ? (
+              <ThinkingBlock text={turn.thinking} streaming={turn.loading && !turn.response} />
+            ) : null}
+            {turn.loading && !turn.response && !turn.thinking ? (
               <TypingIndicator />
             ) : turn.error ? (
               <span style={{ color: "var(--red)", fontSize: 12 }}>Error: {turn.error}</span>
@@ -1132,6 +1469,18 @@ function TurnPair({ turn, thinking }: { turn: ChatTurn; thinking: boolean }) {
               <>
                 <ResponseBody text={turn.response ?? ""} />
                 {turn.spec && <SpecCard spec={turn.spec} />}
+                {turn.confirm && (
+                  <ApprovalCard
+                    action={turn.confirm}
+                    onApprove={(a: PendingAction) =>
+                      onPickFollowup(`Yes — proceed with: ${a.action}. ${a.summary}`)
+                    }
+                    onDismiss={() => {}}
+                  />
+                )}
+                {!turn.loading && turn.followups && turn.followups.length > 0 && (
+                  <FollowupChips chips={turn.followups} onPick={onPickFollowup} />
+                )}
                 {!turn.loading && turn.response && (
                   <SavePlanButton title={turn.query} content={turn.response} />
                 )}

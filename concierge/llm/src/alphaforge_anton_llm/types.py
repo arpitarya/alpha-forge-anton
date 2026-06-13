@@ -26,6 +26,9 @@ class Message(BaseModel):
     content: str
     tool_call_id: str | None = None
     name: str | None = None
+    # Vision attachments as data URLs ("data:image/png;base64,…"); only adapters
+    # for providers in the manifest's `vision` block consume them.
+    images: list[str] = []
 
 
 class ToolSchema(BaseModel):

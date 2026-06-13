@@ -41,6 +41,12 @@ async def save(plan_id: str, content: str, message: str | None = None) -> str:
     return f"elgar://plan/{plan_id}"
 
 
+async def get(doc_id: str) -> str | None:
+    """Read a doc's content from the store; None when it does not exist."""
+    code, out = await _run("get", doc_id)
+    return out if code == 0 else None
+
+
 async def store_path() -> str:
     code, out = await _run("path")
     if code != 0:

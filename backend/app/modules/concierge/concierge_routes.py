@@ -8,8 +8,9 @@ from fastapi.responses import StreamingResponse
 from app.core.deps import get_current_user
 from app.modules.concierge.compose_schemas import ComposeRequest, ComposeResponse
 from app.modules.concierge.compose_service import compose
-from app.modules.concierge.concierge_schemas import ChatRequest
+from app.modules.concierge.concierge_schemas import ChatRequest, MemoryDoc
 from app.modules.concierge.concierge_service import stream_chat
+from app.modules.concierge.memory_service import load_memory, save_memory
 from app.modules.concierge.stt_service import transcribe
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
@@ -37,3 +38,14 @@ async def concierge(body: ChatRequest) -> StreamingResponse:
 async def stt(file: UploadFile = File(...)) -> dict[str, str]:
     text = await transcribe(file)
     return {"transcript": text}
+
+
+@router.get("/memory")
+async def get_memory() -> MemoryDoc:
+    """The user-editable context doc Orff injects into every chat."""
+    return MemoryDoc(content=await load_memory())
+
+
+@router.put("/memory")
+async def put_memory(body: MemoryDoc) -> MemoryDoc:
+    return MemoryDoc(content=await save_memory(body.content))

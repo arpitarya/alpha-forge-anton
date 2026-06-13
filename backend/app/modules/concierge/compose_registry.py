@@ -14,8 +14,8 @@ from typing import Any
 # Presentational solar-ui primitives with JSON-serializable props only.
 COMPOSABLE_COMPONENTS: frozenset[str] = frozenset({
     "AllocationBar", "Badge", "Card", "Chip", "CountUp", "DataTable", "DeltaText",
-    "Divider", "DonutChart", "Icon", "Kbd", "LineChart", "LiveDot", "ProgressBar",
-    "RiskBars", "Sparkline", "Stat", "StatGrid", "Text",
+    "DiffTable", "Divider", "DonutChart", "Icon", "Kbd", "LineChart", "LiveDot",
+    "ProgressBar", "RiskBars", "Sparkline", "Stat", "StatGrid", "Text",
 })
 
 # Parameterless data hooks the client host resolves (`SpecHost.tsx`).

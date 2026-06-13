@@ -105,6 +105,11 @@ def trusted_providers() -> set[str]:
     return set(_private().get("trusted_providers", []))
 
 
+def vision_providers() -> list[str]:
+    """Providers whose adapters accept image attachments, in preference order."""
+    return list(_routing().get("vision", {}).get("providers", []))
+
+
 def is_private(qt: QueryType) -> bool:
     """True when a query touches real holdings → trusted-provider floor + disclosure."""
     return qt.value in private_query_types()

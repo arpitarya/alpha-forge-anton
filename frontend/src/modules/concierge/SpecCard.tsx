@@ -1,7 +1,7 @@
 "use client";
 
-import { SpecHost } from "./SpecHost";
 import type { UINode } from "./compose.types";
+import { SpecHost } from "./SpecHost";
 
 interface Props {
   spec: UINode;

@@ -67,6 +67,21 @@ export function formatChoiceLabel(active: ActiveModel): string {
   return `${active.providerName} · ${active.modelName}`;
 }
 
+/** A prompt-assembly / data-read step, surfaced as a collapsible tool block. */
+export interface ToolStep {
+  name: string;
+  detail: string;
+  ms: number;
+}
+
+/** A mutating intent Orff detected — rendered as a structured approval card. */
+export interface PendingAction {
+  id: string;
+  action: string;
+  summary: string;
+  steps: string[];
+}
+
 export interface ChatTurn {
   id: string;
   query: string;
@@ -80,4 +95,16 @@ export interface ChatTurn {
   active: ActiveModel;
   /** Fux-validated UISpec attached by the compose follow-up (§18.3). */
   spec?: UINode | null;
+  /** Reasoning trace split from a `<think>` block on reasoning models. */
+  thinking?: string | null;
+  /** Data-read trail (Fux recall, memory load, holdings disclosure, …). */
+  tools?: ToolStep[];
+  /** Approval card for a detected mutating intent. */
+  confirm?: PendingAction | null;
+  /** Tap-to-send next-step prompts. */
+  followups?: string[];
+  /** Real USD spend for the turn (0 on free providers). */
+  costUsd?: number | null;
+  /** Image data URLs the user attached to the prompt. */
+  images?: string[];
 }

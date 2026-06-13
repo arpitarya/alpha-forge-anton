@@ -5,12 +5,30 @@ from __future__ import annotations
 from typing import Literal, get_args
 
 from alphaforge_anton_llm import registry
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
+
+# Vision attachments: data URLs, capped so a paste can't balloon the request.
+MAX_IMAGES = 4
+MAX_IMAGE_CHARS = 6_000_000  # ~4.5 MB binary as base64
 
 
 class ChatMessage(BaseModel):
     role: Literal["user", "assistant"]
     content: str
+    images: list[str] = Field(default_factory=list, max_length=MAX_IMAGES)
+
+    @field_validator("images")
+    @classmethod
+    def _image_size(cls, v: list[str]) -> list[str]:
+        if any(len(img) > MAX_IMAGE_CHARS for img in v):
+            raise ValueError(f"image exceeds {MAX_IMAGE_CHARS} chars (base64)")
+        return v
+
+
+class MemoryDoc(BaseModel):
+    """The user-editable context document shown in the Memory panel."""
+
+    content: str = ""
 
 
 # Pydantic needs a static type, so the slugs are spelled out — but they must mirror

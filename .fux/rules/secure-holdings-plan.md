@@ -4,13 +4,24 @@ domain: security
 type: narrative
 status: active
 created: 2026-06-11
-updated: 2026-06-11
+updated: 2026-06-13
 ---
 # Secure holdings access for Orff + the plan→drift→advise workflow
 
 **Status:** _Shipped (steps 1–5) — plan plane, trusted-provider floor, disclosure
 chokepoint, and both guard probes are live. Wiring holdings tools into Orff's
 **tool-calling** loop (vs the current system-message injection) remains future work._
+
+> **Update 2026-06-13 — tiered disclosure: full rows now flow to the trusted lane.**
+> User-directed ("actual data should flow in"): once `enforce_floor()` has pinned a
+> private query to a trusted provider, `holdings_private.detailed_context()` injects the
+> **full holding rows** (symbol, qty, avg/ltp, INR value, P&L, day move — rendered by
+> `holdings_detail.holdings_table()`), so Orff answers instrument-level questions from
+> real data. Percentages-only `disclosed_context()` is retained as defense-in-depth: it
+> is what any non-trusted provider would receive, and the probe now asserts both lanes
+> (`untrusted → no symbols/₹`, `trusted → actual rows`). Threat #1 is unchanged — free
+> providers still never see a private prompt; the trusted provider (`claude-sdk`,
+> user-confirmed paid lane) is the only recipient of row-level data.
 
 > **Update 2026-06-12 — plan plane moved out of this repo.** Plan documents now live
 > in the private **elgar store** (`ELGAR_DIR`, its own git repo) and are only

@@ -1,9 +1,9 @@
 "use client";
 
-import { useHoldings, useTreemap } from "../portfolio/portfolio.query";
 import { usePlan, usePlanDrift, useProjection } from "../plans/plans.query";
-import { DynamicRenderer } from "./DynamicRenderer";
+import { useHoldings, useTreemap } from "../portfolio/portfolio.query";
 import type { UINode } from "./compose.types";
+import { DynamicRenderer } from "./DynamicRenderer";
 
 interface Props {
   spec: UINode;

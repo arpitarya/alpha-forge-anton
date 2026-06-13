@@ -32,6 +32,9 @@
     "query_types": ["portfolio_private"],
     "trusted_providers": ["claude-sdk"]
   },
+  "vision": {
+    "providers": ["gemini", "claude-sdk"]
+  },
   "provider_query_type": {
     "claude-sdk": "investment_plan",
     "openrouter": "investment_plan",

@@ -24,10 +24,8 @@ export function SavePlanButton({ title, content }: Props) {
         save.mutate(
           { title, content },
           {
-            onSuccess: (r) =>
-              notify.ok({ title: "Plan saved to elgar", message: r.ref }),
-            onError: (e) =>
-              notify.error({ title: "Plan save failed", message: String(e) }),
+            onSuccess: (r) => notify.ok({ title: "Plan saved to elgar", message: r.ref }),
+            onError: (e) => notify.error({ title: "Plan save failed", message: String(e) }),
           },
         )
       }

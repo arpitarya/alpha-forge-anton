@@ -1,98 +1,74 @@
-"""Orff concierge service — streams provider tokens as SSE."""
+"""Orff concierge service — streams provider tokens and typed SSE events.
+
+Wire protocol (one JSON object per `data:` line — concierge/README.md §events):
+  {content, provider, model, …, cost_usd}  cumulative token snapshot
+  {tool: {name, detail, ms}}               prompt-assembly / data-read step
+  {thinking: "…"}                          reasoning trace split from <think>
+  {confirm: {id, action, summary, steps}}  approval card for mutating intents
+  {spec: {…}}                              compose follow-up UISpec
+  {followups: ["…"]}                       tap-to-send next prompts
+  {error: "…"} / [DONE]
+"""
 
 from __future__ import annotations
 
-import json
-import re
 import time
 
-from alphaforge_anton_llm import registry
+from alphaforge_anton_llm import pricing
 from alphaforge_anton_llm.gateway import create_gateway
-from alphaforge_anton_llm.types import Message, QueryType
 
+from app.modules.concierge.action_service import detect_action
 from app.modules.concierge.compose_service import compose_followup
 from app.modules.concierge.concierge_schemas import ChatMessage, ChatRequest
-from app.modules.concierge.fux_bridge import recall as fux_recall
-from app.modules.concierge.holdings_private import disclosed_context, enforce_floor
-
-_SYSTEM = (
-    "You are Orff, the AI financial concierge inside AlphaForge Anton — a personal investment "
-    "terminal for Indian markets. Be concise, data-driven, and actionable. Format numbers in "
-    "Indian locale (₹, L, Cr). When you recommend a trade, include the rationale and expected "
-    "impact on the portfolio. Keep responses under 400 words unless a detailed breakdown is "
-    "explicitly requested."
-)
-_GROUNDING_PREAMBLE = (
-    "Authoritative project knowledge from Fux (Anton's knowledge brain). Treat these "
-    "rules, formulas, and definitions as ground truth when they apply; cite the figures "
-    "and logic they prescribe rather than inventing your own:\n\n"
-)
+from app.modules.concierge.followup_service import suggest_followups
+from app.modules.concierge.prompt_service import assemble
+from app.modules.concierge.stream_events import redact, split_thinking, sse
 
 _gateway = create_gateway()
 
 
-def _resolve(req: ChatRequest, last_user_msg: str) -> tuple[QueryType, str | None]:
-    # Intent → QueryType lives in the registry manifest (concierge-registry-single-source).
-    if req.provider == "auto":
-        return registry.classify_intent(last_user_msg), None
-    return registry.provider_query_type(req.provider), req.provider
-
-
-def _sse(payload: dict) -> bytes:
-    return f"data: {json.dumps(payload)}\n\n".encode()
-
-
-# Upstream provider errors embed the request URL, which carries the API key as a
-# `?key=…`/`?api_key=…` query param. Never forward a live secret to the browser.
-_SECRET_RE = re.compile(r"(?i)([?&](?:api[_-]?key|key|token|access_token)=)[^&\s\"']+")
-
-
-def _redact(msg: str) -> str:
-    return _SECRET_RE.sub(r"\1<redacted>", msg)
-
-
 async def stream_chat(req: ChatRequest):
-    """Async generator yielding SSE-formatted bytes per token snapshot."""
-    msgs = [Message(role="system", content=_SYSTEM)]
-    last_user = next((m.content for m in reversed(req.messages) if m.role == "user"), "")
-    grounding = await fux_recall(last_user) if last_user else ""
-    if grounding:
-        msgs.append(Message(role="system", content=_GROUNDING_PREAMBLE + grounding))
-    msgs.extend(Message(role=m.role, content=m.content) for m in req.messages)
-
-    # Classify on the text so a holdings query is caught even under an explicit pin:
-    # private → inject percentages-only context + force the trusted-provider floor.
-    intent_qt = registry.classify_intent(last_user)
-    if registry.is_private(intent_qt):
-        msgs.append(Message(role="system", content=disclosed_context()))
-        qt, preferred, confirmed, notice = enforce_floor(req.provider, intent_qt)
-    else:
-        qt, preferred = _resolve(req, last_user)
-        confirmed, notice = req.provider == "claude-sdk", None
-
-    # Honour the pinned model id only when routing kept the user's provider (the privacy
-    # floor or Auto can override it; a foreign model id must not leak onto another provider).
-    model = req.model_id if preferred == req.provider and req.provider != "auto" else None
+    """Async generator yielding SSE-formatted bytes per token snapshot / event."""
+    # Everything lives inside the try: an exception before the first yield would kill
+    # the SSE connection after the 200 headers — the browser sees only "Failed to fetch".
     t0 = time.perf_counter()
+
+    def el() -> float:
+        return round(time.perf_counter() - t0, 2)
+
     try:
+        a = await assemble(req)
+        for step in a.trace:
+            yield sse({"tool": step, "elapsed_s": el()})
+
+        snap = None
         async for snap in _gateway.stream(
-            msgs, query_type=qt, preferred_provider=preferred, model=model, confirmed=confirmed,
+            a.msgs, query_type=a.query_type, preferred_provider=a.preferred,
+            model=a.model, confirmed=a.confirmed,
         ):
-            yield _sse({
-                "content": snap.content,
-                "provider": snap.provider,
-                "model": snap.model,
+            thinking, visible = split_thinking(snap.content)
+            if thinking:
+                yield sse({"thinking": thinking, "elapsed_s": el()})
+            yield sse({
+                "content": visible, "provider": snap.provider, "model": snap.model,
                 "prompt_tokens": snap.prompt_tokens,
                 "completion_tokens": snap.completion_tokens,
-                "elapsed_s": round(time.perf_counter() - t0, 2),
-                "auto_level": req.auto_level,
-                "notice": notice,
+                "cost_usd": round(pricing.estimate_cost_usd(
+                    snap.provider, snap.model, snap.prompt_tokens, snap.completion_tokens,
+                ), 6),
+                "elapsed_s": el(), "auto_level": req.auto_level, "notice": a.notice,
             })
+
+        if (action := detect_action(a.last_user)) is not None:
+            yield sse({"confirm": action, "elapsed_s": el()})
         # "show / chart / …" turns also get a generated UI — additive, never an error.
-        if (extra := await compose_followup(last_user)) is not None:
-            yield _sse({**extra, "elapsed_s": round(time.perf_counter() - t0, 2)})
+        if (extra := await compose_followup(a.last_user)) is not None:
+            yield sse({**extra, "elapsed_s": el()})
+        reply = split_thinking(snap.content)[1] if snap else ""
+        if chips := await suggest_followups(_gateway, a.last_user, reply):
+            yield sse({"followups": chips, "elapsed_s": el()})
     except Exception as exc:
-        yield _sse({"error": _redact(str(exc)), "elapsed_s": round(time.perf_counter() - t0, 2)})
+        yield sse({"error": redact(str(exc)), "elapsed_s": el()})
     finally:
         yield b"data: [DONE]\n\n"
 

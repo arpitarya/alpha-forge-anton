@@ -37,6 +37,7 @@ def main() -> int:
 
     from app.modules.plans.plan_drift import ClassDrift
     from app.modules.plans.plan_loader import Plan
+    from app.modules.concierge import holdings_detail as hd
     from app.modules.concierge import holdings_private as hp
 
     # 1. disclosure renders clean even with a *populated* portfolio
@@ -50,6 +51,47 @@ def main() -> int:
     leaks = scan_text(hp.disclosed_context())
     check("disclosed_context is percentages-only (no ₹/symbols)", not leaks, f"leaked {leaks}")
     check("leak guard is armed", bool(scan_text("equity RELIANCE worth ₹1,23,456")))
+
+    # 1b. missing elgar plan → actuals-only fallback, never an exception (the
+    #     "fetch the holdings" → Failed-to-fetch regression), still percentages-only
+    def _no_plan(plan_id: str = "core-allocation"):
+        raise FileNotFoundError("no plan in elgar store")
+
+    class _Slice:
+        class asset_class:
+            value = "equity"
+        pct = 61.5
+
+    class _StubAgg:
+        def allocation(self):
+            return [_Slice()]
+
+    hp.drift_for_plan = _no_plan
+    hd.HoldingsAggregator = _StubAgg
+    try:
+        ctx = hp.disclosed_context()
+        check("missing plan degrades instead of raising", True)
+    except Exception as exc:  # noqa: BLE001
+        ctx = ""
+        check("missing plan degrades instead of raising", False, f"{type(exc).__name__}: {exc}")
+    check("fallback is percentages-only (no ₹/symbols)", not scan_text(ctx), f"leaked {scan_text(ctx)}")
+    check("fallback forbids inventing targets", "do NOT invent targets" in ctx)
+    check("fallback discloses actual class mix", "equity: 62%" in ctx, ctx[:120])
+
+    # 1c. full rows flow ONLY to the trusted lane (detailed_context chokepoint)
+    fake_row = (
+        "- [zerodha] RELIANCE · equity: qty 50 @ avg 2,410.00, ltp 2,891.00 → "
+        "now ₹144,550, P&L +19.9%, day +0.4%"
+    )
+    hp.holdings_table = lambda max_rows=60: fake_row
+    detail = hp.detailed_context("claude-sdk")
+    check("trusted provider receives actual holding rows", "RELIANCE" in detail, detail[:120])
+    check("trusted detail flags itself as authorized", "FULL DETAIL" in detail)
+    check("trusted detail still surfaces the missing plan", "elgar save" in detail)
+    for untrusted in ("gemini", None):
+        ctx = hp.detailed_context(untrusted)
+        clean = "RELIANCE" not in ctx and not scan_text(ctx)
+        check(f"untrusted ({untrusted}) gets percentages-only, no symbols", clean, ctx[:120])
 
     # 2. a private query floors to a trusted provider for every selectable provider
     trusted = registry.trusted_providers()

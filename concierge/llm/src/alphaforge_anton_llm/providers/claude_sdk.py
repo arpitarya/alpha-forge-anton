@@ -4,13 +4,27 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import AsyncIterator
+from collections.abc import AsyncIterator
 
 from alphaforge_anton_llm import pricing
+from alphaforge_anton_llm.providers._vision import parse_data_url
 from alphaforge_anton_llm.providers.base import ProviderAdapter, ProviderHealth
 from alphaforge_anton_llm.types import Message, ProviderResponse, ToolSchema
 
 logger = logging.getLogger(__name__)
+
+
+def _blocks(m: Message) -> str | list[dict]:
+    """Plain text normally; content blocks when the turn carries images."""
+    if not m.images:
+        return m.content
+    blocks: list[dict] = [
+        {"type": "image",
+         "source": {"type": "base64", "media_type": mime, "data": data}}
+        for img in m.images if (parsed := parse_data_url(img)) for mime, data in [parsed]
+    ]
+    blocks.append({"type": "text", "text": m.content})
+    return blocks
 
 
 class ClaudeSdkAdapter(ProviderAdapter):
@@ -40,8 +54,11 @@ class ClaudeSdkAdapter(ProviderAdapter):
 
         model = model or self.default_model()
         client = anthropic.AsyncAnthropic(api_key=api_key)
-        system = next((m.content for m in messages if m.role == "system"), None)
-        turns = [{"role": m.role, "content": m.content} for m in messages if m.role != "system"]
+        # Join ALL system messages — the gateway appends grounding and the private
+        # holdings disclosure as extra system turns; dropping them leaks intent.
+        system_parts = [m.content for m in messages if m.role == "system"]
+        system = "\n\n".join(system_parts) if system_parts else None
+        turns = [{"role": m.role, "content": _blocks(m)} for m in messages if m.role != "system"]
         max_tokens = pricing.max_tokens(self.name, model)
         kwargs: dict = {"model": model, "max_tokens": max_tokens, "messages": turns}
         if system:
