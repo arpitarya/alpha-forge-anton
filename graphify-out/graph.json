@@ -12291,9 +12291,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/claude_import.py",
       "source_location": "L51",
-      "id": "claude_import_rationale_51",
       "community": 4,
-      "norm_label": "an investment conversation: enough advice signal, and it outweighs dev signal."
+      "norm_label": "an investment conversation: enough advice signal, and it outweighs dev signal.",
+      "id": "claude_import_rationale_51"
     },
     {
       "label": "prompt_service.py",
@@ -55909,11 +55909,11 @@
       "source_file": "backend/app/modules/concierge/claude_import.py",
       "source_location": "L20",
       "weight": 0.8,
-      "_src": "claude_import_rationale_51",
-      "_tgt": "concierge_schemas_sessionturn",
+      "_src": "concierge_schemas_sessionturn",
+      "_tgt": "claude_import_rationale_51",
+      "confidence_score": 0.5,
       "source": "concierge_schemas_sessionturn",
-      "target": "claude_import_rationale_51",
-      "confidence_score": 0.5
+      "target": "claude_import_rationale_51"
     },
     {
       "relation": "calls",
@@ -56041,11 +56041,11 @@
       "source_file": "backend/app/modules/concierge/claude_import.py",
       "source_location": "L20",
       "weight": 0.8,
-      "_src": "claude_import_rationale_51",
-      "_tgt": "concierge_schemas_sessionmeta",
+      "_src": "concierge_schemas_sessionmeta",
+      "_tgt": "claude_import_rationale_51",
+      "confidence_score": 0.5,
       "source": "concierge_schemas_sessionmeta",
-      "target": "claude_import_rationale_51",
-      "confidence_score": 0.5
+      "target": "claude_import_rationale_51"
     },
     {
       "relation": "calls",
