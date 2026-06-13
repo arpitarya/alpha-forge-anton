@@ -11067,36 +11067,36 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/plans/elgar_bridge.py",
       "source_location": "L37",
-      "id": "elgar_bridge_rationale_37",
       "community": 14,
-      "norm_label": "write a plan doc into the store; returns its `elgar://plan/<id>` ref."
+      "norm_label": "write a plan doc into the store; returns its `elgar://plan/<id>` ref.",
+      "id": "elgar_bridge_rationale_37"
     },
     {
       "label": "Read a doc's content from the store; None when it does not exist.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/plans/elgar_bridge.py",
       "source_location": "L46",
-      "id": "elgar_bridge_rationale_46",
       "community": 14,
-      "norm_label": "read a doc's content from the store; none when it does not exist."
+      "norm_label": "read a doc's content from the store; none when it does not exist.",
+      "id": "elgar_bridge_rationale_46"
     },
     {
       "label": "All store docs (`{id, status, title}`), optionally filtered by id prefix.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/plans/elgar_bridge.py",
       "source_location": "L52",
-      "id": "elgar_bridge_rationale_52",
       "community": 14,
-      "norm_label": "all store docs (`{id, status, title}`), optionally filtered by id prefix."
+      "norm_label": "all store docs (`{id, status, title}`), optionally filtered by id prefix.",
+      "id": "elgar_bridge_rationale_52"
     },
     {
       "label": "Delete a doc from the store; True on success, False when it does not exist.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/plans/elgar_bridge.py",
       "source_location": "L64",
-      "id": "elgar_bridge_rationale_64",
       "community": 14,
-      "norm_label": "delete a doc from the store; true on success, false when it does not exist."
+      "norm_label": "delete a doc from the store; true on success, false when it does not exist.",
+      "id": "elgar_bridge_rationale_64"
     },
     {
       "label": "plan_loader.py",
@@ -11373,54 +11373,54 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L33",
-      "id": "concierge_routes_rationale_33",
       "community": 7,
-      "norm_label": "generate a validated uispec the client can safely render (\u00a718.3)."
+      "norm_label": "generate a validated uispec the client can safely render (\u00a718.3).",
+      "id": "concierge_routes_rationale_33"
     },
     {
       "label": "The user-editable context doc Orff injects into every chat.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L57",
-      "id": "concierge_routes_rationale_57",
       "community": 7,
-      "norm_label": "the user-editable context doc orff injects into every chat."
+      "norm_label": "the user-editable context doc orff injects into every chat.",
+      "id": "concierge_routes_rationale_57"
     },
     {
       "label": "Past conversations for the history sidebar \u2014 newest store-order first.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L68",
-      "id": "concierge_routes_rationale_68",
       "community": 7,
-      "norm_label": "past conversations for the history sidebar \u2014 newest store-order first."
+      "norm_label": "past conversations for the history sidebar \u2014 newest store-order first.",
+      "id": "concierge_routes_rationale_68"
     },
     {
       "label": "A stored conversation, parsed back into turns for resume.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L74",
-      "id": "concierge_routes_rationale_74",
       "community": 7,
-      "norm_label": "a stored conversation, parsed back into turns for resume."
+      "norm_label": "a stored conversation, parsed back into turns for resume.",
+      "id": "concierge_routes_rationale_74"
     },
     {
       "label": "Persist (overwrite) a conversation's transcript into elgar.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L80",
-      "id": "concierge_routes_rationale_80",
       "community": 7,
-      "norm_label": "persist (overwrite) a conversation's transcript into elgar."
+      "norm_label": "persist (overwrite) a conversation's transcript into elgar.",
+      "id": "concierge_routes_rationale_80"
     },
     {
       "label": "Delete a conversation from the store.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L87",
-      "id": "concierge_routes_rationale_87",
       "community": 7,
-      "norm_label": "delete a conversation from the store."
+      "norm_label": "delete a conversation from the store.",
+      "id": "concierge_routes_rationale_87"
     },
     {
       "label": "stt_service.py",
@@ -11625,45 +11625,45 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/history_service.py",
       "source_location": "L1",
-      "id": "history_service_rationale_1",
       "community": 7,
-      "norm_label": "orff conversation history \u2014 each chat session persisted as one elgar doc.  the c"
+      "norm_label": "orff conversation history \u2014 each chat session persisted as one elgar doc.  the c",
+      "id": "history_service_rationale_1"
     },
     {
       "label": "Write/overwrite a session's transcript in elgar; returns the session id.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/history_service.py",
       "source_location": "L48",
-      "id": "history_service_rationale_48",
       "community": 7,
-      "norm_label": "write/overwrite a session's transcript in elgar; returns the session id."
+      "norm_label": "write/overwrite a session's transcript in elgar; returns the session id.",
+      "id": "history_service_rationale_48"
     },
     {
       "label": "Parse a stored session back into structured turns for resume (empty when absent)",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/history_service.py",
       "source_location": "L56",
-      "id": "history_service_rationale_56",
       "community": 7,
-      "norm_label": "parse a stored session back into structured turns for resume (empty when absent)"
+      "norm_label": "parse a stored session back into structured turns for resume (empty when absent)",
+      "id": "history_service_rationale_56"
     },
     {
       "label": "Past conversations (newest store-order first), title-labelled for the sidebar.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/history_service.py",
       "source_location": "L68",
-      "id": "history_service_rationale_68",
       "community": 7,
-      "norm_label": "past conversations (newest store-order first), title-labelled for the sidebar."
+      "norm_label": "past conversations (newest store-order first), title-labelled for the sidebar.",
+      "id": "history_service_rationale_68"
     },
     {
       "label": "Remove a conversation from the store; False if it was already gone.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/history_service.py",
       "source_location": "L79",
-      "id": "history_service_rationale_79",
       "community": 7,
-      "norm_label": "remove a conversation from the store; false if it was already gone."
+      "norm_label": "remove a conversation from the store; false if it was already gone.",
+      "id": "history_service_rationale_79"
     },
     {
       "label": "compose_service.py",
@@ -11841,36 +11841,36 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_schemas.py",
       "source_location": "L48",
-      "id": "concierge_schemas_rationale_48",
       "community": 7,
-      "norm_label": "a conversation's sidebar entry."
+      "norm_label": "a conversation's sidebar entry.",
+      "id": "concierge_schemas_rationale_48"
     },
     {
       "label": "A conversation loaded for resume \u2014 its turns plus the sidebar meta.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_schemas.py",
       "source_location": "L55",
-      "id": "concierge_schemas_rationale_55",
       "community": 7,
-      "norm_label": "a conversation loaded for resume \u2014 its turns plus the sidebar meta."
+      "norm_label": "a conversation loaded for resume \u2014 its turns plus the sidebar meta.",
+      "id": "concierge_schemas_rationale_55"
     },
     {
       "label": "PUT body for /history/{id} \u2014 the session id comes from the path.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_schemas.py",
       "source_location": "L61",
-      "id": "concierge_schemas_rationale_61",
       "community": 7,
-      "norm_label": "put body for /history/{id} \u2014 the session id comes from the path."
+      "norm_label": "put body for /history/{id} \u2014 the session id comes from the path.",
+      "id": "concierge_schemas_rationale_61"
     },
     {
       "label": "Resolved model choice from the frontend ModelPicker.      The frontend already a",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_schemas.py",
       "source_location": "L90",
-      "id": "concierge_schemas_rationale_90",
       "community": 7,
-      "norm_label": "resolved model choice from the frontend modelpicker.      the frontend already a"
+      "norm_label": "resolved model choice from the frontend modelpicker.      the frontend already a",
+      "id": "concierge_schemas_rationale_90"
     },
     {
       "label": "fux_bridge.py",
@@ -26937,9 +26937,9 @@
       "weight": 0.8,
       "_src": "concierge_events_probe_rationale_1",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "concierge_events_probe_rationale_1",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -26949,9 +26949,9 @@
       "weight": 0.8,
       "_src": "concierge_events_probe_rationale_1",
       "_tgt": "concierge_schemas_sessionturn",
+      "confidence_score": 0.5,
       "source": "concierge_events_probe_rationale_1",
-      "target": "concierge_schemas_sessionturn",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionturn"
     },
     {
       "relation": "contains",
@@ -29096,8 +29096,8 @@
       "source_file": "frontend/src/modules/concierge/concierge.sessions.ts",
       "source_location": "L20",
       "weight": 1.0,
-      "_src": "concierge_sessions_usesessions",
-      "_tgt": "concierge_history_usesavesession",
+      "_src": "concierge_history_usesavesession",
+      "_tgt": "concierge_sessions_usesessions",
       "source": "concierge_history_usesavesession",
       "target": "concierge_sessions_usesessions"
     },
@@ -29696,8 +29696,8 @@
       "source_file": "frontend/src/modules/concierge/ChatContext.tsx",
       "source_location": "L43",
       "weight": 1.0,
-      "_src": "chatcontext_chatprovider",
-      "_tgt": "concierge_sessions_usesessions",
+      "_src": "concierge_sessions_usesessions",
+      "_tgt": "chatcontext_chatprovider",
       "source": "concierge_sessions_usesessions",
       "target": "chatcontext_chatprovider"
     },
@@ -52748,8 +52748,8 @@
       "source_file": "backend/app/modules/concierge/history_service.py",
       "source_location": "L51",
       "weight": 1.0,
-      "_src": "history_service_save_session",
-      "_tgt": "elgar_bridge_save",
+      "_src": "elgar_bridge_save",
+      "_tgt": "history_service_save_session",
       "source": "elgar_bridge_save",
       "target": "history_service_save_session"
     },
@@ -52808,8 +52808,8 @@
       "source_file": "backend/app/modules/concierge/history_service.py",
       "source_location": "L70",
       "weight": 1.0,
-      "_src": "history_service_list_sessions",
-      "_tgt": "elgar_bridge_list_docs",
+      "_src": "elgar_bridge_list_docs",
+      "_tgt": "history_service_list_sessions",
       "source": "elgar_bridge_list_docs",
       "target": "history_service_list_sessions"
     },
@@ -52832,8 +52832,8 @@
       "source_file": "backend/app/modules/concierge/history_service.py",
       "source_location": "L81",
       "weight": 1.0,
-      "_src": "history_service_delete_session",
-      "_tgt": "elgar_bridge_remove",
+      "_src": "elgar_bridge_remove",
+      "_tgt": "history_service_delete_session",
       "source": "elgar_bridge_remove",
       "target": "history_service_delete_session"
     },
@@ -53613,9 +53613,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_1",
       "_tgt": "concierge_schemas_savesessionbody",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_1",
-      "target": "concierge_schemas_savesessionbody",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_savesessionbody"
     },
     {
       "relation": "uses",
@@ -53625,9 +53625,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_1",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_1",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -53637,9 +53637,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_1",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_1",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -53649,9 +53649,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_33",
       "_tgt": "compose_schemas_composerequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_33",
-      "target": "compose_schemas_composerequest",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composerequest"
     },
     {
       "relation": "uses",
@@ -53661,9 +53661,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_33",
       "_tgt": "compose_schemas_composeresponse",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_33",
-      "target": "compose_schemas_composeresponse",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composeresponse"
     },
     {
       "relation": "uses",
@@ -53673,9 +53673,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_33",
       "_tgt": "concierge_schemas_chatrequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_33",
-      "target": "concierge_schemas_chatrequest",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_chatrequest"
     },
     {
       "relation": "uses",
@@ -53685,9 +53685,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_33",
       "_tgt": "concierge_schemas_memorydoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_33",
-      "target": "concierge_schemas_memorydoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_memorydoc"
     },
     {
       "relation": "uses",
@@ -53697,9 +53697,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_33",
       "_tgt": "concierge_schemas_savesessionbody",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_33",
-      "target": "concierge_schemas_savesessionbody",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_savesessionbody"
     },
     {
       "relation": "uses",
@@ -53709,9 +53709,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_33",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_33",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -53721,9 +53721,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_33",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_33",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -53733,9 +53733,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_57",
       "_tgt": "compose_schemas_composerequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_57",
-      "target": "compose_schemas_composerequest",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composerequest"
     },
     {
       "relation": "uses",
@@ -53745,9 +53745,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_57",
       "_tgt": "compose_schemas_composeresponse",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_57",
-      "target": "compose_schemas_composeresponse",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composeresponse"
     },
     {
       "relation": "uses",
@@ -53757,9 +53757,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_57",
       "_tgt": "concierge_schemas_chatrequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_57",
-      "target": "concierge_schemas_chatrequest",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_chatrequest"
     },
     {
       "relation": "uses",
@@ -53769,9 +53769,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_57",
       "_tgt": "concierge_schemas_memorydoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_57",
-      "target": "concierge_schemas_memorydoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_memorydoc"
     },
     {
       "relation": "uses",
@@ -53781,9 +53781,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_57",
       "_tgt": "concierge_schemas_savesessionbody",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_57",
-      "target": "concierge_schemas_savesessionbody",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_savesessionbody"
     },
     {
       "relation": "uses",
@@ -53793,9 +53793,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_57",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_57",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -53805,9 +53805,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_57",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_57",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -53817,9 +53817,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_68",
       "_tgt": "compose_schemas_composerequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_68",
-      "target": "compose_schemas_composerequest",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composerequest"
     },
     {
       "relation": "uses",
@@ -53829,9 +53829,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_68",
       "_tgt": "compose_schemas_composeresponse",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_68",
-      "target": "compose_schemas_composeresponse",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composeresponse"
     },
     {
       "relation": "uses",
@@ -53841,9 +53841,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_68",
       "_tgt": "concierge_schemas_chatrequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_68",
-      "target": "concierge_schemas_chatrequest",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_chatrequest"
     },
     {
       "relation": "uses",
@@ -53853,9 +53853,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_68",
       "_tgt": "concierge_schemas_memorydoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_68",
-      "target": "concierge_schemas_memorydoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_memorydoc"
     },
     {
       "relation": "uses",
@@ -53865,9 +53865,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_68",
       "_tgt": "concierge_schemas_savesessionbody",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_68",
-      "target": "concierge_schemas_savesessionbody",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_savesessionbody"
     },
     {
       "relation": "uses",
@@ -53877,9 +53877,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_68",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_68",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -53889,9 +53889,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_68",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_68",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -53901,9 +53901,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_74",
       "_tgt": "compose_schemas_composerequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_74",
-      "target": "compose_schemas_composerequest",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composerequest"
     },
     {
       "relation": "uses",
@@ -53913,9 +53913,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_74",
       "_tgt": "compose_schemas_composeresponse",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_74",
-      "target": "compose_schemas_composeresponse",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composeresponse"
     },
     {
       "relation": "uses",
@@ -53925,9 +53925,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_74",
       "_tgt": "concierge_schemas_chatrequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_74",
-      "target": "concierge_schemas_chatrequest",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_chatrequest"
     },
     {
       "relation": "uses",
@@ -53937,9 +53937,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_74",
       "_tgt": "concierge_schemas_memorydoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_74",
-      "target": "concierge_schemas_memorydoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_memorydoc"
     },
     {
       "relation": "uses",
@@ -53949,9 +53949,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_74",
       "_tgt": "concierge_schemas_savesessionbody",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_74",
-      "target": "concierge_schemas_savesessionbody",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_savesessionbody"
     },
     {
       "relation": "uses",
@@ -53961,9 +53961,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_74",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_74",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -53973,9 +53973,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_74",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_74",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -53985,9 +53985,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_80",
       "_tgt": "compose_schemas_composerequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_80",
-      "target": "compose_schemas_composerequest",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composerequest"
     },
     {
       "relation": "uses",
@@ -53997,9 +53997,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_80",
       "_tgt": "compose_schemas_composeresponse",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_80",
-      "target": "compose_schemas_composeresponse",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composeresponse"
     },
     {
       "relation": "uses",
@@ -54009,9 +54009,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_80",
       "_tgt": "concierge_schemas_chatrequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_80",
-      "target": "concierge_schemas_chatrequest",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_chatrequest"
     },
     {
       "relation": "uses",
@@ -54021,9 +54021,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_80",
       "_tgt": "concierge_schemas_memorydoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_80",
-      "target": "concierge_schemas_memorydoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_memorydoc"
     },
     {
       "relation": "uses",
@@ -54033,9 +54033,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_80",
       "_tgt": "concierge_schemas_savesessionbody",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_80",
-      "target": "concierge_schemas_savesessionbody",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_savesessionbody"
     },
     {
       "relation": "uses",
@@ -54045,9 +54045,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_80",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_80",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -54057,9 +54057,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_80",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_80",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -54069,9 +54069,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_87",
       "_tgt": "compose_schemas_composerequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_87",
-      "target": "compose_schemas_composerequest",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composerequest"
     },
     {
       "relation": "uses",
@@ -54081,9 +54081,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_87",
       "_tgt": "compose_schemas_composeresponse",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_87",
-      "target": "compose_schemas_composeresponse",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composeresponse"
     },
     {
       "relation": "uses",
@@ -54093,9 +54093,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_87",
       "_tgt": "concierge_schemas_chatrequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_87",
-      "target": "concierge_schemas_chatrequest",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_chatrequest"
     },
     {
       "relation": "uses",
@@ -54105,9 +54105,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_87",
       "_tgt": "concierge_schemas_memorydoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_87",
-      "target": "concierge_schemas_memorydoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_memorydoc"
     },
     {
       "relation": "uses",
@@ -54117,9 +54117,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_87",
       "_tgt": "concierge_schemas_savesessionbody",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_87",
-      "target": "concierge_schemas_savesessionbody",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_savesessionbody"
     },
     {
       "relation": "uses",
@@ -54129,9 +54129,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_87",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_87",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -54141,9 +54141,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_87",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_87",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "contains",
@@ -54657,9 +54657,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_1",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_1",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -54669,9 +54669,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_1",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_1",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -54681,9 +54681,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_1",
       "_tgt": "concierge_schemas_sessionturn",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_1",
-      "target": "concierge_schemas_sessionturn",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionturn"
     },
     {
       "relation": "uses",
@@ -54693,9 +54693,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_48",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_48",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -54705,9 +54705,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_48",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_48",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -54717,9 +54717,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_48",
       "_tgt": "concierge_schemas_sessionturn",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_48",
-      "target": "concierge_schemas_sessionturn",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionturn"
     },
     {
       "relation": "uses",
@@ -54729,9 +54729,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_68",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_68",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -54741,9 +54741,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_68",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_68",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -54753,9 +54753,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_68",
       "_tgt": "concierge_schemas_sessionturn",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_68",
-      "target": "concierge_schemas_sessionturn",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionturn"
     },
     {
       "relation": "uses",
@@ -54765,9 +54765,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_79",
       "_tgt": "concierge_schemas_sessiondoc",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_79",
-      "target": "concierge_schemas_sessiondoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessiondoc"
     },
     {
       "relation": "uses",
@@ -54777,9 +54777,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_79",
       "_tgt": "concierge_schemas_sessionmeta",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_79",
-      "target": "concierge_schemas_sessionmeta",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionmeta"
     },
     {
       "relation": "uses",
@@ -54789,9 +54789,9 @@
       "weight": 0.8,
       "_src": "history_service_rationale_79",
       "_tgt": "concierge_schemas_sessionturn",
+      "confidence_score": 0.5,
       "source": "history_service_rationale_79",
-      "target": "concierge_schemas_sessionturn",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_sessionturn"
     },
     {
       "relation": "contains",
@@ -55183,8 +55183,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L11",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_21",
-      "_tgt": "concierge_schemas_memorydoc",
+      "_src": "concierge_schemas_memorydoc",
+      "_tgt": "concierge_routes_rationale_21",
       "confidence_score": 0.5,
       "source": "concierge_schemas_memorydoc",
       "target": "concierge_routes_rationale_21"
@@ -55195,8 +55195,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L11",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_45",
-      "_tgt": "concierge_schemas_memorydoc",
+      "_src": "concierge_schemas_memorydoc",
+      "_tgt": "concierge_routes_rationale_45",
       "confidence_score": 0.5,
       "source": "concierge_schemas_memorydoc",
       "target": "concierge_routes_rationale_45"
@@ -55327,8 +55327,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L11",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_21",
-      "_tgt": "concierge_schemas_chatrequest",
+      "_src": "concierge_schemas_chatrequest",
+      "_tgt": "concierge_routes_rationale_21",
       "confidence_score": 0.5,
       "source": "concierge_schemas_chatrequest",
       "target": "concierge_routes_rationale_21"
@@ -55339,8 +55339,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L11",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_45",
-      "_tgt": "concierge_schemas_chatrequest",
+      "_src": "concierge_schemas_chatrequest",
+      "_tgt": "concierge_routes_rationale_45",
       "confidence_score": 0.5,
       "source": "concierge_schemas_chatrequest",
       "target": "concierge_routes_rationale_45"
@@ -56251,8 +56251,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_21",
-      "_tgt": "compose_schemas_composerequest",
+      "_src": "compose_schemas_composerequest",
+      "_tgt": "concierge_routes_rationale_21",
       "confidence_score": 0.5,
       "source": "compose_schemas_composerequest",
       "target": "concierge_routes_rationale_21"
@@ -56263,8 +56263,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_45",
-      "_tgt": "compose_schemas_composerequest",
+      "_src": "compose_schemas_composerequest",
+      "_tgt": "concierge_routes_rationale_45",
       "confidence_score": 0.5,
       "source": "compose_schemas_composerequest",
       "target": "concierge_routes_rationale_45"
@@ -56299,8 +56299,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_21",
-      "_tgt": "compose_schemas_composeresponse",
+      "_src": "compose_schemas_composeresponse",
+      "_tgt": "concierge_routes_rationale_21",
       "confidence_score": 0.5,
       "source": "compose_schemas_composeresponse",
       "target": "concierge_routes_rationale_21"
@@ -56311,8 +56311,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_45",
-      "_tgt": "compose_schemas_composeresponse",
+      "_src": "compose_schemas_composeresponse",
+      "_tgt": "concierge_routes_rationale_45",
       "confidence_score": 0.5,
       "source": "compose_schemas_composeresponse",
       "target": "concierge_routes_rationale_45"
