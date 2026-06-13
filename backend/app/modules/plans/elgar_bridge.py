@@ -33,24 +33,30 @@ async def _run(*args: str, stdin: bytes | None = None) -> tuple[int, str]:
     return (proc.returncode or 0), (out.decode() or err.decode())
 
 
-async def save(plan_id: str, content: str, message: str | None = None) -> str:
-    """Write a plan doc into the store; returns its `elgar://plan/<id>` ref."""
-    args = ["save", plan_id] + (["-m", message] if message else [])
+def _dir(collection: str | None) -> list[str]:
+    return ["--dir", collection] if collection else []
+
+
+async def save(
+    plan_id: str, content: str, message: str | None = None, collection: str | None = None
+) -> str:
+    """Write a doc into the store; returns its `elgar://plan/<id>` ref."""
+    args = ["save", plan_id, *_dir(collection)] + (["-m", message] if message else [])
     code, out = await _run(*args, stdin=content.encode())
     if code != 0:
         raise RuntimeError(f"elgar save failed: {out[:200]}")
     return f"elgar://plan/{plan_id}"
 
 
-async def get(doc_id: str) -> str | None:
+async def get(doc_id: str, collection: str | None = None) -> str | None:
     """Read a doc's content from the store; None when it does not exist."""
-    code, out = await _run("get", doc_id)
+    code, out = await _run("get", doc_id, *_dir(collection))
     return out if code == 0 else None
 
 
-async def list_docs(prefix: str = "") -> list[dict]:
-    """All store docs (`{id, status, title}`), optionally filtered by id prefix."""
-    code, out = await _run("list", "--json")
+async def list_docs(prefix: str = "", collection: str | None = None) -> list[dict]:
+    """Docs in a collection (`{id, status, title}`), optionally filtered by id prefix."""
+    code, out = await _run("list", "--json", *_dir(collection))
     if code != 0:
         return []
     try:
@@ -60,9 +66,9 @@ async def list_docs(prefix: str = "") -> list[dict]:
     return [r for r in rows if r.get("id", "").startswith(prefix)]
 
 
-async def remove(doc_id: str) -> bool:
+async def remove(doc_id: str, collection: str | None = None) -> bool:
     """Delete a doc from the store; True on success, False when it does not exist."""
-    code, _ = await _run("rm", doc_id)
+    code, _ = await _run("rm", doc_id, *_dir(collection))
     return code == 0
 
 

@@ -84,17 +84,17 @@ def main() -> int:
     check("elgar memory save→load round-trips", saved == loaded == "probe: moderate risk, 6mo buffer")
     check("re-saving identical content does not error", again == saved)
 
-    # ── elgar-backed conversation history (one doc per session) ──
+    # ── elgar-backed conversation history (own `sessions/` collection) ──
     from app.modules.concierge.concierge_schemas import SessionMeta, SessionTurn
     from app.modules.concierge.history_service import (
-        SESSION_PREFIX,
+        SESSION_DIR,
         delete_session,
         list_sessions,
         load_session,
         save_session,
     )
 
-    check("session doc id is namespaced", SESSION_PREFIX == "orff-session-")
+    check("history lives in its own store collection", SESSION_DIR == "sessions")
 
     async def _history() -> tuple[bool, bool, bool]:
         meta = SessionMeta(id="probe-hist", title="Probe chat")

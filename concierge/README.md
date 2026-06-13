@@ -23,7 +23,7 @@ Named after Carl Orff, in keeping with the project's composer naming convention 
 
 ## Quick orientation
 
-- **Memory**: a user-editable **context doc** (goals/constraints) lives in the elgar store and is injected into every prompt; full **conversation history** is also persisted to elgar — one doc per session (`orff-session-<id>`), listed, resumed, and deleted from the History panel — see the feature set below
+- **Memory**: a user-editable **context doc** (goals/constraints) lives in the elgar store and is injected into every prompt; full **conversation history** is also persisted to elgar in its own `sessions/` collection (separate from money `plans/`) — one doc per session, listed, resumed, and deleted from the History panel — see the feature set below
 - **Streaming**: LLMGateway stream -> FastAPI `StreamingResponse` -> SSE -> `useConciergeStream` hook
 - **Shared sessions**: concierge and browser voice write to the same `concierge_turns` table via a `source` column; Orff sees the full interleaved history regardless of input modality
 - **Prompt assembly**: stable system, intent, memory, holdings, news, history, and current-message blocks are composed server-side
@@ -39,7 +39,7 @@ gateway. Each capability is registry/manifest-driven and safe by construction.
 |---------|---------|-------|
 | Artifacts panel | every composed UISpec collected in a side panel | [ArtifactsPanel.tsx](../frontend/src/modules/concierge/ArtifactsPanel.tsx) |
 | Project context / memory | user-editable doc injected into every chat, **stored in elgar** | [MemoryPanel.tsx](../frontend/src/modules/concierge/MemoryPanel.tsx) · [memory_service.py](../backend/app/modules/concierge/memory_service.py) |
-| Conversation history | past chats listed in a sidebar, resume or delete — **one elgar doc per session** | [HistoryPanel.tsx](../frontend/src/modules/concierge/HistoryPanel.tsx) · [history_service.py](../backend/app/modules/concierge/history_service.py) |
+| Conversation history | past chats listed in a sidebar, resume or delete — **elgar `sessions/` collection, one doc per chat** | [HistoryPanel.tsx](../frontend/src/modules/concierge/HistoryPanel.tsx) · [history_service.py](../backend/app/modules/concierge/history_service.py) |
 | Vision input | paste/attach a broker screenshot → vision provider floor | `routing.json` `vision` · [_vision.py](llm/src/alphaforge_anton_llm/providers/_vision.py) · [ImageAttach.tsx](../frontend/src/modules/concierge/ImageAttach.tsx) |
 | Suggested follow-ups | 3 tap-to-send chips after each reply | [FollowupChips.tsx](../frontend/src/modules/concierge/FollowupChips.tsx) · [followup_service.py](../backend/app/modules/concierge/followup_service.py) |
 | Edit & branch | edit a prior turn, drop everything after, resubmit | `useChatStream.editTurn` |
@@ -79,14 +79,17 @@ The user-context doc lives in the **elgar store** (`elgar get/save orff-context`
 file — it holds personal goals/figures, exactly the money-adjacent data the `plan-store` rule keeps
 in elgar. Anton reaches it over the shared `elgar` CLI via [elgar_bridge.py](../backend/app/modules/plans/elgar_bridge.py).
 
-**Conversation history** uses the same store: each chat is one doc
-(`orff-session-<id>`), rewritten in place as it grows (debounced ~900ms after a turn
-settles, so a completed exchange is one git commit — never per token). The store's git log
-*is* the conversation's audit trail. [history_service.py](../backend/app/modules/concierge/history_service.py)
+**Conversation history** uses the same store but its **own collection** — elgar docs
+live in named subdirs (`store/plans/*.plan.md` for money plans, `store/sessions/*.session.md`
+for chat history), so a chat never mixes with a plan or shows up in `elgar list`. Each chat is
+one `sessions/` doc, rewritten in place as it grows (debounced ~900ms after a turn settles, so a
+completed exchange is one git commit — never per token). The store's git log *is* the
+conversation's audit trail. [history_service.py](../backend/app/modules/concierge/history_service.py)
 renders a human-readable transcript with a machine block for lossless resume; the routes are
 `GET /concierge/history` (list), `GET|PUT|DELETE /concierge/history/{id}`. All history I/O is
 best-effort — a missing/unreachable store degrades to an empty sidebar, never blocking the chat.
-List/resume/delete needs `elgar list --json` / `get` / `rm` (the bridge added `list_docs` + `remove`).
+The collection is selected with the elgar `--dir sessions` flag (`elgar list/get/save/rm`), which
+the bridge threads through `list_docs` / `get` / `save` / `remove`.
 
 ## On-the-fly UI composition (Fux-governed)
 
