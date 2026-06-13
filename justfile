@@ -131,6 +131,11 @@ gen-concierge:
 gen-concierge-check:
     cd frontend && pnpm gen:concierge:check
 
+# Sync investment-related Claude Code chats into Orff history (elgar sessions/).
+# Re-runnable & idempotent. Preview first: just sync-claude-history --dry-run
+sync-claude-history *args:
+    cd backend && uv run python -m app.modules.concierge.claude_import {{args}}
+
 # ── Database / Infrastructure ────────────────────
 
 # Setup PostgreSQL & Redis via Homebrew (macOS, no Docker)

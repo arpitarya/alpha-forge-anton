@@ -40,6 +40,7 @@ gateway. Each capability is registry/manifest-driven and safe by construction.
 | Artifacts panel | every composed UISpec collected in a side panel | [ArtifactsPanel.tsx](../frontend/src/modules/concierge/ArtifactsPanel.tsx) |
 | Project context / memory | user-editable doc injected into every chat, **stored in elgar** | [MemoryPanel.tsx](../frontend/src/modules/concierge/MemoryPanel.tsx) · [memory_service.py](../backend/app/modules/concierge/memory_service.py) |
 | Conversation history | past chats listed in a sidebar, resume or delete — **elgar `sessions/` collection, one doc per chat** | [HistoryPanel.tsx](../frontend/src/modules/concierge/HistoryPanel.tsx) · [history_service.py](../backend/app/modules/concierge/history_service.py) |
+| Claude-chat import | re-runnable sync of investment-related local Claude Code chats into Orff history (`just sync-claude-history`) | [claude_import.py](../backend/app/modules/concierge/claude_import.py) · [claude_parse.py](../backend/app/modules/concierge/claude_parse.py) |
 | Vision input | paste/attach a broker screenshot → vision provider floor | `routing.json` `vision` · [_vision.py](llm/src/alphaforge_anton_llm/providers/_vision.py) · [ImageAttach.tsx](../frontend/src/modules/concierge/ImageAttach.tsx) |
 | Suggested follow-ups | 3 tap-to-send chips after each reply | [FollowupChips.tsx](../frontend/src/modules/concierge/FollowupChips.tsx) · [followup_service.py](../backend/app/modules/concierge/followup_service.py) |
 | Edit & branch | edit a prior turn, drop everything after, resubmit | `useChatStream.editTurn` |
@@ -90,6 +91,17 @@ renders a human-readable transcript with a machine block for lossless resume; th
 best-effort — a missing/unreachable store degrades to an empty sidebar, never blocking the chat.
 The collection is selected with the elgar `--dir sessions` flag (`elgar list/get/save/rm`), which
 the bridge threads through `list_docs` / `get` / `save` / `remove`.
+
+**Importing past Claude chats** — `just sync-claude-history [--dry-run]` is a re-runnable
+mechanism that copies investment-related conversations from the local Claude Code transcripts
+(`~/.claude/projects/*.jsonl`) into the same `sessions/` collection.
+[claude_parse.py](../backend/app/modules/concierge/claude_parse.py) strips tool calls, tool
+results, and system/command wrappers so each import reads as a clean You/Orff transcript;
+[claude_import.py](../backend/app/modules/concierge/claude_import.py) keeps a chat when the
+human's prompts hit ≥`MIN_HITS` investment keywords, and upserts it under a stable id
+(`claude-<sessionId>`, `source: claude-code` in frontmatter). The render is deterministic (the
+transcript's mtime as `updated`), so re-syncing only commits transcripts that actually changed.
+Contract: `just probe claude-import` (standalone — no real `~/.claude`, no store writes).
 
 ## On-the-fly UI composition (Fux-governed)
 

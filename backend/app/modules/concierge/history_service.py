@@ -28,10 +28,21 @@ _TURNS_RE = re.compile(r"<!-- orff:turns\n(.*?)\n-->", re.DOTALL)
 _TITLE_RE = re.compile(r"^#\s+(.+)$", re.MULTILINE)
 
 
-def _render(meta: SessionMeta, turns: list[SessionTurn]) -> str:
-    now = datetime.now(UTC).isoformat(timespec="seconds")
-    lines = ["---", f"id: {meta.id}", "status: active", f"updated: {now}", "---",
-             f"# {meta.title or 'Untitled chat'}", ""]
+def render_session(
+    meta: SessionMeta,
+    turns: list[SessionTurn],
+    *,
+    updated: str | None = None,
+    source: str | None = None,
+) -> str:
+    """The on-disk session doc. `updated`/`source` let importers write deterministic,
+    provenance-tagged docs (a stable `updated` keeps re-syncs from churning git)."""
+    ts = updated or datetime.now(UTC).isoformat(timespec="seconds")
+    front = ["---", f"id: {meta.id}", "status: active", f"updated: {ts}"]
+    if source:
+        front.append(f"source: {source}")
+    front.append("---")
+    lines = [*front, f"# {meta.title or 'Untitled chat'}", ""]
     for t in turns:
         lines += [f"**You:** {t.query}", ""]
         if t.response:
@@ -45,7 +56,7 @@ def _render(meta: SessionMeta, turns: list[SessionTurn]) -> str:
 
 async def save_session(meta: SessionMeta, turns: list[SessionTurn]) -> str:
     """Write/overwrite a session's transcript in the sessions collection; returns its id."""
-    body = _render(meta, turns[-MAX_TURNS:])
+    body = render_session(meta, turns[-MAX_TURNS:])
     msg = f"orff: session {meta.id}"
     await elgar_bridge.save(meta.id, body, message=msg, collection=SESSION_DIR)
     return meta.id

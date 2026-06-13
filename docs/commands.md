@@ -29,6 +29,10 @@ cd backend && uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 cd backend && uv run pytest -v
 uv run ruff check .
 
+# ── Orff history ─────────────────────────────────────────────────────────────
+just sync-claude-history --dry-run   # Preview which local Claude Code chats would import
+just sync-claude-history             # Sync investment-related Claude chats → elgar sessions/ (idempotent)
+
 # ── Backend Debugging (VS Code) ──────────────────────────────────────────────
 # Option A — launch directly: pick "Backend: FastAPI (uvicorn, debug)" in Run & Debug (F5)
 # Option B — attach to running process:

@@ -29,6 +29,7 @@ Available probes:
     plan-api             plan_api_probe.py
     compose-registry     compose_registry_probe.py
     concierge-events     concierge_events_probe.py
+    claude-import        claude_import_probe.py
     plan-projection      plan_projection_probe.py
 
   Broker XHR probes (require CDP :9299):
@@ -74,6 +75,7 @@ case "$NAME" in
     plan-api)          SCRIPT="plan_api_probe.py" ;;
     compose-registry)  SCRIPT="compose_registry_probe.py" ;;
     concierge-events)  SCRIPT="concierge_events_probe.py" ;;
+    claude-import)     SCRIPT="claude_import_probe.py" ;;
     plan-projection)   SCRIPT="plan_projection_probe.py" ;;
     zerodha)           SCRIPT="zerodha_probe.py" ;;
     zerodha-coin)      SCRIPT="zerodha_coin_probe.py" ;;
