@@ -31,6 +31,39 @@ class MemoryDoc(BaseModel):
     content: str = ""
 
 
+# Conversation history — persisted to elgar, one doc per session (history_service).
+MAX_SESSION_TURNS = 200
+
+
+class SessionTurn(BaseModel):
+    """One exchange in a saved conversation (the resume-critical fields only)."""
+
+    query: str
+    response: str = ""
+    provider: str | None = None
+    model: str | None = None
+
+
+class SessionMeta(BaseModel):
+    """A conversation's sidebar entry."""
+
+    id: str
+    title: str = ""
+
+
+class SessionDoc(SessionMeta):
+    """A conversation loaded for resume — its turns plus the sidebar meta."""
+
+    turns: list[SessionTurn] = Field(default_factory=list)
+
+
+class SaveSessionBody(BaseModel):
+    """PUT body for /history/{id} — the session id comes from the path."""
+
+    title: str = ""
+    turns: list[SessionTurn] = Field(default_factory=list, max_length=MAX_SESSION_TURNS)
+
+
 # Pydantic needs a static type, so the slugs are spelled out — but they must mirror
 # the registry manifest (single source of truth). The assertion below fails loudly
 # at import if a provider is added/removed there without updating this Literal.

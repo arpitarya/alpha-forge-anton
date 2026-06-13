@@ -2,7 +2,13 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import { reduceEvent, type StreamPayload } from "./chat.events";
-import { activeModelFor, type ChatTurn, type ModelChoice } from "./concierge.types";
+import type { SessionDoc, SessionTurnDTO } from "./concierge.history";
+import {
+  activeModelFor,
+  type ChatTurn,
+  type ModelChoice,
+  type ProviderId,
+} from "./concierge.types";
 
 function getToken(): string | null {
   return typeof window !== "undefined" ? localStorage.getItem("af_token") : null;
@@ -18,9 +24,38 @@ export interface SessionTotals {
   turns: number;
 }
 
+/** Rebuild a display turn from a stored (resume-only) turn — no live stream state. */
+function turnFromDTO(t: SessionTurnDTO): ChatTurn {
+  return {
+    id: nanoid(),
+    query: t.query,
+    response: t.response || null,
+    provider: t.provider,
+    model: t.model,
+    elapsed: null,
+    tokens: null,
+    error: null,
+    loading: false,
+    active: {
+      provider: (t.provider as ProviderId) ?? "gemini",
+      modelId: t.model ?? "",
+      providerName: t.provider ?? "",
+      modelName: t.model ?? "",
+      autoLevel: "none",
+    },
+    images: [],
+    thinking: null,
+    tools: [],
+    confirm: null,
+    followups: [],
+    costUsd: null,
+  };
+}
+
 export function useChatStream() {
   const [turns, setTurns] = useState<ChatTurn[]>([]);
   const [open, setOpen] = useState(false);
+  const [sessionId, setSessionId] = useState(nanoid);
   const abortRef = useRef<AbortController | null>(null);
 
   const patchTurn = useCallback((id: string, patch: Partial<ChatTurn>) => {
@@ -182,7 +217,22 @@ export function useChatStream() {
     setTurns((prev) => prev.map((t) => (t.loading ? { ...t, loading: false } : t)));
   }, []);
 
-  const clear = useCallback(() => setTurns([]), []);
+  // New conversation: blank thread + a fresh session id so the next save is a
+  // new elgar doc rather than overwriting the one we just left.
+  const clear = useCallback(() => {
+    abortRef.current?.abort();
+    setTurns([]);
+    setSessionId(nanoid());
+  }, []);
+
+  // Resume a stored conversation: adopt its id (so further saves overwrite it)
+  // and rebuild its turns for display.
+  const hydrate = useCallback((doc: SessionDoc) => {
+    abortRef.current?.abort();
+    setSessionId(doc.id);
+    setTurns(doc.turns.map(turnFromDTO));
+    setOpen(true);
+  }, []);
 
   const totals = useMemo<SessionTotals>(
     () => ({
@@ -193,5 +243,5 @@ export function useChatStream() {
     [turns],
   );
 
-  return { turns, open, setOpen, submit, editTurn, stop, clear, totals };
+  return { turns, open, setOpen, sessionId, submit, editTurn, stop, clear, hydrate, totals };
 }

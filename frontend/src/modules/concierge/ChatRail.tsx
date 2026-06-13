@@ -17,6 +17,7 @@ import {
   type ProviderId,
 } from "./concierge.types";
 import { FollowupChips } from "./FollowupChips";
+import { HistoryPanel } from "./HistoryPanel";
 import { ImageAttach } from "./ImageAttach";
 import { MemoryPanel } from "./MemoryPanel";
 import { ModelPicker } from "./ModelPicker";
@@ -28,13 +29,15 @@ import { ToolTrail } from "./ToolTrail";
 import type { SessionTotals } from "./useChatStream";
 import { useVoice } from "./useVoice";
 
-type Panel = "none" | "artifacts" | "memory";
+type Panel = "none" | "artifacts" | "memory" | "history";
 
 interface Props {
   open: boolean;
   turns: ChatTurn[];
   choice: ModelChoice;
   totals: SessionTotals;
+  sessionId: string;
+  onResume: (id: string) => void;
   onClose: () => void;
   onClear: () => void;
   onSend: (q: string, images?: string[]) => void;
@@ -133,6 +136,8 @@ export function ChatRail({
   turns,
   choice,
   totals,
+  sessionId,
+  onResume,
   onClose,
   onClear,
   onSend,
@@ -210,6 +215,9 @@ export function ChatRail({
         break;
       case "memory":
         setPanel("memory");
+        break;
+      case "history":
+        setPanel("history");
         break;
       case "artifacts":
         setPanel("artifacts");
@@ -385,6 +393,13 @@ export function ChatRail({
             onClick={() => setPanel((p) => (p === "memory" ? "none" : "memory"))}
           >
             <BrainIcon />
+          </NavBtn>
+          <NavBtn
+            active={panel === "history"}
+            title="History"
+            onClick={() => setPanel((p) => (p === "history" ? "none" : "history"))}
+          >
+            <HistoryIcon />
           </NavBtn>
           <NavBtn
             active={speakReplies}
@@ -574,6 +589,17 @@ export function ChatRail({
           {panel === "memory" ? (
             <div style={{ flex: 1, minHeight: 0 }}>
               <MemoryPanel onClose={() => setPanel("none")} />
+            </div>
+          ) : panel === "history" ? (
+            <div style={{ flex: 1, minHeight: 0 }}>
+              <HistoryPanel
+                activeId={sessionId}
+                onResume={(id) => {
+                  onResume(id);
+                  setPanel("none");
+                }}
+                onClose={() => setPanel("none")}
+              />
             </div>
           ) : panel === "artifacts" ? (
             <div style={{ flex: 1, minHeight: 0 }}>
@@ -976,6 +1002,24 @@ function BrainIcon() {
     >
       <path d="M9 3a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8A3 3 0 0 0 7 17a3 3 0 0 0 5 1 3 3 0 0 0 5-1 3 3 0 0 0 2-5.2A3 3 0 0 0 18 6a3 3 0 0 0-3-3 3 3 0 0 0-3 1.5A3 3 0 0 0 9 3z" />
       <path d="M12 5v13" />
+    </svg>
+  );
+}
+function HistoryIcon() {
+  return (
+    <svg
+      width={17}
+      height={17}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+      <path d="M3 4v4h4M12 8v4l3 2" />
     </svg>
   );
 }

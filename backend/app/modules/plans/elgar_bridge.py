@@ -7,6 +7,7 @@ path (one git commit per save, store stays outside any public work tree).
 from __future__ import annotations
 
 import asyncio
+import json
 import os
 import re
 import shutil
@@ -45,6 +46,24 @@ async def get(doc_id: str) -> str | None:
     """Read a doc's content from the store; None when it does not exist."""
     code, out = await _run("get", doc_id)
     return out if code == 0 else None
+
+
+async def list_docs(prefix: str = "") -> list[dict]:
+    """All store docs (`{id, status, title}`), optionally filtered by id prefix."""
+    code, out = await _run("list", "--json")
+    if code != 0:
+        return []
+    try:
+        rows = json.loads(out)
+    except json.JSONDecodeError:
+        return []
+    return [r for r in rows if r.get("id", "").startswith(prefix)]
+
+
+async def remove(doc_id: str) -> bool:
+    """Delete a doc from the store; True on success, False when it does not exist."""
+    code, _ = await _run("rm", doc_id)
+    return code == 0
 
 
 async def store_path() -> str:

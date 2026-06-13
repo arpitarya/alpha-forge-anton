@@ -4,13 +4,25 @@ domain: concierge
 type: convention
 status: active
 created: 2026-06-12
-updated: 2026-06-12
+updated: 2026-06-13
+aliases:
+  - projection-honesty
+  - no-guarantees
+  - assumptions-cited
+keywords:
+  - projection
+  - disclosure
+  - assumptions
+  - real
+  - nominal
+  - guarantee
 code_refs:
   - backend/app/modules/plans/projection_service.py
   - backend/app/modules/concierge/holdings_private.py
-related: [capital-market-assumptions, ui-component-contract, secure-holdings-plan]
-aliases: [projection-honesty, no-guarantees, assumptions-cited]
-keywords: [projection, disclosure, assumptions, real, nominal, guarantee]
+related:
+  - capital-market-assumptions
+  - ui-component-contract
+  - secure-holdings-plan
 ---
 **Convention:** every forward projection Orff presents must satisfy four
 honesty requirements:

@@ -5,6 +5,7 @@ import { createContext, type ReactNode, useCallback, useContext, useRef, useStat
 import { AlphaBar } from "./AlphaBar";
 import { ChatRail } from "./ChatRail";
 import { pickDefaultChoice } from "./concierge.defaults";
+import { useSessions } from "./concierge.sessions";
 import type { ModelChoice } from "./concierge.types";
 import { useChatStream } from "./useChatStream";
 
@@ -37,7 +38,9 @@ function loadChoice(): ModelChoice {
 }
 
 export function ChatProvider({ children }: { children: ReactNode }) {
-  const { turns, open, setOpen, submit, editTurn, stop, clear, totals } = useChatStream();
+  const { turns, open, setOpen, sessionId, submit, editTurn, stop, clear, hydrate, totals } =
+    useChatStream();
+  const { onResume } = useSessions({ sessionId, turns, hydrate });
   const footerModelRef = useRef<HTMLSpanElement>(null);
   const [choice, setChoice] = useState<ModelChoice>(loadChoice);
   const pathname = usePathname();
@@ -88,6 +91,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           turns={turns}
           choice={choice}
           totals={totals}
+          sessionId={sessionId}
+          onResume={onResume}
           onClose={() => setOpen(false)}
           onClear={clear}
           onSend={handleSend}

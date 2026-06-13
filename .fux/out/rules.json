@@ -248,7 +248,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-10",
-      "updated": "2026-06-12"
+      "updated": "2026-06-13"
     },
     {
       "id": "concierge-registry-single-source",
@@ -278,7 +278,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-10",
-      "updated": "2026-06-12"
+      "updated": "2026-06-13"
     },
     {
       "id": "core-allocation",
@@ -436,7 +436,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-12",
-      "updated": "2026-06-12"
+      "updated": "2026-06-13"
     },
     {
       "id": "getting-started",
@@ -699,7 +699,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-12",
-      "updated": "2026-06-12"
+      "updated": "2026-06-13"
     },
     {
       "id": "rebalancing-policy",
@@ -793,7 +793,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-12"
+      "updated": "2026-06-13"
     },
     {
       "id": "vault-only-credentials",
@@ -1024,7 +1024,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-10"
+      "updated": "2026-06-13"
     },
     {
       "id": "source-kind-status",

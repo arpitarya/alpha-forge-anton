@@ -8,7 +8,14 @@ export type CommandKind =
   | { kind: "send"; prompt: string }
   | { kind: "action"; action: CommandAction };
 
-export type CommandAction = "export" | "memory" | "artifacts" | "clear" | "stop" | "voice";
+export type CommandAction =
+  | "export"
+  | "memory"
+  | "history"
+  | "artifacts"
+  | "clear"
+  | "stop"
+  | "voice";
 
 export interface SlashCommand {
   name: string;
@@ -49,6 +56,11 @@ export const COMMANDS: SlashCommand[] = [
     body: { kind: "send", prompt: "Sync my broker sources and refresh holdings." },
   },
   { name: "memory", hint: "Edit what Orff remembers", body: { kind: "action", action: "memory" } },
+  {
+    name: "history",
+    hint: "Browse & resume past chats",
+    body: { kind: "action", action: "history" },
+  },
   {
     name: "artifacts",
     hint: "Open composed UI panel",

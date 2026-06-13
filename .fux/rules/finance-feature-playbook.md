@@ -4,14 +4,26 @@ domain: process
 type: convention
 status: active
 created: 2026-06-12
-updated: 2026-06-12
+updated: 2026-06-13
+aliases:
+  - new-metric
+  - finance-feature
+  - end-to-end
+keywords:
+  - playbook
+  - metric
+  - feature
+  - pipeline
+  - checklist
 code_refs:
   - backend/app/modules/plans/projection_service.py
   - backend/app/modules/concierge/compose_registry.py
   - frontend/src/modules/concierge/SpecHost.tsx
-related: [ui-component-contract, doc-per-code-change, files-max-100-lines, probe-cdp-not-playwright]
-aliases: [new-metric, finance-feature, end-to-end]
-keywords: [playbook, metric, feature, pipeline, checklist]
+related:
+  - ui-component-contract
+  - doc-per-code-change
+  - files-max-100-lines
+  - probe-cdp-not-playwright
 ---
 **Convention:** a new financial metric/insight ships through a fixed seven-step
 pipeline — each step has an existing exemplar (the projection feature):

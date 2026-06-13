@@ -84,6 +84,35 @@ def main() -> int:
     check("elgar memory save→load round-trips", saved == loaded == "probe: moderate risk, 6mo buffer")
     check("re-saving identical content does not error", again == saved)
 
+    # ── elgar-backed conversation history (one doc per session) ──
+    from app.modules.concierge.concierge_schemas import SessionMeta, SessionTurn
+    from app.modules.concierge.history_service import (
+        SESSION_PREFIX,
+        delete_session,
+        list_sessions,
+        load_session,
+        save_session,
+    )
+
+    check("session doc id is namespaced", SESSION_PREFIX == "orff-session-")
+
+    async def _history() -> tuple[bool, bool, bool]:
+        meta = SessionMeta(id="probe-hist", title="Probe chat")
+        await save_session(
+            meta, [SessionTurn(query="q1", response="a1", provider="gemini", model="flash")]
+        )
+        doc = await load_session("probe-hist")
+        listed = any(r.id == "probe-hist" for r in await list_sessions())
+        gone = await delete_session("probe-hist")  # also leaves the store clean
+        absent = not any(r.id == "probe-hist" for r in await list_sessions())
+        resumes = doc.turns[0].query == "q1" and doc.turns[0].response == "a1"
+        return resumes, listed, (gone and absent)
+
+    resumes, listed, removed = asyncio.run(_history())
+    check("history save→load resumes its turns", resumes)
+    check("saved session appears in the history list", listed)
+    check("history delete removes it from the store", removed)
+
     print("\n" + ("❌ concierge event protocol drift" if _fail else "✅ concierge event protocol intact"))
     return 1 if _fail else 0
 
