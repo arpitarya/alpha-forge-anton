@@ -1464,9 +1464,9 @@
       "file_type": "rationale",
       "source_file": "probes/concierge_events_probe.py",
       "source_location": "L1",
-      "id": "concierge_events_probe_rationale_1",
       "community": 3,
-      "norm_label": "concierge event-protocol probe \u2014 the contract behind orff's chat-app + claude- c"
+      "norm_label": "concierge event-protocol probe \u2014 the contract behind orff's chat-app + claude- c",
+      "id": "concierge_events_probe_rationale_1"
     },
     {
       "label": "ui_pref_tabs.py",
@@ -5460,9 +5460,9 @@
       "file_type": "rationale",
       "source_file": "concierge/llm/src/alphaforge_anton_llm/registry.py",
       "source_location": "L129",
-      "id": "registry_rationale_129",
       "community": 3,
-      "norm_label": "the pinned default model \u2014 highest-scored across all providers.      priority: c"
+      "norm_label": "the pinned default model \u2014 highest-scored across all providers.      priority: c",
+      "id": "registry_rationale_129"
     },
     {
       "label": "rate_limiter.py",
@@ -6450,18 +6450,18 @@
       "file_type": "rationale",
       "source_file": "concierge/llm/src/alphaforge_anton_llm/providers/_vision.py",
       "source_location": "L1",
-      "id": "vision_rationale_1",
       "community": 1,
-      "norm_label": "shared vision helper \u2014 split image data urls into (mime, base64) pairs."
+      "norm_label": "shared vision helper \u2014 split image data urls into (mime, base64) pairs.",
+      "id": "vision_rationale_1"
     },
     {
       "label": "(\"image/png\", \"<base64>\") for a valid image data URL, else None.",
       "file_type": "rationale",
       "source_file": "concierge/llm/src/alphaforge_anton_llm/providers/_vision.py",
       "source_location": "L11",
-      "id": "vision_rationale_11",
       "community": 1,
-      "norm_label": "(\"image/png\", \"<base64>\") for a valid image data url, else none."
+      "norm_label": "(\"image/png\", \"<base64>\") for a valid image data url, else none.",
+      "id": "vision_rationale_11"
     },
     {
       "label": "base.py",
@@ -6630,9 +6630,9 @@
       "file_type": "rationale",
       "source_file": "concierge/llm/src/alphaforge_anton_llm/providers/claude_sdk.py",
       "source_location": "L18",
-      "id": "claude_sdk_rationale_18",
       "community": 1,
-      "norm_label": "plain text normally; content blocks when the turn carries images."
+      "norm_label": "plain text normally; content blocks when the turn carries images.",
+      "id": "claude_sdk_rationale_18"
     },
     {
       "label": "__init__.py",
@@ -10977,9 +10977,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/plans/elgar_bridge.py",
       "source_location": "L45",
-      "id": "elgar_bridge_rationale_45",
       "community": 14,
-      "norm_label": "read a doc's content from the store; none when it does not exist."
+      "norm_label": "read a doc's content from the store; none when it does not exist.",
+      "id": "elgar_bridge_rationale_45"
     },
     {
       "label": "plan_loader.py",
@@ -11220,18 +11220,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L21",
-      "id": "concierge_routes_rationale_21",
       "community": 12,
-      "norm_label": "generate a validated uispec the client can safely render (\u00a718.3)."
+      "norm_label": "generate a validated uispec the client can safely render (\u00a718.3).",
+      "id": "concierge_routes_rationale_21"
     },
     {
       "label": "The user-editable context doc Orff injects into every chat.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L45",
-      "id": "concierge_routes_rationale_45",
       "community": 12,
-      "norm_label": "the user-editable context doc orff injects into every chat."
+      "norm_label": "the user-editable context doc orff injects into every chat.",
+      "id": "concierge_routes_rationale_45"
     },
     {
       "label": "stt_service.py",
@@ -11346,27 +11346,27 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L1",
-      "id": "followup_service_rationale_1",
       "community": 3,
-      "norm_label": "suggested follow-ups \u2014 up to three short next-step chips after each reply.  best"
+      "norm_label": "suggested follow-ups \u2014 up to three short next-step chips after each reply.  best",
+      "id": "followup_service_rationale_1"
     },
     {
       "label": "Tolerant parse of the model's array \u2014 fenced or bare; [] on any mismatch.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L28",
-      "id": "followup_service_rationale_28",
       "community": 3,
-      "norm_label": "tolerant parse of the model's array \u2014 fenced or bare; [] on any mismatch."
+      "norm_label": "tolerant parse of the model's array \u2014 fenced or bare; [] on any mismatch.",
+      "id": "followup_service_rationale_28"
     },
     {
       "label": "Three tap-to-send chips for the turn, or [] when generation fails.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L42",
-      "id": "followup_service_rationale_42",
       "community": 1,
-      "norm_label": "three tap-to-send chips for the turn, or [] when generation fails."
+      "norm_label": "three tap-to-send chips for the turn, or [] when generation fails.",
+      "id": "followup_service_rationale_42"
     },
     {
       "label": "compose_service.py",
@@ -11490,18 +11490,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_schemas.py",
       "source_location": "L29",
-      "id": "concierge_schemas_rationale_29",
       "community": 12,
-      "norm_label": "the user-editable context document shown in the memory panel."
+      "norm_label": "the user-editable context document shown in the memory panel.",
+      "id": "concierge_schemas_rationale_29"
     },
     {
       "label": "Resolved model choice from the frontend ModelPicker.      The frontend already a",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_schemas.py",
       "source_location": "L57",
-      "id": "concierge_schemas_rationale_57",
       "community": 3,
-      "norm_label": "resolved model choice from the frontend modelpicker.      the frontend already a"
+      "norm_label": "resolved model choice from the frontend modelpicker.      the frontend already a",
+      "id": "concierge_schemas_rationale_57"
     },
     {
       "label": "fux_bridge.py",
@@ -11706,18 +11706,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/action_service.py",
       "source_location": "L1",
-      "id": "action_service_rationale_1",
       "community": 3,
-      "norm_label": "action confirmation \u2014 detect a mutating intent in the user's message and emit a"
+      "norm_label": "action confirmation \u2014 detect a mutating intent in the user's message and emit a",
+      "id": "action_service_rationale_1"
     },
     {
       "label": "A structured pending-action card for a mutating intent, else None.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/action_service.py",
       "source_location": "L53",
-      "id": "action_service_rationale_53",
       "community": 3,
-      "norm_label": "a structured pending-action card for a mutating intent, else none."
+      "norm_label": "a structured pending-action card for a mutating intent, else none.",
+      "id": "action_service_rationale_53"
     },
     {
       "label": "prompt_service.py",
@@ -11760,9 +11760,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L1",
-      "id": "prompt_service_rationale_1",
       "community": 3,
-      "norm_label": "prompt assembly for orff \u2014 system, fux grounding, user memory, holdings disclosu"
+      "norm_label": "prompt assembly for orff \u2014 system, fux grounding, user memory, holdings disclosu",
+      "id": "prompt_service_rationale_1"
     },
     {
       "label": "stream_events.py",
@@ -11805,18 +11805,18 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/stream_events.py",
       "source_location": "L1",
-      "id": "stream_events_rationale_1",
       "community": 3,
-      "norm_label": "sse wire helpers for the orff stream \u2014 event framing, secret redaction, and the"
+      "norm_label": "sse wire helpers for the orff stream \u2014 event framing, secret redaction, and the",
+      "id": "stream_events_rationale_1"
     },
     {
       "label": "Split a `<think>\u2026</think>` reasoning trace from the visible answer.      Snapsho",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/stream_events.py",
       "source_location": "L30",
-      "id": "stream_events_rationale_30",
       "community": 3,
-      "norm_label": "split a `<think>...</think>` reasoning trace from the visible answer.      snapsho"
+      "norm_label": "split a `<think>...</think>` reasoning trace from the visible answer.      snapsho",
+      "id": "stream_events_rationale_30"
     },
     {
       "label": "holdings_detail.py",
@@ -11913,27 +11913,27 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/memory_service.py",
       "source_location": "L1",
-      "id": "memory_service_rationale_1",
       "community": 12,
-      "norm_label": "orff long-term memory \u2014 a user-editable context document injected into every cha"
+      "norm_label": "orff long-term memory \u2014 a user-editable context document injected into every cha",
+      "id": "memory_service_rationale_1"
     },
     {
       "label": "The memory doc, or \"\" when none exists \u2014 additive, never blocks a chat.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/memory_service.py",
       "source_location": "L25",
-      "id": "memory_service_rationale_25",
       "community": 12,
-      "norm_label": "the memory doc, or \"\" when none exists \u2014 additive, never blocks a chat."
+      "norm_label": "the memory doc, or \"\" when none exists \u2014 additive, never blocks a chat.",
+      "id": "memory_service_rationale_25"
     },
     {
       "label": "Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/memory_service.py",
       "source_location": "L34",
-      "id": "memory_service_rationale_34",
       "community": 12,
-      "norm_label": "persist the doc into elgar (clipped to max_chars); returns what was stored."
+      "norm_label": "persist the doc into elgar (clipped to max_chars); returns what was stored.",
+      "id": "memory_service_rationale_34"
     },
     {
       "label": "compose_schemas.py",
@@ -12012,9 +12012,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/concierge_service.py",
       "source_location": "L31",
-      "id": "concierge_service_rationale_31",
       "community": 3,
-      "norm_label": "async generator yielding sse-formatted bytes per token snapshot / event."
+      "norm_label": "async generator yielding sse-formatted bytes per token snapshot / event.",
+      "id": "concierge_service_rationale_31"
     },
     {
       "label": "__init__.py",
@@ -26520,9 +26520,9 @@
       "weight": 0.8,
       "_src": "concierge_events_probe_rationale_1",
       "_tgt": "types_message",
+      "confidence_score": 0.5,
       "source": "concierge_events_probe_rationale_1",
-      "target": "types_message",
-      "confidence_score": 0.5
+      "target": "types_message"
     },
     {
       "relation": "contains",
@@ -28763,8 +28763,8 @@
       "source_file": "frontend/src/modules/concierge/ChatRail.tsx",
       "source_location": "L209",
       "weight": 1.0,
-      "_src": "chatrail_runcommand",
-      "_tgt": "chat_export_downloadthread",
+      "_src": "chat_export_downloadthread",
+      "_tgt": "chatrail_runcommand",
       "source": "chat_export_downloadthread",
       "target": "chatrail_runcommand"
     },
@@ -28835,8 +28835,8 @@
       "source_file": "backend/app/modules/brokers/refetch.py",
       "source_location": "L85",
       "weight": 1.0,
-      "_src": "refetch_prime_in_background",
-      "_tgt": "imageattach_add",
+      "_src": "imageattach_add",
+      "_tgt": "refetch_prime_in_background",
       "source": "imageattach_add",
       "target": "refetch_prime_in_background"
     },
@@ -28847,8 +28847,8 @@
       "source_file": "/Users/arpitarya/my_programs/alpha-forge/backend/app/modules/dashboard/dashboard_repo.py",
       "source_location": "L26",
       "weight": 1.0,
-      "_src": "dashboard_repo_seed_ticker",
-      "_tgt": "imageattach_add",
+      "_src": "imageattach_add",
+      "_tgt": "dashboard_repo_seed_ticker",
       "source": "imageattach_add",
       "target": "dashboard_repo_seed_ticker"
     },
@@ -28859,8 +28859,8 @@
       "source_file": "/Users/arpitarya/my_programs/alpha-forge/backend/app/modules/dashboard/dashboard_repo.py",
       "source_location": "L34",
       "weight": 1.0,
-      "_src": "dashboard_repo_seed_watchlist",
-      "_tgt": "imageattach_add",
+      "_src": "imageattach_add",
+      "_tgt": "dashboard_repo_seed_watchlist",
       "source": "imageattach_add",
       "target": "dashboard_repo_seed_watchlist"
     },
@@ -28871,8 +28871,8 @@
       "source_file": "/Users/arpitarya/my_programs/alpha-forge/backend/app/modules/dashboard/dashboard_repo.py",
       "source_location": "L71",
       "weight": 1.0,
-      "_src": "dashboard_repo_add_ticker",
-      "_tgt": "imageattach_add",
+      "_src": "imageattach_add",
+      "_tgt": "dashboard_repo_add_ticker",
       "source": "imageattach_add",
       "target": "dashboard_repo_add_ticker"
     },
@@ -28883,8 +28883,8 @@
       "source_file": "/Users/arpitarya/my_programs/alpha-forge/backend/app/modules/dashboard/dashboard_repo.py",
       "source_location": "L87",
       "weight": 1.0,
-      "_src": "dashboard_repo_add_watchlist",
-      "_tgt": "imageattach_add",
+      "_src": "imageattach_add",
+      "_tgt": "dashboard_repo_add_watchlist",
       "source": "imageattach_add",
       "target": "dashboard_repo_add_watchlist"
     },
@@ -28895,8 +28895,8 @@
       "source_file": "/Users/arpitarya/my_programs/alpha-forge/mcp/src/alphaforge_anton_repo_context/chunker.py",
       "source_location": "L102",
       "weight": 1.0,
-      "_src": "chunker_chunk_python",
-      "_tgt": "imageattach_add",
+      "_src": "imageattach_add",
+      "_tgt": "chunker_chunk_python",
       "source": "imageattach_add",
       "target": "chunker_chunk_python"
     },
@@ -28907,8 +28907,8 @@
       "source_file": "/Users/arpitarya/my_programs/alpha-forge/mcp/src/alphaforge_anton_repo_context/indexer.py",
       "source_location": "L105",
       "weight": 1.0,
-      "_src": "indexer_upsert_file",
-      "_tgt": "imageattach_add",
+      "_src": "imageattach_add",
+      "_tgt": "indexer_upsert_file",
       "source": "imageattach_add",
       "target": "indexer_upsert_file"
     },
@@ -28919,8 +28919,8 @@
       "source_file": "packages/solar-ui/src/components/notifications/notifications.store.ts",
       "source_location": "L62",
       "weight": 1.0,
-      "_src": "notifications_store_subscribe",
-      "_tgt": "imageattach_add",
+      "_src": "imageattach_add",
+      "_tgt": "notifications_store_subscribe",
       "source": "imageattach_add",
       "target": "notifications_store_subscribe"
     },
@@ -29015,8 +29015,8 @@
       "source_file": "frontend/src/modules/concierge/ChatRail.tsx",
       "source_location": "L231",
       "weight": 1.0,
-      "_src": "chatrail_handlesubmit",
-      "_tgt": "concierge_commands_resolvecommand",
+      "_src": "concierge_commands_resolvecommand",
+      "_tgt": "chatrail_handlesubmit",
       "source": "concierge_commands_resolvecommand",
       "target": "chatrail_handlesubmit"
     },
@@ -30059,8 +30059,8 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L53",
       "weight": 1.0,
-      "_src": "prompt_service_assemble",
-      "_tgt": "bootscreen_next",
+      "_src": "bootscreen_next",
+      "_tgt": "prompt_service_assemble",
       "source": "bootscreen_next",
       "target": "prompt_service_assemble"
     },
@@ -33359,8 +33359,8 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L73",
       "weight": 1.0,
-      "_src": "prompt_service_assemble",
-      "_tgt": "registry_classify_intent",
+      "_src": "registry_classify_intent",
+      "_tgt": "prompt_service_assemble",
       "source": "registry_classify_intent",
       "target": "prompt_service_assemble"
     },
@@ -33515,8 +33515,8 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L85",
       "weight": 1.0,
-      "_src": "prompt_service_assemble",
-      "_tgt": "registry_provider_query_type",
+      "_src": "registry_provider_query_type",
+      "_tgt": "prompt_service_assemble",
       "source": "registry_provider_query_type",
       "target": "prompt_service_assemble"
     },
@@ -33671,8 +33671,8 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L78",
       "weight": 1.0,
-      "_src": "prompt_service_assemble",
-      "_tgt": "registry_trusted_providers",
+      "_src": "registry_trusted_providers",
+      "_tgt": "prompt_service_assemble",
       "source": "registry_trusted_providers",
       "target": "prompt_service_assemble"
     },
@@ -33719,8 +33719,8 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L90",
       "weight": 1.0,
-      "_src": "prompt_service_assemble",
-      "_tgt": "registry_vision_providers",
+      "_src": "registry_vision_providers",
+      "_tgt": "prompt_service_assemble",
       "source": "registry_vision_providers",
       "target": "prompt_service_assemble"
     },
@@ -33755,8 +33755,8 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L74",
       "weight": 1.0,
-      "_src": "prompt_service_assemble",
-      "_tgt": "registry_is_private",
+      "_src": "registry_is_private",
+      "_tgt": "prompt_service_assemble",
       "source": "registry_is_private",
       "target": "prompt_service_assemble"
     },
@@ -34104,9 +34104,9 @@
       "weight": 0.8,
       "_src": "registry_rationale_129",
       "_tgt": "types_querytype",
+      "confidence_score": 0.5,
       "source": "registry_rationale_129",
-      "target": "types_querytype",
-      "confidence_score": 0.5
+      "target": "types_querytype"
     },
     {
       "relation": "contains",
@@ -34990,11 +34990,11 @@
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "followup_service_rationale_1",
-      "_tgt": "types_querytype",
+      "_src": "types_querytype",
+      "_tgt": "followup_service_rationale_1",
+      "confidence_score": 0.5,
       "source": "types_querytype",
-      "target": "followup_service_rationale_1",
-      "confidence_score": 0.5
+      "target": "followup_service_rationale_1"
     },
     {
       "relation": "uses",
@@ -35002,11 +35002,11 @@
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "followup_service_rationale_28",
-      "_tgt": "types_querytype",
+      "_src": "types_querytype",
+      "_tgt": "followup_service_rationale_28",
+      "confidence_score": 0.5,
       "source": "types_querytype",
-      "target": "followup_service_rationale_28",
-      "confidence_score": 0.5
+      "target": "followup_service_rationale_28"
     },
     {
       "relation": "uses",
@@ -35014,11 +35014,11 @@
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "followup_service_rationale_42",
-      "_tgt": "types_querytype",
+      "_src": "types_querytype",
+      "_tgt": "followup_service_rationale_42",
+      "confidence_score": 0.5,
       "source": "types_querytype",
-      "target": "followup_service_rationale_42",
-      "confidence_score": 0.5
+      "target": "followup_service_rationale_42"
     },
     {
       "relation": "uses",
@@ -35098,11 +35098,11 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L13",
       "weight": 0.8,
-      "_src": "prompt_service_assembled",
-      "_tgt": "types_querytype",
+      "_src": "types_querytype",
+      "_tgt": "prompt_service_assembled",
+      "confidence_score": 0.5,
       "source": "types_querytype",
-      "target": "prompt_service_assembled",
-      "confidence_score": 0.5
+      "target": "prompt_service_assembled"
     },
     {
       "relation": "uses",
@@ -35110,11 +35110,11 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L13",
       "weight": 0.8,
-      "_src": "prompt_service_rationale_1",
-      "_tgt": "types_querytype",
+      "_src": "types_querytype",
+      "_tgt": "prompt_service_rationale_1",
+      "confidence_score": 0.5,
       "source": "types_querytype",
-      "target": "prompt_service_rationale_1",
-      "confidence_score": 0.5
+      "target": "prompt_service_rationale_1"
     },
     {
       "relation": "uses",
@@ -35939,8 +35939,8 @@
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L37",
       "weight": 1.0,
-      "_src": "followup_service_parse_followups",
-      "_tgt": "str",
+      "_src": "str",
+      "_tgt": "followup_service_parse_followups",
       "source": "str",
       "target": "followup_service_parse_followups"
     },
@@ -36586,11 +36586,11 @@
       "source_file": "concierge/llm/src/alphaforge_anton_llm/providers/claude_sdk.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "claude_sdk_rationale_18",
-      "_tgt": "types_message",
+      "_src": "types_message",
+      "_tgt": "claude_sdk_rationale_18",
+      "confidence_score": 0.5,
       "source": "types_message",
-      "target": "claude_sdk_rationale_18",
-      "confidence_score": 0.5
+      "target": "claude_sdk_rationale_18"
     },
     {
       "relation": "uses",
@@ -36598,11 +36598,11 @@
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "followup_service_rationale_1",
-      "_tgt": "types_message",
+      "_src": "types_message",
+      "_tgt": "followup_service_rationale_1",
+      "confidence_score": 0.5,
       "source": "types_message",
-      "target": "followup_service_rationale_1",
-      "confidence_score": 0.5
+      "target": "followup_service_rationale_1"
     },
     {
       "relation": "uses",
@@ -36610,11 +36610,11 @@
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "followup_service_rationale_28",
-      "_tgt": "types_message",
+      "_src": "types_message",
+      "_tgt": "followup_service_rationale_28",
+      "confidence_score": 0.5,
       "source": "types_message",
-      "target": "followup_service_rationale_28",
-      "confidence_score": 0.5
+      "target": "followup_service_rationale_28"
     },
     {
       "relation": "uses",
@@ -36622,11 +36622,11 @@
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "followup_service_rationale_42",
-      "_tgt": "types_message",
+      "_src": "types_message",
+      "_tgt": "followup_service_rationale_42",
+      "confidence_score": 0.5,
       "source": "types_message",
-      "target": "followup_service_rationale_42",
-      "confidence_score": 0.5
+      "target": "followup_service_rationale_42"
     },
     {
       "relation": "uses",
@@ -36658,11 +36658,11 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L13",
       "weight": 0.8,
-      "_src": "prompt_service_assembled",
-      "_tgt": "types_message",
+      "_src": "types_message",
+      "_tgt": "prompt_service_assembled",
+      "confidence_score": 0.5,
       "source": "types_message",
-      "target": "prompt_service_assembled",
-      "confidence_score": 0.5
+      "target": "prompt_service_assembled"
     },
     {
       "relation": "uses",
@@ -36670,11 +36670,11 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L13",
       "weight": 0.8,
-      "_src": "prompt_service_rationale_1",
-      "_tgt": "types_message",
+      "_src": "types_message",
+      "_tgt": "prompt_service_rationale_1",
+      "confidence_score": 0.5,
       "source": "types_message",
-      "target": "prompt_service_rationale_1",
-      "confidence_score": 0.5
+      "target": "prompt_service_rationale_1"
     },
     {
       "relation": "calls",
@@ -36683,8 +36683,8 @@
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L48",
       "weight": 1.0,
-      "_src": "followup_service_suggest_followups",
-      "_tgt": "types_message",
+      "_src": "types_message",
+      "_tgt": "followup_service_suggest_followups",
       "source": "types_message",
       "target": "followup_service_suggest_followups"
     },
@@ -36707,8 +36707,8 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L52",
       "weight": 1.0,
-      "_src": "prompt_service_assemble",
-      "_tgt": "types_message",
+      "_src": "types_message",
+      "_tgt": "prompt_service_assemble",
       "source": "types_message",
       "target": "prompt_service_assemble"
     },
@@ -37018,11 +37018,11 @@
       "source_file": "concierge/llm/src/alphaforge_anton_llm/providers/claude_sdk.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "claude_sdk_rationale_18",
-      "_tgt": "types_toolschema",
+      "_src": "types_toolschema",
+      "_tgt": "claude_sdk_rationale_18",
+      "confidence_score": 0.5,
       "source": "types_toolschema",
-      "target": "claude_sdk_rationale_18",
-      "confidence_score": 0.5
+      "target": "claude_sdk_rationale_18"
     },
     {
       "relation": "uses",
@@ -37318,11 +37318,11 @@
       "source_file": "concierge/llm/src/alphaforge_anton_llm/providers/claude_sdk.py",
       "source_location": "L12",
       "weight": 0.8,
-      "_src": "claude_sdk_rationale_18",
-      "_tgt": "types_providerresponse",
+      "_src": "types_providerresponse",
+      "_tgt": "claude_sdk_rationale_18",
+      "confidence_score": 0.5,
       "source": "types_providerresponse",
-      "target": "claude_sdk_rationale_18",
-      "confidence_score": 0.5
+      "target": "claude_sdk_rationale_18"
     },
     {
       "relation": "calls",
@@ -37775,8 +37775,8 @@
       "source_file": "backend/app/modules/concierge/concierge_service.py",
       "source_location": "L56",
       "weight": 1.0,
-      "_src": "concierge_service_stream_chat",
-      "_tgt": "pricing_estimate_cost_usd",
+      "_src": "pricing_estimate_cost_usd",
+      "_tgt": "concierge_service_stream_chat",
       "source": "pricing_estimate_cost_usd",
       "target": "concierge_service_stream_chat"
     },
@@ -39611,8 +39611,8 @@
       "source_file": "concierge/llm/src/alphaforge_anton_llm/providers/claude_sdk.py",
       "source_location": "L24",
       "weight": 1.0,
-      "_src": "claude_sdk_blocks",
-      "_tgt": "vision_parse_data_url",
+      "_src": "vision_parse_data_url",
+      "_tgt": "claude_sdk_blocks",
       "source": "vision_parse_data_url",
       "target": "claude_sdk_blocks"
     },
@@ -39754,11 +39754,11 @@
       "source_file": "concierge/llm/src/alphaforge_anton_llm/providers/claude_sdk.py",
       "source_location": "L11",
       "weight": 0.8,
-      "_src": "claude_sdk_rationale_18",
-      "_tgt": "base_providerhealth",
+      "_src": "base_providerhealth",
+      "_tgt": "claude_sdk_rationale_18",
+      "confidence_score": 0.5,
       "source": "base_providerhealth",
-      "target": "claude_sdk_rationale_18",
-      "confidence_score": 0.5
+      "target": "claude_sdk_rationale_18"
     },
     {
       "relation": "uses",
@@ -39838,11 +39838,11 @@
       "source_file": "concierge/llm/src/alphaforge_anton_llm/providers/claude_sdk.py",
       "source_location": "L11",
       "weight": 0.8,
-      "_src": "claude_sdk_rationale_18",
-      "_tgt": "base_provideradapter",
+      "_src": "base_provideradapter",
+      "_tgt": "claude_sdk_rationale_18",
+      "confidence_score": 0.5,
       "source": "base_provideradapter",
-      "target": "claude_sdk_rationale_18",
-      "confidence_score": 0.5
+      "target": "claude_sdk_rationale_18"
     },
     {
       "relation": "imports_from",
@@ -40091,8 +40091,8 @@
       "source_file": "backend/app/modules/concierge/followup_service.py",
       "source_location": "L46",
       "weight": 1.0,
-      "_src": "followup_service_suggest_followups",
-      "_tgt": "claude_sdk_claudesdkadapter_complete",
+      "_src": "claude_sdk_claudesdkadapter_complete",
+      "_tgt": "followup_service_suggest_followups",
       "source": "claude_sdk_claudesdkadapter_complete",
       "target": "followup_service_suggest_followups"
     },
@@ -52067,8 +52067,8 @@
       "source_file": "backend/app/modules/concierge/memory_service.py",
       "source_location": "L36",
       "weight": 1.0,
-      "_src": "memory_service_save_memory",
-      "_tgt": "elgar_bridge_save",
+      "_src": "elgar_bridge_save",
+      "_tgt": "memory_service_save_memory",
       "source": "elgar_bridge_save",
       "target": "memory_service_save_memory"
     },
@@ -52692,9 +52692,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_1",
       "_tgt": "concierge_schemas_memorydoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_1",
-      "target": "concierge_schemas_memorydoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_memorydoc"
     },
     {
       "relation": "uses",
@@ -52704,9 +52704,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_21",
       "_tgt": "compose_schemas_composerequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_21",
-      "target": "compose_schemas_composerequest",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composerequest"
     },
     {
       "relation": "uses",
@@ -52716,9 +52716,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_21",
       "_tgt": "compose_schemas_composeresponse",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_21",
-      "target": "compose_schemas_composeresponse",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composeresponse"
     },
     {
       "relation": "uses",
@@ -52728,9 +52728,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_21",
       "_tgt": "concierge_schemas_chatrequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_21",
-      "target": "concierge_schemas_chatrequest",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_chatrequest"
     },
     {
       "relation": "uses",
@@ -52740,9 +52740,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_21",
       "_tgt": "concierge_schemas_memorydoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_21",
-      "target": "concierge_schemas_memorydoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_memorydoc"
     },
     {
       "relation": "uses",
@@ -52752,9 +52752,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_45",
       "_tgt": "compose_schemas_composerequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_45",
-      "target": "compose_schemas_composerequest",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composerequest"
     },
     {
       "relation": "uses",
@@ -52764,9 +52764,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_45",
       "_tgt": "compose_schemas_composeresponse",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_45",
-      "target": "compose_schemas_composeresponse",
-      "confidence_score": 0.5
+      "target": "compose_schemas_composeresponse"
     },
     {
       "relation": "uses",
@@ -52776,9 +52776,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_45",
       "_tgt": "concierge_schemas_chatrequest",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_45",
-      "target": "concierge_schemas_chatrequest",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_chatrequest"
     },
     {
       "relation": "uses",
@@ -52788,9 +52788,9 @@
       "weight": 0.8,
       "_src": "concierge_routes_rationale_45",
       "_tgt": "concierge_schemas_memorydoc",
+      "confidence_score": 0.5,
       "source": "concierge_routes_rationale_45",
-      "target": "concierge_schemas_memorydoc",
-      "confidence_score": 0.5
+      "target": "concierge_schemas_memorydoc"
     },
     {
       "relation": "contains",
@@ -53027,8 +53027,8 @@
       "source_file": "backend/app/modules/concierge/concierge_service.py",
       "source_location": "L68",
       "weight": 1.0,
-      "_src": "concierge_service_stream_chat",
-      "_tgt": "followup_service_suggest_followups",
+      "_src": "followup_service_suggest_followups",
+      "_tgt": "concierge_service_stream_chat",
       "source": "followup_service_suggest_followups",
       "target": "concierge_service_stream_chat"
     },
@@ -53326,11 +53326,11 @@
       "source_file": "backend/app/modules/concierge/concierge_service.py",
       "source_location": "L22",
       "weight": 0.8,
-      "_src": "concierge_service_rationale_31",
-      "_tgt": "concierge_schemas_chatmessage",
+      "_src": "concierge_schemas_chatmessage",
+      "_tgt": "concierge_service_rationale_31",
+      "confidence_score": 0.5,
       "source": "concierge_schemas_chatmessage",
-      "target": "concierge_service_rationale_31",
-      "confidence_score": 0.5
+      "target": "concierge_service_rationale_31"
     },
     {
       "relation": "uses",
@@ -53386,11 +53386,11 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L15",
       "weight": 0.8,
-      "_src": "prompt_service_assembled",
-      "_tgt": "concierge_schemas_chatrequest",
+      "_src": "concierge_schemas_chatrequest",
+      "_tgt": "prompt_service_assembled",
+      "confidence_score": 0.5,
       "source": "concierge_schemas_chatrequest",
-      "target": "prompt_service_assembled",
-      "confidence_score": 0.5
+      "target": "prompt_service_assembled"
     },
     {
       "relation": "uses",
@@ -53398,11 +53398,11 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L15",
       "weight": 0.8,
-      "_src": "prompt_service_rationale_1",
-      "_tgt": "concierge_schemas_chatrequest",
+      "_src": "concierge_schemas_chatrequest",
+      "_tgt": "prompt_service_rationale_1",
+      "confidence_score": 0.5,
       "source": "concierge_schemas_chatrequest",
-      "target": "prompt_service_rationale_1",
-      "confidence_score": 0.5
+      "target": "prompt_service_rationale_1"
     },
     {
       "relation": "uses",
@@ -53422,11 +53422,11 @@
       "source_file": "backend/app/modules/concierge/concierge_service.py",
       "source_location": "L22",
       "weight": 0.8,
-      "_src": "concierge_service_rationale_31",
-      "_tgt": "concierge_schemas_chatrequest",
+      "_src": "concierge_schemas_chatrequest",
+      "_tgt": "concierge_service_rationale_31",
+      "confidence_score": 0.5,
       "source": "concierge_schemas_chatrequest",
-      "target": "concierge_service_rationale_31",
-      "confidence_score": 0.5
+      "target": "concierge_service_rationale_31"
     },
     {
       "relation": "uses",
@@ -53434,8 +53434,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L11",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_20",
-      "_tgt": "concierge_schemas_chatrequest",
+      "_src": "concierge_schemas_chatrequest",
+      "_tgt": "concierge_routes_rationale_20",
       "confidence_score": 0.5,
       "source": "concierge_schemas_chatrequest",
       "target": "concierge_routes_rationale_20"
@@ -53831,8 +53831,8 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L77",
       "weight": 1.0,
-      "_src": "prompt_service_assemble",
-      "_tgt": "holdings_private_detailed_context",
+      "_src": "holdings_private_detailed_context",
+      "_tgt": "prompt_service_assemble",
       "source": "holdings_private_detailed_context",
       "target": "prompt_service_assemble"
     },
@@ -53867,8 +53867,8 @@
       "source_file": "backend/app/modules/concierge/prompt_service.py",
       "source_location": "L76",
       "weight": 1.0,
-      "_src": "prompt_service_assemble",
-      "_tgt": "holdings_private_enforce_floor",
+      "_src": "holdings_private_enforce_floor",
+      "_tgt": "prompt_service_assemble",
       "source": "holdings_private_enforce_floor",
       "target": "prompt_service_assemble"
     },
@@ -53939,8 +53939,8 @@
       "source_file": "backend/app/modules/concierge/concierge_service.py",
       "source_location": "L62",
       "weight": 1.0,
-      "_src": "concierge_service_stream_chat",
-      "_tgt": "action_service_detect_action",
+      "_src": "action_service_detect_action",
+      "_tgt": "concierge_service_stream_chat",
       "source": "action_service_detect_action",
       "target": "concierge_service_stream_chat"
     },
@@ -54035,8 +54035,8 @@
       "source_file": "backend/app/modules/concierge/concierge_service.py",
       "source_location": "L40",
       "weight": 1.0,
-      "_src": "concierge_service_stream_chat",
-      "_tgt": "prompt_service_assemble",
+      "_src": "prompt_service_assemble",
+      "_tgt": "concierge_service_stream_chat",
       "source": "prompt_service_assemble",
       "target": "concierge_service_stream_chat"
     },
@@ -54095,8 +54095,8 @@
       "source_file": "backend/app/modules/concierge/concierge_service.py",
       "source_location": "L42",
       "weight": 1.0,
-      "_src": "concierge_service_stream_chat",
-      "_tgt": "stream_events_sse",
+      "_src": "stream_events_sse",
+      "_tgt": "concierge_service_stream_chat",
       "source": "stream_events_sse",
       "target": "concierge_service_stream_chat"
     },
@@ -54107,8 +54107,8 @@
       "source_file": "backend/app/modules/concierge/concierge_service.py",
       "source_location": "L71",
       "weight": 1.0,
-      "_src": "concierge_service_stream_chat",
-      "_tgt": "stream_events_redact",
+      "_src": "stream_events_redact",
+      "_tgt": "concierge_service_stream_chat",
       "source": "stream_events_redact",
       "target": "concierge_service_stream_chat"
     },
@@ -54131,8 +54131,8 @@
       "source_file": "backend/app/modules/concierge/concierge_service.py",
       "source_location": "L49",
       "weight": 1.0,
-      "_src": "concierge_service_stream_chat",
-      "_tgt": "stream_events_split_thinking",
+      "_src": "stream_events_split_thinking",
+      "_tgt": "concierge_service_stream_chat",
       "source": "stream_events_split_thinking",
       "target": "concierge_service_stream_chat"
     },
@@ -54334,8 +54334,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_20",
-      "_tgt": "compose_schemas_composerequest",
+      "_src": "compose_schemas_composerequest",
+      "_tgt": "concierge_routes_rationale_20",
       "confidence_score": 0.5,
       "source": "compose_schemas_composerequest",
       "target": "concierge_routes_rationale_20"
@@ -54358,8 +54358,8 @@
       "source_file": "backend/app/modules/concierge/concierge_routes.py",
       "source_location": "L9",
       "weight": 0.8,
-      "_src": "concierge_routes_rationale_20",
-      "_tgt": "compose_schemas_composeresponse",
+      "_src": "compose_schemas_composeresponse",
+      "_tgt": "concierge_routes_rationale_20",
       "confidence_score": 0.5,
       "source": "compose_schemas_composeresponse",
       "target": "concierge_routes_rationale_20"
