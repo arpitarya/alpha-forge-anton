@@ -30,8 +30,9 @@ def _fixture() -> list[str]:
     """A transcript with prose, an ai-title, and tool/system noise that must be dropped."""
     return [
         json.dumps({"type": "ai-title", "sessionId": "x", "aiTitle": "Rebalance my equity sleeve"}),
-        json.dumps({"type": "user", "message": {"role": "user",
-                    "content": [{"type": "text", "text": "Should I rebalance my portfolio toward more equity?"}]}}),
+        json.dumps({"type": "user", "message": {"role": "user", "content": [{"type": "text", "text":
+                    "Should I rebalance my asset allocation — is my equity exposure too high, "
+                    "and is my emergency fund enough before I raise my SIP?"}]}}),
         json.dumps({"type": "user", "message": {"role": "user",
                     "content": [{"type": "text", "text": "<system-reminder>injected ctx</system-reminder>"}]}}),
         json.dumps({"type": "assistant", "message": {"role": "assistant", "model": "anthropic/claude-opus-4-8",
@@ -57,14 +58,18 @@ def main() -> int:
     check("title comes from the ai-title record", title == "Rebalance my equity sleeve")
     check("one clean turn (system-reminder + tool_result dropped)", len(turns) == 1, f"got {len(turns)}")
     check("user prompt is the real typed text", turns[0]["query"].startswith("Should I rebalance"))
+    check("user prompt keeps the full question", "emergency fund" in turns[0]["query"])
     check("assistant prose kept, tool_use dropped", turns[0]["response"].startswith("Your equity"))
     check("turn is tagged as a claude-code import", turns[0]["provider"] == "claude-code")
     check("model id shortened", turns[0]["model"] == "claude-opus-4-8")
 
-    # ── investment keyword filter ──
-    check(f"investment chat matches (≥{MIN_HITS} keywords)", is_investment(turns))
+    # ── investment filter: advice signal must clear MIN_HITS and outweigh dev signal ──
+    check(f"investment chat matches (≥{MIN_HITS} signals, outweighs dev)", is_investment(turns))
     chit = [{"query": "what's the weather like tomorrow?", "response": "sunny"}]
     check("non-investment chat is filtered out", not is_investment(chit))
+    dev = [{"query": "implement the rebalance function in the portfolio component and fix the css",
+            "response": "done"}]
+    check("dev session that merely mentions 'rebalance' is filtered out", not is_investment(dev))
 
     # ── deterministic, resumable render ──
     meta = SessionMeta(id="claude-x", title=title)

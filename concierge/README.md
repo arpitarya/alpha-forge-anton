@@ -97,10 +97,14 @@ mechanism that copies investment-related conversations from the local Claude Cod
 (`~/.claude/projects/*.jsonl`) into the same `sessions/` collection.
 [claude_parse.py](../backend/app/modules/concierge/claude_parse.py) strips tool calls, tool
 results, and system/command wrappers so each import reads as a clean You/Orff transcript;
-[claude_import.py](../backend/app/modules/concierge/claude_import.py) keeps a chat when the
-human's prompts hit ≥`MIN_HITS` investment keywords, and upserts it under a stable id
+[claude_import.py](../backend/app/modules/concierge/claude_import.py) keeps a chat only when the
+human's prompts carry real **advice signal** — ≥`MIN_HITS` investment-decision phrases (`_INVEST`)
+that also **outweigh** engineering signal (`_DEV`) — so coding sessions on the app itself are
+excluded even though they mention broker/holdings/portfolio. Matches upsert under a stable id
 (`claude-<sessionId>`, `source: claude-code` in frontmatter). The render is deterministic (the
 transcript's mtime as `updated`), so re-syncing only commits transcripts that actually changed.
+(Note: a pure Claude Code dev history typically yields zero — genuine investment chats live in the
+claude.ai chat app, which would need its data export as the source instead.)
 Contract: `just probe claude-import` (standalone — no real `~/.claude`, no store writes).
 
 ## On-the-fly UI composition (Fux-governed)

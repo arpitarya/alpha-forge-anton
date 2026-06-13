@@ -22,18 +22,36 @@ from app.modules.concierge.history_service import SESSION_DIR, render_session
 from app.modules.plans import elgar_bridge
 
 PROJECTS = Path(os.environ.get("CLAUDE_PROJECTS", Path.home() / ".claude" / "projects"))
-MIN_HITS = 2  # min distinct investment keywords in the human's prompts to qualify
-_KEYWORDS = (
-    "portfolio", "holding", "equity", "mutual fund", "sip", "allocation", "rebalanc",
-    "asset class", "drawdown", "xirr", "cagr", "dividend", "valuation", "net worth",
-    "emergency fund", "invest", "stock", "nifty", "sensex", "gold", "crypto", "bond",
-    "fixed deposit", "capital gain", "retire", "corpus", "broker", "holdings",
+MIN_HITS = 3  # min distinct investment signals in the human's prompts to qualify
+
+# Advice/decision vocabulary — what an *investment* conversation sounds like, not the
+# domain nouns (broker/holding/portfolio) that also pepper every dev session.
+_INVEST = (
+    "rebalanc", "asset allocation", "asset class", "emergency fund", "sip",
+    "mutual fund", "index fund", "expense ratio", "risk tolerance", "diversif",
+    "portfolio allocation", "tax loss", "tax harvest", "capital gain", "xirr", "cagr",
+    "drawdown", "corpus", "retirement", "retire by", "nifty", "sensex", "debt fund",
+    "equity exposure", "gold allocation", "should i invest", "should i buy",
+    "should i sell", "how much should i", "expected return", "lump sum", "annual return",
+)
+# Engineering signals — if these dominate, it's a coding session about the app, not advice.
+_DEV = (
+    "function", "file", "component", "tsx", ".py", ".ts", "css", "probe", "commit",
+    "refactor", "endpoint", "module", "frontend", "backend", "git ", "implement",
+    "deploy", "bug", "compile", "lint", "pytest", "api route", "schema", "migration",
+    "docker", "button", "screen", "import ", "fix the", "the code", "repo",
 )
 
 
+def _hits(text: str, words: tuple[str, ...]) -> int:
+    return sum(w in text for w in words)
+
+
 def is_investment(turns: list[dict]) -> bool:
+    """An investment conversation: enough advice signal, and it outweighs dev signal."""
     asked = " ".join(t["query"] for t in turns).lower()
-    return sum(k in asked for k in _KEYWORDS) >= MIN_HITS
+    inv = _hits(asked, _INVEST)
+    return inv >= MIN_HITS and inv > _hits(asked, _DEV)
 
 
 def _doc_id(path: Path) -> str:

@@ -1,10 +1,10 @@
 # Fux GRAPH_REPORT
 
-_1895 nodes · 9099 edges · 419 code files · 57 rules · 218 communities._
+_1896 nodes · 9104 edges · 419 code files · 57 rules · 218 communities._
 
 ## Node types
 
-- function: 1133
+- function: 1134
 - code-file: 419
 - class: 286
 - convention: 15
@@ -18,11 +18,11 @@ _1895 nodes · 9099 edges · 419 code files · 57 rules · 218 communities._
 
 ## Edges
 
-_4737 of 9099 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_4737 of 9104 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
 - references: 4737
-- calls: 2810
-- contains: 1421
+- calls: 2814
+- contains: 1422
 - related: 87
 - governs: 44
 
@@ -44,7 +44,7 @@ _4737 of 9099 are INFERRED (low-confidence `references`, down-weighted in cluste
 ## Chokepoints (PageRank centrality)
 
 - **get** (function) — 0.0121
-- **get** (function) — 0.0120
+- **get** (function) — 0.0119
 - **ChatRail.tsx** (code-file) — 0.0054
 - **AlphaBar.tsx** (code-file) — 0.0037
 - **info** (function) — 0.0033
@@ -66,7 +66,7 @@ _4737 of 9099 are INFERRED (low-confidence `references`, down-weighted in cluste
 - **community 7** (7 nodes): UserClaims, decode_access_token, deps.py, get_current_user, require_owner, security.py, user_from_jwt
 - **community 8** (4 nodes): _repo_root, env_loader.py, get_env_files, load_env_files
 - **community 10** (10 nodes): create_app, lifespan, logger.py, logging.py, main.py, setup_logging, setup_logging, test_log_writes_to_file, test_logger.py, test_setup_logging_creates_dir
-- **community 11** (952 nodes): AngelOneSource, Assembled, AssetClass, AuthState, Base, BinanceSource, BootReport, BootReport, BootService, BootService, BootStatus, BraveSource
+- **community 11** (953 nodes): AngelOneSource, Assembled, AssetClass, AuthState, Base, BinanceSource, BootReport, BootReport, BootService, BootService, BootStatus, BraveSource
 - **community 14** (48 nodes): AllocationSlice, ClassDrift, HoldingsAggregator, RebalanceDrift, RebalanceSuggestion, TreemapCell, TreemapCell, TreemapCell.tsx, TreemapCellProps, _inr_invested, _inr_value, aggregator.py
 - **community 16** (27 nodes): AccountSection, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, DisplaySection, DisplaySection.tsx, DisplaySectionProps, MarketsSection, MarketsSection.tsx
 - **community 18** (6 nodes): _load_cached, _path, _read_all, _write_row, fx.py, get_inr_per_usd
