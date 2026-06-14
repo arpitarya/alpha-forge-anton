@@ -1,3 +1,11 @@
 {
-  "servers": {}
+  "servers": {
+    "cage": {
+      "type": "stdio",
+      "command": "cage",
+      "args": [
+        "mcp"
+      ]
+    }
+  }
 }

@@ -24,6 +24,14 @@
             "command": "fux context"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cage hook-session-start"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -53,6 +61,16 @@
           {
             "type": "command",
             "command": "fux hook-recall"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cage hook-session-end"
           }
         ]
       }
