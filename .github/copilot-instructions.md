@@ -53,3 +53,14 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 Before answering architecture or codebase questions, read `graphify-out/GRAPH_REPORT.md` if it exists.
 If `graphify-out/wiki/index.md` exists, navigate it for deep questions.
 Type `/graphify` in Copilot Chat to build or update the knowledge graph.
+
+<!-- cage:start -->
+## Cage — LLM cost & savings ledger
+
+This project meters LLM traffic into `.cage/` (a *flux*: $0, deterministic).
+- For spend / savings questions, prefer the `cage` MCP tools (`cage_report`,
+  `cage_attrib`, `cage_budget`) over guessing.
+- To meter this agent's own calls, run it under `cage meter -- <cmd>` or point its
+  base URL at `cage proxy`.
+- The ledger stores token *counts* only — never prompt bodies.
+<!-- cage:end -->

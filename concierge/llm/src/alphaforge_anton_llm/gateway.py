@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
 from collections.abc import AsyncIterator
 
+from alphaforge_anton_llm import cage_meter
 from alphaforge_anton_llm.cost_guard import CostGuard, CostGuardError
 from alphaforge_anton_llm.handover import Handover
 from alphaforge_anton_llm.providers import REGISTRY
@@ -15,6 +17,10 @@ from alphaforge_anton_llm.router import QueryRouter
 from alphaforge_anton_llm.types import Message, ProviderResponse, QueryType, ToolSchema
 
 logger = logging.getLogger(__name__)
+
+
+def _ms(start: float) -> int:
+    return int((time.monotonic() - start) * 1000)
 
 
 class LLMGateway:
@@ -50,9 +56,11 @@ class LLMGateway:
         # The pinned model id only applies to its own provider; a fallback uses its default.
         picked_model = model if name == preferred_provider else None
         prepared = self._handover.prepare(messages)
+        t0 = time.monotonic()
         try:
             r = await self._registry[name].complete(prepared, tools=tools, model=picked_model)
             assert isinstance(r, ProviderResponse)
+            cage_meter.record(r, query_type=query_type, latency_ms=_ms(t0))
             return r
         except CostGuardError:
             raise
@@ -64,8 +72,10 @@ class LLMGateway:
                 try:
                     self._guard.check(nxt, confirmed=confirmed)
                     await self._rate.acquire(nxt)
+                    t1 = time.monotonic()
                     r = await self._registry[nxt].complete(prepared, tools=tools)
                     assert isinstance(r, ProviderResponse)
+                    cage_meter.record(r, query_type=query_type, latency_ms=_ms(t1))
                     return r
                 except Exception as e2:
                     logger.warning("Fallback %s also failed: %s", nxt, e2)

@@ -1,0 +1,6 @@
+# Append-only event log — machine-local. Carries token *counts* + cost, never
+# prompt bodies or holdings (cage-plan §10). Point CAGE_LEDGER at elgar to keep
+# even the counts in the private store.
+ledger/
+# Generated dashboards.
+out/

@@ -16,6 +16,14 @@ dependencies = [
     "uvicorn>=0.27.0",
 ]
 
+[project.optional-dependencies]
+# Cage — the sibling cost/savings flux. Optional: the cage_meter adapter is
+# fail-open, so the gateway runs with or without it. Install to enable the ledger.
+cage = ["cage-flux"]
+
+[tool.uv.sources]
+cage-flux = { path = "../../../cage", editable = true }
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
