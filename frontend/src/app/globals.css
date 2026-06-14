@@ -317,6 +317,48 @@ input[type="range"]::-moz-range-thumb {
   color: var(--fg);
   white-space: pre;
 }
+/* Tables */
+.response-body .rb-table-wrap {
+  overflow-x: auto;
+  margin: 0.55em 0;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-hi) transparent;
+}
+.response-body .rb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  font-family: "Space Grotesk", sans-serif;
+}
+.response-body .rb-table thead tr {
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+}
+.response-body .rb-table th {
+  padding: 7px 12px;
+  text-align: left;
+  font-family: "Space Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.response-body .rb-table td {
+  padding: 6px 12px;
+  color: var(--fg-2);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  vertical-align: top;
+  line-height: 1.45;
+}
+.response-body .rb-table tbody tr:last-child td { border-bottom: none; }
+.response-body .rb-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+}
+
 .response-body .rb-code-lang {
   display: block;
   font-family: "Space Mono", monospace;

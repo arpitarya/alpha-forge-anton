@@ -13,6 +13,7 @@ and exercises:
   8. Chat rail has left nav sidebar: <nav aria-label="Alpha modes"> is 58px wide
   9. Chat rail header: "Conversation" title + "online" chip visible
  10. ESC closes rail
+ 11. Double-click toggle: double-clicking the Voice/Chat toggle reopens the rail
 
 Run:
     uv run python probes/ui_footer_chat_probe.py
@@ -275,6 +276,22 @@ async def run(base: str, cdp_port: int) -> bool:
         rail_closed = not await _rail_is_open(page)
         _record("ESC closes chat rail", rail_closed)
         await page.screenshot(path=str(SHOT_DIR / "ci-footer-05-closed.png"))
+
+        # ── 11. Double-click toggle reopens rail ──────────────────────────────
+        # Shortcut: double-clicking the Voice/Chat toggle opens the chat rail
+        # directly, without first submitting a message.
+        print("\n── Double-click toggle reopens rail")
+        await chat_tab.dblclick()
+        try:
+            await page.wait_for_function("""() => {
+                const aside = document.querySelector('[aria-label="Alpha chat"]');
+                return aside && window.getComputedStyle(aside).pointerEvents !== 'none';
+            }""", timeout=4_000)
+            _record("Double-click toggle opens chat rail", True)
+        except Exception as e:
+            _record("Double-click toggle opens chat rail", False, str(e))
+        await page.wait_for_timeout(400)
+        await page.screenshot(path=str(SHOT_DIR / "ci-footer-06-dblclick-open.png"))
 
     finally:
         await page.close()

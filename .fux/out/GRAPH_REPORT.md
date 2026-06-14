@@ -1,10 +1,10 @@
 # Fux GRAPH_REPORT
 
-_1896 nodes · 9104 edges · 419 code files · 57 rules · 218 communities._
+_1900 nodes · 9113 edges · 419 code files · 57 rules · 218 communities._
 
 ## Node types
 
-- function: 1134
+- function: 1138
 - code-file: 419
 - class: 286
 - convention: 15
@@ -18,11 +18,11 @@ _1896 nodes · 9104 edges · 419 code files · 57 rules · 218 communities._
 
 ## Edges
 
-_4737 of 9104 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_4737 of 9113 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
 - references: 4737
-- calls: 2814
-- contains: 1422
+- calls: 2819
+- contains: 1426
 - related: 87
 - governs: 44
 
@@ -45,7 +45,7 @@ _4737 of 9104 are INFERRED (low-confidence `references`, down-weighted in cluste
 
 - **get** (function) — 0.0121
 - **get** (function) — 0.0119
-- **ChatRail.tsx** (code-file) — 0.0054
+- **ChatRail.tsx** (code-file) — 0.0060
 - **AlphaBar.tsx** (code-file) — 0.0037
 - **info** (function) — 0.0033
 - **post** (function) — 0.0032
@@ -97,7 +97,7 @@ _4737 of 9104 are INFERRED (low-confidence `references`, down-weighted in cluste
 - **community 65** (3 nodes): ApprovalCard, ApprovalCard.tsx, Btn
 - **community 66** (2 nodes): ArtifactsPanel, ArtifactsPanel.tsx
 - **community 67** (3 nodes): ChatContext.tsx, ChatCtx, useChat
-- **community 68** (42 nodes): BrainIcon, ChatNavIcon, ChatRail, ChatRail.tsx, CommandPalette, CommandPalette.tsx, CrBtn, EmptyState, FuChip, HistoryIcon, InlineTokens, Kbd
+- **community 68** (46 nodes): BrainIcon, ChatNavIcon, ChatRail, ChatRail.tsx, CommandPalette, CommandPalette.tsx, CrBtn, EmptyState, FuChip, HistoryIcon, InlineTokens, Kbd
 - **community 69** (2 nodes): CommandMenu, CommandMenu.tsx
 - **community 70** (3 nodes): Disclosure, Disclosure.tsx, Props
 - **community 71** (3 nodes): DynamicRenderer, DynamicRenderer.tsx, Props

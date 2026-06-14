@@ -1588,6 +1588,54 @@ function InlineTokens({ text }: { text: string }) {
   );
 }
 
+function MdTable({ lines }: { lines: string[] }) {
+  const parseRow = (line: string) =>
+    line
+      .split("|")
+      .slice(1, -1)
+      .map((c) => c.trim());
+  const isSeparator = (line: string) => /^[\s|:=-]+$/.test(line);
+
+  const [headerLine, ...rest] = lines;
+  if (!headerLine) return null;
+  const headers = parseRow(headerLine);
+  const bodyLines = rest.filter((l) => !isSeparator(l));
+
+  function severityStyle(cell: string): React.CSSProperties {
+    const v = cell.toLowerCase();
+    if (v === "high") return { color: "var(--red)", fontWeight: 600 };
+    if (v === "medium") return { color: "#f59e0b", fontWeight: 600 };
+    if (v === "low") return { color: "var(--green)", fontWeight: 600 };
+    return {};
+  }
+
+  return (
+    <div className="rb-table-wrap">
+      <table className="rb-table">
+        <thead>
+          <tr>
+            {headers.map((h) => (
+              <th key={h}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {bodyLines.map((line) => (
+            <tr key={line.slice(0, 40)}>
+              {parseRow(line).map((cell, j) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: table cells have no stable id
+                <td key={j} style={severityStyle(cell)}>
+                  <InlineTokens text={cell} />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function ResponseBody({ text }: { text: string }) {
   const lines = text.split("\n");
   const nodes: React.ReactNode[] = [];
@@ -1637,6 +1685,15 @@ function ResponseBody({ text }: { text: string }) {
       continue;
     }
 
+    if (raw.trim().startsWith("|")) {
+      const tableLines: string[] = [];
+      while (i < lines.length && lines[i].trim().startsWith("|")) {
+        tableLines.push(lines[i]);
+        i++;
+      }
+      nodes.push(<MdTable key={`tbl-${i}`} lines={tableLines} />);
+      continue;
+    }
     if (/^[-*] /.test(raw)) {
       const items: string[] = [];
       while (i < lines.length && /^[-*] /.test(lines[i])) {

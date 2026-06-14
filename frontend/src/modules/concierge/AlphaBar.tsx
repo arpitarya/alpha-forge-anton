@@ -136,7 +136,14 @@ export function AlphaBar({
         }}
       />
 
-      <ModeSegment mode={railOpen ? "chat" : mode} onChange={handleModeChange} />
+      <ModeSegment
+        mode={railOpen ? "chat" : mode}
+        onChange={handleModeChange}
+        onDoubleOpen={() => {
+          setMode("chat");
+          onChatModeOpen();
+        }}
+      />
 
       {railOpen && <CollapsedStrip onClose={onClose} />}
 
@@ -183,11 +190,21 @@ export function AlphaBar({
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function ModeSegment({ mode, onChange }: { mode: Mode; onChange: (m: Mode) => void }) {
+function ModeSegment({
+  mode,
+  onChange,
+  onDoubleOpen,
+}: {
+  mode: Mode;
+  onChange: (m: Mode) => void;
+  onDoubleOpen: () => void;
+}) {
   return (
     <div
       role="tablist"
       aria-label="Input mode"
+      title="Double-click to open the chat panel"
+      onDoubleClick={onDoubleOpen}
       style={{
         display: "flex",
         height: 26,
@@ -197,6 +214,7 @@ function ModeSegment({ mode, onChange }: { mode: Mode; onChange: (m: Mode) => vo
         borderRadius: 6,
         border: "1px solid var(--line-hi)",
         background: "color-mix(in srgb, var(--surface) 60%, transparent)",
+        userSelect: "none",
       }}
     >
       <ModeBtn active={mode === "voice"} onClick={() => onChange("voice")} ariaLabel="Voice mode">

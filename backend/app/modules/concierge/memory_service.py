@@ -13,7 +13,7 @@ from app.modules.plans import elgar_bridge
 
 # The doc id under which the concierge context lives in the elgar store.
 MEMORY_DOC_ID = "orff-context"
-MAX_CHARS = 4_000
+MAX_CHARS = 8_000
 
 MEMORY_PREAMBLE = (
     "User-maintained context (goals, constraints, preferences) — the user wrote "
