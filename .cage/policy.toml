@@ -1,0 +1,34 @@
+# Cage policy for AlphaForge Anton — prices, pipeline order, budgets, quality.
+# Cost rows here mirror concierge/llm/.../registry/providers.json (the authoritative
+# source). The gateway passes its own computed cost per call; these prices only feed
+# Cage's counterfactual token→USD conversions (cage attrib / cage matrix).
+
+[prices.claude-sdk."claude-opus-4-8"]
+input = 15.00
+output = 75.00
+cache_read = 1.50
+
+[prices.claude-sdk."claude-sonnet-4-6"]
+input = 3.00
+output = 15.00
+cache_read = 0.30
+
+[prices.claude-sdk."claude-haiku-4-5-20251001"]
+input = 1.00
+output = 5.00
+cache_read = 0.10
+
+# Anton's deterministic context stack, in canonical pipeline order (cage-plan §4.2).
+# graphify (code), fux (rules/memory), router (model choice), Handover (compressor),
+# response cache. Marginal savings are attributed along this order.
+[tools]
+order = ["graphify", "fux", "router", "compressor", "cache", "response-cache"]
+
+# Subsumes Orff's CostGuard behind one ledger (cage-plan §8.1).
+[budgets]
+session_usd = 2.00
+daily_usd = 25.00
+on_exceed = "warn"
+
+[quality]
+signal = "task_ok"
