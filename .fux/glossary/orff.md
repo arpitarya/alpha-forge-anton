@@ -4,7 +4,7 @@ domain: concierge
 type: glossary
 status: active
 created: 2026-06-09
-updated: 2026-06-14
+updated: 2026-06-15
 aliases:
   - concierge
   - assistant

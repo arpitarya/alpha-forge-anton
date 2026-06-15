@@ -3950,7 +3950,7 @@
       "label": "search",
       "type": "function",
       "file": "backend/app/modules/concierge/parallel_client.py",
-      "line": 21,
+      "line": 20,
       "community": 11,
       "centrality": 0.001121
     },
@@ -3959,7 +3959,7 @@
       "label": "format_results",
       "type": "function",
       "file": "backend/app/modules/concierge/parallel_client.py",
-      "line": 35,
+      "line": 37,
       "community": 11,
       "centrality": 0.000238
     },

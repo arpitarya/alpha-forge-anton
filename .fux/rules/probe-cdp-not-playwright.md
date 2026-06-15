@@ -4,13 +4,23 @@ domain: brokers
 type: convention
 status: active
 created: 2026-06-09
-updated: 2026-06-09
+updated: 2026-06-15
+keywords:
+  - probe
+  - cdp
+  - chrome
+  - 9299
+  - playwright
+  - mcp
+  - verification
+  - xhr
 code_refs:
   - probes/Probes.md
   - probes/WHY_PROBES_NOT_MCP.md
   - backend/app/modules/brokers/_cdp.py
-related: [broker-source-contract, broker-source-integration]
-keywords: [probe, cdp, chrome, 9299, playwright, mcp, verification, xhr]
+related:
+  - broker-source-contract
+  - broker-source-integration
 ---
 **Convention:** UI and broker verification is done with scripts in `probes/` that
 attach to the already-running AlphaForge Anton Chrome over CDP on port **9299**
