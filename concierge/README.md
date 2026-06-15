@@ -64,10 +64,10 @@ client-side by [chat.events.ts](../frontend/src/modules/concierge/chat.events.ts
 | Event shape | Meaning |
 |-------------|---------|
 | `{content, provider, model, prompt_tokens, completion_tokens, cost_usd, …}` | cumulative token snapshot |
-| `{tool: {name, detail, ms}}` | a prompt-assembly / data-read step (Fux recall, memory, disclosure, vision route) |
+| `{tool: {name, detail, ms}}` | a prompt-assembly / data-read step (Fux recall, memory, disclosure, vision route, `parallel` web grounding) |
 | `{thinking: "…"}` | reasoning trace split from a `<think>` block |
-| `{confirm: {id, action, summary, steps}}` | approval card for a detected mutating intent |
-| `{spec: {…}}` | a Fux-validated compose follow-up UISpec |
+| `{confirm: {id, action, summary, steps, apply?}}` | approval card for a mutating intent; an optional `apply: {path, body}` makes Approve POST it (e.g. a signals strategy-knob change) |
+| `{spec: {…}}` | a UISpec — either a Fux-validated compose follow-up or the **deterministic signals plan card** (`signals/plan_card.py`) on a `/review` turn |
 | `{followups: ["…"]}` | up to 3 tap-to-send next prompts |
 | `{error: "…"}` then `[DONE]` | redacted error; the stream always terminates with `[DONE]` |
 
@@ -75,6 +75,20 @@ Every step runs inside `stream_chat`'s `try`, so a failure becomes an SSE `error
 a dead connection. Prompt assembly (system, Fux grounding, **elgar memory**, holdings disclosure,
 history, vision floor) lives in [prompt_service.py](../backend/app/modules/concierge/prompt_service.py).
 The protocol is covered by `just probe concierge-events` (standalone, no CDP).
+
+**Parallel web grounding — the "Deep search" toggle (handoff §9).** A request may
+carry `web_grounding: bool` (default `false`), set by the off-by-default 🌐 Deep
+search chip in the composer. When on, [grounding_service.py](../backend/app/modules/concierge/grounding_service.py)
+calls Parallel (key from `PARALLEL_API_KEY`, afbach-vault-injected — never env/code),
+injects the extracts as a system block, records a **Search-vs-Task-tagged** Cage
+receipt (`cage_meter.record_tool`), and adds a `parallel` ToolTrail step. A **hard
+monthly budget cap** runs first: `cage_meter.month_spend_usd("parallel")` (month-to-date,
+INR-converted) vs `parallel.monthly_budget_inr` in the strategy config — over budget ⇒
+the call is **skipped** and Orff answers from the free sources. Task tier is gated on
+`parallel.allow_task_api` + a deep-dive prompt. The free RSS/NSE/yfinance path is
+unchanged; `news/.../sources/parallel.py` exists but is **not** in the default
+aggregation. Verified by `just probe parallel-grounding` (off / on / no-key / over-budget)
+and `just probe parallel-keys`.
 
 The user-context doc lives in the **elgar store** (`elgar get/save orff-context`), not a home-dir
 file — it holds personal goals/figures, exactly the money-adjacent data the `plan-store` rule keeps

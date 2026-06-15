@@ -248,7 +248,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-10",
-      "updated": "2026-06-14"
+      "updated": "2026-06-15"
     },
     {
       "id": "concierge-registry-single-source",
@@ -676,7 +676,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-09"
+      "updated": "2026-06-15"
     },
     {
       "id": "projection-disclosure",
