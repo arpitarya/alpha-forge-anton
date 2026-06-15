@@ -25,6 +25,19 @@ export interface SlashCommand {
 
 export const COMMANDS: SlashCommand[] = [
   {
+    name: "review",
+    hint: "Buy/hold/trim/sell vs your last plan",
+    body: {
+      kind: "send",
+      prompt: "Review every holding vs my last plan — buy/hold/trim/sell with reasons and stops.",
+    },
+  },
+  {
+    name: "screen",
+    hint: "Screen new swing entries in your themes",
+    body: { kind: "send", prompt: "Screen for new swing entries in my themes." },
+  },
+  {
     name: "rebalance",
     hint: "Draft a rebalance toward plan targets",
     body: {

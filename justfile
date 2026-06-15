@@ -170,11 +170,14 @@ db-migrate:
 db-revision msg:
     cd backend && uv run alembic revision --autogenerate -m "{{msg}}"
 
-# ── Probes ───────────────────────────────────────
+# ── Signals ──────────────────────────────────────
 
-# Open Chrome with CDP on :9299 (required before running any probe)
-zerodha-chrome:
-    bash broker/zerodha/chrome.sh
+# Backtest the active strategy.config over cached yfinance history (Phase 5, §10.5).
+# Reports expectancy, win-rate, max drawdown & P&L AFTER costs — the go/no-go before sizing up.
+backtest:
+    cd backend && uv run python -m app.modules.signals.backtest_cli
+
+# ── Probes ───────────────────────────────────────
 
 # Run a probe by name — omit name to list all available probes (CDP :9299 required)
 # Examples: just probe ui | just probe zerodha | just probe groww-cash

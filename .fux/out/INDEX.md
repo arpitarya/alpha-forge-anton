@@ -1,6 +1,6 @@
 # Fux INDEX
 
-_45 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_46 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
 
 ## brokers
 - **broker-source** (glossary) — BrokerSource
@@ -42,6 +42,7 @@ _45 active entries across 10 domains. Read this first; open a rule (`fux why <id
 - **portfolio-valuation** (formula) — Portfolio totals are computed over INR-normalised holdings:
 - **position-concentration** (rule) — Default concentration ceilings Orff applies when reviewing holdings
 - **rebalancing-policy** (rule) — Rebalancing is band-triggered, not calendar-triggered, and follows
+- **strategy-knob-tradeoffs** (rule) — the signals engine's behaviour is governed by a small set of tunable
 - **xirr-vs-cagr** (formula) — Use the return measure that matches the cash-flow shape:
 
 ## process

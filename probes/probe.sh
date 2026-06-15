@@ -31,6 +31,17 @@ Available probes:
     concierge-events     concierge_events_probe.py
     claude-import        claude_import_probe.py
     plan-projection      plan_projection_probe.py
+    parallel-keys        parallel_keys_probe.py
+    parallel-grounding   parallel_grounding_probe.py
+    signals-review       signals_review_probe.py
+    signals-screen       signals_screen_probe.py
+    signals-replan       signals_replan_probe.py
+    signals-pnl          signals_pnl_probe.py
+    signals-backtest     signals_backtest_probe.py
+
+  Release-health probes (require CDP :9299):
+    pypi-publish         pypi_publish_probe.py
+    github-publish       github_publish_probe.py
 
   Broker XHR probes (require CDP :9299):
     zerodha              zerodha_probe.py
@@ -77,6 +88,15 @@ case "$NAME" in
     concierge-events)  SCRIPT="concierge_events_probe.py" ;;
     claude-import)     SCRIPT="claude_import_probe.py" ;;
     plan-projection)   SCRIPT="plan_projection_probe.py" ;;
+    parallel-keys)     SCRIPT="parallel_keys_probe.py" ;;
+    parallel-grounding) SCRIPT="parallel_grounding_probe.py" ;;
+    signals-review)    SCRIPT="signals_review_probe.py" ;;
+    signals-screen)    SCRIPT="signals_screen_probe.py" ;;
+    signals-replan)    SCRIPT="signals_replan_probe.py" ;;
+    signals-pnl)       SCRIPT="signals_pnl_probe.py" ;;
+    signals-backtest)  SCRIPT="signals_backtest_probe.py" ;;
+    pypi-publish)      SCRIPT="pypi_publish_probe.py" ;;
+    github-publish)    SCRIPT="github_publish_probe.py" ;;
     zerodha)           SCRIPT="zerodha_probe.py" ;;
     zerodha-coin)      SCRIPT="zerodha_coin_probe.py" ;;
     zerodha-cash)      SCRIPT="zerodha_cash_probe.py" ;;

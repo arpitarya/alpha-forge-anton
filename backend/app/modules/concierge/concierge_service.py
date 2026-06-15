@@ -23,6 +23,8 @@ from app.modules.concierge.concierge_schemas import ChatMessage, ChatRequest
 from app.modules.concierge.followup_service import suggest_followups
 from app.modules.concierge.prompt_service import assemble
 from app.modules.concierge.stream_events import redact, split_thinking, sse
+from app.modules.signals import strategy_tuning
+from app.modules.signals.plan_card import review_spec as plan_review_spec
 
 _gateway = create_gateway()
 
@@ -43,26 +45,47 @@ async def stream_chat(req: ChatRequest):
 
         snap = None
         async for snap in _gateway.stream(
-            a.msgs, query_type=a.query_type, preferred_provider=a.preferred,
-            model=a.model, confirmed=a.confirmed,
+            a.msgs,
+            query_type=a.query_type,
+            preferred_provider=a.preferred,
+            model=a.model,
+            confirmed=a.confirmed,
         ):
             thinking, visible = split_thinking(snap.content)
             if thinking:
                 yield sse({"thinking": thinking, "elapsed_s": el()})
-            yield sse({
-                "content": visible, "provider": snap.provider, "model": snap.model,
-                "prompt_tokens": snap.prompt_tokens,
-                "completion_tokens": snap.completion_tokens,
-                "cost_usd": round(pricing.estimate_cost_usd(
-                    snap.provider, snap.model, snap.prompt_tokens, snap.completion_tokens,
-                ), 6),
-                "elapsed_s": el(), "auto_level": req.auto_level, "notice": a.notice,
-            })
+            yield sse(
+                {
+                    "content": visible,
+                    "provider": snap.provider,
+                    "model": snap.model,
+                    "prompt_tokens": snap.prompt_tokens,
+                    "completion_tokens": snap.completion_tokens,
+                    "cost_usd": round(
+                        pricing.estimate_cost_usd(
+                            snap.provider,
+                            snap.model,
+                            snap.prompt_tokens,
+                            snap.completion_tokens,
+                        ),
+                        6,
+                    ),
+                    "elapsed_s": el(),
+                    "auto_level": req.auto_level,
+                    "notice": a.notice,
+                }
+            )
 
-        if (action := detect_action(a.last_user)) is not None:
+        # A strategy-knob change proposes its own ApprovalCard (with an apply target);
+        # otherwise fall back to the generic mutating-intent detector.
+        if (card := strategy_tuning.detect(a.last_user)) is not None:
+            yield sse({"confirm": card, "elapsed_s": el()})
+        elif (action := detect_action(a.last_user)) is not None:
             yield sse({"confirm": action, "elapsed_s": el()})
-        # "show / chart / …" turns also get a generated UI — additive, never an error.
-        if (extra := await compose_followup(a.last_user)) is not None:
+        # Deterministic plan card on a /review turn; else the generic compose follow-up.
+        if (pspec := await plan_review_spec(a.last_user)) is not None:
+            yield sse({**pspec, "elapsed_s": el()})
+        elif (extra := await compose_followup(a.last_user)) is not None:
             yield sse({**extra, "elapsed_s": el()})
         reply = split_thinking(snap.content)[1] if snap else ""
         if chips := await suggest_followups(_gateway, a.last_user, reply):

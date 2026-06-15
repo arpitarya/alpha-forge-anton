@@ -16,11 +16,13 @@ import {
   PROVIDERS,
   type ProviderId,
 } from "./concierge.types";
+import { DeepSearchToggle } from "./DeepSearchToggle";
 import { FollowupChips } from "./FollowupChips";
 import { HistoryPanel } from "./HistoryPanel";
 import { ImageAttach } from "./ImageAttach";
 import { MemoryPanel } from "./MemoryPanel";
 import { ModelPicker } from "./ModelPicker";
+import { SaveActionPlanButton } from "./SaveActionPlanButton";
 import { SavePlanButton } from "./SavePlanButton";
 import { SessionMeter } from "./SessionMeter";
 import { SpecCard } from "./SpecCard";
@@ -40,7 +42,7 @@ interface Props {
   onResume: (id: string) => void;
   onClose: () => void;
   onClear: () => void;
-  onSend: (q: string, images?: string[]) => void;
+  onSend: (q: string, images?: string[], webGrounding?: boolean) => void;
   onEdit: (id: string, q: string) => void;
   onStop: () => void;
   onChoiceChange: (c: ModelChoice) => void;
@@ -147,6 +149,7 @@ export function ChatRail({
   footerModelRef,
 }: Props) {
   const [size, setSize] = useState<"md" | "lg">("md");
+  const [deepSearch, setDeepSearch] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [lastSubmitted, setLastSubmitted] = useState("");
   const [images, setImages] = useState<string[]>([]);
@@ -243,7 +246,7 @@ export function ChatRail({
       return;
     }
     if (!q && !images.length) return;
-    onSend(q, images);
+    onSend(q, images, deepSearch);
     setLastSubmitted(q);
     setInputValue("");
     setImages([]);
@@ -737,6 +740,7 @@ export function ChatRail({
                   style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0, flex: 1 }}
                 >
                   <ImageAttach images={images} onChange={setImages} />
+                  <DeepSearchToggle on={deepSearch} onToggle={() => setDeepSearch((v) => !v)} />
                   <ModelPicker
                     value={choice}
                     query={inputValue || lastSubmitted}
@@ -1516,9 +1520,21 @@ function TurnPair({
                 {turn.confirm && (
                   <ApprovalCard
                     action={turn.confirm}
-                    onApprove={(a: PendingAction) =>
-                      onPickFollowup(`Yes — proceed with: ${a.action}. ${a.summary}`)
-                    }
+                    onApprove={(a: PendingAction) => {
+                      if (a.apply) {
+                        const tok =
+                          typeof window !== "undefined" ? localStorage.getItem("af_token") : null;
+                        void fetch(a.apply.path, {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                            ...(tok ? { Authorization: `Bearer ${tok}` } : {}),
+                          },
+                          body: JSON.stringify(a.apply.body),
+                        });
+                      }
+                      onPickFollowup(`Yes — proceed with: ${a.action}. ${a.summary}`);
+                    }}
                     onDismiss={() => {}}
                   />
                 )}
@@ -1527,6 +1543,9 @@ function TurnPair({
                 )}
                 {!turn.loading && turn.response && (
                   <SavePlanButton title={turn.query} content={turn.response} />
+                )}
+                {!turn.loading && turn.spec && /review/i.test(turn.query) && (
+                  <SaveActionPlanButton />
                 )}
               </>
             )}

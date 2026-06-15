@@ -99,3 +99,6 @@ class ChatRequest(BaseModel):
     provider: ProviderSlug = "auto"
     model_id: str | None = None
     auto_level: AutoLevel = "top"
+    # Opt-in Parallel web grounding (off by default — the free RSS/NSE/yfinance
+    # path stays the everyday default; this is the explicit paid "Deep search").
+    web_grounding: bool = False

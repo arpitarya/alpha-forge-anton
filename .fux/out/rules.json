@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 57,
+  "count": 58,
   "rules": [
     {
       "id": "async-everywhere",
@@ -739,6 +739,31 @@
       "examples": [],
       "created": "2026-06-11",
       "updated": "2026-06-13"
+    },
+    {
+      "id": "strategy-knob-tradeoffs",
+      "type": "rule",
+      "domain": "portfolio",
+      "status": "active",
+      "title": "the signals engine's behaviour is governed by a small set of tunable",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/strategy-knob-tradeoffs.md",
+      "code_refs": [
+        "backend/app/modules/signals/strategy_config.py",
+        "backend/app/modules/signals/strategy_tuning.py",
+        "backend/app/modules/signals/signal_rules.py",
+        "backend/app/modules/signals/screener_rules.py"
+      ],
+      "related": [
+        "position-concentration",
+        "rebalancing-policy",
+        "capital-market-assumptions"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-15",
+      "updated": "2026-06-15"
     },
     {
       "id": "tax-loss-harvesting",

@@ -44,6 +44,17 @@ Attaches to the broker's page already open in Chrome. Either:
 
 **When to write one:** new broker source added, or debugging live API response shapes.
 
+### Vault check probe (`*_keys_probe.py`)
+
+Standalone (no CDP). Reads the afbach vault over its HTTP API and asserts the
+secrets a feature depends on are present and non-empty. **A probe never writes a
+secret** — keys are always provisioned through bach itself
+(`afbach secret set anton <KEY>`), the single source of truth. The probe is the
+verification counterpart only, and never prints secret values (length only).
+
+**When to write one:** a new feature reads an API key from the vault (e.g.
+`parallel_keys_probe.py` for the signals-engine Parallel grounding key).
+
 ---
 
 ## Writing a new probe
@@ -259,3 +270,11 @@ This decouples probe selectors from styling changes.
 | `probes/ui_probe.py` | Main UI auth + navigation probe |
 | `probes/ui_portfolio_probe.py` | Portfolio filter / sort / search probe |
 | `probes/<broker>_probe.py` | Broker-specific XHR / REST probes |
+| `probes/pypi_publish_probe.py` | Release health — fux-engine / cage-flux are live on PyPI |
+| `probes/github_publish_probe.py` | Release health — the fux/cage publish & CI workflows are green |
+| `probes/parallel_keys_probe.py` | Vault check — Parallel (parallel.ai) API key is provisioned in afbach |
+| `probes/parallel_grounding_probe.py` | §9 Deep-search wiring — off / on (call+receipt+ToolTrail) / no-key fail-open / over-budget skip |
+| `probes/signals_review_probe.py` | Signals Phase 1 — deterministic ActionPlan (byte-identical) on a fixture; `just signals-review` |
+| `probes/signals_screen_probe.py` | Signals Phase 2 — deterministic ScreenResult (ranking + gates) on a fixture universe; `just probe signals-screen` |
+| `probes/signals_replan_probe.py` | Signals Phase 3 — re-plan loop reports the diff (exited/new/stops/un-acted) on changed holdings; `just probe signals-replan` |
+| `probes/signals_pnl_probe.py` | Signals Phase 4 — monthly tracker nets brokerage/STT/friction/STCG on a fixture; `just probe signals-pnl` |

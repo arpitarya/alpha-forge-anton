@@ -80,6 +80,9 @@ export interface PendingAction {
   action: string;
   summary: string;
   steps: string[];
+  /** When present, Approve POSTs this (e.g. a strategy-knob change) in addition to
+   * re-sending a confirmation turn. */
+  apply?: { path: string; body: Record<string, unknown> };
 }
 
 export interface ChatTurn {

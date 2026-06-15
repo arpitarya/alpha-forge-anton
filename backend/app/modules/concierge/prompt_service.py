@@ -14,21 +14,11 @@ from alphaforge_anton_llm.types import Message, QueryType
 
 from app.modules.concierge.concierge_schemas import ChatRequest
 from app.modules.concierge.fux_bridge import recall as fux_recall
+from app.modules.concierge.grounding_service import inject as web_ground
 from app.modules.concierge.holdings_private import detailed_context, enforce_floor
 from app.modules.concierge.memory_service import MEMORY_PREAMBLE, load_memory
-
-SYSTEM = (
-    "You are Orff, the AI financial concierge inside AlphaForge Anton — a personal investment "
-    "terminal for Indian markets. Be concise, data-driven, and actionable. Format numbers in "
-    "Indian locale (₹, L, Cr). When you recommend a trade, include the rationale and expected "
-    "impact on the portfolio. Keep responses under 400 words unless a detailed breakdown is "
-    "explicitly requested."
-)
-GROUNDING_PREAMBLE = (
-    "Authoritative project knowledge from Fux (Anton's knowledge brain). Treat these "
-    "rules, formulas, and definitions as ground truth when they apply; cite the figures "
-    "and logic they prescribe rather than inventing your own:\n\n"
-)
+from app.modules.concierge.plan_context import inject as signals_ground
+from app.modules.concierge.prompt_text import GROUNDING_PREAMBLE, SYSTEM
 
 
 @dataclass
@@ -64,6 +54,11 @@ async def assemble(req: ChatRequest) -> Assembled:
         msgs.append(Message(role="system", content=MEMORY_PREAMBLE + memory))
         _step(trace, "memory.load", f"{len(memory)} chars of user context", t)
 
+    # Best-effort context injectors — each appends its own system block + trace step:
+    # opt-in Parallel web grounding (§9), then signals/plan context (§7, gated).
+    await web_ground(req, msgs, trace)
+    await signals_ground(req, msgs, trace)
+
     msgs.extend(
         Message(role=m.role, content=m.content, images=list(m.images)) for m in req.messages
     )
@@ -75,8 +70,11 @@ async def assemble(req: ChatRequest) -> Assembled:
         t = time.perf_counter()
         qt, preferred, confirmed, notice = enforce_floor(req.provider, intent_qt)
         msgs.append(Message(role="system", content=detailed_context(preferred)))
-        level = "full rows → trusted lane" if preferred in registry.trusted_providers() \
+        level = (
+            "full rows → trusted lane"
+            if preferred in registry.trusted_providers()
             else "percentages only"
+        )
         _step(trace, "holdings.disclose", level, t)
     elif req.provider == "auto":
         qt, preferred = registry.classify_intent(last_user), None

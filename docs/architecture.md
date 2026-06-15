@@ -18,6 +18,7 @@ alpha-forge-anton/
 │   │   ├── plans/       plan store plane — plan_loader (reads the private elgar store at ELGAR_DIR), plan_drift (targets × live actuals, %-only), /plans + /plans/drift routes. Money docs live in elgar (sibling tool, ~/my_programs/elgar), never in this repo — `fux why plan-store`
 │   │   ├── brokers/     pluggable BrokerSource adapters (Zerodha Kite/Coin, Groww, Angel One, IndMoney, TickerTape, Binance) + aggregator + registry. Used by portfolio routes. All CSV portfolio dumps share `dump_utils.py` — see broker-csv-dumps.md
 │   │   ├── trade/       routes (paper/live trade endpoints)
+│   │   ├── signals/     deterministic swing-trade engine — strategy_config (tunable knobs, Orff-editable) + quote_source (yfinance, cached) + indicators (ta-lib) + signal_rules + universe/screener_rules + plan_store/plan_diff (re-plan loop, elgar actions/) + strategy_tuning (ApprovalCard→elgar) + plan_card (deterministic UISpec) + weekly_service (scheduled review) + pnl_tracker (realized P&L net of brokerage/STT/friction/STCG). GET /signals/review (plan+diff) /screen /strategy /weekly · POST /plan /strategy /pnl. No LLM in the numbers — see docs/signals.md
 │   │   └── dashboard/   routes (cross-module aggregation)
 │   ├── app/main.py   FastAPI app factory; mounts api_router from app.modules
 │   ├── alembic/      Database migrations

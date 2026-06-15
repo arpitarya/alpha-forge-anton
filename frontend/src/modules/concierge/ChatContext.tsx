@@ -12,7 +12,7 @@ import { useChatStream } from "./useChatStream";
 interface ChatCtx {
   open: boolean;
   setOpen: (v: boolean) => void;
-  submit: (q: string, choice: ModelChoice, images?: string[]) => void;
+  submit: (q: string, choice: ModelChoice, images?: string[], webGrounding?: boolean) => void;
 }
 
 const Ctx = createContext<ChatCtx>({
@@ -58,7 +58,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   );
 
   const handleSend = useCallback(
-    (q: string, images?: string[]) => submit(q, choice, images),
+    (q: string, images?: string[], webGrounding?: boolean) =>
+      submit(q, choice, images, webGrounding),
     [submit, choice],
   );
   const handleEdit = useCallback(

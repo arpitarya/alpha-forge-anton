@@ -68,6 +68,7 @@ export function useChatStream() {
       history: { role: "user" | "assistant"; content: string }[],
       images: string[],
       active: ChatTurn["active"],
+      webGrounding = false,
     ) => {
       abortRef.current?.abort();
       const ctrl = new AbortController();
@@ -87,6 +88,7 @@ export function useChatStream() {
             provider: active.provider,
             model_id: active.modelId,
             auto_level: active.autoLevel,
+            web_grounding: webGrounding,
           }),
           signal: ctrl.signal,
         });
@@ -130,7 +132,7 @@ export function useChatStream() {
   );
 
   const submit = useCallback(
-    async (query: string, choice: ModelChoice, images: string[] = []) => {
+    async (query: string, choice: ModelChoice, images: string[] = [], webGrounding = false) => {
       if (!query.trim() && !images.length) return;
       const active = activeModelFor(choice, query);
       const id = nanoid();
@@ -164,7 +166,7 @@ export function useChatStream() {
         return msgs;
       });
       prior.push({ role: "user", content: query });
-      await run({ id } as ChatTurn, prior, images, active);
+      await run({ id } as ChatTurn, prior, images, active, webGrounding);
     },
     [turns, run],
   );

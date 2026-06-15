@@ -19,10 +19,15 @@ import urllib.request
 from pathlib import Path
 
 
-def _vault_secret(key: str) -> str | None:
+def vault_endpoint() -> tuple[str, str | None]:
+    """Resolve (base_url, token) for the afbach vault.
+
+    Token comes from AFBACH_TOKEN, falling back to .env.cred.local at the repo
+    root; URL from AFBACH_URL (also honoured from that file) or the local default.
+    A None token means the vault can't be reached — callers should bail cleanly.
+    """
     token = os.getenv("AFBACH_TOKEN")
     if not token:
-        # Try reading from .env.cred.local relative to repo root
         cred_file = Path(__file__).resolve().parent.parent / ".env.cred.local"
         if cred_file.exists():
             for line in cred_file.read_text().splitlines():
@@ -30,10 +35,15 @@ def _vault_secret(key: str) -> str | None:
                     token = line.split("=", 1)[1].strip()
                 if line.startswith("AFBACH_URL="):
                     os.environ.setdefault("AFBACH_URL", line.split("=", 1)[1].strip())
+    url = os.getenv("AFBACH_URL", "http://[::1]:54087/v1").rstrip("/")
+    return url, token
+
+
+def _vault_secret(key: str) -> str | None:
+    url, token = vault_endpoint()
     if not token:
         return None
 
-    url = os.getenv("AFBACH_URL", "http://[::1]:54087/v1").rstrip("/")
     req = urllib.request.Request(
         f"{url}/secrets",
         headers={"Authorization": f"Bearer {token}"},
