@@ -44,5 +44,13 @@ def realized_pnl(
         short_term_gain=round(short_term, 2),
         target=round(target, 2),
         vs_target=round(net - target, 2),
+        progress_pct=round(net / target * 100, 2) if target else 0.0,
         trades=len(trades),
     )
+
+
+def monthly_target() -> float:
+    """Active monthly P&L target from the objective config (0.0 if none set)."""
+    from app.modules.signals.objective_config import load_objective  # lazy — avoids circular at import
+
+    return load_objective().active_target()

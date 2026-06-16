@@ -87,18 +87,33 @@ class LLMGateway:
         preferred_provider: str | None = None,
         model: str | None = None,
         confirmed: bool = False,
+        reasoning: bool = False,
+        effort: str | None = None,
     ) -> AsyncIterator[ProviderResponse]:
         """Stream ProviderResponse snapshots; one-shot when provider can't stream."""
         name, _ = await self._select(query_type, preferred_provider, confirmed, model)
         picked_model = model if name == preferred_provider else None
         adapter = self._registry[name]
         prepared = self._handover.prepare(messages)
+        t0 = time.monotonic()
+        # Phase 4: extended thinking only for reasoning intents on a capable adapter.
+        kwargs: dict = {"model": picked_model}
+        if reasoning and getattr(adapter, "supports_reasoning", False):
+            extra = {"thinking": {"type": "adaptive", "display": "summarized"}}
+            if effort:
+                extra["output_config"] = {"effort": effort}
+            kwargs["extra"] = extra
         if getattr(adapter, "supports_streaming", False) and hasattr(adapter, "astream"):
-            async for snapshot in adapter.astream(prepared, model=picked_model):
+            last: ProviderResponse | None = None
+            async for snapshot in adapter.astream(prepared, **kwargs):
+                last = snapshot
                 yield snapshot
+            if last is not None:  # meter once from the final snapshot (cache split incl.)
+                cage_meter.record(last, query_type=query_type, latency_ms=_ms(t0))
             return
         result = await adapter.complete(prepared, model=picked_model)
         assert isinstance(result, ProviderResponse)
+        cage_meter.record(result, query_type=query_type, latency_ms=_ms(t0))
         yield result
 
     async def health(self) -> dict[str, ProviderHealth]:

@@ -273,7 +273,8 @@ This decouples probe selectors from styling changes.
 | `probes/pypi_publish_probe.py` | Release health — fux-engine / cage-flux are live on PyPI |
 | `probes/github_publish_probe.py` | Release health — the fux/cage publish & CI workflows are green |
 | `probes/parallel_keys_probe.py` | Vault check — Parallel (parallel.ai) API key is provisioned in afbach |
-| `probes/parallel_grounding_probe.py` | §9 Deep-search wiring — off / on (call+receipt+ToolTrail) / no-key fail-open / over-budget skip |
+| `probes/deep_search_probe.py` | §9 agent-initiated deep search — auto card (no call) / confirm (call+receipt) / reject / always (cardless) / never / over-budget degrade |
+| `probes/ui_deep_search_probe.py` | §9 frontend (CDP, fixture-served) — tri-state Auto/Always/Never control renders + sends `deep_search_mode`, persists the pref; an Auto gap raises the request_deep_search card (reasons + queries + cost) and Approve dispatches the run |
 | `probes/signals_review_probe.py` | Signals Phase 1 — deterministic ActionPlan (byte-identical) on a fixture; `just signals-review` |
 | `probes/signals_screen_probe.py` | Signals Phase 2 — deterministic ScreenResult (ranking + gates) on a fixture universe; `just probe signals-screen` |
 | `probes/signals_replan_probe.py` | Signals Phase 3 — re-plan loop reports the diff (exited/new/stops/un-acted) on changed holdings; `just probe signals-replan` |

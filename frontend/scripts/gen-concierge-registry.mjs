@@ -38,6 +38,8 @@ export type ProviderId = ${union};
 export interface ModelConsumption {
   input_per_m: number;
   output_per_m: number;
+  cache_read_per_m?: number;
+  cache_write_per_m?: number;
   max_tokens: number;
   paid: boolean;
 }

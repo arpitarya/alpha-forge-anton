@@ -29,6 +29,10 @@ class Message(BaseModel):
     # Vision attachments as data URLs ("data:image/png;base64,…"); only adapters
     # for providers in the manifest's `vision` block consume them.
     images: list[str] = []
+    # Prompt-caching hint (system messages only): True marks a turn-stable block
+    # that belongs in the cacheable prefix; volatile blocks leave it False. The
+    # claude-sdk adapter caches the contiguous run of cacheable blocks. See Phase 3.
+    cacheable: bool = False
 
 
 class ToolSchema(BaseModel):
@@ -47,8 +51,11 @@ class ProviderResponse(BaseModel):
     content: str
     provider: str
     model: str
-    prompt_tokens: int = 0
+    prompt_tokens: int = 0  # uncached input tokens (full price)
     completion_tokens: int = 0
+    # Prompt-cache split (Anthropic usage): served-from-cache vs written-to-cache.
+    cache_read_input_tokens: int = 0
+    cache_creation_input_tokens: int = 0
     tool_calls: list[ToolCall] = []
     raw: dict[str, Any] = {}
 

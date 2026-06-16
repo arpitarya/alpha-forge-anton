@@ -6,6 +6,8 @@ export type ProviderId = "gemini" | "groq" | "cerebras" | "mistral" | "openroute
 export interface ModelConsumption {
   input_per_m: number;
   output_per_m: number;
+  cache_read_per_m?: number;
+  cache_write_per_m?: number;
   max_tokens: number;
   paid: boolean;
 }
@@ -199,6 +201,8 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "consumption": {
           "input_per_m": 3,
           "output_per_m": 15,
+          "cache_read_per_m": 0.3,
+          "cache_write_per_m": 3.75,
           "max_tokens": 4096,
           "paid": true
         }
@@ -213,6 +217,8 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "consumption": {
           "input_per_m": 15,
           "output_per_m": 75,
+          "cache_read_per_m": 1.5,
+          "cache_write_per_m": 18.75,
           "max_tokens": 4096,
           "paid": true
         }
@@ -227,6 +233,8 @@ export const PROVIDERS: Record<ProviderId, ProviderMeta> = {
         "consumption": {
           "input_per_m": 1,
           "output_per_m": 5,
+          "cache_read_per_m": 0.1,
+          "cache_write_per_m": 1.25,
           "max_tokens": 4096,
           "paid": true
         }
@@ -256,7 +264,7 @@ export const INTENT_PATTERNS: IntentPattern[] = [
     "queryType": "portfolio_private"
   },
   {
-    "pattern": "risk|drawdown|var|simulat|stress|hedge|tax|optim",
+    "pattern": "risk|drawdown|var|simulat|stress|hedge|tax|optim|review|strateg",
     "queryType": "investment_plan"
   },
   {

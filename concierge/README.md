@@ -24,10 +24,11 @@ Named after Carl Orff, in keeping with the project's composer naming convention 
 ## Quick orientation
 
 - **Memory**: a user-editable **context doc** (goals/constraints) lives in the elgar store and is injected into every prompt; full **conversation history** is also persisted to elgar in its own `sessions/` collection (separate from money `plans/`) — one doc per session, listed, resumed, and deleted from the History panel — see the feature set below
-- **Streaming**: LLMGateway stream -> FastAPI `StreamingResponse` -> SSE -> `useConciergeStream` hook
+- **Streaming**: LLMGateway stream -> FastAPI `StreamingResponse` -> SSE -> `useConciergeStream` hook. The trusted lane (`claude-sdk`) streams token-by-token via `client.messages.stream()` (Phase 1 — `_claude_stream.py`); free providers use the OpenAI-compat SSE path
+- **Prompt caching** (trusted lane, Phase 3): the turn-stable system prefix (`SYSTEM` + objective + memory) is flagged `cacheable`; the adapter sends `system` as a block array with `cache_control: {ephemeral}` on the last cacheable block (`_claude_system.py`), so multi-turn sessions read it from cache (~0.1× input). Volatile blocks (Fux grounding, web, signals, live holdings) stay uncached. The cache read/write split + cache-aware cost land in the Cage receipt; rates live in `providers.json`
 - **Shared sessions**: concierge and browser voice write to the same `concierge_turns` table via a `source` column; Orff sees the full interleaved history regardless of input modality
 - **Prompt assembly**: stable system, intent, memory, holdings, news, history, and current-message blocks are composed server-side
-- **Model routing**: `auto` resolves to the gateway's free-provider route for the detected intent; reasoning-capable routes are added through the roadmap work
+- **Model routing**: `auto` resolves to the gateway's free-provider route for the detected intent. On the trusted lane, an intent→model tier (Phase 4, authored in `routing.json` `tiers`) picks **Opus 4.8 + adaptive thinking + `effort:high`** for plan/strategy/pick intents and **Sonnet** for chat/holdings; the `thinking_mode` request flag (Auto/On/Off) overrides the thinking gate. Thinking deltas stream as `{thinking}` via a `<think>` prefix — no frontend change
 - **Single source of truth**: providers, intent routing, and the default-model policy are authored once in [`llm/src/alphaforge_anton_llm/registry/`](llm/src/alphaforge_anton_llm/registry/) (`providers.json` + `routing.json`). Python reads it via `registry.py`; the frontend regenerates `concierge.registry.generated.ts` with `pnpm gen:concierge`. Edit the manifest, never the `.ts`/`.py` copies — see [6-registry-consolidation-plan.md](docs/6-registry-consolidation-plan.md)
 
 ## Chat-app & Claude-Code feature set
@@ -38,6 +39,7 @@ gateway. Each capability is registry/manifest-driven and safe by construction.
 | Feature | Surface | Where |
 |---------|---------|-------|
 | Artifacts panel | every composed UISpec collected in a side panel | [ArtifactsPanel.tsx](../frontend/src/modules/concierge/ArtifactsPanel.tsx) |
+| Objective tab | north-star **target + horizon + mission** beside Memory; read-only view (`GET /signals/objective`), progress shown as a **distinct pending state** until a trades source lands; edits are proposed into chat → `set_objective` → ApprovalCard → elgar (never a silent write) | [ObjectivePanel.tsx](../frontend/src/modules/concierge/ObjectivePanel.tsx) · [objective_config.py](../backend/app/modules/signals/objective_config.py) |
 | Project context / memory | user-editable doc injected into every chat, **stored in elgar** | [MemoryPanel.tsx](../frontend/src/modules/concierge/MemoryPanel.tsx) · [memory_service.py](../backend/app/modules/concierge/memory_service.py) |
 | Conversation history | past chats listed in a sidebar, resume or delete — **elgar `sessions/` collection, one doc per chat** | [HistoryPanel.tsx](../frontend/src/modules/concierge/HistoryPanel.tsx) · [history_service.py](../backend/app/modules/concierge/history_service.py) |
 | Claude-chat import | re-runnable sync of investment-related local Claude Code chats into Orff history (`just sync-claude-history`) | [claude_import.py](../backend/app/modules/concierge/claude_import.py) · [claude_parse.py](../backend/app/modules/concierge/claude_parse.py) |
@@ -76,19 +78,36 @@ a dead connection. Prompt assembly (system, Fux grounding, **elgar memory**, hol
 history, vision floor) lives in [prompt_service.py](../backend/app/modules/concierge/prompt_service.py).
 The protocol is covered by `just probe concierge-events` (standalone, no CDP).
 
-**Parallel web grounding — the "Deep search" toggle (handoff §9).** A request may
-carry `web_grounding: bool` (default `false`), set by the off-by-default 🌐 Deep
-search chip in the composer. When on, [grounding_service.py](../backend/app/modules/concierge/grounding_service.py)
-calls Parallel (key from `PARALLEL_API_KEY`, afbach-vault-injected — never env/code),
-injects the extracts as a system block, records a **Search-vs-Task-tagged** Cage
-receipt (`cage_meter.record_tool`), and adds a `parallel` ToolTrail step. A **hard
-monthly budget cap** runs first: `cage_meter.month_spend_usd("parallel")` (month-to-date,
-INR-converted) vs `parallel.monthly_budget_inr` in the strategy config — over budget ⇒
-the call is **skipped** and Orff answers from the free sources. Task tier is gated on
-`parallel.allow_task_api` + a deep-dive prompt. The free RSS/NSE/yfinance path is
-unchanged; `news/.../sources/parallel.py` exists but is **not** in the default
-aggregation. Verified by `just probe parallel-grounding` (off / on / no-key / over-budget)
-and `just probe parallel-keys`.
+**Agent-initiated deep search — Orff asks before spending (handoff §9; canonical spec
+in [deep-search-ask.handoff.md](../docs/handoffs/deep-search-ask.handoff.md)).** The old on/off
+`web_grounding` toggle is retired. Instead the trusted tool-calling lane offers a
+**confirm-gated** tool, `request_deep_search(reasons, queries)` ([tool_registry.py](../backend/app/modules/concierge/tool_registry.py));
+the system prompt tells Orff to call it — with concrete reasons — when a question needs
+current web data it lacks, rather than guessing or answering stale. A request carries
+`deep_search_mode` (default `auto`), set by the tri-state **🌐 Auto / Always / Never**
+control in the composer ([DeepSearchMode.tsx](../frontend/src/modules/concierge/DeepSearchMode.tsx),
+persisted to `localStorage["af-deep-search-mode"]` via `ChatContext`):
+
+- **Auto** — on the call, [deep_search_service.py](../backend/app/modules/concierge/deep_search_service.py)
+  emits a `{confirm}` card (`summary`=reasons, `steps`=queries, `detail`=`~₹0.5 · ₹<mtd> of
+  ₹<budget> used this month`) and **makes no Parallel call**. The card renders via
+  [ApprovalCard.tsx](../frontend/src/modules/concierge/ApprovalCard.tsx) (now showing the
+  reasons + the cost line beneath the queries); on Approve it `POST`s the apply target
+  `/concierge/deep-search` to run the queries; reject ⇒ Orff answers from free sources and
+  says what it couldn't verify.
+- **Always** — the tool runs cardless (auto-confirm) inside the loop; grounding is fed back
+  as the `tool_result` and Orff continues.
+- **Never** — the tool isn't offered at all.
+
+The shared executor is `grounding_service.run` (one Parallel call → one **Search-vs-Task-tagged**
+Cage receipt via `cage_meter.record_tool`; key `PARALLEL_API_KEY`, afbach-vault-injected —
+never env/code). `grounding_service.budget_status` reads `cage_meter.month_spend_usd("parallel")`
+(month-to-date, INR-converted) vs `parallel.monthly_budget_inr` — over budget ⇒ the card/flow
+degrades to free sources and says so, no call, no receipt. Task tier is gated on
+`parallel.allow_task_api` + a deep-dive prompt. **Fail-open throughout** — a grounding error
+yields a free-source answer, never a dead stream. Verified by `just probe deep-search`
+(backend: auto / confirm / reject / always / never / over-budget) and `just probe ui-deep-search`
+(frontend: the tri-state control sends the mode + an Auto gap renders the card, real Chrome).
 
 The user-context doc lives in the **elgar store** (`elgar get/save orff-context`), not a home-dir
 file — it holds personal goals/figures, exactly the money-adjacent data the `plan-store` rule keeps

@@ -8,6 +8,11 @@ export { resolveProviderAuto, resolveTopAuto } from "./concierge.routing";
 
 export type AutoLevel = "top" | "provider" | "none";
 
+// Agent-initiated deep search (replaces the old on/off web_grounding toggle): Auto =
+// Orff asks via a confirm card before any paid search; Always = run cardless; Never =
+// the tool isn't offered. Mirrors the backend DeepSearchMode literal.
+export type DeepSearchMode = "auto" | "always" | "never";
+
 /**
  * Two-level model selection.
  * - `{ provider: "auto" }` — top-level Auto, routes across all providers.
@@ -80,6 +85,9 @@ export interface PendingAction {
   action: string;
   summary: string;
   steps: string[];
+  /** Optional cost/budget line (e.g. the deep-search "~₹0.5 · ₹X of ₹Y used") shown
+   * under the steps. */
+  detail?: string;
   /** When present, Approve POSTs this (e.g. a strategy-knob change) in addition to
    * re-sending a confirmation turn. */
   apply?: { path: string; body: Record<string, unknown> };

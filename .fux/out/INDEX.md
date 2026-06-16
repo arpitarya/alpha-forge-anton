@@ -1,6 +1,9 @@
 # Fux INDEX
 
-_46 active entries across 10 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_50 active entries across 11 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+
+## architecture
+- **mutation-confirm-rmw** (rule) — every Orff-initiated mutation (memory note, exclusion-list edit, strategy/obj…
 
 ## brokers
 - **broker-source** (glossary) — BrokerSource
@@ -42,6 +45,7 @@ _46 active entries across 10 domains. Read this first; open a rule (`fux why <id
 - **portfolio-valuation** (formula) — Portfolio totals are computed over INR-normalised holdings:
 - **position-concentration** (rule) — Default concentration ceilings Orff applies when reviewing holdings
 - **rebalancing-policy** (rule) — Rebalancing is band-triggered, not calendar-triggered, and follows
+- **signals-deterministic-core** (rule) — the signals engine is a deterministic core with a probabilistic edge.
 - **strategy-knob-tradeoffs** (rule) — the signals engine's behaviour is governed by a small set of tunable
 - **xirr-vs-cagr** (formula) — Use the return measure that matches the cash-flow shape:
 
@@ -57,9 +61,11 @@ _46 active entries across 10 domains. Read this first; open a rule (`fux why <id
 
 ## security
 - **afbach-vault** (glossary) — afbach vault (alpha-forge-bach)
+- **context-docs-figure-free** (rule) — Orff's standing-context / memory docs hold durable preferences and rules only…
 - **knowledge-location** (convention) — every authored knowledge document lives in exactly one of two
 - **no-secrets-in-vcs** (convention) — Never commit secrets — `.env` files, API keys, tokens, private _[global]_
 - **plan-store** (convention) — Plan store (elgar) — money documents are linked, never stored
+- **trusted-lane-tools** (rule) — Orff's tool-calling and paid web grounding are governed by the trusted lane.
 - **vault-only-credentials** (convention) — Broker credentials — user IDs, client IDs, API keys — live only
 
 ## tax

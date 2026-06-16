@@ -23,6 +23,7 @@ class ProviderAdapter(ABC):
     env_key: str
     supports_tool_calling: bool = True
     supports_streaming: bool = True
+    supports_reasoning: bool = False  # accepts extended-thinking params (Phase 4)
 
     @abstractmethod
     async def complete(

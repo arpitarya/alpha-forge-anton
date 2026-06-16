@@ -11,34 +11,22 @@ byte-identical for the determinism contract.
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import Any
-
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import ValidationError
 
 from app.core.deps import get_current_user
 from app.modules.brokers.aggregator import HoldingsAggregator
-from app.modules.signals import plan_store, strategy_tuning
-from app.modules.signals.pnl_tracker import realized_pnl
+from app.modules.signals import objective_tuning, plan_store, strategy_tuning
+from app.modules.signals.objective_config import load_objective
+from app.modules.signals.objective_tuning import ObjectiveUpdate
+from app.modules.signals.pnl_tracker import monthly_target, realized_pnl
 from app.modules.signals.review_service import build_action_plan, build_review
 from app.modules.signals.screen_service import build_screen
-from app.modules.signals.signal_schema import RealizedTrade
+from app.modules.signals.signal_schema import PnlRequest, RealizedTrade, StrategyChange
 from app.modules.signals.strategy_config import load_config
 from app.modules.signals.weekly_service import weekly_review
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
-
-
-class StrategyChange(BaseModel):
-    knob: str  # dotted path, e.g. "trim_rule.mode"
-    value: Any
-
-
-class PnlRequest(BaseModel):
-    """Realized round-trips for the month + the target (figures stay request-scoped)."""
-
-    trades: list[RealizedTrade] = Field(default_factory=list)
-    target: float = 0.0
 
 
 @router.get("/review")
@@ -74,10 +62,26 @@ async def get_weekly() -> dict:
     return {**review.model_dump(), "generated_at": datetime.now(UTC).isoformat()}
 
 
+@router.get("/objective")
+async def get_objective() -> dict:
+    obj = load_objective()
+    return obj.model_dump() | {"active_target": obj.active_target(), "generated_at": datetime.now(UTC).isoformat()}
+
+
+@router.post("/objective")
+async def set_objective(body: ObjectiveUpdate) -> dict:
+    try:
+        obj = await objective_tuning.apply(body.model_dump(exclude_none=True))
+    except (ValueError, ValidationError) as e:
+        raise HTTPException(422, f"invalid objective: {e}") from e
+    return obj.model_dump() | {"active_target": obj.active_target()}
+
+
 @router.post("/pnl")
 async def get_pnl(body: PnlRequest) -> dict:
     """Monthly realized P&L, net of brokerage + STT + friction + STCG vs target."""
-    report = realized_pnl(body.trades, load_config().costs, body.target)
+    target = body.target or monthly_target()
+    report = realized_pnl(body.trades, load_config().costs, target)
     return report.model_dump()
 
 

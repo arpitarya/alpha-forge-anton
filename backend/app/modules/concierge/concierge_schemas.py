@@ -84,6 +84,12 @@ assert set(get_args(ProviderSlug)) == registry.provider_slugs() | {"auto"}, (
 )
 
 AutoLevel = Literal["top", "provider", "none"]
+# "Think harder" override (trusted lane). Auto = intent routing decides; On = force
+# adaptive thinking on the intent's model; Off = disable it. See Phase 4.
+ThinkingMode = Literal["auto", "on", "off"]
+# Agent-initiated deep search (replaces the web_grounding toggle): Auto asks via a
+# confirm card, Always runs cardless, Never doesn't offer the tool. See the handoff.
+DeepSearchMode = Literal["auto", "always", "never"]
 
 
 class ChatRequest(BaseModel):
@@ -99,6 +105,8 @@ class ChatRequest(BaseModel):
     provider: ProviderSlug = "auto"
     model_id: str | None = None
     auto_level: AutoLevel = "top"
-    # Opt-in Parallel web grounding (off by default — the free RSS/NSE/yfinance
-    # path stays the everyday default; this is the explicit paid "Deep search").
-    web_grounding: bool = False
+    # Agent-initiated, confirm-gated Parallel deep search. Auto (default) = Orff asks
+    # before spending; the free RSS/NSE/yfinance path stays the everyday default.
+    deep_search_mode: DeepSearchMode = "auto"
+    # "Think harder" override; Auto defers to intent routing (the default behaviour).
+    thinking_mode: ThinkingMode = "auto"

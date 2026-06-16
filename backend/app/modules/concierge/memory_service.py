@@ -9,11 +9,26 @@ best-effort so a missing or absent store never blocks the chat stream."""
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
+
 from app.modules.plans import elgar_bridge
 
-# The doc id under which the concierge context lives in the elgar store.
+# The doc id the Memory panel reads/writes — the user's free-text additions.
 MEMORY_DOC_ID = "orff-context"
 MAX_CHARS = 8_000
+CONTEXT_MAX = 12_000
+
+# Standing-context docs injected into every chat, in priority order. These are the
+# durable, FIGURE-FREE preference/rule docs — position figures never live here, they
+# arrive live from the holdings disclosure (see the plan-store / secure-holdings rule).
+# `orff-context` (last) holds the user's free-text additions from the Memory panel.
+MEMORY_DOCS = (
+    "investor-profile",
+    "trading-sleeve-rules",
+    "hard-exclusion-list",
+    "portfolio-snapshot",
+    "orff-context",
+)
 
 MEMORY_PREAMBLE = (
     "User-maintained context (goals, constraints, preferences) — the user wrote "
@@ -30,8 +45,35 @@ async def load_memory() -> str:
     return (text or "").strip()[:MAX_CHARS]
 
 
+async def load_context() -> str:
+    """Every standing-context doc concatenated (best-effort per doc) for prompt
+    injection. The Memory panel still reads/writes only `orff-context` via
+    load_memory/save_memory — this is the read-only union used at chat time."""
+    out: list[str] = []
+    for doc in MEMORY_DOCS:
+        try:
+            text = (await elgar_bridge.get(doc) or "").strip()
+        except Exception:
+            continue
+        if text:
+            out.append(f"## {doc}\n{text}")
+    return "\n\n".join(out)[:CONTEXT_MAX]
+
+
 async def save_memory(text: str) -> str:
     """Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored."""
     clipped = text[:MAX_CHARS]
     await elgar_bridge.save(MEMORY_DOC_ID, clipped, message="orff: update context")
     return clipped
+
+
+async def append_memory(note: str) -> str:
+    """Append `note` to the memory doc with a date-stamp separator; returns new content.
+
+    POST (not PUT) — calling twice must produce two entries, not one idempotent write.
+    """
+    current = await load_memory()
+    stamp = datetime.now(UTC).strftime("%Y-%m-%d")
+    separator = f"\n\n---\n{stamp}\n"
+    merged = (current + separator + note.strip())[:MAX_CHARS]
+    return await save_memory(merged)

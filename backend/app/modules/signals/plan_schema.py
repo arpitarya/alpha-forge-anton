@@ -62,6 +62,7 @@ class RealizedReport(BaseModel):
     short_term_gain: float = 0.0
     target: float = 0.0
     vs_target: float = 0.0
+    progress_pct: float = 0.0  # net/target*100 — raw, allowed-negative; clamp only in UI
     trades: int = 0
 
 
