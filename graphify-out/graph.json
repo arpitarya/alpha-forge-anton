@@ -762,36 +762,36 @@
       "file_type": "rationale",
       "source_file": "probes/ui_deep_search_probe.py",
       "source_location": "L1",
-      "id": "ui_deep_search_probe_rationale_1",
       "community": 3,
-      "norm_label": "playwright cdp probe \u2014 the tri-state deep-search control + request_deep_search c"
+      "norm_label": "playwright cdp probe \u2014 the tri-state deep-search control + request_deep_search c",
+      "id": "ui_deep_search_probe_rationale_1"
     },
     {
       "label": "Record the request's deep_search_mode; a fresh-data (\"PARAS\") query that is not",
       "file_type": "rationale",
       "source_file": "probes/ui_deep_search_probe.py",
       "source_location": "L92",
-      "id": "ui_deep_search_probe_rationale_92",
       "community": 3,
-      "norm_label": "record the request's deep_search_mode; a fresh-data (\"paras\") query that is not"
+      "norm_label": "record the request's deep_search_mode; a fresh-data (\"paras\") query that is not",
+      "id": "ui_deep_search_probe_rationale_92"
     },
     {
       "label": "The card's apply target \u2014 confirming the card must POST here.",
       "file_type": "rationale",
       "source_file": "probes/ui_deep_search_probe.py",
       "source_location": "L105",
-      "id": "ui_deep_search_probe_rationale_105",
       "community": 3,
-      "norm_label": "the card's apply target \u2014 confirming the card must post here."
+      "norm_label": "the card's apply target \u2014 confirming the card must post here.",
+      "id": "ui_deep_search_probe_rationale_105"
     },
     {
       "label": "Seed a query (footer bar) to open the rail \u2014 hits the plain-reply branch.",
       "file_type": "rationale",
       "source_file": "probes/ui_deep_search_probe.py",
       "source_location": "L129",
-      "id": "ui_deep_search_probe_rationale_129",
       "community": 3,
-      "norm_label": "seed a query (footer bar) to open the rail \u2014 hits the plain-reply branch."
+      "norm_label": "seed a query (footer bar) to open the rail \u2014 hits the plain-reply branch.",
+      "id": "ui_deep_search_probe_rationale_129"
     },
     {
       "label": "plan_projection_probe.py",

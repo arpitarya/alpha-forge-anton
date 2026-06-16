@@ -1,0 +1,9 @@
+untagged-candidate	capital-gains-debt-gold	looks like a principle (has a check:/normative type) but is untagged — add `principle:` + `enforcement: deterministic|judgment`
+untagged-candidate	capital-gains-equity	looks like a principle (has a check:/normative type) but is untagged — add `principle:` + `enforcement: deterministic|judgment`
+untagged-candidate	crypto-tax-vda	looks like a principle (has a check:/normative type) but is untagged — add `principle:` + `enforcement: deterministic|judgment`
+untagged-candidate	day-pnl	looks like a principle (has a check:/normative type) but is untagged — add `principle:` + `enforcement: deterministic|judgment`
+untagged-candidate	drawdown-recovery	looks like a principle (has a check:/normative type) but is untagged — add `principle:` + `enforcement: deterministic|judgment`
+untagged-candidate	holdings-sum-equals-total	looks like a principle (has a check:/normative type) but is untagged — add `principle:` + `enforcement: deterministic|judgment`
+untagged-candidate	market-hours-nse	looks like a principle (has a check:/normative type) but is untagged — add `principle:` + `enforcement: deterministic|judgment`
+untagged-candidate	tax-loss-harvesting	looks like a principle (has a check:/normative type) but is untagged — add `principle:` + `enforcement: deterministic|judgment`
+untagged-candidate	transaction-costs	looks like a principle (has a check:/normative type) but is untagged — add `principle:` + `enforcement: deterministic|judgment`
