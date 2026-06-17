@@ -29,7 +29,7 @@ Apply these on every file without looking up the docs:
 - Python: `async def` everywhere, absolute imports from `app.`, Pydantic v2, ruff (line-length=100)
 - TypeScript: strict mode, functional components only, pnpm, Biome v2
 - Never commit `.env` files or API keys
-- Never commit money docs (`*.plan.md` / personal figures) — they live in the private **elgar** store (`elgar save <id>`); this repo holds `elgar://plan/<id>` links only. Enforced by `just dante-pii` + pre-commit — `fux why plan-store`
+- **[CONSTITUTIONAL]** Never commit money docs (`*.plan.md` / `*.drift.md`) or hard PII (PAN / Aadhaar / broker account-client-folio numbers) — money docs live in the private **elgar** store (`elgar save <id>`); this repo holds `elgar://plan/<id>` links only. Worked-example ₹ figures are allowed (WARN; `pii:allow` to whitelist a line). This is `plan-store`, anton's **first constitutional rule** (sealed in `.fux/constitution.lock`); it cannot change in place — supersede + re-ratify. Enforced by `dante pii` + `just probe plan-safety` via pre-commit **and** the required `just constitution` (`fux gate`) CI check — `fux why plan-store`
 - All broker CSV dumps use `dump_utils.py` — see [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md)
 - Every code change must be accompanied by a doc update in the same session
 - **UI & broker verification: always use `probes/` (CDP :9299), never Playwright MCP** — see [probes/WHY_PROBES_NOT_MCP.md](probes/WHY_PROBES_NOT_MCP.md). New features need a probe + `just` recipe before they count as verified.

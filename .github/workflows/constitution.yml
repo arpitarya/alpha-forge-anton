@@ -1,0 +1,31 @@
+name: constitution
+
+# The wall. `fux gate` exits 2 on any constitutional-tier finding — a tampered or
+# unsealed apex rule (plan-store: money docs / hard PII must never enter this public
+# repo). Local pre-commit is bypassable with `--no-verify`; this required check is not.
+# Mark "constitution / gate" a required status check in branch protection for `main`.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # fux check is git-aware (staleness); needs history
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install fux-engine (pinned in pyproject.toml)
+        run: pip install "fux-engine>=0.4.0"
+
+      - uses: extractions/setup-just@v2
+
+      - name: just constitution (fux gate — exit 2 blocks)
+        run: just constitution

@@ -13,7 +13,12 @@
 - Cloud LLM providers disabled in `APP_ENV=development` unless `ALLOW_CLOUD_LLM_IN_DEV=true`
 - Broker outbound HTTP guarded against unapproved hosts in dev mode via `BROKER_ALLOWED_HOSTS`
 - Run `just audit` to scan Python + Node dependencies for known CVEs
-- **Money documents never live in this repo.** Personal & strategy plan docs (`*.plan.md`, `*.drift.md`, anything with personal financial figures) belong in the private elgar store (`elgar save <id>`, default `~/.alphaforge-anton/elgar`); commit only `elgar://plan/<id>` links. Enforced by `just dante-pii` (also in the pre-commit hook with `DANTE_ENFORCE=true`) and `just probe plan-safety` — see `fux why plan-store`
+- **[CONSTITUTIONAL] Money documents & hard PII never live in this repo.** This is `plan-store`, anton's first **constitutional** Fux rule — ratified, content-sealed in `.fux/constitution.lock`, and gate-enforced; it cannot change in place (supersede + re-ratify only). Two always-blocking classes, matched to the `dante pii` BLOCK tier:
+  - **Money documents** — `*.plan.md` / `*.drift.md` and any saved plan, strategy plan (targets/bands/rules), projection, or saved Orff plan conversation. These live only in the private elgar store (`elgar save <id>`, default `~/.alphaforge-anton/elgar`); commit only `elgar://plan/<id>` links. (CRITICAL → BLOCK.)
+  - **Hard identifiers** — PAN, Aadhaar, broker account / client / folio numbers. (HIGH → BLOCK.)
+
+  Worked-example ₹ amounts in docs / knowledge rules / eval fixtures are permitted (MEDIUM → WARN); whitelist an intentional line with `pii:allow`. Real position figures stay out via the money-doc class above + `context-docs-figure-free`.
+  **Enforcement (two layers):** `dante pii` (`DANTE_ENFORCE=true`) + `just probe plan-safety` in the pre-commit hook — *bypassable with `--no-verify`* — **and** the **required** `just constitution` (`fux gate`) CI check, which is the wall (`fux gate` exits 2 on any constitutional finding). See `fux why plan-store`.
 
 ## Documentation
 
