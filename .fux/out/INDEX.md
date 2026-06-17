@@ -64,7 +64,7 @@ _50 active entries across 11 domains. Read this first; open a rule (`fux why <id
 - **context-docs-figure-free** (rule) — Orff's standing-context / memory docs hold durable preferences and rules only…
 - **knowledge-location** (convention) — every authored knowledge document lives in exactly one of two
 - **no-secrets-in-vcs** (convention) — Never commit secrets — `.env` files, API keys, tokens, private _[global]_
-- **plan-store** (convention) — Plan store (elgar) — money documents are linked, never stored
+- **plan-store** (convention) — Plan store (elgar) — money documents & hard PII never enter the public repo
 - **trusted-lane-tools** (rule) — Orff's tool-calling and paid web grounding are governed by the trusted lane.
 - **vault-only-credentials** (convention) — Broker credentials — user IDs, client IDs, API keys — live only
 

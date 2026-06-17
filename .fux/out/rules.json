@@ -637,7 +637,7 @@
       "type": "convention",
       "domain": "security",
       "status": "active",
-      "title": "Plan store (elgar) — money documents are linked, never stored",
+      "title": "Plan store (elgar) — money documents & hard PII never enter the public repo",
       "layer": "project",
       "path": "/Users/arpitarya/my_programs/anton/.fux/rules/plan-store.md",
       "code_refs": [],
@@ -646,7 +646,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-12",
-      "updated": "2026-06-12"
+      "updated": "2026-06-17"
     },
     {
       "id": "portfolio-plan-template",
