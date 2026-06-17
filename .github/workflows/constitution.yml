@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # fux check is git-aware (staleness); needs history
+        # No fetch-depth: 0 — constitutional tamper/lock findings are content-hash
+        # based (history-independent). Git history only feeds advisory staleness.
 
       - uses: actions/setup-python@v5
         with:
