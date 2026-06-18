@@ -6,13 +6,31 @@ status: active
 principle: money/PII
 enforcement: deterministic
 created: 2026-06-18
-updated: 2026-06-18
+updated: 2026-06-19
+aliases:
+  - runtime-pii-guard
+  - orff-note-guard
+  - critic-runtime-block
+keywords:
+  - pii
+  - runtime
+  - critic
+  - orff
+  - memory
+  - note
+  - pan
+  - aadhaar
+  - account
+  - block
+  - advisory
 code_refs:
   - backend/app/modules/concierge/critic_guard.py
   - backend/app/modules/concierge/memory_service.py
-related: [plan-store, mutation-confirm-rmw, context-docs-figure-free, secure-holdings-plan]
-aliases: [runtime-pii-guard, orff-note-guard, critic-runtime-block]
-keywords: [pii, runtime, critic, orff, memory, note, pan, aadhaar, account, block, advisory]
+related:
+  - plan-store
+  - mutation-confirm-rmw
+  - context-docs-figure-free
+  - secure-holdings-plan
 seal: a2ab8247054bca0e
 ---
 **Principle (deterministic — runtime money/PII guard):** Any text the Orff agent writes
