@@ -1,11 +1,11 @@
 # Fux GRAPH_REPORT
 
-_2337 nodes · 14399 edges · 492 code files · 64 rules · 226 communities._
+_2339 nodes · 14399 edges · 494 code files · 64 rules · 228 communities._
 
 ## Node types
 
 - function: 1434
-- code-file: 492
+- code-file: 494
 - class: 347
 - convention: 16
 - narrative: 12
