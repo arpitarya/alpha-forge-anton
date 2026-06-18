@@ -582,19 +582,21 @@ flowchart LR
 
 **Snapshot format** (compact markdown for LLM):
 
+_Illustrative example — synthetic data, not real holdings._
+
 ```
 HOLDINGS as of 2026-05-27 14:32 IST (cached, refreshes hourly):
 
-Total portfolio value: ₹42,18,500 | Day P&L: +₹18,200 (+0.43%) | Unrealised P&L: +₹3,82,400 (+9.97%)
+Total portfolio value: ₹X,XX,XXX | Day P&L: +₹X,XXX (+X.X%) | Unrealised P&L: +₹X,XX,XXX (+X.X%)
 
-| Symbol     | Qty | Avg Cost | LTP    | Value     | Unrealised P&L | Weight |
-|------------|-----|----------|--------|-----------|----------------|--------|
-| RELIANCE   | 50  | 2,400.00 | 2,890  | 1,44,500  | +24,500 (+20.4%) | 12.4%  |
-| HDFCBANK   | 80  | 1,510.00 | 1,685  | 1,34,800  | +14,000 (+11.6%) | 11.6%  |
-| TCS        | 30  | 3,200.00 | 4,120  | 1,23,600  | +27,600 (+28.7%) | 10.6%  |
-| ...        | ... | ...      | ...    | ...       | ...              | ...    |
+| Symbol   | Qty | Avg Cost | LTP   | Value    | Unrealised P&L  | Weight |
+|----------|-----|----------|-------|----------|-----------------|--------|
+| ACME     | NN  | X,XXX.XX | X,XXX | X,XX,XXX | +XX,XXX (+X.X%)  | 25%    |
+| FOOCORP  | NN  | X,XXX.XX | X,XXX | X,XX,XXX | +XX,XXX (+X.X%)  | 25%    |
+| BARLTD   | NN  | X,XXX.XX | X,XXX | X,XX,XXX | +XX,XXX (+X.X%)  | 25%    |
+| BAZINC   | NN  | X,XXX.XX | X,XXX | X,XX,XXX | +XX,XXX (+X.X%)  | 25%    |
 
-Top sectors (by value): Financials 28% | IT 22% | Energy 14% | Consumer 11% | Other 25%
+Top sectors (by value): Financials 25% | IT 25% | Energy 25% | Other 25%
 ```
 
 ### Design choices

@@ -1,6 +1,11 @@
 # Fux DRIFT report
 
-_9 finding(s)._
+_12 finding(s)._
+
+## stale (3)
+- context-docs-figure-free: backend/app/modules/concierge/memory_service.py changed 2026-06-18 > rule updated 2026-06-16
+- mutation-confirm-rmw: backend/app/modules/concierge/memory_service.py changed 2026-06-18 > rule updated 2026-06-16
+- probe-cdp-not-playwright: probes/Probes.md changed 2026-06-18 > rule updated 2026-06-17
 
 ## untagged-candidate (9)
 - capital-gains-debt-gold: looks like a principle (has a check:/normative type) but is untagged — add `principle:` + `enforcement: deterministic|judgment`
