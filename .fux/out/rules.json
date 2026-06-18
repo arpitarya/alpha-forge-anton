@@ -303,7 +303,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-16",
-      "updated": "2026-06-16"
+      "updated": "2026-06-18"
     },
     {
       "id": "core-allocation",
@@ -614,7 +614,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-16",
-      "updated": "2026-06-16"
+      "updated": "2026-06-18"
     },
     {
       "id": "plan-boot-llm-brokerage",
@@ -727,7 +727,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-17"
+      "updated": "2026-06-18"
     },
     {
       "id": "projection-disclosure",

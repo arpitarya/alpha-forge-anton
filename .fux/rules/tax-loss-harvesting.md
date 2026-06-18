@@ -3,6 +3,8 @@ id: tax-loss-harvesting
 domain: tax
 type: regulatory
 status: active
+principle: capital-loss-set-off-rules
+enforcement: judgment
 created: 2026-06-12
 updated: 2026-06-12
 aliases: [loss-set-off, carry-forward, stcl, ltcl]

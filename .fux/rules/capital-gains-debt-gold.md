@@ -3,6 +3,8 @@ id: capital-gains-debt-gold
 domain: tax
 type: regulatory
 status: active
+principle: capital-gains-nonequity-regime
+enforcement: judgment
 created: 2026-06-12
 updated: 2026-06-12
 aliases: [debt-fund-tax, gold-tax, specified-mutual-fund, indexation]

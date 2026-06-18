@@ -4,7 +4,7 @@ domain: brokers
 type: convention
 status: active
 created: 2026-06-09
-updated: 2026-06-17
+updated: 2026-06-18
 keywords:
   - probe
   - cdp
@@ -21,6 +21,7 @@ code_refs:
 related:
   - broker-source-contract
   - broker-source-integration
+seal: d7cd2e55e50c2866
 ---
 **Convention:** UI and broker verification is done with scripts in `probes/` that
 attach to the already-running AlphaForge Anton Chrome over CDP on port **9299**

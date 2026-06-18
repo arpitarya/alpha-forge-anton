@@ -4,15 +4,31 @@ domain: architecture
 type: rule
 status: active
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-06-18
+aliases:
+  - confirm-card-mutations
+  - approval-card-writes
+  - no-silent-mutation
+keywords:
+  - mutation
+  - confirm
+  - approval
+  - rmw
+  - append
+  - intent
+  - sync
+  - build_confirm
 code_refs:
   - backend/app/modules/concierge/tool_executor.py
   - backend/app/modules/concierge/action_service.py
   - backend/app/modules/concierge/memory_service.py
   - backend/app/modules/concierge/exclusion_service.py
-related: [strategy-knob-tradeoffs, secure-holdings-plan, plan-store, ui-component-contract]
-aliases: [confirm-card-mutations, approval-card-writes, no-silent-mutation]
-keywords: [mutation, confirm, approval, rmw, append, intent, sync, build_confirm]
+related:
+  - strategy-knob-tradeoffs
+  - secure-holdings-plan
+  - plan-store
+  - ui-component-contract
+seal: b167c42e880d7c15
 ---
 **Rule:** every Orff-initiated mutation (memory note, exclusion-list edit, strategy/objective
 change, plan save) is **confirm-gated** and follows one shape:

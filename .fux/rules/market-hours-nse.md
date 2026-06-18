@@ -3,6 +3,8 @@ id: market-hours-nse
 domain: market-structure
 type: regulatory
 status: active
+principle: nse-session-hours
+enforcement: judgment
 created: 2026-06-01
 updated: 2026-06-01
 aliases: [trading-hours, nse, bse, session-timings, ist]

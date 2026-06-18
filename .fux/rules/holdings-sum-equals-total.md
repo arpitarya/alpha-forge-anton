@@ -3,6 +3,8 @@ id: holdings-sum-equals-total
 domain: portfolio
 type: invariant
 status: active
+principle: holdings-roll-up-conservation
+enforcement: deterministic
 created: 2026-06-03
 updated: 2026-06-03
 code_refs:

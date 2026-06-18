@@ -3,6 +3,8 @@ id: crypto-tax-vda
 domain: tax
 type: regulatory
 status: active
+principle: vda-tax-regime
+enforcement: judgment
 created: 2026-06-12
 updated: 2026-06-12
 aliases: [crypto-tax, vda, virtual-digital-asset, 30-percent]

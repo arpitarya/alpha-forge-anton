@@ -4,14 +4,29 @@ domain: security
 type: rule
 status: active
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-06-18
+aliases:
+  - memory-figure-free
+  - no-stale-figures
+  - live-numbers-only
+keywords:
+  - context
+  - memory
+  - figures
+  - holdings
+  - drift
+  - investor-profile
+  - orff-context
 code_refs:
   - backend/app/modules/concierge/memory_service.py
   - backend/app/modules/concierge/prompt_service.py
   - backend/app/modules/concierge/holdings_detail.py
-related: [secure-holdings-plan, plan-store, signals-deterministic-core, position-concentration]
-aliases: [memory-figure-free, no-stale-figures, live-numbers-only]
-keywords: [context, memory, figures, holdings, drift, investor-profile, orff-context]
+related:
+  - secure-holdings-plan
+  - plan-store
+  - signals-deterministic-core
+  - position-concentration
+seal: 92cf24b9f5e0f819
 ---
 **Rule:** Orff's standing-context / memory docs hold **durable preferences and rules only —
 never position figures**. Share counts, ₹ amounts, P&L %, and weights come **live from the
