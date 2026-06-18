@@ -4,7 +4,7 @@ domain: architecture
 type: rule
 status: active
 created: 2026-06-16
-updated: 2026-06-18
+updated: 2026-06-19
 aliases:
   - confirm-card-mutations
   - approval-card-writes

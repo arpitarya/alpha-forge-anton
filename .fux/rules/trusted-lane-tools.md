@@ -4,15 +4,31 @@ domain: security
 type: rule
 status: active
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-06-19
+aliases:
+  - tool-lane-policy
+  - tools-trusted-only
+  - deep-search-budget
+keywords:
+  - tools
+  - tool-calling
+  - trusted
+  - lane
+  - claude-sdk
+  - grounding
+  - parallel
+  - budget
+  - cage
 code_refs:
   - backend/app/modules/concierge/tool_layer.py
   - backend/app/modules/concierge/tool_registry.py
   - backend/app/modules/concierge/deep_search_service.py
   - backend/app/modules/concierge/grounding_service.py
-related: [secure-holdings-plan, mutation-confirm-rmw, concierge-registry-single-source, vault-only-credentials]
-aliases: [tool-lane-policy, tools-trusted-only, deep-search-budget]
-keywords: [tools, tool-calling, trusted, lane, claude-sdk, grounding, parallel, budget, cage]
+related:
+  - secure-holdings-plan
+  - mutation-confirm-rmw
+  - concierge-registry-single-source
+  - vault-only-credentials
 ---
 **Rule:** Orff's tool-calling and paid web grounding are governed by the trusted lane.
 
