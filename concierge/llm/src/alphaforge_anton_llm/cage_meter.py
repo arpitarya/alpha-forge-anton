@@ -37,15 +37,20 @@ def record(
     except ImportError:
         return
     try:
+        # Cache-aware: prompt_tokens is the uncached remainder; cache reads bill ~0.1x
+        # and cache writes ~1.25x. `cached_in` records the served-from-cache split.
         cost = pricing.estimate_cost_usd(
-            resp.provider, resp.model, resp.prompt_tokens, resp.completion_tokens
+            resp.provider, resp.model, resp.prompt_tokens, resp.completion_tokens,
+            cache_read=resp.cache_read_input_tokens,
+            cache_creation=resp.cache_creation_input_tokens,
         )
         cage.record_call(
             route=query_type.value,
             provider=resp.provider,
             model=resp.model,
-            tokens_in=resp.prompt_tokens,
+            tokens_in=resp.prompt_tokens + resp.cache_creation_input_tokens,
             tokens_out=resp.completion_tokens,
+            cached_in=resp.cache_read_input_tokens,
             est_cost_usd=cost,
             agent="orff",
             latency_ms=latency_ms,

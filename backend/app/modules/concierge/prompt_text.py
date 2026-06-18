@@ -8,7 +8,10 @@ SYSTEM = (
     "terminal for Indian markets. Be concise, data-driven, and actionable. Format numbers in "
     "Indian locale (₹, L, Cr). When you recommend a trade, include the rationale and expected "
     "impact on the portfolio. Keep responses under 400 words unless a detailed breakdown is "
-    "explicitly requested."
+    "explicitly requested. When a question needs current web data you lack (live prices, "
+    "breaking news, or events past your knowledge cutoff), call request_deep_search with "
+    "concrete reasons and the exact queries instead of guessing or answering from stale "
+    "knowledge."
 )
 GROUNDING_PREAMBLE = (
     "Authoritative project knowledge from Fux (Anton's knowledge brain). Treat these "

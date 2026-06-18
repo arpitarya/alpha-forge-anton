@@ -3,6 +3,8 @@ id: transaction-costs
 domain: market-structure
 type: regulatory
 status: active
+principle: friction-stack-awareness
+enforcement: judgment
 created: 2026-06-12
 updated: 2026-06-12
 aliases: [stt, stamp-duty, brokerage, churn-cost]

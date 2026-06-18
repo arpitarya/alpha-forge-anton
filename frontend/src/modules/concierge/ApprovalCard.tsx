@@ -46,9 +46,22 @@ export function ApprovalCard({
       <div style={{ fontSize: 14, fontWeight: 600, color: "var(--fg)", marginBottom: 8 }}>
         {action.action}
       </div>
+      {action.summary && (
+        <div
+          style={{
+            fontFamily: "Space Grotesk, sans-serif",
+            fontSize: 12.5,
+            lineHeight: 1.5,
+            color: "var(--fg-2)",
+            marginBottom: 8,
+          }}
+        >
+          {action.summary}
+        </div>
+      )}
       <ol
         style={{
-          margin: "0 0 12px",
+          margin: "0 0 10px",
           paddingLeft: 18,
           display: "flex",
           flexDirection: "column",
@@ -63,6 +76,19 @@ export function ApprovalCard({
           <li key={s}>{s}</li>
         ))}
       </ol>
+      {action.detail && (
+        <div
+          style={{
+            fontFamily: "Space Mono, monospace",
+            fontSize: 10,
+            letterSpacing: "0.06em",
+            color: "var(--fg-3)",
+            marginBottom: 12,
+          }}
+        >
+          {action.detail}
+        </div>
+      )}
       {resolved ? (
         <div
           style={{

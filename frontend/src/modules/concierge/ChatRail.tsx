@@ -10,18 +10,20 @@ import { imagesFromClipboard, MAX_IMAGES } from "./chat.images";
 import { matchCommands, resolveCommand, type SlashCommand } from "./concierge.commands";
 import {
   type ChatTurn,
+  type DeepSearchMode as DeepSearchModeType,
   formatChoiceLabel,
   type ModelChoice,
   type PendingAction,
   PROVIDERS,
   type ProviderId,
 } from "./concierge.types";
-import { DeepSearchToggle } from "./DeepSearchToggle";
+import { DeepSearchMode } from "./DeepSearchMode";
 import { FollowupChips } from "./FollowupChips";
 import { HistoryPanel } from "./HistoryPanel";
 import { ImageAttach } from "./ImageAttach";
 import { MemoryPanel } from "./MemoryPanel";
 import { ModelPicker } from "./ModelPicker";
+import { ObjectivePanel } from "./ObjectivePanel";
 import { SaveActionPlanButton } from "./SaveActionPlanButton";
 import { SavePlanButton } from "./SavePlanButton";
 import { SessionMeter } from "./SessionMeter";
@@ -31,7 +33,7 @@ import { ToolTrail } from "./ToolTrail";
 import type { SessionTotals } from "./useChatStream";
 import { useVoice } from "./useVoice";
 
-type Panel = "none" | "artifacts" | "memory" | "history";
+type Panel = "none" | "artifacts" | "objective" | "memory" | "history";
 
 interface Props {
   open: boolean;
@@ -42,11 +44,13 @@ interface Props {
   onResume: (id: string) => void;
   onClose: () => void;
   onClear: () => void;
-  onSend: (q: string, images?: string[], webGrounding?: boolean) => void;
+  onSend: (q: string, images?: string[]) => void;
   onEdit: (id: string, q: string) => void;
   onStop: () => void;
   onChoiceChange: (c: ModelChoice) => void;
   footerModelRef: React.RefObject<HTMLSpanElement | null>;
+  deepSearchMode: DeepSearchModeType;
+  onDeepSearchModeChange: (m: DeepSearchModeType) => void;
 }
 
 const SEEDS = [
@@ -147,9 +151,10 @@ export function ChatRail({
   onStop,
   onChoiceChange,
   footerModelRef,
+  deepSearchMode,
+  onDeepSearchModeChange,
 }: Props) {
   const [size, setSize] = useState<"md" | "lg">("md");
-  const [deepSearch, setDeepSearch] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [lastSubmitted, setLastSubmitted] = useState("");
   const [images, setImages] = useState<string[]>([]);
@@ -246,7 +251,7 @@ export function ChatRail({
       return;
     }
     if (!q && !images.length) return;
-    onSend(q, images, deepSearch);
+    onSend(q, images);
     setLastSubmitted(q);
     setInputValue("");
     setImages([]);
@@ -389,6 +394,13 @@ export function ChatRail({
             onClick={() => setPanel((p) => (p === "artifacts" ? "none" : "artifacts"))}
           >
             <SparkIcon />
+          </NavBtn>
+          <NavBtn
+            active={panel === "objective"}
+            title="Objective"
+            onClick={() => setPanel((p) => (p === "objective" ? "none" : "objective"))}
+          >
+            <TargetIcon />
           </NavBtn>
           <NavBtn
             active={panel === "memory"}
@@ -589,7 +601,17 @@ export function ChatRail({
           </header>
 
           {/* ── Thread / side panel ── */}
-          {panel === "memory" ? (
+          {panel === "objective" ? (
+            <div style={{ flex: 1, minHeight: 0 }}>
+              <ObjectivePanel
+                onEdit={(q) => {
+                  setPanel("none");
+                  onSend(q);
+                }}
+                onClose={() => setPanel("none")}
+              />
+            </div>
+          ) : panel === "memory" ? (
             <div style={{ flex: 1, minHeight: 0 }}>
               <MemoryPanel onClose={() => setPanel("none")} />
             </div>
@@ -740,7 +762,7 @@ export function ChatRail({
                   style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0, flex: 1 }}
                 >
                   <ImageAttach images={images} onChange={setImages} />
-                  <DeepSearchToggle on={deepSearch} onToggle={() => setDeepSearch((v) => !v)} />
+                  <DeepSearchMode value={deepSearchMode} onChange={onDeepSearchModeChange} />
                   <ModelPicker
                     value={choice}
                     query={inputValue || lastSubmitted}
@@ -1006,6 +1028,25 @@ function BrainIcon() {
     >
       <path d="M9 3a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8A3 3 0 0 0 7 17a3 3 0 0 0 5 1 3 3 0 0 0 5-1 3 3 0 0 0 2-5.2A3 3 0 0 0 18 6a3 3 0 0 0-3-3 3 3 0 0 0-3 1.5A3 3 0 0 0 9 3z" />
       <path d="M12 5v13" />
+    </svg>
+  );
+}
+function TargetIcon() {
+  return (
+    <svg
+      width={17}
+      height={17}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="1" />
     </svg>
   );
 }

@@ -3,7 +3,7 @@
 A deterministic swing-trade engine that reviews current holdings and emits a
 buy/hold/trim/sell **ActionPlan**, and screens a configured universe for new
 buy-candidates — **no LLM touches the numbers**. The Orff concierge only narrates
-the result (Phase 3). Design of record: [signals-engine.handoff.md](signals-engine.handoff.md).
+the result (Phase 3). Design of record: [signals-engine.handoff.md](handoffs/signals-engine.handoff.md).
 
 ## What Phase 1 ships
 
@@ -135,17 +135,20 @@ lives in the route response, never in the plan). Verified by:
   multi-year window offline, asserts the report is byte-identical across two runs, that
   both exit paths close round-trips, and that a losing set ⇒ `positive_expectancy=False`.
 
-## Parallel "Deep search" grounding (handoff §9) — shipped
+## Parallel "Deep search" grounding (handoff §9) — agent-initiated, shipped
 
-Off-by-default per-message toggle: the composer's 🌐 Deep search chip sets
-`web_grounding`, and `concierge/grounding_service.py` calls Parallel (Search tier;
-Task tier gated on `parallel.allow_task_api` + a deep-dive prompt), injecting the
-extracts + a `parallel` ToolTrail step and recording a Search/Task-tagged Cage
-receipt. A **hard monthly budget cap** checks month-to-date Parallel spend from the
-Cage ledger against `parallel.monthly_budget_inr` *before* each call — over budget ⇒
-skipped, Orff says so. Key from the afbach vault. `news/.../sources/parallel.py`
-mirrors the source contract but stays **out** of the free aggregation path. Verified
-by `just probe parallel-grounding` (off / on / no-key / over-budget) + `parallel-keys`.
+The old `web_grounding` toggle is retired. Orff now calls the confirm-gated tool
+`request_deep_search(reasons, queries)` (trusted lane) when it spots a fresh-data gap;
+`deep_search_mode` (auto/always/never) governs it. `concierge/deep_search_service.py`
+builds the confirm card (no call) and, on confirm/Always, runs the queries through the
+shared executor `concierge/grounding_service.run` (Search tier; Task gated on
+`parallel.allow_task_api` + a deep-dive prompt), recording a Search/Task-tagged Cage
+receipt. A **hard monthly budget cap** (`grounding_service.budget_status`) checks
+month-to-date Parallel spend against `parallel.monthly_budget_inr` *before* each call —
+over budget ⇒ degrades to free sources, Orff says so. Key from the afbach vault.
+`news/.../sources/parallel.py` mirrors the source contract but stays **out** of the free
+aggregation path. Verified by `just probe deep-search` (auto / confirm / reject / always
+/ never / over-budget) + `parallel-keys`. Canonical spec: `docs/handoffs/deep-search-ask.handoff.md`.
 
 ## Not yet (later phases)
 

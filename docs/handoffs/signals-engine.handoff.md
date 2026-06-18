@@ -175,6 +175,8 @@ plan(today) = f(holdings(today), last_plan, outcomes_since_last_plan, signals(to
 - **Cost:** record a Cage receipt per Parallel call (Search vs Task tagged) so the SessionMeter and the budget check both see real spend. See `docs/cage.md`.
 - **Default path stays free:** RSS / NSE / BSE / Reddit / yfinance remain the everyday sources; Parallel is the explicit, paid, budget-capped, on-demand depth button.
 
+**Status note (2026-06-15):** `parallel_client` now targets the GA endpoint `POST /v1/search` (`x-api-key` auth, no beta header; `max_results` + `excerpt_settings` moved under `advanced_settings`). `grounding_service` prices are pinned to published rates — Search `$0.005/req`, Task to the `core` processor `$0.025/run` (`_TASK_PROCESSOR = "core"`); the real async Task API call (job create + long-poll) is still the one remaining follow-up — today's "task" tier is a deeper Search call, billed conservatively at the `core` rate. The vault key `PARALLEL_API_KEY` injects automatically (Anton's `vault_client` pulls the whole `anton` namespace — no key list to edit).
+
 ---
 
 ## 10. Build sequence

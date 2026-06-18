@@ -125,7 +125,7 @@
           "ctx": "200k ctx",
           "cost": "$3/M",
           "desc": "Balanced default — confirmation required before each call.",
-          "consumption": { "input_per_m": 3.0, "output_per_m": 15.0, "max_tokens": 4096, "paid": true }
+          "consumption": { "input_per_m": 3.0, "output_per_m": 15.0, "cache_read_per_m": 0.3, "cache_write_per_m": 3.75, "max_tokens": 4096, "paid": true }
         },
         {
           "id": "claude-opus-4-8",
@@ -134,7 +134,7 @@
           "ctx": "200k ctx",
           "cost": "$15/M",
           "desc": "Deepest reasoning — most expensive, confirmation required.",
-          "consumption": { "input_per_m": 15.0, "output_per_m": 75.0, "max_tokens": 4096, "paid": true }
+          "consumption": { "input_per_m": 15.0, "output_per_m": 75.0, "cache_read_per_m": 1.5, "cache_write_per_m": 18.75, "max_tokens": 4096, "paid": true }
         },
         {
           "id": "claude-haiku-4-5-20251001",
@@ -143,7 +143,7 @@
           "ctx": "200k ctx",
           "cost": "$1/M",
           "desc": "Fast + cheapest paid tier, confirmation required.",
-          "consumption": { "input_per_m": 1.0, "output_per_m": 5.0, "max_tokens": 4096, "paid": true }
+          "consumption": { "input_per_m": 1.0, "output_per_m": 5.0, "cache_read_per_m": 0.1, "cache_write_per_m": 1.25, "max_tokens": 4096, "paid": true }
         }
       ]
     }

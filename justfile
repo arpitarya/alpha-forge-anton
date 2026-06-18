@@ -260,3 +260,19 @@ fux-check:
     fux build
     fux check
     fux verify
+
+# ── Constitution gate (REQUIRED CI check) ─────────────────────────
+# The wall: `fux gate` exits 2 on any constitutional-tier finding — a tampered
+# or unsealed apex rule (e.g. plan-store: money docs / hard PII). Local
+# pre-commit is bypassable with --no-verify; this CI check is not.
+constitution:
+    fux gate
+
+# ── Branch-protection drift audit (the second half of the wall) ───
+# Branch protection is GitHub config Fux CANNOT seal (handoff §1) — so it is
+# WATCHED, not sealed. Asserts the required checks (gate + ai-review) +
+# enforce_admins=true are intact and that live protection matches the committed
+# .github/branch-protection.json; FAILS LOUDLY on any drift. Also runs weekly in
+# .github/workflows/audit-protection.yml. Needs gh with admin read on the repo.
+audit-protection owner="arpitarya" repo="alpha-forge-anton" branch="main":
+    ./scripts/audit-branch-protection.sh {{owner}} {{repo}} {{branch}}

@@ -9,6 +9,7 @@ never inside the plan itself.
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -67,16 +68,30 @@ from app.modules.signals.plan_schema import (  # noqa: E402
     WeeklyReview,
 )
 
+class StrategyChange(BaseModel):
+    knob: str  # dotted path, e.g. "trim_rule.mode"
+    value: Any
+
+
+class PnlRequest(BaseModel):
+    """Realized round-trips for the month + target (figures stay request-scoped)."""
+
+    trades: list[RealizedTrade] = Field(default_factory=list)
+    target: float = 0.0
+
+
 __all__ = [
     "Action",
     "ActionPlan",
     "Candidate",
     "HoldingSnap",
     "PlanDiff",
+    "PnlRequest",
     "RealizedReport",
     "RealizedTrade",
     "SavedPlan",
     "ScreenResult",
+    "StrategyChange",
     "Verdict",
     "WeeklyReview",
 ]

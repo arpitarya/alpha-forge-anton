@@ -6,6 +6,7 @@ import type { SessionDoc, SessionTurnDTO } from "./concierge.history";
 import {
   activeModelFor,
   type ChatTurn,
+  type DeepSearchMode,
   type ModelChoice,
   type ProviderId,
 } from "./concierge.types";
@@ -68,7 +69,7 @@ export function useChatStream() {
       history: { role: "user" | "assistant"; content: string }[],
       images: string[],
       active: ChatTurn["active"],
-      webGrounding = false,
+      deepSearchMode: DeepSearchMode = "auto",
     ) => {
       abortRef.current?.abort();
       const ctrl = new AbortController();
@@ -88,7 +89,7 @@ export function useChatStream() {
             provider: active.provider,
             model_id: active.modelId,
             auto_level: active.autoLevel,
-            web_grounding: webGrounding,
+            deep_search_mode: deepSearchMode,
           }),
           signal: ctrl.signal,
         });
@@ -132,7 +133,12 @@ export function useChatStream() {
   );
 
   const submit = useCallback(
-    async (query: string, choice: ModelChoice, images: string[] = [], webGrounding = false) => {
+    async (
+      query: string,
+      choice: ModelChoice,
+      images: string[] = [],
+      deepSearchMode: DeepSearchMode = "auto",
+    ) => {
       if (!query.trim() && !images.length) return;
       const active = activeModelFor(choice, query);
       const id = nanoid();
@@ -166,7 +172,7 @@ export function useChatStream() {
         return msgs;
       });
       prior.push({ role: "user", content: query });
-      await run({ id } as ChatTurn, prior, images, active, webGrounding);
+      await run({ id } as ChatTurn, prior, images, active, deepSearchMode);
     },
     [turns, run],
   );

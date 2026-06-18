@@ -24,8 +24,10 @@ from app.modules.concierge.history_service import (
 )
 from app.modules.concierge.memory_service import load_memory, save_memory
 from app.modules.concierge.stt_service import transcribe
+from app.modules.concierge.tool_routes import router as _tool_router
 
 router = APIRouter(dependencies=[Depends(get_current_user)])
+router.include_router(_tool_router)
 
 
 @router.post("/compose")

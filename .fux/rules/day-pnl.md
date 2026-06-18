@@ -3,6 +3,8 @@ id: day-pnl
 domain: portfolio
 type: formula
 status: active
+principle: day-pnl-on-current-value
+enforcement: deterministic
 created: 2026-06-03
 updated: 2026-06-03
 code_refs:

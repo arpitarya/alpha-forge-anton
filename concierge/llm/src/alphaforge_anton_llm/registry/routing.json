@@ -5,7 +5,7 @@
       "query_type": "portfolio_private"
     },
     {
-      "pattern": "risk|drawdown|var|simulat|stress|hedge|tax|optim",
+      "pattern": "risk|drawdown|var|simulat|stress|hedge|tax|optim|review|strateg",
       "query_type": "investment_plan"
     },
     {
@@ -34,6 +34,15 @@
   },
   "vision": {
     "providers": ["gemini", "claude-sdk"]
+  },
+  "reasoning_intents": ["investment_plan", "stock_pick"],
+  "tiers": {
+    "claude-sdk": {
+      "default": { "model": "claude-sonnet-4-6" },
+      "investment_plan": { "model": "claude-opus-4-8", "effort": "high" },
+      "stock_pick": { "model": "claude-opus-4-8", "effort": "high" },
+      "followup": { "model": "claude-haiku-4-5-20251001" }
+    }
   },
   "provider_query_type": {
     "claude-sdk": "investment_plan",

@@ -74,3 +74,22 @@ async def record_feedback(outcome: dict) -> None:
     """Append a compose outcome to the brain's learning loop (§18.4). Best-effort."""
     with contextlib.suppress(Exception):  # telemetry must never break a response
         await _run("feedback", "--record", "-", stdin=json.dumps(outcome).encode())
+
+
+async def critic_suggestions(proposal: str) -> list[str]:
+    """Advisory judgment layer for the runtime critic (`runtime-note-pii`).
+
+    Runs `fux critic "<proposal>"` and returns its judgment *suggestions* — advisory-first
+    (fux ≥ 0.5.0): judgment principles SUGGEST, they do not block here. The deterministic
+    money/PII block is enforced in-process by `critic_guard`, never delegated to this.
+    Best-effort: returns [] on any failure so a chat write never breaks on the advisory pass.
+    Any tokens a host-agent self-critique spends are metered by Cage at the LLM gateway."""
+    try:
+        code, out = await _run("critic", proposal)
+        if code not in (0, 2):
+            return []
+        # Surface advisory judgment lines: `· [needs-judgment] <id>: …` / `(advisory)`.
+        return [ln.strip() for ln in out.splitlines()
+                if "needs-judgment" in ln or "(advisory)" in ln]
+    except Exception:  # advisory is additive — never block a write
+        return []

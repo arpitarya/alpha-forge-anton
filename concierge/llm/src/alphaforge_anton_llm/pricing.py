@@ -12,7 +12,11 @@ from __future__ import annotations
 
 from alphaforge_anton_llm import registry
 
-_DEFAULT = {"input_per_m": 0.0, "output_per_m": 0.0, "max_tokens": 2048, "paid": False}
+_DEFAULT = {
+    "input_per_m": 0.0, "output_per_m": 0.0, "max_tokens": 2048, "paid": False,
+    # Prompt-cache rates (per-M); 0.0 → a model with no caching just never discounts.
+    "cache_read_per_m": 0.0, "cache_write_per_m": 0.0,
+}
 
 
 def model_meta(slug: str, model_id: str | None = None) -> dict:
@@ -37,7 +41,16 @@ def max_tokens(slug: str, model_id: str | None = None) -> int:
     return int(consumption(slug, model_id)["max_tokens"])
 
 
-def estimate_cost_usd(slug: str, model_id: str | None, prompt: int, completion: int) -> float:
-    """Real USD spend for a call from its prompt/completion token counts."""
+def estimate_cost_usd(
+    slug: str, model_id: str | None, prompt: int, completion: int,
+    cache_read: int = 0, cache_creation: int = 0,
+) -> float:
+    """Real USD spend, cache-aware. `prompt` is the uncached input; cache reads bill at
+    `cache_read_per_m` (~0.1x) and cache writes at `cache_write_per_m` (~1.25x)."""
     c = consumption(slug, model_id)
-    return (prompt * c["input_per_m"] + completion * c["output_per_m"]) / 1_000_000
+    return (
+        prompt * c["input_per_m"]
+        + cache_read * c["cache_read_per_m"]
+        + cache_creation * c["cache_write_per_m"]
+        + completion * c["output_per_m"]
+    ) / 1_000_000

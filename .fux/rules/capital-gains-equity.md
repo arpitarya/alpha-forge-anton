@@ -3,6 +3,8 @@ id: capital-gains-equity
 domain: tax
 type: regulatory
 status: active
+principle: capital-gains-equity-regime
+enforcement: judgment
 created: 2026-06-01
 updated: 2026-06-01
 aliases: [stcg, ltcg, capital-gains, holding-period]

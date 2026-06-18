@@ -6,13 +6,13 @@ import { AlphaBar } from "./AlphaBar";
 import { ChatRail } from "./ChatRail";
 import { pickDefaultChoice } from "./concierge.defaults";
 import { useSessions } from "./concierge.sessions";
-import type { ModelChoice } from "./concierge.types";
+import type { DeepSearchMode, ModelChoice } from "./concierge.types";
 import { useChatStream } from "./useChatStream";
 
 interface ChatCtx {
   open: boolean;
   setOpen: (v: boolean) => void;
-  submit: (q: string, choice: ModelChoice, images?: string[], webGrounding?: boolean) => void;
+  submit: (q: string, choice: ModelChoice, images?: string[]) => void;
 }
 
 const Ctx = createContext<ChatCtx>({
@@ -22,6 +22,14 @@ const Ctx = createContext<ChatCtx>({
 });
 
 const STORAGE_KEY = "af-model-choice";
+const DEEP_SEARCH_KEY = "af-deep-search-mode";
+
+function loadDeepSearchMode(): DeepSearchMode {
+  // Persisted client-pref (mirrors loadChoice). Default Auto = Orff asks before spending.
+  if (typeof window === "undefined") return "auto";
+  const raw = localStorage.getItem(DEEP_SEARCH_KEY);
+  return raw === "always" || raw === "never" ? raw : "auto";
+}
 
 function loadChoice(): ModelChoice {
   // A fresh session pins a derived default (see `pickDefaultChoice`) rather than
@@ -43,6 +51,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const { onResume } = useSessions({ sessionId, turns, hydrate });
   const footerModelRef = useRef<HTMLSpanElement>(null);
   const [choice, setChoice] = useState<ModelChoice>(loadChoice);
+  const [deepSearchMode, setDeepSearchMode] = useState<DeepSearchMode>(loadDeepSearchMode);
   const pathname = usePathname();
 
   const handleChoiceChange = useCallback((c: ModelChoice) => {
@@ -52,15 +61,21 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     } catch {}
   }, []);
 
+  const handleDeepSearchModeChange = useCallback((m: DeepSearchMode) => {
+    setDeepSearchMode(m);
+    try {
+      localStorage.setItem(DEEP_SEARCH_KEY, m);
+    } catch {}
+  }, []);
+
   const handleSubmit = useCallback(
-    (q: string, c: ModelChoice, images?: string[]) => submit(q, c, images),
-    [submit],
+    (q: string, c: ModelChoice, images?: string[]) => submit(q, c, images, deepSearchMode),
+    [submit, deepSearchMode],
   );
 
   const handleSend = useCallback(
-    (q: string, images?: string[], webGrounding?: boolean) =>
-      submit(q, choice, images, webGrounding),
-    [submit, choice],
+    (q: string, images?: string[]) => submit(q, choice, images, deepSearchMode),
+    [submit, choice, deepSearchMode],
   );
   const handleEdit = useCallback(
     (id: string, q: string) => editTurn(id, q, choice),
@@ -101,6 +116,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           onStop={stop}
           footerModelRef={footerModelRef}
           onChoiceChange={handleChoiceChange}
+          deepSearchMode={deepSearchMode}
+          onDeepSearchModeChange={handleDeepSearchModeChange}
         />
       </div>
     </Ctx.Provider>

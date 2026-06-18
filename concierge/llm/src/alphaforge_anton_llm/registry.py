@@ -60,6 +60,31 @@ def default_model(slug: str) -> str:
     return load_providers()[slug]["models"][0]["id"]
 
 
+def tier_for(slug: str, intent: str) -> dict:
+    """Model+effort tier for a provider+intent (intent entry over the provider default).
+
+    `intent` is a QueryType value or a synthetic key (e.g. "followup"). Authored in
+    `routing.json` `tiers`, never hardcoded in the adapter — see Phase 4 / Fux
+    `concierge-registry-single-source`."""
+    t = _routing().get("tiers", {}).get(slug, {})
+    return {**t.get("default", {}), **t.get(intent, {})}
+
+
+def model_for(slug: str, intent: str) -> str:
+    """The tiered model id for a provider+intent (falls back to the provider default)."""
+    return tier_for(slug, intent).get("model") or default_model(slug)
+
+
+def effort_for(slug: str, intent: str) -> str | None:
+    """The `output_config.effort` for a provider+intent tier, or None."""
+    return tier_for(slug, intent).get("effort")
+
+
+def is_reasoning_intent(qt: QueryType) -> bool:
+    """True when an intent warrants extended thinking (review/strategy class)."""
+    return qt.value in set(_routing().get("reasoning_intents", []))
+
+
 def classify_intent(text: str) -> QueryType:
     """Map free-text query → QueryType (first matching pattern wins)."""
     for pattern, qt in _intents():

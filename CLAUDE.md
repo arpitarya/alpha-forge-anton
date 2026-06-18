@@ -11,6 +11,7 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 | Coding conventions (Python + TypeScript) | [docs/conventions.md](docs/conventions.md) |
 | CLI commands (setup, run, build, migrate, clean) | [docs/commands.md](docs/commands.md) |
 | Guardrails & project rules | [docs/guardrails.md](docs/guardrails.md) |
+| Runtime money/PII critic (Orff live-write guard) | [docs/runtime-critic.md](docs/runtime-critic.md) |
 | Broker CSV dumps (shared dump_utils contract) | [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md) |
 | Signals engine (deterministic swing verdicts) | [docs/signals.md](docs/signals.md) |
 | Comparison docs — how to write `<name>.compare.md` | [docs/comparison.guide.md](docs/comparison.guide.md) |
@@ -29,7 +30,8 @@ Apply these on every file without looking up the docs:
 - Python: `async def` everywhere, absolute imports from `app.`, Pydantic v2, ruff (line-length=100)
 - TypeScript: strict mode, functional components only, pnpm, Biome v2
 - Never commit `.env` files or API keys
-- Never commit money docs (`*.plan.md` / personal figures) — they live in the private **elgar** store (`elgar save <id>`); this repo holds `elgar://plan/<id>` links only. Enforced by `just dante-pii` + pre-commit — `fux why plan-store`
+- **[CONSTITUTIONAL]** Never commit money docs (`*.plan.md` / `*.drift.md`) or hard PII (PAN / Aadhaar / broker account-client-folio numbers) — money docs live in the private **elgar** store (`elgar save <id>`); this repo holds `elgar://plan/<id>` links only. Worked-example ₹ figures are allowed (WARN; `pii:allow` to whitelist a line). This is `plan-store`, anton's **first constitutional rule** (sealed in `.fux/constitution.lock`); it cannot change in place — supersede + re-ratify. Enforced by `dante pii` + `just probe plan-safety` via pre-commit **and** the required `just constitution` (`fux gate`) CI check — `fux why plan-store`
+- **Runtime money/PII guard** — at runtime, Orff writes to the elgar store from free text where no commit hook runs. The `runtime-note-pii` principle guards the one riskiest live path (`append_memory`): `critic_guard.review_note` BLOCKs the same PAN/Aadhaar/account patterns as `dante pii` **before** the write (→ HTTP 422). The judgment layer (`fux critic`) is advisory-first. Scoped to `append_memory` only — do not widen without review. `fux why runtime-note-pii` · `just probe critic-runtime` · [docs/runtime-critic.md](docs/runtime-critic.md)
 - All broker CSV dumps use `dump_utils.py` — see [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md)
 - Every code change must be accompanied by a doc update in the same session
 - **UI & broker verification: always use `probes/` (CDP :9299), never Playwright MCP** — see [probes/WHY_PROBES_NOT_MCP.md](probes/WHY_PROBES_NOT_MCP.md). New features need a probe + `just` recipe before they count as verified.

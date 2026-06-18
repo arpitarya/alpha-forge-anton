@@ -3,6 +3,8 @@ id: drawdown-recovery
 domain: portfolio
 type: formula
 status: active
+principle: drawdown-recovery-convexity
+enforcement: deterministic
 created: 2026-06-12
 updated: 2026-06-12
 related: [capital-market-assumptions, position-concentration, core-allocation]

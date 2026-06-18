@@ -1,12 +1,13 @@
-"""Opt-in Parallel web grounding for Orff — the "Deep search" path (handoff §9).
+"""Parallel web grounding for Orff — the shared "Deep search" executor (handoff §9).
 
-When a request sets ``web_grounding`` this calls Parallel, injects the ranked
-extracts as a grounding block, and adds a ``parallel`` ToolTrail step. Guardrails:
+``run`` does one Parallel call (key-gated, fail-open) and records a tagged Cage
+receipt; ``budget_status`` reads month-to-date Parallel spend vs the strategy-config
+cap (INR). Both are called by ``deep_search_service`` (the agent-initiated, confirm-
+gated flow) — there is no always-on inject path. Guardrails:
 
-- **Hard monthly budget cap.** Before any call it reads month-to-date Parallel
-  spend from the Cage ledger and compares it (INR) to ``parallel.monthly_budget_inr``
-  in the strategy config; over budget ⇒ the call is **skipped** and Orff is told to
-  answer from the free sources. No call, no receipt.
+- **Hard monthly budget cap.** ``budget_status`` compares month-to-date Parallel
+  spend (Cage ledger, INR) to ``parallel.monthly_budget_inr``; over budget ⇒ the
+  flow degrades to the free sources. No call, no receipt.
 - **Search vs Task.** A deep-dive prompt uses the costlier Task tier — but only when
   ``parallel.allow_task_api`` is set; the Cage receipt is tagged ``grounding-{kind}``.
 - **Key** from the afbach vault (``PARALLEL_API_KEY``, boot-injected — never env/code;
@@ -21,16 +22,18 @@ import time
 from dataclasses import dataclass
 
 from alphaforge_anton_llm import cage_meter
-from alphaforge_anton_llm.types import Message
 
 from app.modules.brokers.fx import to_inr
 from app.modules.concierge import parallel_client
-from app.modules.concierge.concierge_schemas import ChatRequest
 from app.modules.signals.strategy_config import load_config
 
 logger = logging.getLogger(__name__)
 
-_SEARCH_USD, _TASK_USD = 0.01, 0.10  # per-call price → the Cage receipt (drives the budget)
+# Per-call price → the Cage receipt (drives the budget). Pinned to Parallel's
+# published rates: Search = $0.005/req; Task pinned to the `core` processor
+# ($0.025/run). When the real Task API lands it MUST use `core` to match this.
+_TASK_PROCESSOR = "core"
+_SEARCH_USD, _TASK_USD = 0.005, 0.025
 _DEEP = ("deep dive", "deep-dive", "deep research", "thorough research")
 
 
@@ -41,8 +44,17 @@ class Grounding:
     ms: int
 
 
-def _kind(prompt: str, allow_task: bool) -> str:
+def kind(prompt: str, allow_task: bool) -> str:
+    """Pick the Parallel tier: Task only on a deep-dive prompt when allowed, else Search."""
     return "task" if allow_task and any(d in prompt.lower() for d in _DEEP) else "search"
+
+
+def budget_status() -> tuple[int, int, bool]:
+    """Month-to-date Parallel spend, the monthly cap, and whether we're over (all INR)."""
+    cfg = load_config()
+    budget = round(cfg.parallel.monthly_budget_inr)
+    mtd = round(to_inr(cage_meter.month_spend_usd("parallel"), "USD"))
+    return mtd, budget, budget > 0 and mtd >= budget
 
 
 async def run(query: str, *, kind: str = "search") -> Grounding | None:
@@ -64,32 +76,3 @@ async def run(query: str, *, kind: str = "search") -> Grounding | None:
         route=f"grounding-{kind}", provider="parallel", est_cost_usd=price, latency_ms=ms
     )
     return Grounding(parallel_client.format_results(results), f"{kind}: {len(results)} results", ms)
-
-
-async def inject(req: ChatRequest, msgs: list[Message], trace: list[dict]) -> None:
-    """Append a Parallel grounding block + trace step when opted in and under budget."""
-    if not req.web_grounding:
-        return
-    last_user = next((m.content for m in reversed(req.messages) if m.role == "user"), "")
-    if not last_user:
-        return
-    cfg = load_config()
-    budget = round(cfg.parallel.monthly_budget_inr)
-    mtd = round(to_inr(cage_meter.month_spend_usd("parallel"), "USD"))
-    if budget > 0 and mtd >= budget:
-        msgs.append(
-            Message(
-                role="system",
-                content=(
-                    f"Parallel deep-search budget for this month is used (₹{mtd} of ₹{budget}) — "
-                    "answer from the free sources and say so."
-                ),
-            )
-        )
-        trace.append({"name": "parallel", "detail": f"budget ₹{mtd}/₹{budget} — skipped", "ms": 0})
-        return
-    g = await run(last_user, kind=_kind(last_user, cfg.parallel.allow_task_api))
-    if not g:
-        return
-    msgs.append(Message(role="system", content=g.text))
-    trace.append({"name": "parallel", "detail": g.detail, "ms": g.ms})
