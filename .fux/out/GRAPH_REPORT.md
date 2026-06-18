@@ -1,11 +1,11 @@
 # Fux GRAPH_REPORT
 
-_2339 nodes · 14399 edges · 494 code files · 64 rules · 228 communities._
+_2341 nodes · 14420 edges · 496 code files · 64 rules · 229 communities._
 
 ## Node types
 
 - function: 1434
-- code-file: 494
+- code-file: 496
 - class: 347
 - convention: 16
 - narrative: 12
@@ -18,9 +18,9 @@ _2339 nodes · 14399 edges · 494 code files · 64 rules · 228 communities._
 
 ## Edges
 
-_8230 of 14399 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_8251 of 14420 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
-- references: 8230
+- references: 8251
 - calls: 4207
 - contains: 1783
 - related: 112
@@ -58,7 +58,7 @@ _8230 of 14399 are INFERRED (low-confidence `references`, down-weighted in clust
 
 ## Communities
 
-- **community 0** (1308 nodes): AccountSection, ActiveModel, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AngelOneSource, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, Assembled, AssetClass, AuthState
+- **community 0** (1309 nodes): AccountSection, ActiveModel, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AngelOneSource, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, Assembled, AssetClass, AuthState
 - **community 1** (4 nodes): 1d8f1014a7d4_dashboard_ticker_watchlist_items.py, _table, downgrade, upgrade
 - **community 2** (12 nodes): 640eee61bc50_initial_schema_with_pgvector_memory.py, Text, Text.tsx, TextProps, a3c9f2e1b4d7_iam_tables.py, b3d6f8a2c9e1_remove_iam_tables.py, downgrade, downgrade, downgrade, upgrade, upgrade, upgrade
 - **community 5** (3 nodes): Settings, _validate_secrets, config.py
