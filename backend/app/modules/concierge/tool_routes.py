@@ -10,6 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from app.core.deps import get_current_user
+from app.modules.concierge.critic_guard import ForbiddenRuntimeActionError
 from app.modules.concierge.deep_search_service import run as run_deep_search
 from app.modules.concierge.exclusion_service import apply as apply_exclusion
 from app.modules.concierge.memory_service import append_memory
@@ -32,8 +33,14 @@ class _DeepSearchBody(BaseModel):
 
 @router.post("/memory/append")
 async def post_memory_append(body: _AppendBody) -> dict:
-    """Append a note to orff-context (apply target for update_context confirm card)."""
-    content = await append_memory(body.note)
+    """Append a note to orff-context (apply target for update_context confirm card).
+
+    The runtime money/PII guard (`runtime-note-pii`) refuses a note carrying a hard identifier
+    (PAN / Aadhaar / account number) with a 422 — the write never reaches the elgar store."""
+    try:
+        content = await append_memory(body.note)
+    except ForbiddenRuntimeActionError as e:
+        raise HTTPException(422, f"refused: {e}") from e
     return {"content": content}
 
 

@@ -272,6 +272,8 @@ This decouples probe selectors from styling changes.
 | `probes/<broker>_probe.py` | Broker-specific XHR / REST probes |
 | `probes/pypi_publish_probe.py` | Release health — fux-engine / cage-flux are live on PyPI |
 | `probes/github_publish_probe.py` | Release health — the fux/cage publish & CI workflows are green |
+| `probes/plan_safety_probe.py` | Constitutional guard — money docs / hard PII never tracked in the repo (commit boundary); `just probe plan-safety` |
+| `probes/critic_runtime_probe.py` | Runtime money/PII guard — a forbidden note (PAN/Aadhaar/account) is refused at `append_memory` before the elgar write; `just probe critic-runtime` (the live-write twin of `plan-safety`) |
 | `probes/parallel_keys_probe.py` | Vault check — Parallel (parallel.ai) API key is provisioned in afbach |
 | `probes/deep_search_probe.py` | §9 agent-initiated deep search — auto card (no call) / confirm (call+receipt) / reject / always (cardless) / never / over-budget degrade |
 | `probes/ui_deep_search_probe.py` | §9 frontend (CDP, fixture-served) — tri-state Auto/Always/Never control renders + sends `deep_search_mode`, persists the pref; an Auto gap raises the request_deep_search card (reasons + queries + cost) and Approve dispatches the run |

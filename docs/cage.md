@@ -25,6 +25,13 @@ QueryType.value`, `agent = "orff"`, cost from `pricing.estimate_cost_usd` (Anton
 authoritative price table). It is **fail-open**: if cage isn't installed or anything
 raises, metering is a silent no-op, so it can never break a completion.
 
+**Runtime critic (`runtime-note-pii`).** The deterministic money/PII block in
+`critic_guard` is **`$0`** — pure in-process regex, no LLM, nothing to meter. Its
+**advisory** judgment layer (`fux critic`) only spends tokens if a host-agent
+self-critique actually runs through the LLM gateway, and that completion is metered
+here like any other (`agent = "orff"`). So the guard adds metered spend only when it
+genuinely asks the model for a judgment — the block path stays free.
+
 ## Enabling it
 
 Cage is an optional dependency (`[cage]` extra, a uv path source):

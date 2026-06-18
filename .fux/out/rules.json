@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 62,
+  "count": 63,
   "rules": [
     {
       "id": "async-everywhere",
@@ -774,6 +774,30 @@
       "examples": [],
       "created": "2026-06-12",
       "updated": "2026-06-12"
+    },
+    {
+      "id": "runtime-note-pii",
+      "type": "invariant",
+      "domain": "security",
+      "status": "active",
+      "title": "Any text the Orff agent writes",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/runtime-note-pii.md",
+      "code_refs": [
+        "backend/app/modules/concierge/critic_guard.py",
+        "backend/app/modules/concierge/memory_service.py"
+      ],
+      "related": [
+        "plan-store",
+        "mutation-confirm-rmw",
+        "context-docs-figure-free",
+        "secure-holdings-plan"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-18",
+      "updated": "2026-06-18"
     },
     {
       "id": "secure-holdings-plan",

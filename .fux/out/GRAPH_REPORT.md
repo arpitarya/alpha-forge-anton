@@ -1,12 +1,12 @@
 # Fux GRAPH_REPORT
 
-_2321 nodes · 14032 edges · 488 code files · 62 rules · 226 communities._
+_2334 nodes · 14395 edges · 490 code files · 63 rules · 226 communities._
 
 ## Node types
 
-- function: 1426
-- code-file: 488
-- class: 345
+- function: 1434
+- code-file: 490
+- class: 347
 - convention: 15
 - narrative: 12
 - rule: 10
@@ -14,39 +14,39 @@ _2321 nodes · 14032 edges · 488 code files · 62 rules · 226 communities._
 - regulatory: 6
 - formula: 4
 - memory: 4
-- invariant: 1
+- invariant: 2
 
 ## Edges
 
-_7945 of 14032 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_8230 of 14395 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
-- references: 7945
-- calls: 4145
-- contains: 1773
-- related: 106
-- governs: 63
+- references: 8230
+- calls: 4207
+- contains: 1783
+- related: 110
+- governs: 65
 
 ## God nodes (highest connectivity)
 
 - **get** (function) — 238 edges
 - **get** (function) — 235 edges
-- **claude_cache_probe.py** (code-file) — 156 edges
-- **claude_tiering_probe.py** (code-file) — 156 edges
-- **claude_stream_probe.py** (code-file) — 142 edges
-- **main** (function) — 118 edges
-- **ui_objective_probe.py** (code-file) — 112 edges
-- **ui_deep_search_probe.py** (code-file) — 111 edges
-- **ui_voice_probe.py** (code-file) — 111 edges
-- **main** (function) — 109 edges
-- **angelone_probe.py** (code-file) — 107 edges
-- **binance_probe.py** (code-file) — 107 edges
+- **claude_cache_probe.py** (code-file) — 160 edges
+- **claude_tiering_probe.py** (code-file) — 160 edges
+- **claude_stream_probe.py** (code-file) — 145 edges
+- **main** (function) — 120 edges
+- **ui_objective_probe.py** (code-file) — 114 edges
+- **ui_deep_search_probe.py** (code-file) — 113 edges
+- **ui_voice_probe.py** (code-file) — 113 edges
+- **main** (function) — 111 edges
+- **angelone_probe.py** (code-file) — 109 edges
+- **binance_probe.py** (code-file) — 109 edges
 
 ## Chokepoints (PageRank centrality)
 
-- **get** (function) — 0.0112
 - **get** (function) — 0.0111
+- **get** (function) — 0.0110
 - **ChatRail.tsx** (code-file) — 0.0047
-- **post** (function) — 0.0031
+- **post** (function) — 0.0030
 - **AlphaBar.tsx** (code-file) — 0.0030
 - **info** (function) — 0.0026
 - **portfolio.types.ts** (code-file) — 0.0025
@@ -54,11 +54,11 @@ _7945 of 14032 are INFERRED (low-confidence `references`, down-weighted in clust
 - **main** (function) — 0.0024
 - **fetch** (function) — 0.0021
 - **test_brokers.py** (code-file) — 0.0021
-- **fetch** (function) — 0.0021
+- **fetch** (function) — 0.0020
 
 ## Communities
 
-- **community 0** (1295 nodes): AccountSection, ActiveModel, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AngelOneSource, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, Assembled, AssetClass, AuthState
+- **community 0** (1308 nodes): AccountSection, ActiveModel, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AngelOneSource, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, Assembled, AssetClass, AuthState
 - **community 1** (4 nodes): 1d8f1014a7d4_dashboard_ticker_watchlist_items.py, _table, downgrade, upgrade
 - **community 2** (12 nodes): 640eee61bc50_initial_schema_with_pgvector_memory.py, Text, Text.tsx, TextProps, a3c9f2e1b4d7_iam_tables.py, b3d6f8a2c9e1_remove_iam_tables.py, downgrade, downgrade, downgrade, upgrade, upgrade, upgrade
 - **community 5** (3 nodes): Settings, _validate_secrets, config.py

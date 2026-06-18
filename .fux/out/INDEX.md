@@ -1,6 +1,6 @@
 # Fux INDEX
 
-_50 active entries across 11 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_51 active entries across 11 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
 
 ## architecture
 - **mutation-confirm-rmw** (rule) — every Orff-initiated mutation (memory note, exclusion-list edit, strategy/obj…
@@ -65,6 +65,7 @@ _50 active entries across 11 domains. Read this first; open a rule (`fux why <id
 - **knowledge-location** (convention) — every authored knowledge document lives in exactly one of two
 - **no-secrets-in-vcs** (convention) — Never commit secrets — `.env` files, API keys, tokens, private _[global]_
 - **plan-store** (convention) — Plan store (elgar) — money documents & hard PII never enter the public repo
+- **runtime-note-pii** (invariant) — Any text the Orff agent writes
 - **trusted-lane-tools** (rule) — Orff's tool-calling and paid web grounding are governed by the trusted lane.
 - **vault-only-credentials** (convention) — Broker credentials — user IDs, client IDs, API keys — live only
 

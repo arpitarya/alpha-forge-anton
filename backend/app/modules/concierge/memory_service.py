@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
+from app.modules.concierge.critic_guard import guard_note
 from app.modules.plans import elgar_bridge
 
 # The doc id the Memory panel reads/writes — the user's free-text additions.
@@ -71,7 +72,12 @@ async def append_memory(note: str) -> str:
     """Append `note` to the memory doc with a date-stamp separator; returns new content.
 
     POST (not PUT) — calling twice must produce two entries, not one idempotent write.
+
+    Runtime money/PII guard (`runtime-note-pii`): `guard_note` critiques the note BEFORE it is
+    persisted — a deterministic PAN/Aadhaar/account match raises `ForbiddenRuntimeActionError`,
+    so the elgar save never runs (runtime twin of `plan-store`). Judgment concerns are advisory.
     """
+    await guard_note(note)
     current = await load_memory()
     stamp = datetime.now(UTC).strftime("%Y-%m-%d")
     separator = f"\n\n---\n{stamp}\n"
