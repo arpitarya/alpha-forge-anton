@@ -2112,9 +2112,9 @@
       "file_type": "rationale",
       "source_file": "probes/critic_runtime_probe.py",
       "source_location": "L1",
-      "id": "critic_runtime_probe_rationale_1",
       "community": 12,
-      "norm_label": "runtime money/pii critic probe \u2014 the enforcement behind the `runtime-note-pii` r"
+      "norm_label": "runtime money/pii critic probe \u2014 the enforcement behind the `runtime-note-pii` r",
+      "id": "critic_runtime_probe_rationale_1"
     },
     {
       "label": "zerodha_coin_probe.py",
@@ -13353,27 +13353,27 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/tool_routes.py",
       "source_location": "L36",
-      "id": "tool_routes_rationale_36",
       "community": 0,
-      "norm_label": "append a note to orff-context (apply target for update_context confirm card)."
+      "norm_label": "append a note to orff-context (apply target for update_context confirm card).",
+      "id": "tool_routes_rationale_36"
     },
     {
       "label": "Add/remove a symbol from hard-exclusion-list (apply target for edit_exclusion_li",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/tool_routes.py",
       "source_location": "L49",
-      "id": "tool_routes_rationale_49",
       "community": 0,
-      "norm_label": "add/remove a symbol from hard-exclusion-list (apply target for edit_exclusion_li"
+      "norm_label": "add/remove a symbol from hard-exclusion-list (apply target for edit_exclusion_li",
+      "id": "tool_routes_rationale_49"
     },
     {
       "label": "Run the confirmed deep-search queries (apply target for request_deep_search).",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/tool_routes.py",
       "source_location": "L62",
-      "id": "tool_routes_rationale_62",
       "community": 0,
-      "norm_label": "run the confirmed deep-search queries (apply target for request_deep_search)."
+      "norm_label": "run the confirmed deep-search queries (apply target for request_deep_search).",
+      "id": "tool_routes_rationale_62"
     },
     {
       "label": "followup_service.py",
@@ -13893,9 +13893,9 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/fux_bridge.py",
       "source_location": "L80",
-      "id": "fux_bridge_rationale_80",
       "community": 16,
-      "norm_label": "advisory judgment layer for the runtime critic (`runtime-note-pii`).      runs `"
+      "norm_label": "advisory judgment layer for the runtime critic (`runtime-note-pii`).      runs `",
+      "id": "fux_bridge_rationale_80"
     },
     {
       "label": "holdings_private.py",
@@ -14388,45 +14388,45 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/critic_guard.py",
       "source_location": "L1",
-      "id": "critic_guard_rationale_1",
       "community": 16,
-      "norm_label": "runtime money/pii critic \u2014 guard the one riskiest live write (`append_memory`)."
+      "norm_label": "runtime money/pii critic \u2014 guard the one riskiest live write (`append_memory`).",
+      "id": "critic_guard_rationale_1"
     },
     {
       "label": "A deterministic money/PII invariant refused a runtime write. Never reaches the s",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/critic_guard.py",
       "source_location": "L37",
-      "id": "critic_guard_rationale_37",
       "community": 0,
-      "norm_label": "a deterministic money/pii invariant refused a runtime write. never reaches the s"
+      "norm_label": "a deterministic money/pii invariant refused a runtime write. never reaches the s",
+      "id": "critic_guard_rationale_37"
     },
     {
       "label": "First hard-identifier match \u2192 (kind, detail), else None. $0, in-process.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/critic_guard.py",
       "source_location": "L52",
-      "id": "critic_guard_rationale_52",
       "community": 16,
-      "norm_label": "first hard-identifier match \u2192 (kind, detail), else none. $0, in-process."
+      "norm_label": "first hard-identifier match \u2192 (kind, detail), else none. $0, in-process.",
+      "id": "critic_guard_rationale_52"
     },
     {
       "label": "Critique a proposed `orff-context` note BEFORE it is persisted.      Determinist",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/critic_guard.py",
       "source_location": "L61",
-      "id": "critic_guard_rationale_61",
       "community": 16,
-      "norm_label": "critique a proposed `orff-context` note before it is persisted.      determinist"
+      "norm_label": "critique a proposed `orff-context` note before it is persisted.      determinist",
+      "id": "critic_guard_rationale_61"
     },
     {
       "label": "Enforce: raise `ForbiddenRuntimeActionError` on a deterministic block, else retu",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/critic_guard.py",
       "source_location": "L77",
-      "id": "critic_guard_rationale_77",
       "community": 16,
-      "norm_label": "enforce: raise `forbiddenruntimeactionerror` on a deterministic block, else retu"
+      "norm_label": "enforce: raise `forbiddenruntimeactionerror` on a deterministic block, else retu",
+      "id": "critic_guard_rationale_77"
     },
     {
       "label": "exclusion_service.py",
@@ -14820,36 +14820,36 @@
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/memory_service.py",
       "source_location": "L41",
-      "id": "memory_service_rationale_41",
       "community": 16,
-      "norm_label": "the memory doc, or \"\" when none exists \u2014 additive, never blocks a chat."
+      "norm_label": "the memory doc, or \"\" when none exists \u2014 additive, never blocks a chat.",
+      "id": "memory_service_rationale_41"
     },
     {
       "label": "Every standing-context doc concatenated (best-effort per doc) for prompt     inj",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/memory_service.py",
       "source_location": "L50",
-      "id": "memory_service_rationale_50",
       "community": 16,
-      "norm_label": "every standing-context doc concatenated (best-effort per doc) for prompt     inj"
+      "norm_label": "every standing-context doc concatenated (best-effort per doc) for prompt     inj",
+      "id": "memory_service_rationale_50"
     },
     {
       "label": "Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored.",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/memory_service.py",
       "source_location": "L65",
-      "id": "memory_service_rationale_65",
       "community": 16,
-      "norm_label": "persist the doc into elgar (clipped to max_chars); returns what was stored."
+      "norm_label": "persist the doc into elgar (clipped to max_chars); returns what was stored.",
+      "id": "memory_service_rationale_65"
     },
     {
       "label": "Append `note` to the memory doc with a date-stamp separator; returns new content",
       "file_type": "rationale",
       "source_file": "backend/app/modules/concierge/memory_service.py",
       "source_location": "L72",
-      "id": "memory_service_rationale_72",
       "community": 16,
-      "norm_label": "append `note` to the memory doc with a date-stamp separator; returns new content"
+      "norm_label": "append `note` to the memory doc with a date-stamp separator; returns new content",
+      "id": "memory_service_rationale_72"
     },
     {
       "label": "tool_executor.py",
@@ -34614,9 +34614,9 @@
       "weight": 0.8,
       "_src": "critic_runtime_probe_rationale_1",
       "_tgt": "critic_guard_forbiddenruntimeactionerror",
+      "confidence_score": 0.5,
       "source": "critic_runtime_probe_rationale_1",
-      "target": "critic_guard_forbiddenruntimeactionerror",
-      "confidence_score": 0.5
+      "target": "critic_guard_forbiddenruntimeactionerror"
     },
     {
       "relation": "contains",
@@ -67554,9 +67554,9 @@
       "weight": 0.8,
       "_src": "tool_routes_appendbody",
       "_tgt": "critic_guard_forbiddenruntimeactionerror",
+      "confidence_score": 0.5,
       "source": "tool_routes_appendbody",
-      "target": "critic_guard_forbiddenruntimeactionerror",
-      "confidence_score": 0.5
+      "target": "critic_guard_forbiddenruntimeactionerror"
     },
     {
       "relation": "uses",
@@ -67566,9 +67566,9 @@
       "weight": 0.8,
       "_src": "tool_routes_exclusionbody",
       "_tgt": "critic_guard_forbiddenruntimeactionerror",
+      "confidence_score": 0.5,
       "source": "tool_routes_exclusionbody",
-      "target": "critic_guard_forbiddenruntimeactionerror",
-      "confidence_score": 0.5
+      "target": "critic_guard_forbiddenruntimeactionerror"
     },
     {
       "relation": "uses",
@@ -67578,9 +67578,9 @@
       "weight": 0.8,
       "_src": "tool_routes_deepsearchbody",
       "_tgt": "critic_guard_forbiddenruntimeactionerror",
+      "confidence_score": 0.5,
       "source": "tool_routes_deepsearchbody",
-      "target": "critic_guard_forbiddenruntimeactionerror",
-      "confidence_score": 0.5
+      "target": "critic_guard_forbiddenruntimeactionerror"
     },
     {
       "relation": "rationale_for",
@@ -67638,9 +67638,9 @@
       "weight": 0.8,
       "_src": "tool_routes_rationale_1",
       "_tgt": "critic_guard_forbiddenruntimeactionerror",
+      "confidence_score": 0.5,
       "source": "tool_routes_rationale_1",
-      "target": "critic_guard_forbiddenruntimeactionerror",
-      "confidence_score": 0.5
+      "target": "critic_guard_forbiddenruntimeactionerror"
     },
     {
       "relation": "uses",
@@ -67650,9 +67650,9 @@
       "weight": 0.8,
       "_src": "tool_routes_rationale_36",
       "_tgt": "critic_guard_forbiddenruntimeactionerror",
+      "confidence_score": 0.5,
       "source": "tool_routes_rationale_36",
-      "target": "critic_guard_forbiddenruntimeactionerror",
-      "confidence_score": 0.5
+      "target": "critic_guard_forbiddenruntimeactionerror"
     },
     {
       "relation": "uses",
@@ -67662,9 +67662,9 @@
       "weight": 0.8,
       "_src": "tool_routes_rationale_49",
       "_tgt": "critic_guard_forbiddenruntimeactionerror",
+      "confidence_score": 0.5,
       "source": "tool_routes_rationale_49",
-      "target": "critic_guard_forbiddenruntimeactionerror",
-      "confidence_score": 0.5
+      "target": "critic_guard_forbiddenruntimeactionerror"
     },
     {
       "relation": "uses",
@@ -67674,9 +67674,9 @@
       "weight": 0.8,
       "_src": "tool_routes_rationale_62",
       "_tgt": "critic_guard_forbiddenruntimeactionerror",
+      "confidence_score": 0.5,
       "source": "tool_routes_rationale_62",
-      "target": "critic_guard_forbiddenruntimeactionerror",
-      "confidence_score": 0.5
+      "target": "critic_guard_forbiddenruntimeactionerror"
     },
     {
       "relation": "contains",
@@ -69821,8 +69821,8 @@
       "source_file": "backend/app/modules/concierge/critic_guard.py",
       "source_location": "L72",
       "weight": 1.0,
-      "_src": "critic_guard_review_note",
-      "_tgt": "fux_bridge_critic_suggestions",
+      "_src": "fux_bridge_critic_suggestions",
+      "_tgt": "critic_guard_review_note",
       "source": "fux_bridge_critic_suggestions",
       "target": "critic_guard_review_note"
     },
@@ -71117,8 +71117,8 @@
       "source_file": "backend/app/modules/concierge/memory_service.py",
       "source_location": "L80",
       "weight": 1.0,
-      "_src": "memory_service_append_memory",
-      "_tgt": "critic_guard_guard_note",
+      "_src": "critic_guard_guard_note",
+      "_tgt": "memory_service_append_memory",
       "source": "critic_guard_guard_note",
       "target": "memory_service_append_memory"
     },

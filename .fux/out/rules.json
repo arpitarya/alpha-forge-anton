@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 63,
+  "count": 64,
   "rules": [
     {
       "id": "async-everywhere",
@@ -462,6 +462,28 @@
       "examples": [],
       "created": "2026-06-12",
       "updated": "2026-06-13"
+    },
+    {
+      "id": "fux-engine-exact-pin",
+      "type": "convention",
+      "domain": "process",
+      "status": "active",
+      "title": "`fux-engine` is exact-pinned in the root `pyproject.toml`",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/fux-engine-exact-pin.md",
+      "code_refs": [
+        "pyproject.toml",
+        "uv.lock"
+      ],
+      "related": [
+        "project-fux",
+        "doc-per-code-change"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-19",
+      "updated": "2026-06-19"
     },
     {
       "id": "getting-started",

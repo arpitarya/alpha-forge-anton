@@ -1,6 +1,6 @@
 # Fux INDEX
 
-_51 active entries across 11 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_52 active entries across 11 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
 
 ## architecture
 - **mutation-confirm-rmw** (rule) — every Orff-initiated mutation (memory note, exclusion-list edit, strategy/obj…
@@ -52,6 +52,7 @@ _51 active entries across 11 domains. Read this first; open a rule (`fux why <id
 ## process
 - **doc-per-code-change** (convention) — Every code change ships with the knowledge update it implies in _[global]_
 - **finance-feature-playbook** (convention) — a new financial metric/insight ships through a fixed seven-step
+- **fux-engine-exact-pin** (convention) — `fux-engine` is exact-pinned in the root `pyproject.toml`
 
 ## project
 - **project-broker-prime** (memory) — `backend/app/modules/brokers/refetch.py` exposes `prime_in_background`, which…

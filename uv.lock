@@ -156,7 +156,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "fux-engine", specifier = ">=0.4.0" }]
+requires-dist = [{ name = "fux-engine", specifier = "==0.6.0" }]
 
 [package.metadata.requires-dev]
 all = [
@@ -1313,11 +1313,11 @@ wheels = [
 
 [[package]]
 name = "fux-engine"
-version = "0.4.0"
+version = "0.6.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/57/08/db85b2eca0220c57b06ca9440c49438598591186ae4af18bb949937328cf/fux_engine-0.4.0.tar.gz", hash = "sha256:dcce07df360f8b8f17a1de5f2ed271ab6074e6d66405e1a536029b20c41550c7", size = 177286, upload-time = "2026-06-16T21:10:58.678Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d1/e7/5eb23812f939797c6660918fdc3d5e76f37a981756e382be0d9a3a2846f8/fux_engine-0.6.0.tar.gz", hash = "sha256:9c4110e139457d02599f78b71c0de7840205aa72acbdfc7ae039fb4d9a72439c", size = 215900, upload-time = "2026-06-18T19:05:08.757Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e2/84/43fe4803aabdfd8bb7011b3e33d805d9765f8da598190377bcdded3048b2/fux_engine-0.4.0-py3-none-any.whl", hash = "sha256:586e0300dbc6e0036cd2239e603b2f09e09fbd20d05cfc1b0c946a966af28328", size = 174501, upload-time = "2026-06-16T21:10:57.258Z" },
+    { url = "https://files.pythonhosted.org/packages/ec/d8/c8bc903d42665fc248464674d722a9cca7d9bc015ca36ef13467d9e44dd0/fux_engine-0.6.0-py3-none-any.whl", hash = "sha256:0a6e5df0b3cd9132bca38544558c52e9689625f00091b35c68af790843a47e4f", size = 208244, upload-time = "2026-06-18T19:05:07.328Z" },
 ]
 
 [[package]]

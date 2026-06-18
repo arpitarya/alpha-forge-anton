@@ -1,13 +1,13 @@
 # Fux GRAPH_REPORT
 
-_2334 nodes · 14395 edges · 490 code files · 63 rules · 226 communities._
+_2337 nodes · 14399 edges · 492 code files · 64 rules · 226 communities._
 
 ## Node types
 
 - function: 1434
-- code-file: 490
+- code-file: 492
 - class: 347
-- convention: 15
+- convention: 16
 - narrative: 12
 - rule: 10
 - glossary: 10
@@ -18,13 +18,13 @@ _2334 nodes · 14395 edges · 490 code files · 63 rules · 226 communities._
 
 ## Edges
 
-_8230 of 14395 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_8230 of 14399 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
 - references: 8230
 - calls: 4207
 - contains: 1783
-- related: 110
-- governs: 65
+- related: 112
+- governs: 67
 
 ## God nodes (highest connectivity)
 
@@ -44,7 +44,7 @@ _8230 of 14395 are INFERRED (low-confidence `references`, down-weighted in clust
 ## Chokepoints (PageRank centrality)
 
 - **get** (function) — 0.0111
-- **get** (function) — 0.0110
+- **get** (function) — 0.0109
 - **ChatRail.tsx** (code-file) — 0.0047
 - **post** (function) — 0.0030
 - **AlphaBar.tsx** (code-file) — 0.0030
@@ -53,7 +53,7 @@ _8230 of 14395 are INFERRED (low-confidence `references`, down-weighted in clust
 - **PrefControls.tsx** (code-file) — 0.0025
 - **main** (function) — 0.0024
 - **fetch** (function) — 0.0021
-- **test_brokers.py** (code-file) — 0.0021
+- **test_brokers.py** (code-file) — 0.0020
 - **fetch** (function) — 0.0020
 
 ## Communities
@@ -90,7 +90,7 @@ _8230 of 14395 are INFERRED (low-confidence `references`, down-weighted in clust
 - **community 52** (2 nodes): _h, test_acted_trim_not_flagged
 - **community 53** (6 nodes): _ind, test_each_gate_can_reject, test_passes_all_gates_builds_candidate, test_rank_is_score_sorted_then_symbol_and_capped, test_screener_rules.py, test_thresholds_come_from_config
 - **community 54** (12 nodes): _facts, _ind, test_add_continuation_needs_catalyst, test_hold_nearest_trigger, test_not_covered_and_no_data, test_sell_below_dma_weak_rsi, test_sell_hard_stop, test_sell_trailing_atr, test_signal_rules.py, test_thresholds_come_from_config, test_trim_concentration, test_trim_profit
-- **community 55** (11 nodes): README.md, async-everywhere, compose.registry.ts, concierge-default-model, concierge-registry-single-source, files-max-100-lines, orff, project-fux, providers.json, routing.json, ui-component-contract
+- **community 55** (15 nodes): README.md, async-everywhere, compose.registry.ts, concierge-default-model, concierge-registry-single-source, doc-per-code-change, files-max-100-lines, fux-engine-exact-pin, orff, project-fux, providers.json, pyproject.toml
 - **community 63** (2 nodes): gen-concierge-registry.mjs, lit
 - **community 64** (2 nodes): RootLayout, layout.tsx
 - **community 65** (2 nodes): Home, page.tsx
@@ -215,4 +215,4 @@ _8230 of 14395 are INFERRED (low-confidence `references`, down-weighted in clust
 - **community 204** (4 nodes): _adapter, _tiers, _toggle, check
 - **community 205** (6 nodes): _RFinal, _RTool, _assembled, _reset, _run, check
 - **community 207** (2 nodes): _concierge_route, _sse
-- **community 208** (6 nodes): afbach-vault, doc-per-code-change, knowledge-location, no-secrets-in-vcs, project-wagner-dante, vault-only-credentials
+- **community 208** (5 nodes): afbach-vault, knowledge-location, no-secrets-in-vcs, project-wagner-dante, vault-only-credentials
