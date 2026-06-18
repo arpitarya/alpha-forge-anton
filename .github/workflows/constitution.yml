@@ -30,6 +30,16 @@ jobs:
       - name: just constitution (fux gate — exit 2 blocks)
         run: just constitution
 
+      - name: plan-store content guard (money docs / hard PII — exit 1 blocks)
+        # `fux gate` checks constitutional RULE integrity, not file CONTENT — so a
+        # money doc committed with `--no-verify` (bypassing the local dante-pii hook)
+        # would otherwise sail through CI. This pure-stdlib probe is the CI-side twin
+        # of the pre-commit `dante pii` / `just probe plan-safety` guard: it FAILS
+        # (exit 1) if any *.plan.md / *.drift.md is tracked or a committed rule doc
+        # leaks data-plane figures. (dante itself is a local sibling tool, not a pip
+        # package, so it can't run in CI — see docs/guardrails.md residual-gap note.)
+        run: python probes/plan_safety_probe.py
+
   ai-review:
     # The second-set-of-eyes review (§2R.1 of docs/constitution-enforcement-handoff.md).
     # A solo author can't approve his own PR, so the missing human approval is

@@ -1,2 +1,4 @@
 {"proposal": "I prefer a large-cap value tilt with quarterly rebalancing", "verdicts": []}
 {"proposal": "target equity allocation around 60 percent, debt 30, gold 10", "verdicts": []}
+{"proposal": "test: PLANTED constitutional violation (money doc) \u2014 gate must block", "verdicts": []}
+{"proposal": "# Planted money doc (constitutional violation \u2014 should never be committable)\nTarget allocation: 60% equity. Buy ABC at \u20b91,234,567 across account 1234567890.\nPAN ABCDE1234F.", "verdicts": []}
