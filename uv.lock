@@ -156,7 +156,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "fux-engine", specifier = "==0.6.0" }]
+requires-dist = [{ name = "fux-engine", specifier = "==0.7.0" }]
 
 [package.metadata.requires-dev]
 all = [
@@ -317,7 +317,7 @@ cage = [
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = ">=0.40.0" },
-    { name = "cage-flux", marker = "extra == 'cage'", editable = "../cage" },
+    { name = "cage-flux", marker = "extra == 'cage'", specifier = "==0.3.0" },
     { name = "fastapi", specifier = ">=0.100.0" },
     { name = "httpx", specifier = ">=0.27.0" },
     { name = "pydantic", specifier = ">=2.0.0" },
@@ -774,17 +774,12 @@ filecache = [
 
 [[package]]
 name = "cage-flux"
-source = { editable = "../cage" }
-
-[package.metadata]
-requires-dist = [
-    { name = "build", marker = "extra == 'dev'", specifier = ">=1.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
-    { name = "sentence-transformers", marker = "extra == 'embeddings'", specifier = ">=2.2" },
-    { name = "sentence-transformers", marker = "extra == 'ml'", specifier = ">=2.2" },
-    { name = "twine", marker = "extra == 'dev'", specifier = ">=5.0" },
+version = "0.3.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a1/86/8a950e8f396390a9eba7f7f88aefdfd71a134f653ffd37650a12ddb991c2/cage_flux-0.3.0.tar.gz", hash = "sha256:eced40cd2ea5576a3d519d21eaff409f95c7cc7af59ec0e6cceb4e50a10684da", size = 65231, upload-time = "2026-06-20T03:24:02.255Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f1/15/d391b4e892eddf1888685aed63e1d74bf7b08bbdc0e7e8c6c056db9ed40f/cage_flux-0.3.0-py3-none-any.whl", hash = "sha256:c32e4d055d3bfb07210d2af65875769167f88f875e7de217bbc2ff9e610cf723", size = 66303, upload-time = "2026-06-20T03:24:00.967Z" },
 ]
-provides-extras = ["embeddings", "ml", "dev"]
 
 [[package]]
 name = "celery"
@@ -1313,11 +1308,11 @@ wheels = [
 
 [[package]]
 name = "fux-engine"
-version = "0.6.0"
+version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/d1/e7/5eb23812f939797c6660918fdc3d5e76f37a981756e382be0d9a3a2846f8/fux_engine-0.6.0.tar.gz", hash = "sha256:9c4110e139457d02599f78b71c0de7840205aa72acbdfc7ae039fb4d9a72439c", size = 215900, upload-time = "2026-06-18T19:05:08.757Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/79/da/21556853d406ddc610cbc5fccffbc9026dc1fc7c0c6ac353b146bf57556c/fux_engine-0.7.0.tar.gz", hash = "sha256:0a5448fdfaa4c4f7488fc59146130cf913871e575c70921af87fc07f98fa63f6", size = 217991, upload-time = "2026-06-19T07:26:10.212Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ec/d8/c8bc903d42665fc248464674d722a9cca7d9bc015ca36ef13467d9e44dd0/fux_engine-0.6.0-py3-none-any.whl", hash = "sha256:0a6e5df0b3cd9132bca38544558c52e9689625f00091b35c68af790843a47e4f", size = 208244, upload-time = "2026-06-18T19:05:07.328Z" },
+    { url = "https://files.pythonhosted.org/packages/89/72/8ced5dc9f4080685cf7964c209d9784006bc45537594a527738d0a9a93a2/fux_engine-0.7.0-py3-none-any.whl", hash = "sha256:0aeccbb1bfb9baf8f497a7448569aad26df60be409347412182ecfaed8fc8c4a", size = 209117, upload-time = "2026-06-19T07:26:08.747Z" },
 ]
 
 [[package]]

@@ -58,6 +58,50 @@ Tools in Anton's stack (graphify, fux, the Handover compressor, the response
 cache) file **savings receipts** via `cage.record_receipt(...)` so `cage attrib`
 can credit each one — that is the part that turns a meter into attribution.
 
+## Savings sources Anton feeds
+
+Two non-LLM savings axes are populated so `cage human` / `cage trend` / `cage
+matrix` produce numbers (both off the request path, both fail-open with cage
+absent):
+
+| Source | What feeds it | Where |
+| ------ | ------------- | ----- |
+| **Human alternatives** (Tier-1, agent-vs-human) | one `tool="human"` receipt per task at task close | [cage_human.py](../concierge/llm/src/alphaforge_anton_llm/cage_human.py) |
+| **graphify token savings** | one `tool="graphify"` `modeled` receipt per metered query | [bin/graphify](../bin/graphify) shim → `cage graphify` |
+
+**Human alternatives.** `cage_human.backfill` walks `tasks.jsonl` (written first by
+`cage hook-session-end`) and calls `cage.record_human(task=<id>, task_type=<type>)`
+for each task — Anton supplies only the id and type; cage's resolver + the
+`[human.tasks.*]` policy table do minutes→USD and the confidence ladder. A typeless
+task falls to cage's global default (honestly low-confidence) — **no minutes are
+invented**. `record_human` is idempotent on `(task, call)`, so re-running never
+double-records. Wired as a **second `SessionEnd` step after** `cage hook-session-end`
+(in `.claude/settings.json`), and runnable as `just cage-human`. Feeds `cage human`
+and `cage trend` (the $ **and** hours-saved time-series).
+
+**graphify metering.** graphify is third-party and read-only, so cage meters it by
+wrapping the unmodified command: `cage graphify -- graphify query "…"`. The
+`bin/graphify` shim routes every bare `graphify query/path/explain` through that
+wrapper transparently — stdout/exit pass through unchanged, and a `tool="graphify"`,
+`method="modeled"` receipt is filed on the side (or nothing, when no cited
+`source_file` resolves — unmeasurable ≠ zero). `graphify update .` stays unwrapped
+(a refresh, not a query). Also `just graphify-cage 'query "…"'`. Verified by
+`just probe graphify-cage`.
+
+The shim + PATH wiring is **not hand-maintained here** — it's installed by the
+PyPI-packaged **`cage adopt`** command (no repo to clone): `cage adopt` runs
+`cage init`, `cage hooks install`, and drops the graphify interceptor (which ships
+*inside* the `cage-flux` wheel as `data/shims/graphify`) + the PATH line.
+`setup.sh --graphify` calls `cage adopt --no-hooks` (anton wires its own SessionEnd
+above). Re-run `setup.sh --graphify`, or `cage adopt --no-hooks` directly, to
+reinstall the shim.
+
+> **Version note.** These surfaces need **cage ≥ 0.3** (`graphify` / `human-record`
+> subcommands, `record_human`). Install/upgrade the tool with
+> `uv tool install cage-flux` (or `pip install cage-flux`); anton's `[cage]`
+> extra pins `cage-flux==0.3.0` for the in-process `cage_meter` / `cage_human`
+> adapters. The shim uses the global `cage` and no-ops cleanly if it's absent.
+
 ## PII / secrets
 
 The ledger stores token **counts** and cost — never prompt bodies or holdings, by

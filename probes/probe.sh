@@ -26,6 +26,7 @@ Available probes:
 
   Fux probes (standalone, no CDP required):
     fux-graph            ui_fux_graph_probe.py
+    graphify-cage        graphify_cage_probe.py
     plan-safety          plan_safety_probe.py
     critic-runtime       critic_runtime_probe.py
     holdings-disclosure  holdings_disclosure_probe.py
@@ -92,6 +93,7 @@ case "$NAME" in
     ui-voice)          SCRIPT="ui_voice_probe.py" ;;
     ui-deep-search)    SCRIPT="ui_deep_search_probe.py" ;;
     fux-graph)         SCRIPT="ui_fux_graph_probe.py" ;;
+    graphify-cage)     SCRIPT="graphify_cage_probe.py" ;;
     plan-safety)       SCRIPT="plan_safety_probe.py" ;;
     critic-runtime)    SCRIPT="critic_runtime_probe.py" ;;
     holdings-disclosure) SCRIPT="holdings_disclosure_probe.py" ;;
