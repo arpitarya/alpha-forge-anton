@@ -4,13 +4,22 @@ domain: process
 type: convention
 status: active
 created: 2026-06-19
-updated: 2026-06-19
+updated: 2026-06-20
+aliases:
+  - fux-version-pin
+keywords:
+  - fux-engine
+  - dependency
+  - pin
+  - uv
+  - lockfile
+  - version
 code_refs:
   - pyproject.toml
   - uv.lock
-related: [project-fux, doc-per-code-change]
-aliases: [fux-version-pin]
-keywords: [fux-engine, dependency, pin, uv, lockfile, version]
+related:
+  - project-fux
+  - doc-per-code-change
 ---
 **Convention:** `fux-engine` is exact-pinned in the root `pyproject.toml`
 (`fux-engine==<version>`, not a floor like `>=`), and `uv.lock` is kept in sync

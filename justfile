@@ -58,6 +58,14 @@ graphify-update:
 graphify-check:
     graphify check-update .
 
+# Backfill one human-baseline (Tier-1) receipt per task → feeds `cage human` / `cage trend`
+cage-human:
+    uv run --project concierge/llm --extra cage python -m alphaforge_anton_llm.cage_human
+
+# Run a graphify query metered through cage: just graphify-cage 'query "how does X relate to Y"'
+graphify-cage args:
+    cage graphify -- graphify {{args}}
+
 # ── Full Stack ───────────────────────────────────
 
 # Start all local services: DB, Bach vault, backend, frontend

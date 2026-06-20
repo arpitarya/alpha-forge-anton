@@ -281,6 +281,21 @@ setup_graphify() {
     info "Refreshing graphify-out/ from the current repo..."
     graphify update .
     ok "graphify graph refreshed"
+
+    wire_cage_metering
+}
+
+# Install cage's graphify metering interceptor (bin/graphify → `cage graphify …`)
+# + PATH via the PyPI `cage adopt` command — no sibling repo needed. Anton wires its
+# own SessionEnd hooks (incl. the human-baseline backfill), so we pass --no-hooks.
+# Idempotent; skipped with an install hint if the cage tool isn't on PATH.
+wire_cage_metering() {
+    if command -v cage &>/dev/null; then
+        ( cd "$REPO_ROOT" && cage adopt --no-hooks )
+    else
+        warn "cage not installed — skipping graphify metering interceptor."
+        echo "  Install it with: uv tool install cage-flux   (then re-run ./setup.sh --graphify)"
+    fi
 }
 
 # ── Python Workspace Dependencies (uv) ────────────────────────────────────────

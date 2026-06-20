@@ -71,6 +71,10 @@
           {
             "type": "command",
             "command": "cage hook-session-end"
+          },
+          {
+            "type": "command",
+            "command": "uv run --project concierge/llm --extra cage python -m alphaforge_anton_llm.cage_human"
           }
         ]
       }

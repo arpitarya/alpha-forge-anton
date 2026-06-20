@@ -19,10 +19,7 @@ dependencies = [
 [project.optional-dependencies]
 # Cage — the sibling cost/savings flux. Optional: the cage_meter adapter is
 # fail-open, so the gateway runs with or without it. Install to enable the ledger.
-cage = ["cage-flux"]
-
-[tool.uv.sources]
-cage-flux = { path = "../../../cage", editable = true }
+cage = ["cage-flux==0.3.0"]
 
 [build-system]
 requires = ["hatchling"]
