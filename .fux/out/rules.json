@@ -248,7 +248,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-10",
-      "updated": "2026-06-19"
+      "updated": "2026-06-21"
     },
     {
       "id": "concierge-registry-single-source",
@@ -303,7 +303,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-16",
-      "updated": "2026-06-19"
+      "updated": "2026-06-21"
     },
     {
       "id": "core-allocation",
@@ -749,7 +749,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-19"
+      "updated": "2026-06-21"
     },
     {
       "id": "projection-disclosure",
@@ -944,7 +944,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-16",
-      "updated": "2026-06-19"
+      "updated": "2026-06-21"
     },
     {
       "id": "ui-component-contract",
@@ -1198,7 +1198,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-19"
+      "updated": "2026-06-21"
     },
     {
       "id": "source-kind-status",
