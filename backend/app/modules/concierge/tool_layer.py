@@ -4,15 +4,12 @@ card then break — awaiting async user approval. MAX_ROUNDS=5. Errors → error
 """
 from __future__ import annotations
 
-import json
 import os
-import time
 
 from alphaforge_anton_llm.types import ProviderResponse
 
-from app.modules.concierge import deep_search_service
-from app.modules.concierge.tool_executor import build_confirm, execute_read
-from app.modules.concierge.tool_registry import DEEP_SEARCH_TOOL, MUTATING_TOOLS, trusted_schemas
+from app.modules.concierge.tool_dispatch import run_blocks
+from app.modules.concierge.tool_registry import trusted_schemas
 
 _MAX_ROUNDS = 5
 
@@ -48,6 +45,7 @@ async def run(assembled, _gateway) -> tuple[list[dict], ProviderResponse | None]
     mode = assembled.deep_search_mode
     tools = _as_anthropic(trusted_schemas(offer_deep_search=mode != "never"))
     events: list = []
+    seen_confirm: set[str] = set()  # confirm-card ids already emitted this call (re-arm guard)
 
     for _ in range(_MAX_ROUNDS):
         try:
@@ -67,27 +65,7 @@ async def run(assembled, _gateway) -> tuple[list[dict], ProviderResponse | None]
                                             completion_tokens=resp.usage.output_tokens)
 
         turns.append({"role": "assistant", "content": [_block_dict(b) for b in resp.content]})
-        results, has_confirm = [], False
-        for tb in tool_blocks:
-            t1 = time.perf_counter()
-            if tb.name == DEEP_SEARCH_TOOL:
-                evs, result_text, hc = await deep_search_service.dispatch(mode, dict(tb.input))
-                events.extend(evs)
-                has_confirm = has_confirm or hc
-            elif tb.name in MUTATING_TOOLS:
-                events.append({"confirm": build_confirm(tb.name, dict(tb.input))})
-                result_text, has_confirm = "Awaiting user confirmation.", True
-            else:
-                try:
-                    data = await execute_read(tb.name, dict(tb.input))
-                    result_text = json.dumps(data, default=str)
-                    events.append({"tool": {"name": tb.name, "detail": f"{len(result_text)} chars",
-                                            "ms": int((time.perf_counter() - t1) * 1000)}})
-                except Exception as exc:
-                    result_text = f"error: {exc}"
-                    events.append({"error": f"{tb.name}: {exc}"})
-            results.append({"type": "tool_result", "tool_use_id": tb.id, "content": result_text})
-
+        results, has_confirm = await run_blocks(tool_blocks, mode, events, seen_confirm)
         turns.append({"role": "user", "content": results})
         if has_confirm:
             return events, ProviderResponse(content=text or "Action proposed — please confirm.",

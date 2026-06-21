@@ -23,6 +23,7 @@ Available probes:
     ui-notif-time        ui_notification_time_probe.py
     ui-voice             ui_voice_probe.py
     ui-deep-search       ui_deep_search_probe.py
+    ui-deep-search-close ui_deep_search_close_probe.py
 
   Fux probes (standalone, no CDP required):
     fux-graph            ui_fux_graph_probe.py
@@ -47,6 +48,7 @@ Available probes:
     signals-replan       signals_replan_probe.py
     signals-pnl          signals_pnl_probe.py
     signals-backtest     signals_backtest_probe.py
+    edge-discovery       edge_discovery_probe.py
     objective            objective_probe.py
     concierge-tools      concierge_tools_probe.py
 
@@ -92,6 +94,7 @@ case "$NAME" in
     ui-notif-time)     SCRIPT="ui_notification_time_probe.py" ;;
     ui-voice)          SCRIPT="ui_voice_probe.py" ;;
     ui-deep-search)    SCRIPT="ui_deep_search_probe.py" ;;
+    ui-deep-search-close) SCRIPT="ui_deep_search_close_probe.py" ;;
     fux-graph)         SCRIPT="ui_fux_graph_probe.py" ;;
     graphify-cage)     SCRIPT="graphify_cage_probe.py" ;;
     plan-safety)       SCRIPT="plan_safety_probe.py" ;;
@@ -114,6 +117,7 @@ case "$NAME" in
     signals-replan)    SCRIPT="signals_replan_probe.py" ;;
     signals-pnl)       SCRIPT="signals_pnl_probe.py" ;;
     signals-backtest)  SCRIPT="signals_backtest_probe.py" ;;
+    edge-discovery)    SCRIPT="edge_discovery_probe.py" ;;
     objective)         SCRIPT="objective_probe.py" ;;
     concierge-tools)   SCRIPT="concierge_tools_probe.py" ;;
     pypi-publish)      SCRIPT="pypi_publish_probe.py" ;;

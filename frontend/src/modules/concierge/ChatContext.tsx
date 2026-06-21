@@ -77,6 +77,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     (q: string, images?: string[]) => submit(q, choice, images, deepSearchMode),
     [submit, choice, deepSearchMode],
   );
+  // Deep-search approval: resend with the awaited grounding + mode forced to "never" so
+  // Orff answers in one closing turn instead of re-arming the confirm card.
+  const handleSendGrounded = useCallback(
+    (q: string, grounding: string) => submit(q, choice, [], "never", grounding),
+    [submit, choice],
+  );
   const handleEdit = useCallback(
     (id: string, q: string) => editTurn(id, q, choice),
     [editTurn, choice],
@@ -112,6 +118,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           onClose={() => setOpen(false)}
           onClear={clear}
           onSend={handleSend}
+          onSendGrounded={handleSendGrounded}
           onEdit={handleEdit}
           onStop={stop}
           footerModelRef={footerModelRef}

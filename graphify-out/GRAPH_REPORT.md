@@ -1,12 +1,12 @@
-# Graph Report - anton  (2026-06-20)
+# Graph Report - anton  (2026-06-21)
 
 ## Corpus Check
-- 479 files · ~2,092,439 words
+- 500 files · ~2,099,958 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2983 nodes · 5462 edges · 97 communities detected
-- Extraction: 58% EXTRACTED · 42% INFERRED · 0% AMBIGUOUS · INFERRED: 2311 edges (avg confidence: 0.7)
+- 3137 nodes · 5928 edges · 102 communities detected
+- Extraction: 56% EXTRACTED · 44% INFERRED · 0% AMBIGUOUS · INFERRED: 2591 edges (avg confidence: 0.7)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -54,27 +54,27 @@
 - [[_COMMUNITY_Community 41|Community 41]]
 - [[_COMMUNITY_Community 42|Community 42]]
 - [[_COMMUNITY_Community 43|Community 43]]
+- [[_COMMUNITY_Community 44|Community 44]]
 - [[_COMMUNITY_Community 45|Community 45]]
-- [[_COMMUNITY_Community 46|Community 46]]
 - [[_COMMUNITY_Community 47|Community 47]]
 - [[_COMMUNITY_Community 48|Community 48]]
 - [[_COMMUNITY_Community 49|Community 49]]
-- [[_COMMUNITY_Community 54|Community 54]]
-- [[_COMMUNITY_Community 57|Community 57]]
-- [[_COMMUNITY_Community 62|Community 62]]
-- [[_COMMUNITY_Community 64|Community 64]]
+- [[_COMMUNITY_Community 50|Community 50]]
+- [[_COMMUNITY_Community 51|Community 51]]
+- [[_COMMUNITY_Community 56|Community 56]]
+- [[_COMMUNITY_Community 58|Community 58]]
+- [[_COMMUNITY_Community 60|Community 60]]
 - [[_COMMUNITY_Community 65|Community 65]]
-- [[_COMMUNITY_Community 66|Community 66]]
-- [[_COMMUNITY_Community 100|Community 100]]
-- [[_COMMUNITY_Community 101|Community 101]]
-- [[_COMMUNITY_Community 102|Community 102]]
+- [[_COMMUNITY_Community 67|Community 67]]
+- [[_COMMUNITY_Community 68|Community 68]]
+- [[_COMMUNITY_Community 69|Community 69]]
 - [[_COMMUNITY_Community 103|Community 103]]
 - [[_COMMUNITY_Community 104|Community 104]]
-- [[_COMMUNITY_Community 118|Community 118]]
-- [[_COMMUNITY_Community 177|Community 177]]
-- [[_COMMUNITY_Community 200|Community 200]]
-- [[_COMMUNITY_Community 201|Community 201]]
-- [[_COMMUNITY_Community 202|Community 202]]
+- [[_COMMUNITY_Community 105|Community 105]]
+- [[_COMMUNITY_Community 106|Community 106]]
+- [[_COMMUNITY_Community 107|Community 107]]
+- [[_COMMUNITY_Community 121|Community 121]]
+- [[_COMMUNITY_Community 180|Community 180]]
 - [[_COMMUNITY_Community 203|Community 203]]
 - [[_COMMUNITY_Community 204|Community 204]]
 - [[_COMMUNITY_Community 205|Community 205]]
@@ -107,18 +107,23 @@
 - [[_COMMUNITY_Community 232|Community 232]]
 - [[_COMMUNITY_Community 233|Community 233]]
 - [[_COMMUNITY_Community 234|Community 234]]
+- [[_COMMUNITY_Community 235|Community 235]]
+- [[_COMMUNITY_Community 236|Community 236]]
+- [[_COMMUNITY_Community 237|Community 237]]
+- [[_COMMUNITY_Community 238|Community 238]]
+- [[_COMMUNITY_Community 239|Community 239]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `get()` - 178 edges
-2. `QueryType` - 80 edges
-3. `Message` - 69 edges
-4. `HoldingsAggregator` - 57 edges
-5. `ProviderResponse` - 55 edges
-6. `alphaforge-logger — Structured rotating-file + console logger.` - 46 edges
-7. `SessionMeta` - 37 edges
-8. `connect_existing_chrome()` - 36 edges
-9. `evaluate()` - 36 edges
-10. `run()` - 35 edges
+1. `get()` - 182 edges
+2. `append()` - 88 edges
+3. `QueryType` - 80 edges
+4. `Message` - 69 edges
+5. `HoldingsAggregator` - 57 edges
+6. `ProviderResponse` - 56 edges
+7. `alphaforge-logger — Structured rotating-file + console logger.` - 47 edges
+8. `SessionMeta` - 41 edges
+9. `evaluate()` - 39 edges
+10. `connect_existing_chrome()` - 38 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Tool ABC + ToolRegistry` --semantically_similar_to--> `domain_role.py filename grammar`  [INFERRED] [semantically similar]
@@ -156,60 +161,60 @@
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.02
-Nodes (179): AngelOneSource, _capture_holdings_via_reload(), _ensure_logged_in(), fetch_holdings_via_browser(), normalize(), Angel One — CDP login + holdings fetch via the authenticated browser context.  S, Map a superportfolio HoldingDetail row to the shared dict shape., _to_float() (+171 more)
+Cohesion: 0.01
+Nodes (220): _pick_cash(), Angel One — capture free-cash balance via CDP from the funds page.  Probe-confir, _to_float(), AngelOneSource, _capture_holdings_via_reload(), _ensure_logged_in(), _extract_equity_holdings(), fetch_holdings_via_browser() (+212 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.02
-Nodes (181): _amain(), `just backtest` entry — replay the active config over real cached history (§10.5, render(), _close(), BTSeries, _cache_file(), _download(), load_series() (+173 more)
+Nodes (207): capture_angelone_cash(), main(), Print Angel One free cash via CDP capture of /funds/v2/getRMSLimit.  Attaches to, _capture(), main(), Attach to existing CDP Chrome, intercept Angel One portfolio + funds XHRs.  Run, Compact preview: top-level keys + first list-of-dict path with sample., _shape_summary() (+199 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.02
-Nodes (159): capture_angelone_cash(), _pick_cash(), Angel One — capture free-cash balance via CDP from the funds page.  Probe-confir, _to_float(), main(), Print Angel One free cash via CDP capture of /funds/v2/getRMSLimit.  Attaches to, _capture(), main() (+151 more)
+Nodes (178): _close(), BTSeries, _cache_file(), _download(), load_series(), Multi-year daily OHLCV for the backtest — fetch once, cache, replay offline.  Se, _read_cache(), _write_cache() (+170 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.02
-Nodes (157): detect_action(), Action confirmation — detect a mutating intent in the user's message and emit a, A structured pending-action card for a mutating intent, else None., _extract_equity_holdings(), Drill into the superportfolio response to pull out HoldingDetail rows., _extract_assets(), next(), month_spend_usd() (+149 more)
+Cohesion: 0.03
+Nodes (104): ABC, default_model(), health(), NewsSource, ProviderAdapter, ProviderHealth, NewsSource abstract base class — the contract every source must implement., The provider's default model id — the first entry in `providers.json`. (+96 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.03
-Nodes (94): ABC, default_model(), health(), NewsSource, ProviderAdapter, ProviderHealth, NewsSource abstract base class — the contract every source must implement., The provider's default model id — the first entry in `providers.json`. (+86 more)
+Cohesion: 0.02
+Nodes (129): dump_angelone(), is_csv_fresh(), live_csv_path(), main(), Angel One holdings CSV cache — fetches via CDP browser, caches to CSV.  TTL cont, _ttl(), write_csv(), _adapter_and_pricing() (+121 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.02
-Nodes (129): HoldingsAggregator, _inr_invested(), _inr_value(), AllocationSlice, Aggregator response dataclasses + default rebalance targets., RebalanceDrift, RebalanceSuggestion, TreemapCell (+121 more)
+Cohesion: 0.03
+Nodes (140): detect_action(), Action confirmation — detect a mutating intent in the user's message and emit a, A structured pending-action card for a mutating intent, else None., _doc_id(), _hits(), is_investment(), main(), _mtime() (+132 more)
 
 ### Community 6 - "Community 6"
-Cohesion: 0.02
-Nodes (111): dump_angelone(), is_csv_fresh(), live_csv_path(), main(), Angel One holdings CSV cache — fetches via CDP browser, caches to CSV.  TTL cont, _ttl(), write_csv(), _adapter_and_pricing() (+103 more)
+Cohesion: 0.03
+Nodes (92): HoldingsAggregator, _inr_invested(), _inr_value(), NewsAggregator — fans out to all enabled sources in parallel, deduplicates., AllocationSlice, Aggregator response dataclasses + default rebalance targets., RebalanceDrift, RebalanceSuggestion (+84 more)
 
 ### Community 7 - "Community 7"
 Cohesion: 0.04
-Nodes (113): _doc_id(), _hits(), is_investment(), main(), _mtime(), check(), _fixture(), main() (+105 more)
+Nodes (93): Gate 1 — deterministic out-of-sample backtest of a pre-registered edge. Pure.  G, Net % per round-trip: enter when the signal fires in [lo, hi), exit `hold` bars, round_trips(), run_gate1(), _series(), net_pct(), Round-trip cost model for the edge engine — frictions + STCG + slippage. Pure., One round-trip → net return % after frictions, STCG, and entry+exit slippage. (+85 more)
 
 ### Community 8 - "Community 8"
 Cohesion: 0.02
 Nodes (108): Angel One source, Binance source (crypto), Groww source, IndMoney source (US stocks), Ticker Tape source (digital gold), Zerodha Kite source, Zerodha Coin source (ETF/MF), Absolute imports + package public surface (+100 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.03
-Nodes (46): NewsAggregator, NewsAggregator — fans out to all enabled sources in parallel, deduplicates., BraveSource, Brave Search source — free 2k req/month, web search fallback., BseAnnouncementsSource, BSE corporate announcements — uses BSE's public JSON API (no auth required)., deduplicate(), Deduplication — URL-canonical + title-hash; keeps the most recent copy. (+38 more)
+Cohesion: 0.04
+Nodes (84): Append one call row to the Cage ledger. Never raises., Append one non-LLM tool call (e.g. a Parallel web search) to the ledger.      Sa, Calendar month-to-date USD spend for a provider, read from the Cage ledger., _adapter(), check(), main(), _stream(), _tiers() (+76 more)
 
 ### Community 10 - "Community 10"
 Cohesion: 0.03
-Nodes (87): Cloud vision (Gemini Flash) for images/PDFs, Nightly cross-session summary, Dependency injection + fakes, Explicit fact extraction table, Followup model inheritance, Intent-to-model routing, Per-module Jupyter notebooks, Offline-state UX (queue + auto-retry) (+79 more)
+Nodes (43): NewsAggregator, BraveSource, Brave Search source — free 2k req/month, web search fallback., BseAnnouncementsSource, BSE corporate announcements — uses BSE's public JSON API (no auth required)., deduplicate(), Deduplication — URL-canonical + title-hash; keeps the most recent copy., Return items with duplicates removed, keeping the newest copy of each story. (+35 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.04
-Nodes (63): BaseSettings, Chunk, chunk_file(), _chunk_markdown(), _chunk_python(), _chunk_ts_like(), _chunk_window(), detect_lang() (+55 more)
+Cohesion: 0.03
+Nodes (87): Cloud vision (Gemini Flash) for images/PDFs, Nightly cross-session summary, Dependency injection + fakes, Explicit fact extraction table, Followup model inheritance, Intent-to-model routing, Per-module Jupyter notebooks, Offline-state UX (queue + auto-retry) (+79 more)
 
 ### Community 12 - "Community 12"
 Cohesion: 0.03
 Nodes (82): Live Per-Query Fan-out over Polling Rationale, News Ingestion Decision, News Source Expansion Backlog, One-File NewsSource Extensibility Contract, StockTwits Source (proposed), Full Session-Cached Snapshot Rationale, Holdings Context Injection, Agentic Loop (Plan-Execute) (+74 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.06
-Nodes (56): build_report(), _friction_net(), _max_drawdown(), Closed round-trips → a `BacktestReport`. Pure: no I/O, no clock (§10.5).  Two co, gross P&L minus the explicit, per-trade frictions (no tax)., Deepest peak-to-trough on a cumulative-P&L curve → (₹, % of peak profit)., BacktestReport, After-cost replay result — the 'is the edge real' check before sizing up. (+48 more)
+Cohesion: 0.04
+Nodes (49): BaseSettings, _find_repo_root(), Configuration for the repo-context MCP server.  Reads from environment (and the, Walk up from this file to find the repo root (has .git)., Settings, get_env_files(), load_env_files(), Resolve the ordered list of .env files to load.  Mirrors Next.js convention with (+41 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.04
@@ -220,20 +225,20 @@ Cohesion: 0.05
 Nodes (48): Base, DashboardTickerItem, DashboardWatchlistItem, SQLAlchemy ORM models for the terminal dashboard feeds.  Single-user app: ticker, One symbol that scrolls in the global terminal ticker bar., One row in the terminal-side Watchlist panel., add_ticker(), add_watchlist() (+40 more)
 
 ### Community 16 - "Community 16"
+Cohesion: 0.05
+Nodes (43): createApiKey(), encryptCredentials(), extendSession(), getLoginKey(), getMe(), _importPublicKey(), listApiKeys(), listSessions() (+35 more)
+
+### Community 17 - "Community 17"
 Cohesion: 0.04
 Nodes (26): initial schema with pgvector memory  Revision ID: 640eee61bc50 Revises:  Create, upgrade(), IAM tables — users, refresh tokens, API keys, audit log.  Revision ID: a3c9f2e1b, upgrade(), AppShell(), downgrade(), Remove IAM tables — IAM is now owned by Wagner.  Revision ID: b3d6f8a2c9e1 Revis, Badge() (+18 more)
 
-### Community 17 - "Community 17"
-Cohesion: 0.07
-Nodes (37): CriticVerdict, _deterministic_block(), ForbiddenRuntimeActionError, guard_note(), Runtime money/PII critic — guard the one riskiest live write (`append_memory`)., A deterministic money/PII invariant refused a runtime write. Never reaches the s, First hard-identifier match → (kind, detail), else None. $0, in-process., Critique a proposed `orff-context` note BEFORE it is persisted.      Determinist (+29 more)
-
 ### Community 18 - "Community 18"
-Cohesion: 0.09
-Nodes (31): createApiKey(), encryptCredentials(), extendSession(), getLoginKey(), getMe(), _importPublicKey(), listApiKeys(), listSessions() (+23 more)
+Cohesion: 0.08
+Nodes (36): _amain(), `just backtest` entry — replay the active config over real cached history (§10.5, render(), build_report(), _friction_net(), _max_drawdown(), Closed round-trips → a `BacktestReport`. Pure: no I/O, no clock (§10.5).  Two co, gross P&L minus the explicit, per-trade frictions (no tax). (+28 more)
 
 ### Community 19 - "Community 19"
-Cohesion: 0.09
-Nodes (30): _broker_detail(), probe_backend(), probe_brokers(), probe_database(), probe_llm(), probe_vault(), System readiness probes used by /health/boot. Each probe returns a BootService s, BootReport (+22 more)
+Cohesion: 0.07
+Nodes (37): _as_cash(), get_cash(), Dedicated free-cash endpoints — snapshot + per-broker sync.  Separate from /port, Cached free-cash state — no sync triggered, always instant., Sync all cash-capable brokers concurrently (CDP + HTTP).      Zerodha uses encto, Sync free-cash for a single broker., sync_all_cash(), sync_one_cash() (+29 more)
 
 ### Community 20 - "Community 20"
 Cohesion: 0.06
@@ -244,302 +249,322 @@ Cohesion: 0.07
 Nodes (37): afbach Vault, AngelOne Broker, probes/<broker>_probe.py, Broker XHR Probe, Chrome DevTools Protocol (CDP), app.modules.brokers._cdp Module, CDP Port 9299, connect_existing_chrome Helper (+29 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.11
-Nodes (23): capture_binance_cash(), _f(), _pick_cash(), Binance — capture free USD/USDT cash via CDP from the wallet page.  Sums the spo, Sum free balances of stablecoins from a Binance wallet payload., Open a fresh Binance tab, capture wallet/balance, return USD cash., main(), Print Binance free USD/USDT cash via CDP capture of wallet/balance.  Attaches to (+15 more)
+Cohesion: 0.08
+Nodes (32): CriticVerdict, _deterministic_block(), ForbiddenRuntimeActionError, guard_note(), Runtime money/PII critic — guard the one riskiest live write (`append_memory`)., A deterministic money/PII invariant refused a runtime write. Never reaches the s, First hard-identifier match → (kind, detail), else None. $0, in-process., Critique a proposed `orff-context` note BEFORE it is persisted.      Determinist (+24 more)
 
 ### Community 23 - "Community 23"
+Cohesion: 0.11
+Nodes (25): check(), _check_all_docs(), main(), Context-doc drift guard — fails if any standing-context elgar doc carries a posi, scan_position_figures(), Objective, Typed north-star objective — the monthly ₹ target Orff optimises toward.  Resolu, Resolve step_up — a future from_date stays dormant; on/after it activates. (+17 more)
+
+### Community 24 - "Community 24"
 Cohesion: 0.09
 Nodes (13): usePlan(), usePlanDrift(), useProjection(), useSavePlan(), useHoldings(), useResetSource(), useStartLogin(), useSubmitOtp() (+5 more)
 
-### Community 24 - "Community 24"
+### Community 25 - "Community 25"
+Cohesion: 0.14
+Nodes (21): _broker_detail(), probe_backend(), probe_brokers(), probe_database(), probe_llm(), probe_vault(), System readiness probes used by /health/boot. Each probe returns a BootService s, BootReport (+13 more)
+
+### Community 26 - "Community 26"
 Cohesion: 0.14
 Nodes (21): backfill(), main(), Human-baseline backfill — file one Tier-1 ``tool="human"`` receipt per task.  Li, Record a human alternative for each task lacking one. Returns #recorded., Append one call row to the Cage ledger. Never raises., record(), _human(), cage_human backfill — one Tier-1 human receipt per task, fail-open + idempotent. (+13 more)
 
-### Community 25 - "Community 25"
+### Community 27 - "Community 27"
 Cohesion: 0.12
 Nodes (23): Communities Legend (Community 0..30+ colored swatches), Node Info Panel (Click a node to inspect), Graphify Graph — Multi-Community Force Layout (F3), Distributed Blue Community Clusters, Fux Graph — Community Layout F4 (162 communities), Circular Ring Arrangement of Community Nodes around Central Hub, Fux Graph — Macro Ring Layout (162 communities, orange theme), Copy Governed Subgraph Button (+15 more)
 
-### Community 26 - "Community 26"
-Cohesion: 0.12
-Nodes (17): createLogger(), get_logger(), getLogger(), Centralized logging configuration for AlphaForge Anton Python services.  Usage::, Return a child logger under the given *namespace*.      Example::          logge, Configure and return the application root logger.      Resolution order for ever, setup_logging(), get_logger() (+9 more)
+### Community 28 - "Community 28"
+Cohesion: 0.11
+Nodes (16): complete(), CompleteIn, eval_run(), EvalIn, get_symbol(), main(), module_overview(), MCP server — exposes repo-context tools over stdio.  Launch via:     python -m a (+8 more)
 
-### Community 27 - "Community 27"
+### Community 29 - "Community 29"
 Cohesion: 0.12
 Nodes (20): Highlighted node: health (~26 edges), Overview minimap, Fux Graph — Initial load (Communities lens, 163 communities), God node: get (function, 766 edges), Fux Graph — Node inspect (get function, 766 edges), Edge language legend (governs/references/calls/contains/related), Governance ledger panel (6 of 7048 edges), Lens panel (Knowledge/Communities, Heat/Path) (+12 more)
 
-### Community 28 - "Community 28"
+### Community 30 - "Community 30"
 Cohesion: 0.13
 Nodes (8): downloadThread(), threadToMarkdown(), imagesFromClipboard(), handleKeyDown(), handlePaste(), handleSubmit(), runCommand(), resolveCommand()
 
-### Community 29 - "Community 29"
+### Community 31 - "Community 31"
 Cohesion: 0.13
 Nodes (18): Focused Function Node (broker module, 37 edges), Node Detail Tooltip (backend/app/modules/broker), Orange Edge Fan from Focused Node, Fux Graph — Communities Mode, Node Neighbourhood Focus, Dense Community Cluster (blue), Labeled Frontend Nodes (Chatbot.tsx, dashboard.routes.tsx), Overview Minimap, Fux Graph — Zoomed Community with Visible Labels (+10 more)
 
-### Community 30 - "Community 30"
+### Community 32 - "Community 32"
 Cohesion: 0.12
 Nodes (17): Angel One Broker, CDP Chrome Session Capture, Groww Broker, INDmoney Broker, Ticker Tape Broker, Zerodha Broker, Alpha Chat, AlphaForge Anton (+9 more)
 
-### Community 31 - "Community 31"
+### Community 33 - "Community 33"
 Cohesion: 0.14
 Nodes (14): SolarOrb component, Alpha Forge Hi-Fi.html design spec, ravel-ui / solar-ui design system, ThemeProvider + useTheme (data-theme/data-accent), solar-orb-ball Implementation Log, solar-orb-ball Plan, solar-orb-ball playground index.html, solar-orb-ball README (+6 more)
 
-### Community 32 - "Community 32"
+### Community 34 - "Community 34"
 Cohesion: 0.17
 Nodes (2): useDashboardStats(), TerminalStats()
 
-### Community 33 - "Community 33"
+### Community 35 - "Community 35"
 Cohesion: 0.18
 Nodes (11): NewsAggregator, Deduplicator (URL-canonical + title-hash), NewsItem schema, NewsSource ABC, NewsSourceSettings ORM (Fernet-encrypted keys), RedditSource (asyncpraw), RssSource adapter (rss_feeds.yaml), News Module Plan (+3 more)
 
-### Community 34 - "Community 34"
+### Community 36 - "Community 36"
 Cohesion: 0.24
 Nodes (11): Governance Ledger Panel (5 of 7048 edges), inr-normalization Governed Node, Labeled Backend Nodes (db.py, demo.py, dated_routes.py), Fux Graph — After Checks with Governance Ledger, Visible Subgraph Copied Toast, Copy Governed Subgraph Button, Governance Ledger Panel, Highlighted Governed Edges (orange) (+3 more)
 
-### Community 35 - "Community 35"
+### Community 37 - "Community 37"
 Cohesion: 0.22
 Nodes (11): Frontend file nodes (SessionGroup.tsx, ChatPanel.tsx, NodeProject.tsx, notifications.store.ts), Overview minimap, Fux Graph Default Dense Cluster View, Copy governance subgraph button, Governance ledger panel (jsr-normalization, day-pnl, holdings-sum-equals-total, portfolio-valuation), Fux Graph Hero with Governance Ledger, Scattered community clusters with governance edges, Fux Graph v2 with Ledger Collapsed (+3 more)
 
-### Community 36 - "Community 36"
+### Community 38 - "Community 38"
 Cohesion: 0.24
 Nodes (10): Anton app icon (@3x) — rounded dark squircle, orange ascending bars + rising arrow, Anton app icon: rounded dark tile containing the ascending bar-and-arrow symbol, Anton app icon (PNG): rounded dark tile with ascending bar-and-arrow symbol, Anton lockup (@2x) — symbol + ALPHA FORGE / ANTON / TRADING TERMINAL wordmark, Anton lockup (@3x) — high-res symbol + gray ALPHA FORGE, light ANTON, orange TRADING TERMINAL, Anton Lockup — symbol + 'ALPHA FORGE / ANTON / TRADING TERMINAL' wordmark, Anton lockup (PNG): symbol plus ALPHA FORGE / ANTON / TRADING TERMINAL wordmark, Anton Symbol — orange gradient ascending bar chart with rising arrow (+2 more)
 
-### Community 37 - "Community 37"
+### Community 39 - "Community 39"
 Cohesion: 0.36
 Nodes (6): classifyIntent(), providerDefault(), resolveProviderAuto(), resolveTopAuto(), activeModelFor(), lookup()
 
-### Community 38 - "Community 38"
+### Community 40 - "Community 40"
 Cohesion: 0.28
 Nodes (4): aggregateAll(), aggregateSelected(), currencySymbol(), fmtMoneyShort()
 
-### Community 39 - "Community 39"
+### Community 41 - "Community 41"
 Cohesion: 0.28
 Nodes (4): available(), Per-provider token-bucket rate limiter., Refills `rate` tokens per second up to `capacity`., TokenBucket
 
-### Community 40 - "Community 40"
+### Community 42 - "Community 42"
 Cohesion: 0.32
 Nodes (4): extractDetail(), kindFromStatus(), toApiError(), shouldRetry()
 
-### Community 41 - "Community 41"
+### Community 43 - "Community 43"
 Cohesion: 0.39
 Nodes (5): assetClassCounts(), bucketOf(), equitySubOf(), isInvitReit(), isUSEquity()
 
-### Community 42 - "Community 42"
+### Community 44 - "Community 44"
 Cohesion: 0.32
 Nodes (8): health function node (convergeImpl, 26 edges), Fux Graph Macro Settled (health node, Communities lens), Edge language legend (governs, references, calls, contains, related), get function god node (766 edges), Fux Knowledge Graph Engine UI, Lens panel (Knowledge / Communities / Heat / Path), Node Types legend (function, code-file, class, narrative, memory, regulatory, formula, invariant, rule), Fux Graph Macro View (get god node)
 
-### Community 43 - "Community 43"
+### Community 45 - "Community 45"
 Cohesion: 0.33
 Nodes (3): readErr(), handleSyncAll(), onAfter()
 
-### Community 45 - "Community 45"
+### Community 47 - "Community 47"
 Cohesion: 0.4
 Nodes (2): requestPath(), skipRefreshRetry()
 
-### Community 46 - "Community 46"
+### Community 48 - "Community 48"
 Cohesion: 0.33
 Nodes (2): Notification(), severityIcon()
 
-### Community 47 - "Community 47"
+### Community 49 - "Community 49"
 Cohesion: 0.5
 Nodes (2): handleFooterSubmit(), handleKeyDown()
 
-### Community 48 - "Community 48"
+### Community 50 - "Community 50"
 Cohesion: 0.4
 Nodes (1): Alembic env.py — async migration runner.
 
-### Community 49 - "Community 49"
+### Community 51 - "Community 51"
 Cohesion: 0.5
 Nodes (3): dashboard ticker + watchlist items  Revision ID: 1d8f1014a7d4 Revises: 640eee61b, _table(), upgrade()
 
-### Community 54 - "Community 54"
+### Community 56 - "Community 56"
 Cohesion: 0.83
 Nodes (3): aspectRatio(), squarify(), worstAspect()
 
-### Community 57 - "Community 57"
+### Community 58 - "Community 58"
+Cohesion: 0.67
+Nodes (3): _forward(), iam_proxy(), IAM proxy — forwards all /iam/* requests to Wagner.
+
+### Community 60 - "Community 60"
 Cohesion: 1.0
 Nodes (2): reduceEvent(), sanitizeContent()
 
-### Community 62 - "Community 62"
+### Community 65 - "Community 65"
 Cohesion: 1.0
 Nodes (2): isActive(), TerminalTopBar()
 
-### Community 64 - "Community 64"
+### Community 67 - "Community 67"
 Cohesion: 0.67
 Nodes (3): LLM Research Agent Plan, LLM Research Workspace Plan, Master Plan Index
 
-### Community 65 - "Community 65"
+### Community 68 - "Community 68"
 Cohesion: 0.67
 Nodes (3): Stylized 'A' monogram mark (orange gradient), AlphaForge brand logo (orange/grey 'A' monogram + ALPHA FORGE wordmark), ALPHA FORGE wordmark text
 
-### Community 66 - "Community 66"
+### Community 69 - "Community 69"
 Cohesion: 0.67
 Nodes (3): Backend Server :8000, Frontend Server :3000, just dev Command
 
-### Community 100 - "Community 100"
+### Community 103 - "Community 103"
 Cohesion: 1.0
 Nodes (1): Shared slowapi rate limiter instance.
 
-### Community 101 - "Community 101"
+### Community 104 - "Community 104"
 Cohesion: 1.0
 Nodes (1): CDP trigger-page URLs and XHR needle strings for every broker adapter.  Import w
 
-### Community 102 - "Community 102"
+### Community 105 - "Community 105"
 Cohesion: 1.0
 Nodes (1): Static preambles for Orff prompt assembly — kept out of `prompt_service` so that
 
-### Community 103 - "Community 103"
+### Community 106 - "Community 106"
 Cohesion: 1.0
 Nodes (1): Deterministic seed data for the terminal dashboard panels.  Replaced by real bro
 
-### Community 104 - "Community 104"
+### Community 107 - "Community 107"
 Cohesion: 1.0
 Nodes (1): Indian RSS feed registry — adding a new outlet = one dict entry here, no other c
 
-### Community 118 - "Community 118"
+### Community 121 - "Community 121"
 Cohesion: 1.0
 Nodes (2): Anton app icon (rounded square, ascending orange bars + upward arrow), Anton horizontal logo (ALPHA FORGE ANTON Trading Terminal, ascending bar+arrow mark)
 
-### Community 177 - "Community 177"
+### Community 180 - "Community 180"
 Cohesion: 1.0
 Nodes (1): Strip query-string from URL for dedup purposes.
 
-### Community 200 - "Community 200"
-Cohesion: 1.0
-Nodes (1): Append a note to orff-context (apply target for update_context confirm card).
-
-### Community 201 - "Community 201"
-Cohesion: 1.0
-Nodes (1): Add/remove a symbol from hard-exclusion-list (apply target for edit_exclusion_li
-
-### Community 202 - "Community 202"
-Cohesion: 1.0
-Nodes (1): Run the confirmed deep-search queries (apply target for request_deep_search).
-
 ### Community 203 - "Community 203"
 Cohesion: 1.0
-Nodes (1): The memory doc, or "" when none exists — additive, never blocks a chat.
+Nodes (1): Parse a stored session back into structured turns for resume (empty when absent)
 
 ### Community 204 - "Community 204"
 Cohesion: 1.0
-Nodes (1): Every standing-context doc concatenated (best-effort per doc) for prompt     inj
+Nodes (1): Split a `<think>…</think>` reasoning trace from the visible answer.      Snapsho
 
 ### Community 205 - "Community 205"
 Cohesion: 1.0
-Nodes (1): Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored.
+Nodes (1): Append a note to orff-context (apply target for update_context confirm card).
 
 ### Community 206 - "Community 206"
 Cohesion: 1.0
-Nodes (1): Append `note` to the memory doc with a date-stamp separator; returns new content
+Nodes (1): Add/remove a symbol from hard-exclusion-list (apply target for edit_exclusion_li
 
 ### Community 207 - "Community 207"
 Cohesion: 1.0
-Nodes (1): Attach to existing CDP Chrome, intercept Gullak dashboard XHRs.  Run while logge
+Nodes (1): Run the confirmed deep-search queries (apply target for request_deep_search).
 
 ### Community 208 - "Community 208"
 Cohesion: 1.0
-Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample.
+Nodes (1): The memory doc, or "" when none exists — additive, never blocks a chat.
 
 ### Community 209 - "Community 209"
 Cohesion: 1.0
-Nodes (1): The full metadata dict for a provider's model (defaults to its first model).
+Nodes (1): Every standing-context doc concatenated (best-effort per doc) for prompt     inj
 
 ### Community 210 - "Community 210"
 Cohesion: 1.0
-Nodes (1): The `consumption` block for a model, with safe defaults if absent.
+Nodes (1): Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored.
 
 ### Community 211 - "Community 211"
 Cohesion: 1.0
-Nodes (1): True when invoking this model costs real money (CostGuard gate).
+Nodes (1): Append `note` to the memory doc with a date-stamp separator; returns new content
 
 ### Community 212 - "Community 212"
 Cohesion: 1.0
-Nodes (1): The output-token cap an adapter should send for this model.
+Nodes (1): Attach to existing CDP Chrome, intercept Gullak dashboard XHRs.  Run while logge
 
 ### Community 213 - "Community 213"
 Cohesion: 1.0
-Nodes (1): Real USD spend for a call from its prompt/completion token counts.
+Nodes (1): Compact preview: top-level keys + first list-of-dict path with sample.
 
 ### Community 214 - "Community 214"
 Cohesion: 1.0
-Nodes (1): Resolved model choice from the frontend ModelPicker.      The frontend already a
+Nodes (1): The full metadata dict for a provider's model (defaults to its first model).
 
 ### Community 215 - "Community 215"
 Cohesion: 1.0
-Nodes (1): The memory doc, or "" when none exists — additive, never blocks a chat.
+Nodes (1): The `consumption` block for a model, with safe defaults if absent.
 
 ### Community 216 - "Community 216"
 Cohesion: 1.0
-Nodes (1): Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored.
+Nodes (1): True when invoking this model costs real money (CostGuard gate).
 
 ### Community 217 - "Community 217"
 Cohesion: 1.0
-Nodes (1): Return (username, password) for UI probes — sourced from Wagner user credentials
+Nodes (1): The output-token cap an adapter should send for this model.
 
 ### Community 218 - "Community 218"
 Cohesion: 1.0
-Nodes (1): Parse a stored session back into structured turns for resume (empty when absent)
+Nodes (1): Real USD spend for a call from its prompt/completion token counts.
 
 ### Community 219 - "Community 219"
 Cohesion: 1.0
-Nodes (1): Write a plan doc into the store; returns its `elgar://plan/<id>` ref.
+Nodes (1): Resolved model choice from the frontend ModelPicker.      The frontend already a
 
 ### Community 220 - "Community 220"
 Cohesion: 1.0
-Nodes (1): Read a doc's content from the store; None when it does not exist.
+Nodes (1): The memory doc, or "" when none exists — additive, never blocks a chat.
 
 ### Community 221 - "Community 221"
 Cohesion: 1.0
-Nodes (1): Delete a doc from the store; True on success, False when it does not exist.
+Nodes (1): Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored.
 
 ### Community 222 - "Community 222"
 Cohesion: 1.0
-Nodes (1): Parse a stored session back into structured turns for resume (empty when absent)
+Nodes (1): Return (username, password) for UI probes — sourced from Wagner user credentials
 
 ### Community 223 - "Community 223"
 Cohesion: 1.0
-Nodes (1): Write a plan doc into the store; returns its `elgar://plan/<id>` ref.
+Nodes (1): Parse a stored session back into structured turns for resume (empty when absent)
 
 ### Community 224 - "Community 224"
 Cohesion: 1.0
-Nodes (1): Read a doc's content from the store; None when it does not exist.
+Nodes (1): Write a plan doc into the store; returns its `elgar://plan/<id>` ref.
 
 ### Community 225 - "Community 225"
 Cohesion: 1.0
-Nodes (1): Resolved model choice from the frontend ModelPicker.      The frontend already a
+Nodes (1): Read a doc's content from the store; None when it does not exist.
 
 ### Community 226 - "Community 226"
 Cohesion: 1.0
-Nodes (1): Inject dev JWT + bypass boot screen, navigate to root.
+Nodes (1): Delete a doc from the store; True on success, False when it does not exist.
 
 ### Community 227 - "Community 227"
 Cohesion: 1.0
-Nodes (1): Return True when the chat rail aside has pointer-events: auto (i.e. actually ope
+Nodes (1): Parse a stored session back into structured turns for resume (empty when absent)
 
 ### Community 228 - "Community 228"
 Cohesion: 1.0
-Nodes (1): Open the chat rail if not already interactive.
+Nodes (1): Write a plan doc into the store; returns its `elgar://plan/<id>` ref.
 
 ### Community 229 - "Community 229"
 Cohesion: 1.0
-Nodes (1): Raised when a paid provider is invoked without user confirmation.
+Nodes (1): Read a doc's content from the store; None when it does not exist.
 
 ### Community 230 - "Community 230"
 Cohesion: 1.0
-Nodes (1): Singleton guard; tracks which providers incur real cost.
+Nodes (1): Resolved model choice from the frontend ModelPicker.      The frontend already a
 
 ### Community 231 - "Community 231"
 Cohesion: 1.0
-Nodes (1): Resolved model choice from the frontend ModelPicker.      The frontend already a
+Nodes (1): Inject dev JWT + bypass boot screen, navigate to root.
 
 ### Community 232 - "Community 232"
 Cohesion: 1.0
-Nodes (1): RateLimiter (token-bucket)
+Nodes (1): Return True when the chat rail aside has pointer-events: auto (i.e. actually ope
 
 ### Community 233 - "Community 233"
 Cohesion: 1.0
-Nodes (1): Cloud-Only Inference / Offline Behavior
+Nodes (1): Open the chat rail if not already interactive.
 
 ### Community 234 - "Community 234"
+Cohesion: 1.0
+Nodes (1): Raised when a paid provider is invoked without user confirmation.
+
+### Community 235 - "Community 235"
+Cohesion: 1.0
+Nodes (1): Singleton guard; tracks which providers incur real cost.
+
+### Community 236 - "Community 236"
+Cohesion: 1.0
+Nodes (1): Resolved model choice from the frontend ModelPicker.      The frontend already a
+
+### Community 237 - "Community 237"
+Cohesion: 1.0
+Nodes (1): RateLimiter (token-bucket)
+
+### Community 238 - "Community 238"
+Cohesion: 1.0
+Nodes (1): Cloud-Only Inference / Offline Behavior
+
+### Community 239 - "Community 239"
 Cohesion: 1.0
 Nodes (1): Anton brand symbol — ascending bar chart with upward arrow (orange gradient, flat style, 2x)
 
@@ -550,105 +575,109 @@ Nodes (1): Anton brand symbol — ascending bar chart with upward arrow (orange 
   docs/HOW.md · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **575 isolated node(s):** `Portfolio filter probe — verifies asset-class chips, sort, PnL filter, and text`, `Capture screenshots of the terminal, portfolio, and preferences pages.  Attaches`, `Get a token from the API and stash it in localStorage so AuthGuard lets us in.`, `Plan API probe — verifies the /plans surface and its leak-safety.  Standalone (n`, `Attach to existing CDP Chrome, intercept Binance wallet XHRs.  Run while logged` (+570 more)
+- **594 isolated node(s):** `Portfolio filter probe — verifies asset-class chips, sort, PnL filter, and text`, `Playwright CDP probe — the deep-search confirm→apply loop now CLOSES in one turn`, `A turn carrying `grounding` is the post-approval closing turn → plain answer, no`, `The card's apply target — Approve must AWAIT this and feed back {grounding}.`, `Capture screenshots of the terminal, portfolio, and preferences pages.  Attaches` (+589 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Community 32`** (12 nodes): `useAddTickerItem()`, `useAddWatchlistItem()`, `useDashboardBrief()`, `useDashboardRisk()`, `useDashboardStats()`, `useDashboardTicker()`, `useDashboardWatchlist()`, `useDeleteTickerItem()`, `useDeleteWatchlistItem()`, `TerminalStats.tsx`, `TerminalStats()`, `dashboard.query.ts`
+- **Thin community `Community 34`** (12 nodes): `useAddTickerItem()`, `useAddWatchlistItem()`, `useDashboardBrief()`, `useDashboardRisk()`, `useDashboardStats()`, `useDashboardTicker()`, `useDashboardWatchlist()`, `useDeleteTickerItem()`, `useDeleteWatchlistItem()`, `TerminalStats.tsx`, `TerminalStats()`, `dashboard.query.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 45`** (6 nodes): `useAuthStore.ts`, `applyHeader()`, `errorMessage()`, `errorStatus()`, `requestPath()`, `skipRefreshRetry()`
+- **Thin community `Community 47`** (6 nodes): `useAuthStore.ts`, `applyHeader()`, `errorMessage()`, `errorStatus()`, `requestPath()`, `skipRefreshRetry()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 46`** (6 nodes): `fmtDateTime()`, `fmtTime()`, `Notification()`, `severityIcon()`, `Notification.tsx`, `notifications.icons.tsx`
+- **Thin community `Community 48`** (6 nodes): `fmtDateTime()`, `fmtTime()`, `Notification()`, `severityIcon()`, `Notification.tsx`, `notifications.icons.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 47`** (5 nodes): `checkMultiline()`, `handleFooterSubmit()`, `handleKeyDown()`, `handleModeChange()`, `AlphaBar.tsx`
+- **Thin community `Community 49`** (5 nodes): `checkMultiline()`, `handleFooterSubmit()`, `handleKeyDown()`, `handleModeChange()`, `AlphaBar.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 48`** (5 nodes): `do_run_migrations()`, `Alembic env.py — async migration runner.`, `run_migrations_offline()`, `run_migrations_online()`, `env.py`
+- **Thin community `Community 50`** (5 nodes): `do_run_migrations()`, `Alembic env.py — async migration runner.`, `run_migrations_offline()`, `run_migrations_online()`, `env.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 57`** (3 nodes): `reduceEvent()`, `sanitizeContent()`, `chat.events.ts`
+- **Thin community `Community 60`** (3 nodes): `reduceEvent()`, `sanitizeContent()`, `chat.events.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 62`** (3 nodes): `TerminalTopBar.tsx`, `isActive()`, `TerminalTopBar()`
+- **Thin community `Community 65`** (3 nodes): `TerminalTopBar.tsx`, `isActive()`, `TerminalTopBar()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 100`** (2 nodes): `Shared slowapi rate limiter instance.`, `limiter.py`
+- **Thin community `Community 103`** (2 nodes): `Shared slowapi rate limiter instance.`, `limiter.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 101`** (2 nodes): `broker_urls.py`, `CDP trigger-page URLs and XHR needle strings for every broker adapter.  Import w`
+- **Thin community `Community 104`** (2 nodes): `broker_urls.py`, `CDP trigger-page URLs and XHR needle strings for every broker adapter.  Import w`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 102`** (2 nodes): `prompt_text.py`, `Static preambles for Orff prompt assembly — kept out of `prompt_service` so that`
+- **Thin community `Community 105`** (2 nodes): `prompt_text.py`, `Static preambles for Orff prompt assembly — kept out of `prompt_service` so that`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 103`** (2 nodes): `Deterministic seed data for the terminal dashboard panels.  Replaced by real bro`, `dashboard_seed.py`
+- **Thin community `Community 106`** (2 nodes): `Deterministic seed data for the terminal dashboard panels.  Replaced by real bro`, `dashboard_seed.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 104`** (2 nodes): `Indian RSS feed registry — adding a new outlet = one dict entry here, no other c`, `rss_feeds.py`
+- **Thin community `Community 107`** (2 nodes): `Indian RSS feed registry — adding a new outlet = one dict entry here, no other c`, `rss_feeds.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 118`** (2 nodes): `Anton app icon (rounded square, ascending orange bars + upward arrow)`, `Anton horizontal logo (ALPHA FORGE ANTON Trading Terminal, ascending bar+arrow mark)`
+- **Thin community `Community 121`** (2 nodes): `Anton app icon (rounded square, ascending orange bars + upward arrow)`, `Anton horizontal logo (ALPHA FORGE ANTON Trading Terminal, ascending bar+arrow mark)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 177`** (1 nodes): `Strip query-string from URL for dedup purposes.`
+- **Thin community `Community 180`** (1 nodes): `Strip query-string from URL for dedup purposes.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 200`** (1 nodes): `Append a note to orff-context (apply target for update_context confirm card).`
+- **Thin community `Community 203`** (1 nodes): `Parse a stored session back into structured turns for resume (empty when absent)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 201`** (1 nodes): `Add/remove a symbol from hard-exclusion-list (apply target for edit_exclusion_li`
+- **Thin community `Community 204`** (1 nodes): `Split a `<think>…</think>` reasoning trace from the visible answer.      Snapsho`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 202`** (1 nodes): `Run the confirmed deep-search queries (apply target for request_deep_search).`
+- **Thin community `Community 205`** (1 nodes): `Append a note to orff-context (apply target for update_context confirm card).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 203`** (1 nodes): `The memory doc, or "" when none exists — additive, never blocks a chat.`
+- **Thin community `Community 206`** (1 nodes): `Add/remove a symbol from hard-exclusion-list (apply target for edit_exclusion_li`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 204`** (1 nodes): `Every standing-context doc concatenated (best-effort per doc) for prompt     inj`
+- **Thin community `Community 207`** (1 nodes): `Run the confirmed deep-search queries (apply target for request_deep_search).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 205`** (1 nodes): `Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored.`
+- **Thin community `Community 208`** (1 nodes): `The memory doc, or "" when none exists — additive, never blocks a chat.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 206`** (1 nodes): `Append `note` to the memory doc with a date-stamp separator; returns new content`
+- **Thin community `Community 209`** (1 nodes): `Every standing-context doc concatenated (best-effort per doc) for prompt     inj`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 207`** (1 nodes): `Attach to existing CDP Chrome, intercept Gullak dashboard XHRs.  Run while logge`
+- **Thin community `Community 210`** (1 nodes): `Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 208`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
+- **Thin community `Community 211`** (1 nodes): `Append `note` to the memory doc with a date-stamp separator; returns new content`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 209`** (1 nodes): `The full metadata dict for a provider's model (defaults to its first model).`
+- **Thin community `Community 212`** (1 nodes): `Attach to existing CDP Chrome, intercept Gullak dashboard XHRs.  Run while logge`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 210`** (1 nodes): `The `consumption` block for a model, with safe defaults if absent.`
+- **Thin community `Community 213`** (1 nodes): `Compact preview: top-level keys + first list-of-dict path with sample.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 211`** (1 nodes): `True when invoking this model costs real money (CostGuard gate).`
+- **Thin community `Community 214`** (1 nodes): `The full metadata dict for a provider's model (defaults to its first model).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 212`** (1 nodes): `The output-token cap an adapter should send for this model.`
+- **Thin community `Community 215`** (1 nodes): `The `consumption` block for a model, with safe defaults if absent.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 213`** (1 nodes): `Real USD spend for a call from its prompt/completion token counts.`
+- **Thin community `Community 216`** (1 nodes): `True when invoking this model costs real money (CostGuard gate).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 214`** (1 nodes): `Resolved model choice from the frontend ModelPicker.      The frontend already a`
+- **Thin community `Community 217`** (1 nodes): `The output-token cap an adapter should send for this model.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 215`** (1 nodes): `The memory doc, or "" when none exists — additive, never blocks a chat.`
+- **Thin community `Community 218`** (1 nodes): `Real USD spend for a call from its prompt/completion token counts.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 216`** (1 nodes): `Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored.`
+- **Thin community `Community 219`** (1 nodes): `Resolved model choice from the frontend ModelPicker.      The frontend already a`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 217`** (1 nodes): `Return (username, password) for UI probes — sourced from Wagner user credentials`
+- **Thin community `Community 220`** (1 nodes): `The memory doc, or "" when none exists — additive, never blocks a chat.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 218`** (1 nodes): `Parse a stored session back into structured turns for resume (empty when absent)`
+- **Thin community `Community 221`** (1 nodes): `Persist the doc into elgar (clipped to MAX_CHARS); returns what was stored.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 219`** (1 nodes): `Write a plan doc into the store; returns its `elgar://plan/<id>` ref.`
+- **Thin community `Community 222`** (1 nodes): `Return (username, password) for UI probes — sourced from Wagner user credentials`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 220`** (1 nodes): `Read a doc's content from the store; None when it does not exist.`
+- **Thin community `Community 223`** (1 nodes): `Parse a stored session back into structured turns for resume (empty when absent)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 221`** (1 nodes): `Delete a doc from the store; True on success, False when it does not exist.`
+- **Thin community `Community 224`** (1 nodes): `Write a plan doc into the store; returns its `elgar://plan/<id>` ref.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 222`** (1 nodes): `Parse a stored session back into structured turns for resume (empty when absent)`
+- **Thin community `Community 225`** (1 nodes): `Read a doc's content from the store; None when it does not exist.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 223`** (1 nodes): `Write a plan doc into the store; returns its `elgar://plan/<id>` ref.`
+- **Thin community `Community 226`** (1 nodes): `Delete a doc from the store; True on success, False when it does not exist.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 224`** (1 nodes): `Read a doc's content from the store; None when it does not exist.`
+- **Thin community `Community 227`** (1 nodes): `Parse a stored session back into structured turns for resume (empty when absent)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 225`** (1 nodes): `Resolved model choice from the frontend ModelPicker.      The frontend already a`
+- **Thin community `Community 228`** (1 nodes): `Write a plan doc into the store; returns its `elgar://plan/<id>` ref.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 226`** (1 nodes): `Inject dev JWT + bypass boot screen, navigate to root.`
+- **Thin community `Community 229`** (1 nodes): `Read a doc's content from the store; None when it does not exist.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 227`** (1 nodes): `Return True when the chat rail aside has pointer-events: auto (i.e. actually ope`
+- **Thin community `Community 230`** (1 nodes): `Resolved model choice from the frontend ModelPicker.      The frontend already a`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 228`** (1 nodes): `Open the chat rail if not already interactive.`
+- **Thin community `Community 231`** (1 nodes): `Inject dev JWT + bypass boot screen, navigate to root.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 229`** (1 nodes): `Raised when a paid provider is invoked without user confirmation.`
+- **Thin community `Community 232`** (1 nodes): `Return True when the chat rail aside has pointer-events: auto (i.e. actually ope`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 230`** (1 nodes): `Singleton guard; tracks which providers incur real cost.`
+- **Thin community `Community 233`** (1 nodes): `Open the chat rail if not already interactive.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 231`** (1 nodes): `Resolved model choice from the frontend ModelPicker.      The frontend already a`
+- **Thin community `Community 234`** (1 nodes): `Raised when a paid provider is invoked without user confirmation.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 232`** (1 nodes): `RateLimiter (token-bucket)`
+- **Thin community `Community 235`** (1 nodes): `Singleton guard; tracks which providers incur real cost.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 233`** (1 nodes): `Cloud-Only Inference / Offline Behavior`
+- **Thin community `Community 236`** (1 nodes): `Resolved model choice from the frontend ModelPicker.      The frontend already a`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 234`** (1 nodes): `Anton brand symbol — ascending bar chart with upward arrow (orange gradient, flat style, 2x)`
+- **Thin community `Community 237`** (1 nodes): `RateLimiter (token-bucket)`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 238`** (1 nodes): `Cloud-Only Inference / Offline Behavior`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 239`** (1 nodes): `Anton brand symbol — ascending bar chart with upward arrow (orange gradient, flat style, 2x)`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
@@ -658,13 +687,13 @@ _Questions this graph is uniquely positioned to answer:_
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
 - **What is the exact relationship between `BaseBroker / BrokerSource abstraction` and `BaseBroker / BrokerSource abstraction`?**
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
-- **Why does `get()` connect `Community 3` to `Community 0`, `Community 1`, `Community 2`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 9`, `Community 11`, `Community 13`, `Community 14`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 22`, `Community 24`?**
-  _High betweenness centrality (0.194) - this node is a cross-community bridge._
-- **Why does `Message` connect `Community 4` to `Community 1`, `Community 3`, `Community 5`, `Community 6`, `Community 7`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
-- **Why does `QueryType` connect `Community 3` to `Community 0`, `Community 4`, `Community 5`, `Community 7`, `Community 19`, `Community 24`?**
-  _High betweenness centrality (0.028) - this node is a cross-community bridge._
-- **Are the 176 inferred relationships involving `get()` (e.g. with `_fetch_holdings()` and `run()`) actually correct?**
-  _`get()` has 176 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 118 inferred relationships involving `str` (e.g. with `run()` and `run()`) actually correct?**
-  _`str` has 118 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `get()` connect `Community 0` to `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 9`, `Community 10`, `Community 13`, `Community 14`, `Community 16`, `Community 17`, `Community 19`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 28`, `Community 58`?**
+  _High betweenness centrality (0.148) - this node is a cross-community bridge._
+- **Why does `append()` connect `Community 1` to `Community 0`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 9`, `Community 10`, `Community 13`, `Community 14`, `Community 18`, `Community 23`, `Community 25`, `Community 28`?**
+  _High betweenness centrality (0.074) - this node is a cross-community bridge._
+- **Why does `Text()` connect `Community 17` to `Community 25`, `Community 1`?**
+  _High betweenness centrality (0.046) - this node is a cross-community bridge._
+- **Are the 180 inferred relationships involving `get()` (e.g. with `_fetch_holdings()` and `run()`) actually correct?**
+  _`get()` has 180 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 120 inferred relationships involving `str` (e.g. with `run()` and `_open_rail()`) actually correct?**
+  _`str` has 120 INFERRED edges - model-reasoned connections that need verification._

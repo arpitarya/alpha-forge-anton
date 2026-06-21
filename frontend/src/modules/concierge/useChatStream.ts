@@ -70,6 +70,7 @@ export function useChatStream() {
       images: string[],
       active: ChatTurn["active"],
       deepSearchMode: DeepSearchMode = "auto",
+      grounding?: string,
     ) => {
       abortRef.current?.abort();
       const ctrl = new AbortController();
@@ -90,6 +91,8 @@ export function useChatStream() {
             model_id: active.modelId,
             auto_level: active.autoLevel,
             deep_search_mode: deepSearchMode,
+            // Approved deep-search result resent so Orff answers in one closing turn.
+            ...(grounding ? { grounding } : {}),
           }),
           signal: ctrl.signal,
         });
@@ -138,6 +141,7 @@ export function useChatStream() {
       choice: ModelChoice,
       images: string[] = [],
       deepSearchMode: DeepSearchMode = "auto",
+      grounding?: string,
     ) => {
       if (!query.trim() && !images.length) return;
       const active = activeModelFor(choice, query);
@@ -172,7 +176,7 @@ export function useChatStream() {
         return msgs;
       });
       prior.push({ role: "user", content: query });
-      await run({ id } as ChatTurn, prior, images, active, deepSearchMode);
+      await run({ id } as ChatTurn, prior, images, active, deepSearchMode, grounding);
     },
     [turns, run],
   );

@@ -277,6 +277,7 @@ This decouples probe selectors from styling changes.
 | `probes/parallel_keys_probe.py` | Vault check — Parallel (parallel.ai) API key is provisioned in afbach |
 | `probes/deep_search_probe.py` | §9 agent-initiated deep search — auto card (no call) / confirm (call+receipt) / reject / always (cardless) / never / over-budget degrade |
 | `probes/ui_deep_search_probe.py` | §9 frontend (CDP, fixture-served) — tri-state Auto/Always/Never control renders + sends `deep_search_mode`, persists the pref; an Auto gap raises the request_deep_search card (reasons + queries + cost) and Approve dispatches the run |
+| `probes/ui_deep_search_close_probe.py` | §9 regression guard (CDP, fixture-served) — approving the deep-search card **closes the loop in one turn**: Approve awaits `/deep-search`, resends a single follow-up carrying the `{grounding}` with `deep_search_mode="never"`, the reconciliation answer renders, and the card does **not** re-arm; `just probe ui-deep-search-close` / `just deep-search-close` |
 | `probes/signals_review_probe.py` | Signals Phase 1 — deterministic ActionPlan (byte-identical) on a fixture; `just signals-review` |
 | `probes/signals_screen_probe.py` | Signals Phase 2 — deterministic ScreenResult (ranking + gates) on a fixture universe; `just probe signals-screen` |
 | `probes/signals_replan_probe.py` | Signals Phase 3 — re-plan loop reports the diff (exited/new/stops/un-acted) on changed holdings; `just probe signals-replan` |

@@ -19,6 +19,7 @@ import re
 from datetime import UTC, datetime
 
 from app.modules.concierge.concierge_schemas import SessionDoc, SessionMeta, SessionTurn
+from app.modules.concierge.stream_events import strip_tool_markup as _scrub
 from app.modules.plans import elgar_bridge
 
 # The store collection (subdir) chat history lives in — never `plans`.
@@ -42,14 +43,18 @@ def render_session(
     if source:
         front.append(f"source: {source}")
     front.append("---")
+    # Scrub leaked tool-call markup so both the human transcript and machine resume block
+    # persist clean (a text-emitted tool call must never round-trip).
+    clean = [t.model_copy(update={"query": _scrub(t.query), "response": _scrub(t.response)})
+             for t in turns]
     lines = [*front, f"# {meta.title or 'Untitled chat'}", ""]
-    for t in turns:
+    for t in clean:
         lines += [f"**You:** {t.query}", ""]
         if t.response:
             tag = " · ".join(x for x in (t.provider, t.model) if x)
             head = f"**Orff** ({tag}):" if tag else "**Orff:**"
             lines += [f"{head} {t.response}", ""]
-    payload = json.dumps([t.model_dump() for t in turns], ensure_ascii=False)
+    payload = json.dumps([t.model_dump() for t in clean], ensure_ascii=False)
     lines += [f"<!-- orff:turns\n{payload}\n-->", ""]
     return "\n".join(lines)
 

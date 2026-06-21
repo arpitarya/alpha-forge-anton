@@ -18,3 +18,7 @@ GROUNDING_PREAMBLE = (
     "rules, formulas, and definitions as ground truth when they apply; cite the figures "
     "and logic they prescribe rather than inventing your own:\n\n"
 )
+DEEP_SEARCH_PREAMBLE = (
+    "Fresh web grounding from the deep search the user just approved. Answer the question "
+    "directly from this — do NOT ask to search again; the result is already here:\n\n"
+)

@@ -14,6 +14,9 @@ import re
 # `?key=…`/`?api_key=…` query param. Never forward a live secret to the browser.
 _SECRET_RE = re.compile(r"(?i)([?&](?:api[_-]?key|key|token|access_token)=)[^&\s\"']+")
 
+# A tool call emitted as TEXT (not a tool_use block) leaks raw <invoke>/<parameter> markup.
+_TOOL_MARKUP_RE = re.compile(r"<\s*/?\s*(?:antml:)?(?:invoke|parameter)\b[^>]*>", re.IGNORECASE)
+
 _THINK_OPEN = "<think>"
 _THINK_CLOSE = "</think>"
 
@@ -24,6 +27,11 @@ def sse(payload: dict) -> bytes:
 
 def redact(msg: str) -> str:
     return _SECRET_RE.sub(r"\1<redacted>", msg)
+
+
+def strip_tool_markup(text: str) -> str:
+    """Drop leaked tool-call tags so they never persist into a turn (the kreglqek leak)."""
+    return _TOOL_MARKUP_RE.sub("", text).strip() if text else text
 
 
 def split_thinking(content: str) -> tuple[str, str]:
