@@ -4,7 +4,7 @@ domain: security
 type: rule
 status: active
 created: 2026-06-16
-updated: 2026-06-19
+updated: 2026-06-21
 aliases:
   - memory-figure-free
   - no-stale-figures
