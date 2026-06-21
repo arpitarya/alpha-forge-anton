@@ -92,9 +92,17 @@ persisted to `localStorage["af-deep-search-mode"]` via `ChatContext`):
   emits a `{confirm}` card (`summary`=reasons, `steps`=queries, `detail`=`~₹0.5 · ₹<mtd> of
   ₹<budget> used this month`) and **makes no Parallel call**. The card renders via
   [ApprovalCard.tsx](../frontend/src/modules/concierge/ApprovalCard.tsx) (now showing the
-  reasons + the cost line beneath the queries); on Approve it `POST`s the apply target
-  `/concierge/deep-search` to run the queries; reject ⇒ Orff answers from free sources and
-  says what it couldn't verify.
+  reasons + the cost line beneath the queries). **Approve closes the loop in one turn**: unlike
+  every other card (fire-and-forget POST + a reprompt that re-reads its elgar write), the
+  deep-search card is the one whose result must come *back*. `ChatRail.onApprove` therefore
+  **awaits** `/concierge/deep-search`, reads the `{grounding}`, and resends a single follow-up
+  carrying that grounding with **`deep_search_mode` forced to `never`** (so the tool isn't
+  offered and Orff answers instead of re-arming the card). The backend injects `req.grounding`
+  as a **volatile (uncached) system block** in `prompt_service.assemble` (the
+  `deep-search.grounding` trace step), and the tool loop carries a once-only confirm-id guard
+  ([tool_dispatch.py](../backend/app/modules/concierge/tool_dispatch.py)): a confirm card whose
+  id repeats within a turn **collapses** rather than re-emitting (defense-in-depth against any
+  future spin). Reject ⇒ Orff answers from free sources and says what it couldn't verify.
 - **Always** — the tool runs cardless (auto-confirm) inside the loop; grounding is fed back
   as the `tool_result` and Orff continues.
 - **Never** — the tool isn't offered at all.
@@ -106,8 +114,11 @@ never env/code). `grounding_service.budget_status` reads `cage_meter.month_spend
 degrades to free sources and says so, no call, no receipt. Task tier is gated on
 `parallel.allow_task_api` + a deep-dive prompt. **Fail-open throughout** — a grounding error
 yields a free-source answer, never a dead stream. Verified by `just probe deep-search`
-(backend: auto / confirm / reject / always / never / over-budget) and `just probe ui-deep-search`
-(frontend: the tri-state control sends the mode + an Auto gap renders the card, real Chrome).
+(backend: auto / confirm / reject / always / never / over-budget), `just probe ui-deep-search`
+(frontend: the tri-state control sends the mode + an Auto gap renders the card, real Chrome),
+and `just probe ui-deep-search-close` / `just deep-search-close` (regression guard: Approve
+awaits the run, resends one `never` follow-up with the grounding, the answer renders, and the
+card does **not** re-arm).
 
 The user-context doc lives in the **elgar store** (`elgar get/save orff-context`), not a home-dir
 file — it holds personal goals/figures, exactly the money-adjacent data the `plan-store` rule keeps

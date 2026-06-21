@@ -14,7 +14,7 @@ from app.modules.concierge.fux_bridge import recall as fux_recall
 from app.modules.concierge.holdings_private import detailed_context, enforce_floor
 from app.modules.concierge.memory_service import MEMORY_PREAMBLE, load_context
 from app.modules.concierge.plan_context import inject as signals_ground
-from app.modules.concierge.prompt_text import GROUNDING_PREAMBLE, SYSTEM
+from app.modules.concierge.prompt_text import DEEP_SEARCH_PREAMBLE, GROUNDING_PREAMBLE, SYSTEM
 from app.modules.concierge.tiering_service import resolve as resolve_tier
 from app.modules.signals.objective_config import load_objective
 
@@ -57,9 +57,10 @@ async def assemble(req: ChatRequest) -> Assembled:
     if memory:
         msgs.append(Message(role="system", content=MEMORY_PREAMBLE + memory, cacheable=True))
         _step(trace, "memory.load", f"{len(memory)} chars of user context", t)
-    # ── cache breakpoint ── volatile blocks follow (per-turn): Fux, web (§9), signals (§7).
-    if grounding:
-        msgs.append(Message(role="system", content=GROUNDING_PREAMBLE + grounding))
+    # ── cache breakpoint ── volatile (per-turn): Fux + deep-search §9 (approved card), signals.
+    for pre, body in ((GROUNDING_PREAMBLE, grounding), (DEEP_SEARCH_PREAMBLE, req.grounding)):
+        if body:
+            msgs.append(Message(role="system", content=pre + body))
     await signals_ground(req, msgs, trace)
     msgs.extend(
         Message(role=m.role, content=m.content, images=list(m.images)) for m in req.messages

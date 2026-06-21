@@ -185,12 +185,23 @@ db-revision msg:
 backtest:
     cd backend && uv run python -m app.modules.signals.backtest_cli
 
+# ── Edges ────────────────────────────────────────
+
+# Run a PRE-REGISTERED edge hypothesis (elgar://edge/<id>) through gates 1-2 + journal.
+# Reports per-gate expectancy / Calmar and the pass/kill verdict — see docs/edges.md.
+edge id="":
+    cd backend && uv run python -m app.modules.edges.edge_cli {{id}}
+
 # ── Probes ───────────────────────────────────────
 
 # Run a probe by name — omit name to list all available probes (CDP :9299 required)
 # Examples: just probe ui | just probe zerodha | just probe groww-cash
 probe name="":
     bash probes/probe.sh {{name}}
+
+# Regression guard — the deep-search confirm→apply loop closes in one turn (no re-arm)
+deep-search-close:
+    bash probes/probe.sh ui-deep-search-close
 
 # ── Testing ──────────────────────────────────────
 

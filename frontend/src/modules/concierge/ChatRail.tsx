@@ -45,6 +45,8 @@ interface Props {
   onClose: () => void;
   onClear: () => void;
   onSend: (q: string, images?: string[]) => void;
+  /** Resend a closing turn carrying an approved deep-search result (forces mode=never). */
+  onSendGrounded: (q: string, grounding: string) => void;
   onEdit: (id: string, q: string) => void;
   onStop: () => void;
   onChoiceChange: (c: ModelChoice) => void;
@@ -147,6 +149,7 @@ export function ChatRail({
   onClose,
   onClear,
   onSend,
+  onSendGrounded,
   onEdit,
   onStop,
   onChoiceChange,
@@ -654,6 +657,7 @@ export function ChatRail({
                     thinking={thinking}
                     onEdit={onEdit}
                     onPickFollowup={(q) => onSend(q)}
+                    onSendGrounded={onSendGrounded}
                   />
                 ))
               )}
@@ -1350,16 +1354,39 @@ function resolveResponderLabel(turn: ChatTurn): string {
   return formatChoiceLabel(turn.active);
 }
 
+/** POST a confirm card's apply target; returns the parsed JSON ({} on any failure —
+ * fail-open, mirroring the backend's deep-search degrade-to-free-sources contract). */
+async function postApply(
+  apply: NonNullable<PendingAction["apply"]>,
+): Promise<Record<string, unknown>> {
+  const tok = typeof window !== "undefined" ? localStorage.getItem("af_token") : null;
+  try {
+    const res = await fetch(apply.path, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(tok ? { Authorization: `Bearer ${tok}` } : {}),
+      },
+      body: JSON.stringify(apply.body),
+    });
+    return res.ok ? await res.json() : {};
+  } catch {
+    return {};
+  }
+}
+
 function TurnPair({
   turn,
   thinking,
   onEdit,
   onPickFollowup,
+  onSendGrounded,
 }: {
   turn: ChatTurn;
   thinking: boolean;
   onEdit: (id: string, q: string) => void;
   onPickFollowup: (q: string) => void;
+  onSendGrounded: (q: string, grounding: string) => void;
 }) {
   const modelName = formatChoiceLabel(turn.active);
   const responderLabel = resolveResponderLabel(turn);
@@ -1562,18 +1589,20 @@ function TurnPair({
                   <ApprovalCard
                     action={turn.confirm}
                     onApprove={(a: PendingAction) => {
-                      if (a.apply) {
-                        const tok =
-                          typeof window !== "undefined" ? localStorage.getItem("af_token") : null;
-                        void fetch(a.apply.path, {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                            ...(tok ? { Authorization: `Bearer ${tok}` } : {}),
-                          },
-                          body: JSON.stringify(a.apply.body),
-                        });
+                      // Deep-search is the one card that closes in place: await the run,
+                      // then resend with its grounding (mode forced to never) so Orff
+                      // answers instead of re-arming the card. Every other card keeps the
+                      // fire-and-forget POST + reprompt (it re-reads its elgar write next turn).
+                      if (a.id === "deep-search" && a.apply) {
+                        void postApply(a.apply).then((data) =>
+                          onSendGrounded(
+                            `Reconcile your answer using these deep-search results for: ${a.summary}`,
+                            String(data?.grounding ?? ""),
+                          ),
+                        );
+                        return;
                       }
+                      if (a.apply) void postApply(a.apply);
                       onPickFollowup(`Yes — proceed with: ${a.action}. ${a.summary}`);
                     }}
                     onDismiss={() => {}}

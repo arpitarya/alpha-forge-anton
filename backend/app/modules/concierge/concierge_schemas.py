@@ -110,3 +110,6 @@ class ChatRequest(BaseModel):
     deep_search_mode: DeepSearchMode = "auto"
     # "Think harder" override; Auto defers to intent routing (the default behaviour).
     thinking_mode: ThinkingMode = "auto"
+    # Volatile, single-turn web grounding resent when a deep-search card is approved, so Orff
+    # answers instead of re-asking (injected uncached by prompt_service; never persisted).
+    grounding: str | None = None
