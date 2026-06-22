@@ -26,7 +26,7 @@ related:
   - plan-store
   - signals-deterministic-core
   - position-concentration
-seal: 92cf24b9f5e0f819
+seal: 4db61197707a1f88
 ---
 **Rule:** Orff's standing-context / memory docs hold **durable preferences and rules only —
 never position figures**. Share counts, ₹ amounts, P&L %, and weights come **live from the
