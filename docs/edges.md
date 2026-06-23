@@ -27,6 +27,12 @@ An edge is a pre-registered hypothesis ([edge_schema.py](../backend/app/modules/
 Result stats (`ResultStats`): expectancy, hit_rate, turnover, max_dd, calmar — carried
 in a `GateResult` with no clock, so the **same spec + same bars ⇒ byte-identical** output.
 
+**Implausible-drawdown guard** ([edge_stats.py](../backend/app/modules/edges/edge_stats.py)): a
+**drawdown-free** cumulative curve over a meaningful sample (≥ `_MIN_TRADES_NO_DD` trades) is
+overfit / look-ahead / data-too-short, **not** a flawless edge — it scores **Calmar 0 (fails the
+gate)**, never a large positive. The `_DD_EPSILON` floor now only guards a true divide-by-zero on
+tiny, low-confidence samples. Covered by `tests/test_edge_stats.py`.
+
 ### Constitutional storage — elgar only
 
 The edge doc is money/strategy content, so it lives in the **private elgar store**
