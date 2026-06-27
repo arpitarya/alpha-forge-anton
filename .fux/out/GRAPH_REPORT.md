@@ -1,12 +1,12 @@
 # Fux GRAPH_REPORT
 
-_2312 nodes · 15812 edges · 521 code files · 64 rules · 226 communities._
+_2589 nodes · 16758 edges · 551 code files · 64 rules · 241 communities._
 
 ## Node types
 
-- function: 1549
-- code-file: 521
-- class: 178
+- function: 1583
+- code-file: 551
+- class: 391
 - convention: 16
 - narrative: 12
 - rule: 10
@@ -18,187 +18,210 @@ _2312 nodes · 15812 edges · 521 code files · 64 rules · 226 communities._
 
 ## Edges
 
-_9278 of 15812 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_9762 of 16758 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
-- references: 9278
-- calls: 4624
-- contains: 1731
+- references: 9762
+- calls: 4838
+- contains: 1979
 - related: 112
 - governs: 67
 
 ## God nodes (highest connectivity)
 
-- **get** (function) — 242 edges
-- **get** (function) — 239 edges
-- **claude_cache_probe.py** (code-file) — 168 edges
-- **claude_tiering_probe.py** (code-file) — 168 edges
-- **claude_stream_probe.py** (code-file) — 154 edges
-- **ui_deep_search_close_probe.py** (code-file) — 138 edges
-- **ui_deep_search_probe.py** (code-file) — 128 edges
-- **ui_objective_probe.py** (code-file) — 126 edges
-- **main** (function) — 125 edges
-- **ui_voice_probe.py** (code-file) — 122 edges
-- **main** (function) — 117 edges
-- **ui_concierge_probe.py** (code-file) — 117 edges
+- **get** (function) — 255 edges
+- **get** (function) — 252 edges
+- **claude_cache_probe.py** (code-file) — 173 edges
+- **claude_tiering_probe.py** (code-file) — 173 edges
+- **claude_stream_probe.py** (code-file) — 158 edges
+- **ui_deep_search_close_probe.py** (code-file) — 141 edges
+- **null_selftest.py** (code-file) — 139 edges
+- **ui_objective_probe.py** (code-file) — 132 edges
+- **ui_deep_search_probe.py** (code-file) — 131 edges
+- **main** (function) — 129 edges
+- **ui_voice_probe.py** (code-file) — 125 edges
+- **main** (function) — 120 edges
 
 ## Chokepoints (PageRank centrality)
 
-- **get** (function) — 0.0111
-- **get** (function) — 0.0110
-- **append** (function) — 0.0048
-- **ChatRail.tsx** (code-file) — 0.0047
-- **post** (function) — 0.0026
-- **info** (function) — 0.0026
+- **get** (function) — 0.0106
+- **get** (function) — 0.0105
+- **append** (function) — 0.0045
+- **ChatRail.tsx** (code-file) — 0.0043
+- **post** (function) — 0.0027
 - **AlphaBar.tsx** (code-file) — 0.0024
-- **main** (function) — 0.0024
-- **auth.api.ts** (code-file) — 0.0022
-- **fetch** (function) — 0.0021
-- **fetch** (function) — 0.0021
-- **test_brokers.py** (code-file) — 0.0021
+- **info** (function) — 0.0023
+- **portfolio.types.ts** (code-file) — 0.0022
+- **PrefControls.tsx** (code-file) — 0.0022
+- **main** (function) — 0.0022
+- **fetch** (function) — 0.0019
+- **run** (function) — 0.0018
 
 ## Communities
 
-- **community 0** (1460 nodes): AccountSection, Action, ActionPlan, AlphaSection, AlphaSection.tsx, AngelOneSource, AppearanceSection, AppearanceSection.tsx, Assembled, AssetClass, BacktestConfig, BacktestReport
+- **community 0** (1549 nodes): AccountSection, Action, ActionPlan, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AngelOneSource, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, Assembled, AssetClass
 - **community 1** (4 nodes): 1d8f1014a7d4_dashboard_ticker_watchlist_items.py, _table, downgrade, upgrade
-- **community 2** (11 nodes): 640eee61bc50_initial_schema_with_pgvector_memory.py, Text, Text.tsx, a3c9f2e1b4d7_iam_tables.py, b3d6f8a2c9e1_remove_iam_tables.py, downgrade, downgrade, downgrade, upgrade, upgrade, upgrade
+- **community 2** (12 nodes): 640eee61bc50_initial_schema_with_pgvector_memory.py, Text, Text.tsx, TextProps, a3c9f2e1b4d7_iam_tables.py, b3d6f8a2c9e1_remove_iam_tables.py, downgrade, downgrade, downgrade, upgrade, upgrade, upgrade
 - **community 5** (3 nodes): Settings, _validate_secrets, config.py
 - **community 6** (3 nodes): Base, database.py, get_db
 - **community 7** (7 nodes): UserClaims, decode_access_token, deps.py, get_current_user, require_owner, security.py, user_from_jwt
 - **community 8** (8 nodes): _is_short_term, _repo_root, chat.images.ts, env_loader.py, fileToDataUrl, get_env_files, load_env_files, pnl_tracker.py
 - **community 10** (10 nodes): create_app, lifespan, logger.py, logging.py, main.py, setup_logging, setup_logging, test_log_writes_to_file, test_logger.py, test_setup_logging_creates_dir
-- **community 13** (32 nodes): AllocationSlice, HoldingSnap, PlanDiff, RealizedReport, RebalanceDrift, RebalanceSuggestion, SavedPlan, TreemapCell, WeeklyReview, _snap, _snap, aggregator_types.py
-- **community 15** (7 nodes): PreferencesScreen, reset, reset, reset, reset_sources, usePrefStore, usePrefStore.ts
+- **community 13** (35 nodes): AllocationSlice, HoldingSnap, PlanDiff, RealizedReport, RebalanceDrift, RebalanceSuggestion, SavedPlan, TreemapCell, TreemapCell, TreemapCell.tsx, TreemapCellProps, WeeklyReview
+- **community 15** (8 nodes): PrefDraft, PreferencesScreen, reset, reset, reset, reset_sources, usePrefStore, usePrefStore.ts
 - **community 19** (2 nodes): _to_float, normalize
 - **community 21** (5 nodes): Treemap, Treemap.tsx, _worst, squarify, treemap_helper.py
 - **community 25** (4 nodes): _sig, _vocab, build_system, compose_prompt.py
 - **community 26** (8 nodes): _snap_event, concierge_service.py, el, redact, sse, stream_chat, stream_events.py, strip_tool_markup
-- **community 29** (16 nodes): DashboardTickerItem, DashboardWatchlistItem, ImageAttach, ImageAttach.tsx, _now, _seed_ticker, _seed_watchlist, add, add_ticker, add_watchlist, dashboard_models.py, dashboard_repo.py
-- **community 30** (19 nodes): BriefBlock, CreateTickerItemRequest, CreateWatchlistItemRequest, DashboardStats, StatCard, TerminalBrief, TickerItem, WatchlistItem, _fmt_inr_short, _ticker_dto, _watchlist_dto, dashboard_routes.py
-- **community 33** (7 nodes): _slip, edge_costs.py, net_pct, test_edge_costs.py, test_known_answer_net_pct_after_all_costs, test_short_horizon_pays_stcg_long_horizon_does_not, test_slippage_lowers_the_net
-- **community 34** (8 nodes): _fake_save, _gate, build_record, test_append_writes_a_doc_through_the_bridge, test_edge_journal.py, test_kill_at_gate1_records_zero_reached, test_kill_at_gate2_records_gate1_reached_but_not_passed, test_pass_run_records_both_gates_cleared
-- **community 40** (3 nodes): Order, Watchlist, portfolio_models.py
-- **community 42** (19 nodes): BTSeries, OHLCV, Ticker, Ticker.tsx, _bt, _cache_file, _cache_file, _download, _download, _read_cache, _read_cache, _write_cache
-- **community 43** (12 nodes): _friction_net, _max_drawdown, _t, backtest_metrics.py, build_report, test_all_losers_flag_negative_expectancy, test_backtest_metrics.py, test_counts_and_win_rate, test_empty_window_is_not_a_pass, test_expectancy_and_profit_factor_positive, test_gross_and_headline_net_delegates_to_realized_pnl, test_max_drawdown_is_the_loser_dip
-- **community 44** (4 nodes): Indicators, _last, compute, indicators.py
-- **community 45** (6 nodes): _changed_map, _rows, build_spec, is_review, plan_card.py, review_spec
-- **community 46** (10 nodes): _delta, _t, realized_pnl, test_costs_are_config_driven, test_empty_is_zero, test_long_term_is_untaxed, test_net_short_term_loss_has_no_tax, test_pnl_tracker.py, test_short_term_components_and_net, test_short_term_loss_offsets_gain
-- **community 47** (8 nodes): Entry, ExitRule, ParallelCfg, ScreenerCfg, Stops, TrimRule, UniverseCfg, strategy_config.py
-- **community 49** (8 nodes): _P, _overfit_bars, _provider, _spec, test_edge_walkforward.py, test_gate2_is_byte_identical_across_runs, test_genuine_edge_clears_both_gates, test_overfit_edge_passes_gate1_but_is_killed_at_gate2
-- **community 50** (2 nodes): _h, test_acted_trim_not_flagged
-- **community 51** (6 nodes): _ind, test_each_gate_can_reject, test_passes_all_gates_builds_candidate, test_rank_is_score_sorted_then_symbol_and_capped, test_screener_rules.py, test_thresholds_come_from_config
-- **community 52** (12 nodes): _facts, _ind, test_add_continuation_needs_catalyst, test_hold_nearest_trigger, test_not_covered_and_no_data, test_sell_below_dma_weak_rsi, test_sell_hard_stop, test_sell_trailing_atr, test_signal_rules.py, test_thresholds_come_from_config, test_trim_concentration, test_trim_profit
-- **community 53** (12 nodes): README.md, async-everywhere, compose.registry.ts, concierge-default-model, concierge-registry-single-source, concierge.registry.generated.ts, files-max-100-lines, orff, project-fux, providers.json, routing.json, ui-component-contract
-- **community 61** (2 nodes): gen-concierge-registry.mjs, lit
-- **community 62** (3 nodes): getMe, handleSubmit, page.tsx
-- **community 64** (9 nodes): FilterBar, FilterBar.tsx, PortfolioHeader, PortfolioHeader.tsx, page.tsx, selectAll, setFilter, toggleRail, useHoldings
-- **community 66** (11 nodes): QueryProvider, apiError.ts, apiNotify.ts, d, extractDetail, isApiError, kindFromStatus, notifyApiError, providers.tsx, shouldRetry, toApiError
-- **community 69** (15 nodes): _importPublicKey, _pemToBytes, auth.api.ts, createApiKey, deleteApiKey, encryptCredentials, extendSession, getLoginKey, invalidateLoginKey, listApiKeys, listSessions, loginUser
-- **community 70** (2 nodes): AuthGuard, auth.guard.tsx
-- **community 71** (16 nodes): ActionBtn, ChatProvider, SessionsGroup, SessionsGroup.tsx, SignOutBtn, WatchlistCard.tsx, auth.query.ts, concierge.sessions.ts, device, fmt, handleLogout, submit
-- **community 73** (16 nodes): AlphaBar, AlphaBar.tsx, ChatCommandLine, ChatIcon, CollapsedStrip, ComposeCard, Kbd, MicIcon, ModeBtn, ModeSegment, SendButton, VoiceBar
-- **community 74** (3 nodes): ApprovalCard, ApprovalCard.tsx, Btn
-- **community 75** (2 nodes): ArtifactsPanel, ArtifactsPanel.tsx
-- **community 76** (3 nodes): ChatContext.tsx, loadDeepSearchMode, useChat
-- **community 77** (40 nodes): BrainIcon, ChatNavIcon, ChatRail, ChatRail.tsx, CrBtn, EmptyState, FuChip, HistoryIcon, InlineTokens, Kbd, MdTable, MicNavIcon
-- **community 78** (2 nodes): CommandMenu, CommandMenu.tsx
-- **community 79** (3 nodes): CommandPalette, CommandPalette.tsx, onKey
-- **community 80** (2 nodes): Disclosure, Disclosure.tsx
-- **community 81** (2 nodes): DynamicRenderer, DynamicRenderer.tsx
-- **community 82** (3 nodes): Chip, FollowupChips, FollowupChips.tsx
-- **community 83** (6 nodes): ActiveDot, AutoRow, ModelPicker.rows.tsx, ModelRow, ProvRow, Tag
-- **community 85** (4 nodes): ModelPicker, ModelPicker.tsx, onKey, onMouseDown
-- **community 86** (3 nodes): ObjectivePanel, ObjectivePanel.tsx, inr
-- **community 87** (3 nodes): SavePlanButton, SavePlanButton.tsx, useSavePlan
-- **community 88** (3 nodes): SessionMeter, SessionMeter.tsx, fmtTokens
-- **community 89** (2 nodes): SpecCard, SpecCard.tsx
-- **community 90** (6 nodes): SpecHost, plans.query.ts, usePlan, usePlanDrift, useProjection, useTreemap
-- **community 91** (2 nodes): ThinkingBlock, ThinkingBlock.tsx
-- **community 92** (2 nodes): ToolTrail, ToolTrail.tsx
-- **community 93** (3 nodes): MicToggle, VoiceCenter.tsx, Waveform
-- **community 94** (3 nodes): chat.events.ts, reduceEvent, sanitizeContent
-- **community 95** (2 nodes): compose.api.ts, composeUI
-- **community 97** (4 nodes): concierge.defaults.ts, ctxScore, pickDefaultChoice, score
-- **community 99** (6 nodes): classifyIntent, concierge.routing.ts, providerDefault, resolveProviderAuto, resolveTopAuto, s
-- **community 101** (2 nodes): getSRCtor, webspeech.types.ts
-- **community 102** (3 nodes): AlphaBriefCard, AlphaBriefCard.tsx, useDashboardBrief
-- **community 103** (15 nodes): BlockingBoot, BootGate, BootGate.tsx, announce, blockers, diagnose, fetchBootReport, isBlocking, isBrokerRow, isCached, reloadAction, runSync
-- **community 104** (2 nodes): MarketOverview, MarketOverview.tsx
-- **community 105** (2 nodes): OrbStage, OrbStage.tsx
-- **community 106** (3 nodes): TerminalRail, TerminalRail.tsx, isActive
-- **community 107** (3 nodes): TerminalStats, TerminalStats.tsx, useDashboardStats
-- **community 108** (5 nodes): TerminalTicker, TerminalTicker.tsx, useAddTickerItem, useDashboardTicker, useDeleteTickerItem
-- **community 109** (4 nodes): TerminalTopBar, TerminalTopBar.tsx, handleLogout, isActive
-- **community 110** (2 nodes): TerminalVoice, TerminalVoice.tsx
-- **community 111** (2 nodes): Watchlist, Watchlist.tsx
-- **community 112** (6 nodes): WatchlistCard, dashboard.query.ts, useAddWatchlistItem, useDashboardRisk, useDashboardWatchlist, useDeleteWatchlistItem
-- **community 113** (5 nodes): boot.diagnose.ts, copyAndConfirm, plural, slugList, truncate
-- **community 118** (3 nodes): AssetClassFilter, AssetClassFilter.tsx, ChipGroup
-- **community 119** (2 nodes): Ledger, Ledger.tsx
-- **community 120** (20 nodes): LedgerRow, LedgerRow.tsx, SourceSpotlight, SourceSpotlight.tsx, SpotStat, WalletCard, WalletCard.tsx, aggregateAll, aggregateSelected, currencySymbol, fmtMoneyShort, highlight
-- **community 121** (2 nodes): PnLToggle, PnLToggle.tsx
-- **community 122** (7 nodes): PortfolioCompactBar, PortfolioCompactBar.tsx, SummaryBar, SummaryBar.tsx, WalletPill, fmtINRShort, useWallets
-- **community 123** (3 nodes): RebalanceRail, RebalanceRail.tsx, useRebalance
-- **community 124** (4 nodes): SortMenu, SortMenu.tsx, h, pick
-- **community 125** (3 nodes): SourceActions, SourceActions.tsx, showSync
-- **community 126** (2 nodes): SourceOtpDialog, SourceOtpDialog.tsx
-- **community 127** (6 nodes): SourceRow, SourceRow.tsx, detail, formatTime, sources.utils.ts, statusVariant
-- **community 128** (23 nodes): SourcesPanel, SourcesPanel.tsx, handleReset, handleStartLogin, handleSubmitOtp, handleSync, handleSyncAll, onAfter, portfolio.query.ts, r, readErr, useForceRefresh
-- **community 129** (6 nodes): StripButton, WalletStrip, WalletStrip.tsx, handleForceRefresh, handleRefreshHoldings, handleSyncCash
-- **community 131** (10 nodes): applyFilter, assetClassCounts, bucketOf, equitySubOf, ex, isInvitReit, isUSEquity, matchQuery, portfolio.filter.ts, sector
-- **community 133** (6 nodes): aspectRatio, itemShort, squarify, stripLen, treemap.utils.ts, worstAspect
-- **community 134** (3 nodes): AboutSection, AboutSection.tsx, StaticBox
-- **community 135** (3 nodes): AccountSection.tsx, Hotkey, initial
-- **community 136** (8 nodes): PreferencesScreen.tsx, PreferencesSidebar, PreferencesSidebar.tsx, isDeepEqual, modifiedCount, notifications.types.ts, onKey, tag
-- **community 137** (2 nodes): SectionIcon, SectionIcon.tsx
-- **community 138** (2 nodes): StubSection, StubSection.tsx
-- **community 141** (2 nodes): ScreenerPanel, ScreenerPanel.tsx
-- **community 145** (3 nodes): _row_dict, get_symbol, get_symbol.py
-- **community 150** (2 nodes): Playground, Playground.tsx
-- **community 151** (3 nodes): SolarOrb, SolarOrb.tsx, hexToGlow
-- **community 154** (2 nodes): AllocationBar, AllocationBar.tsx
-- **community 155** (2 nodes): AppShell, AppShell.tsx
-- **community 156** (2 nodes): Badge, Badge.tsx
-- **community 157** (2 nodes): BootStep, BootStep.tsx
-- **community 159** (3 nodes): Card, Card.tsx, CardHeader
-- **community 160** (2 nodes): Chip, Chip.tsx
-- **community 161** (4 nodes): CountUp, CountUp.tsx, formatNumber, step
-- **community 162** (2 nodes): DataTable, DataTable.tsx
-- **community 163** (3 nodes): DeltaText, DeltaText.tsx, render
-- **community 164** (2 nodes): DiffTable, DiffTable.tsx
-- **community 165** (2 nodes): Divider, Divider.tsx
-- **community 166** (4 nodes): DonutChart, DonutChart.tsx, el, r
-- **community 167** (2 nodes): HudCorners, HudCorners.tsx
-- **community 168** (2 nodes): Icon, Icon.tsx
-- **community 169** (2 nodes): IconRail, IconRail.tsx
-- **community 171** (2 nodes): Kbd, Kbd.tsx
-- **community 172** (6 nodes): LineChart, LineChart.tsx, fmt, path, x, y
-- **community 173** (3 nodes): LiveDot, LiveDot.tsx, dot
-- **community 174** (3 nodes): AntonMark, Logo, Logo.tsx
-- **community 175** (2 nodes): MicIndicator, MicIndicator.tsx
-- **community 176** (7 nodes): PrefControls.tsx, PrefInput, PrefSeg, PrefSelect, PrefSlider, PrefTog, v
-- **community 177** (2 nodes): PrefGroup, PrefGroup.tsx
-- **community 178** (2 nodes): PrefRow, PrefRow.tsx
-- **community 179** (2 nodes): ProgressBar, ProgressBar.tsx
-- **community 180** (2 nodes): RiskBars, RiskBars.tsx
-- **community 181** (4 nodes): SearchBox, SearchBox.tsx, handle, tag
-- **community 182** (2 nodes): SegmentedControl, SegmentedControl.tsx
-- **community 183** (2 nodes): Sparkline, Sparkline.tsx
-- **community 184** (2 nodes): Stat, Stat.tsx
-- **community 185** (2 nodes): StatGrid, StatGrid.tsx
-- **community 186** (2 nodes): Swatches, Swatches.tsx
-- **community 187** (4 nodes): ThemeProvider, ThemeProvider.tsx, readPersisted, writePersisted
-- **community 188** (2 nodes): TopBar, TopBar.tsx
-- **community 189** (3 nodes): TreemapCell.tsx, h, w
-- **community 190** (2 nodes): VoiceDock, VoiceDock.tsx
-- **community 191** (2 nodes): WatchRow, WatchRow.tsx
-- **community 192** (2 nodes): Waveform, Waveform.tsx
-- **community 193** (10 nodes): Notification, Notification.tsx, beginExit, cancelTtl, dismissNotification, fmtDateTime, fmtTime, notify.ts, severityIcon, startTtl
-- **community 194** (2 nodes): NotificationsHost, NotificationsHost.tsx
-- **community 196** (7 nodes): CloseIcon, Err, Info, Ok, Sync, Warn, notifications.icons.tsx
-- **community 197** (9 nodes): clearNotifications, defaultTtl, emit, getServerSnapshot, getSnapshot, nextId, notifications.store.ts, pushNotification, useNotifications
-- **community 202** (7 nodes): Probes.md, WHY_PROBES_NOT_MCP.md, broker-source-integration, cdp-chrome, enctoken, probe-cdp-not-playwright, project-cdp-prerequisite
-- **community 203** (4 nodes): _adapter, _tiers, _toggle, check
-- **community 204** (6 nodes): _RFinal, _RTool, _assembled, _reset, _run, check
-- **community 206** (2 nodes): _concierge_route, _sse
-- **community 207** (3 nodes): fux-engine-exact-pin, pyproject.toml, uv.lock
-- **community 208** (6 nodes): afbach-vault, doc-per-code-change, knowledge-location, no-secrets-in-vcs, project-wagner-dante, vault-only-credentials
+- **community 29** (3 nodes): ApprovalProposal, Calibration, approval_contract.py
+- **community 30** (2 nodes): Cone, cone_contract.py
+- **community 31** (2 nodes): DecisionRow, decision_contract.py
+- **community 32** (2 nodes): FeedState, feedstate_contract.py
+- **community 33** (4 nodes): CapitalStructure, DrawdownGuard, SelfFunding, objective_contract.py
+- **community 35** (16 nodes): DashboardTickerItem, DashboardWatchlistItem, ImageAttach, ImageAttach.tsx, _now, _seed_ticker, _seed_watchlist, add, add_ticker, add_watchlist, dashboard_models.py, dashboard_repo.py
+- **community 36** (20 nodes): BriefBlock, CreateTickerItemRequest, CreateWatchlistItemRequest, DashboardStats, StatCard, TerminalBrief, TickerItem, TickerItem, WatchlistItem, _fmt_inr_short, _ticker_dto, _watchlist_dto
+- **community 39** (7 nodes): _slip, edge_costs.py, net_pct, test_edge_costs.py, test_known_answer_net_pct_after_all_costs, test_short_horizon_pays_stcg_long_horizon_does_not, test_slippage_lowers_the_net
+- **community 40** (8 nodes): _fake_save, _gate, build_record, test_append_writes_a_doc_through_the_bridge, test_edge_journal.py, test_kill_at_gate1_records_zero_reached, test_kill_at_gate2_records_gate1_reached_but_not_passed, test_pass_run_records_both_gates_cleared
+- **community 41** (14 nodes): _append, _path, _read, budget, declare_budget, record_trial, remaining, spent, test_declare_record_spent_remaining, test_edges_are_isolated, test_latest_declaration_wins, test_missing_ledger_reads_empty
+- **community 42** (11 nodes): Subscription, __init__.py, _write, funding_subscriptions.py, load_subscriptions, opex_per_month, test_committed_registry_loads, test_funding_subscriptions.py, test_load_parses_rows, test_missing_file_is_zero_opex, test_opex_converts_usd_and_amortizes_annual
+- **community 45** (8 nodes): Gate0Error, _rows, assert_no_leak, check_leak, gate0_integrity.py, test_clean_universe_passes, test_gate0_integrity.py, test_seeded_leak_is_rejected
+- **community 49** (3 nodes): Order, Watchlist, portfolio_models.py
+- **community 51** (20 nodes): BTSeries, OHLCV, Ticker, Ticker.tsx, TickerProps, _bt, _cache_file, _cache_file, _download, _download, _read_cache, _read_cache
+- **community 52** (12 nodes): _friction_net, _max_drawdown, _t, backtest_metrics.py, build_report, test_all_losers_flag_negative_expectancy, test_backtest_metrics.py, test_counts_and_win_rate, test_empty_window_is_not_a_pass, test_expectancy_and_profit_factor_positive, test_gross_and_headline_net_delegates_to_realized_pnl, test_max_drawdown_is_the_loser_dip
+- **community 53** (4 nodes): Indicators, _last, compute, indicators.py
+- **community 54** (6 nodes): _changed_map, _rows, build_spec, is_review, plan_card.py, review_spec
+- **community 55** (10 nodes): _delta, _t, realized_pnl, test_costs_are_config_driven, test_empty_is_zero, test_long_term_is_untaxed, test_net_short_term_loss_has_no_tax, test_pnl_tracker.py, test_short_term_components_and_net, test_short_term_loss_offsets_gain
+- **community 56** (8 nodes): Entry, ExitRule, ParallelCfg, ScreenerCfg, Stops, TrimRule, UniverseCfg, strategy_config.py
+- **community 58** (2 nodes): _h, test_acted_trim_not_flagged
+- **community 59** (6 nodes): _ind, test_each_gate_can_reject, test_passes_all_gates_builds_candidate, test_rank_is_score_sorted_then_symbol_and_capped, test_screener_rules.py, test_thresholds_come_from_config
+- **community 60** (12 nodes): _facts, _ind, test_add_continuation_needs_catalyst, test_hold_nearest_trigger, test_not_covered_and_no_data, test_sell_below_dma_weak_rsi, test_sell_hard_stop, test_sell_trailing_atr, test_signal_rules.py, test_thresholds_come_from_config, test_trim_concentration, test_trim_profit
+- **community 61** (15 nodes): README.md, async-everywhere, compose.registry.ts, concierge-default-model, concierge-registry-single-source, doc-per-code-change, files-max-100-lines, fux-engine-exact-pin, orff, project-fux, providers.json, pyproject.toml
+- **community 69** (2 nodes): gen-concierge-registry.mjs, lit
+- **community 70** (2 nodes): RootLayout, layout.tsx
+- **community 71** (2 nodes): Home, page.tsx
+- **community 72** (23 nodes): AssetClassCounts, FilterBar, FilterBar.tsx, FilterBarProps, FilterState, PortfolioHeader, PortfolioHeader.tsx, PortfolioPage, applyFilter, assetClassCounts, bucketOf, equitySubOf
+- **community 73** (2 nodes): PreferencesPage, page.tsx
+- **community 74** (2 nodes): AxiosRequestConfig, api.ts
+- **community 75** (12 nodes): ApiError, QueryProvider, Register, apiError.ts, apiNotify.ts, extractDetail, isApiError, kindFromStatus, notifyApiError, providers.tsx, shouldRetry, toApiError
+- **community 76** (2 nodes): AppState, store.ts
+- **community 78** (2 nodes): AuthGuard, auth.guard.tsx
+- **community 79** (17 nodes): ActionBtn, ChatProvider, SessionsGroup, SessionsGroup.tsx, SignOutBtn, Stream, WatchlistCard.tsx, auth.query.ts, concierge.sessions.ts, device, fmt, handleLogout
+- **community 80** (9 nodes): ApiKey, ApiKeyCreateRequest, IamUser, LoginKeyResponse, LoginRequest, RegisterRequest, SessionResponse, TokenResponse, auth.types.ts
+- **community 81** (17 nodes): AlphaBar, AlphaBar.tsx, ChatCommandLine, ChatIcon, CollapsedStrip, ComposeCard, Kbd, MicIcon, ModeBtn, ModeSegment, Props, SendButton
+- **community 82** (3 nodes): ApprovalCard, ApprovalCard.tsx, Btn
+- **community 83** (2 nodes): ArtifactsPanel, ArtifactsPanel.tsx
+- **community 84** (4 nodes): ChatContext.tsx, ChatCtx, loadDeepSearchMode, useChat
+- **community 85** (45 nodes): BrainIcon, ChatNavIcon, ChatRail, ChatRail.tsx, CommandPalette, CommandPalette.tsx, CrBtn, EmptyState, FuChip, HistoryIcon, InlineTokens, Kbd
+- **community 86** (2 nodes): CommandMenu, CommandMenu.tsx
+- **community 87** (3 nodes): Disclosure, Disclosure.tsx, Props
+- **community 88** (3 nodes): DynamicRenderer, DynamicRenderer.tsx, Props
+- **community 89** (3 nodes): Chip, FollowupChips, FollowupChips.tsx
+- **community 90** (9 nodes): ActiveDot, AutoRow, AutoRowProps, ModelPicker.rows.tsx, ModelRow, ModelRowProps, ProvRow, ProvRowProps, Tag
+- **community 92** (4 nodes): ModelPicker.tsx, Props, onKey, onMouseDown
+- **community 93** (9 nodes): ModelPicker, Resolved, activeModelFor, classifyIntent, concierge.routing.ts, lookup, providerDefault, resolveProviderAuto, resolveTopAuto
+- **community 94** (3 nodes): ObjectivePanel, ObjectivePanel.tsx, inr
+- **community 95** (4 nodes): Props, SavePlanButton, SavePlanButton.tsx, useSavePlan
+- **community 96** (3 nodes): SessionMeter, SessionMeter.tsx, fmtTokens
+- **community 97** (3 nodes): Props, SpecCard, SpecCard.tsx
+- **community 98** (8 nodes): Props, SpecHost, SpecHost.tsx, plans.query.ts, usePlan, usePlanDrift, useProjection, useTreemap
+- **community 99** (2 nodes): ThinkingBlock, ThinkingBlock.tsx
+- **community 100** (2 nodes): ToolTrail, ToolTrail.tsx
+- **community 101** (4 nodes): MicToggle, Props, VoiceCenter.tsx, Waveform
+- **community 102** (4 nodes): StreamPayload, chat.events.ts, reduceEvent, sanitizeContent
+- **community 103** (5 nodes): DefaultChoice, concierge.defaults.ts, ctxScore, pickDefaultChoice, score
+- **community 105** (5 nodes): IntentPattern, ModelConsumption, ModelMeta, ProviderMeta, concierge.registry.generated.ts
+- **community 106** (5 nodes): ActiveModel, ChatTurn, PendingAction, ToolStep, concierge.types.ts
+- **community 108** (4 nodes): SessionTotals, nanoid, turnFromDTO, useChatStream.ts
+- **community 109** (7 nodes): SRErrorEvent, SREvent, SRResult, SRResultList, WebkitSR, getSRCtor, webspeech.types.ts
+- **community 110** (3 nodes): ApprovalProposal, Calibration, approval.types.ts
+- **community 111** (2 nodes): Cone, cone.types.ts
+- **community 112** (4 nodes): ApprovalProposal, Calibration, DecisionRow, decision.types.ts
+- **community 113** (2 nodes): FeedState, feedstate.types.ts
+- **community 115** (4 nodes): CapitalStructure, DrawdownGuard, SelfFunding, objective.types.ts
+- **community 116** (3 nodes): AlphaBriefCard, AlphaBriefCard.tsx, useDashboardBrief
+- **community 117** (15 nodes): BlockingBoot, BootGate, BootGate.tsx, announce, diagnose, isBlocking, isBrokerRow, isCached, reloadAction, runSync, slugList, tick
+- **community 118** (4 nodes): BootScreen, BootScreen.tsx, BootScreenProps, BootStep
+- **community 119** (2 nodes): MarketOverview, MarketOverview.tsx
+- **community 120** (2 nodes): OrbStage, OrbStage.tsx
+- **community 121** (3 nodes): TerminalRail, TerminalRail.tsx, isActive
+- **community 122** (3 nodes): TerminalStats, TerminalStats.tsx, useDashboardStats
+- **community 123** (5 nodes): TerminalTicker, TerminalTicker.tsx, useAddTickerItem, useDashboardTicker, useDeleteTickerItem
+- **community 124** (4 nodes): TerminalTopBar, TerminalTopBar.tsx, handleLogout, isActive
+- **community 125** (2 nodes): TerminalVoice, TerminalVoice.tsx
+- **community 126** (2 nodes): Watchlist, Watchlist.tsx
+- **community 127** (6 nodes): WatchlistCard, dashboard.query.ts, useAddWatchlistItem, useDashboardRisk, useDashboardWatchlist, useDeleteWatchlistItem
+- **community 128** (6 nodes): Diagnosis, Failure, Pattern, boot.diagnose.ts, copyAndConfirm, plural
+- **community 129** (8 nodes): BriefBlockDTO, DashboardStatsDTO, RiskMeterDTO, StatCardDTO, TerminalBriefDTO, TickerItemDTO, WatchlistItemDTO, dashboard.types.ts
+- **community 131** (6 nodes): ClassDriftDTO, PlanDTO, PlanDriftDTO, PlanSaveResponseDTO, ProjectionDTO, plans.types.ts
+- **community 132** (5 nodes): AssetClassFilter, AssetClassFilter.tsx, AssetClassFilterProps, ChipGroup, ChipGroupProps
+- **community 133** (4 nodes): ColDef, Ledger, Ledger.tsx, LedgerProps
+- **community 134** (27 nodes): LedgerRow, LedgerRow.tsx, PortfolioCompactBar, PortfolioCompactBar.tsx, PortfolioCompactBarProps, SourceSpotlight, SummaryBar, SummaryBar.tsx, SummaryBarProps, WalletCard, WalletCard.tsx, WalletCardProps
+- **community 135** (2 nodes): PnLToggle, PnLToggle.tsx
+- **community 136** (4 nodes): RebalanceRail, RebalanceRail.tsx, RebalanceRailProps, useRebalance
+- **community 137** (5 nodes): SortMenu, SortMenu.tsx, SortMenuProps, h, pick
+- **community 138** (3 nodes): Props, SourceActions, SourceActions.tsx
+- **community 139** (3 nodes): Props, SourceOtpDialog, SourceOtpDialog.tsx
+- **community 140** (5 nodes): SourceRow, SourceRow.tsx, formatTime, sources.utils.ts, statusVariant
+- **community 141** (4 nodes): SourceSpotlight.tsx, SourceSpotlightProps, SpotStat, onRefresh
+- **community 142** (12 nodes): SourcesPanel, SourcesPanel.tsx, handleReset, handleStartLogin, handleSubmitOtp, handleSync, handleSyncAll, onAfter, readErr, useSourceRow.hook.ts, useSources, useSyncAll
+- **community 143** (10 nodes): StripButton, WalletStrip, WalletStrip.tsx, WalletStripProps, handleForceRefresh, handleRefreshHoldings, handleSyncCash, useForceRefresh, useSyncAllSources, useSyncAllWallets
+- **community 145** (7 nodes): FxResponseDTO, portfolio.query.ts, useResetSource, useSourceRow, useStartLogin, useSubmitOtp, useSyncSource
+- **community 146** (12 nodes): AllocationSliceDTO, HoldingDTO, HoldingsResponseDTO, PortfolioTotalsDTO, RebalanceResponseDTO, SourceInfoDTO, SyncAllResultDTO, TreemapCellDTO, TreemapResponseDTO, WalletInfoDTO, WalletsResponseDTO, portfolio.types.ts
+- **community 147** (5 nodes): Rect, aspectRatio, squarify, treemap.utils.ts, worstAspect
+- **community 148** (4 nodes): AboutSection, AboutSection.tsx, AboutSectionProps, StaticBox
+- **community 149** (3 nodes): AccountSection.tsx, AccountSectionProps, Hotkey
+- **community 150** (7 nodes): PreferencesScreen.tsx, PreferencesSidebar, PreferencesSidebar.tsx, PreferencesSidebarProps, isDeepEqual, modifiedCount, onKey
+- **community 151** (2 nodes): SectionIcon, SectionIcon.tsx
+- **community 152** (3 nodes): StubSection, StubSection.tsx, StubSectionProps
+- **community 154** (2 nodes): PrefSectionMeta, preferences.types.ts
+- **community 155** (2 nodes): ScreenerPanel, ScreenerPanel.tsx
+- **community 159** (3 nodes): _row_dict, get_symbol, get_symbol.py
+- **community 164** (2 nodes): Playground, Playground.tsx
+- **community 165** (5 nodes): SolarOrb, SolarOrb.tsx, SolarOrbProps, Star, hexToGlow
+- **community 168** (4 nodes): AllocationBar, AllocationBar.tsx, AllocationBarProps, AllocationSegment
+- **community 169** (3 nodes): AppShell, AppShell.tsx, AppShellProps
+- **community 170** (3 nodes): Badge, Badge.tsx, BadgeProps
+- **community 171** (3 nodes): BootStep, BootStep.tsx, BootStepProps
+- **community 172** (2 nodes): Button.tsx, ButtonProps
+- **community 173** (5 nodes): Card, Card.tsx, CardHeader, CardHeaderProps, CardProps
+- **community 174** (3 nodes): Chip, Chip.tsx, ChipProps
+- **community 175** (5 nodes): CountUp, CountUp.tsx, CountUpProps, formatNumber, step
+- **community 176** (4 nodes): DataTable, DataTable.tsx, DataTableColumn, DataTableProps
+- **community 177** (4 nodes): DeltaText, DeltaText.tsx, DeltaTextProps, render
+- **community 178** (4 nodes): DiffRow, DiffTable, DiffTable.tsx, DiffTableProps
+- **community 179** (3 nodes): Divider, Divider.tsx, DividerProps
+- **community 180** (4 nodes): DonutChart, DonutChart.tsx, DonutChartProps, DonutSlice
+- **community 181** (3 nodes): HudCorners, HudCorners.tsx, HudCornersProps
+- **community 182** (3 nodes): Icon, Icon.tsx, IconProps
+- **community 183** (4 nodes): IconRail, IconRail.tsx, IconRailItem, IconRailProps
+- **community 184** (2 nodes): Input.tsx, InputProps
+- **community 185** (3 nodes): Kbd, Kbd.tsx, KbdProps
+- **community 186** (7 nodes): LineChart, LineChart.tsx, LineChartProps, fmt, path, x, y
+- **community 187** (3 nodes): LiveDot, LiveDot.tsx, LiveDotProps
+- **community 188** (4 nodes): AntonMark, Logo, Logo.tsx, LogoProps
+- **community 189** (3 nodes): MicIndicator, MicIndicator.tsx, MicIndicatorProps
+- **community 190** (12 nodes): PrefControls.tsx, PrefInput, PrefInputProps, PrefOption, PrefSeg, PrefSegProps, PrefSelect, PrefSelectProps, PrefSlider, PrefSliderProps, PrefTog, PrefTogProps
+- **community 191** (3 nodes): PrefGroup, PrefGroup.tsx, PrefGroupProps
+- **community 192** (3 nodes): PrefRow, PrefRow.tsx, PrefRowProps
+- **community 193** (3 nodes): ProgressBar, ProgressBar.tsx, ProgressBarProps
+- **community 194** (3 nodes): RiskBars, RiskBars.tsx, RiskBarsProps
+- **community 195** (4 nodes): SearchBox, SearchBox.tsx, SearchBoxProps, handle
+- **community 196** (4 nodes): SegmentedControl, SegmentedControl.tsx, SegmentedControlProps, SegmentedOption
+- **community 197** (3 nodes): Sparkline, Sparkline.tsx, SparklineProps
+- **community 198** (3 nodes): Stat, Stat.tsx, StatProps
+- **community 199** (3 nodes): StatGrid, StatGrid.tsx, StatGridProps
+- **community 200** (3 nodes): Swatches, Swatches.tsx, SwatchesProps
+- **community 201** (7 nodes): PersistShape, ThemeProvider, ThemeProvider.tsx, ThemeProviderProps, ThemeState, readPersisted, writePersisted
+- **community 202** (4 nodes): TopBar, TopBar.tsx, TopBarNavItem, TopBarProps
+- **community 203** (3 nodes): VoiceDock, VoiceDock.tsx, VoiceDockProps
+- **community 204** (3 nodes): WatchRow, WatchRow.tsx, WatchRowProps
+- **community 205** (3 nodes): Waveform, Waveform.tsx, WaveformProps
+- **community 206** (12 nodes): Notification, Notification.tsx, Props, beginExit, cancelTtl, dismissNotification, fmtDateTime, fmtTime, notifications.icons.tsx, notify.ts, severityIcon, startTtl
+- **community 207** (4 nodes): NotificationsHost, NotificationsHost.tsx, NotificationsHostProps, useNotifications
+- **community 209** (8 nodes): clearNotifications, defaultTtl, emit, getServerSnapshot, getSnapshot, nextId, notifications.store.ts, pushNotification
+- **community 210** (4 nodes): Notification, NotificationAction, NotificationInput, notifications.types.ts
+- **community 214** (2 nodes): onSuccess, tsup.config.ts
+- **community 215** (7 nodes): Probes.md, WHY_PROBES_NOT_MCP.md, broker-source-integration, cdp-chrome, enctoken, probe-cdp-not-playwright, project-cdp-prerequisite
+- **community 216** (4 nodes): _adapter, _tiers, _toggle, check
+- **community 217** (6 nodes): _RFinal, _RTool, _assembled, _reset, _run, check
+- **community 219** (2 nodes): _concierge_route, _sse
+- **community 220** (5 nodes): afbach-vault, knowledge-location, no-secrets-in-vcs, project-wagner-dante, vault-only-credentials

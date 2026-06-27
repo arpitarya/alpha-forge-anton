@@ -76,6 +76,16 @@ re-fetch from the broker API, bypassing the TTL. Broker sources check
 `is_csv_fresh()` on every `fetch()` call — deleting the live file makes the
 next sync skip the CSV path entirely.
 
+## Reusing the I/O discipline for non-holdings data (market data)
+
+`CSV_HEADERS` is the **holdings** contract. Market data (NSE bhavcopy OHLCV bars) is a
+different shape, so `marketdata/bhavcopy_ingest.py` does **not** use `CSV_HEADERS` or widen
+`dump_utils.py`. Instead it **reuses the I/O discipline** — `dump_dir()` (env-var path,
+`chmod 700`), the `# source=… dumped_at_utc=…` header-comment, and the `chmod 600` write —
+with its own column set (`date, symbol, series, isin, open, high, low, close, volume`). The
+rule of thumb: reuse `dump_dir()` and the permission/header conventions for any cache under
+the dump dir; only holdings dumps use `CSV_HEADERS` + `write_csv`.
+
 ## Adding a new broker
 
 1. Create `backend/app/modules/brokers/{slug}/{slug}_dump.py`.

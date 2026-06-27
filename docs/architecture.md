@@ -19,6 +19,10 @@ alpha-forge-anton/
 │   │   ├── brokers/     pluggable BrokerSource adapters (Zerodha Kite/Coin, Groww, Angel One, IndMoney, TickerTape, Binance) + aggregator + registry. Used by portfolio routes. All CSV portfolio dumps share `dump_utils.py` — see broker-csv-dumps.md
 │   │   ├── trade/       routes (paper/live trade endpoints)
 │   │   ├── signals/     deterministic swing-trade engine — strategy_config (tunable knobs, Orff-editable) + quote_source (yfinance, cached) + indicators (ta-lib) + signal_rules + universe/screener_rules + plan_store/plan_diff (re-plan loop, elgar actions/) + strategy_tuning (ApprovalCard→elgar) + plan_card (deterministic UISpec) + weekly_service (scheduled review) + pnl_tracker (realized P&L net of brokerage/STT/friction/STCG). GET /signals/review (plan+diff) /screen /strategy /weekly · POST /plan /strategy /pnl. No LLM in the numbers — see docs/signals.md
+│   │   ├── edges/       edge-discovery engine — pre-registered hypotheses through gates 1–2 + journal (elgar), plus trial_ledger (append-only, counts-only trial-budget integrity) + null_selftest (random-data trust check: asserts no edge in noise). See docs/edges.md
+│   │   ├── contracts/   Phase-0 engine↔UI contracts (single source of truth) — Objective/TestReport/Cone/ApprovalProposal/DecisionRow/FeedState Pydantic models + contracts_codegen → generated frontend TS types (drift-tested). See docs/contracts.md
+│   │   ├── marketdata/  Gate-0 data integrity — NSE bhavcopy ingest (reuses dump_utils I/O, own OHLCV columns) + point-in-time universe + gate0_integrity (rejects look-ahead / survivorship leakage). See docs/edges.md
+│   │   ├── funding/     fixed-cost opex registry — subscriptions.toml ($0, no secrets) → opex_per_month(), the denominator of Objective.self_funding. See docs/cage.md
 │   │   └── dashboard/   routes (cross-module aggregation)
 │   ├── app/main.py   FastAPI app factory; mounts api_router from app.modules
 │   ├── alembic/      Database migrations
@@ -92,6 +96,10 @@ alpha-forge-anton/
 - `backend/app/modules/brokers/base.py` — `BrokerSource` ABC; implement for new brokers
 - `backend/app/modules/brokers/registry.py` — broker source registry (slug → class)
 - `backend/app/modules/brokers/dump_utils.py` — shared CSV-dump utilities (path, permissions, headers, P&L). See [broker-csv-dumps.md](broker-csv-dumps.md)
+- `backend/app/modules/contracts/contracts_codegen.py` — Pydantic contract models → generated frontend TS (`just contracts-gen`); `tests/test_contracts_sync.py` is the drift guard. See [contracts.md](contracts.md)
+- `backend/app/modules/marketdata/gate0_integrity.py` — `assert_no_leak()` rejects a universe with look-ahead / survivorship leakage; `bhavcopy_ingest.py` parses NSE bhavcopy (reusing `dump_utils` I/O) + builds the point-in-time `universe_as_of`. Probe: `just probe gate0`
+- `backend/app/modules/funding/funding_subscriptions.py` — `opex_per_month()` from `subscriptions.toml` (INR via `brokers.fx`) — the self-funding denominator
+- `backend/app/modules/edges/trial_ledger.py` — append-only, counts-only trial-budget ledger (overfitting integrity); `null_selftest.py` — `just null-data` random-data trust check (no edge in noise)
 - `backend/app/modules/concierge/` — Orff concierge backend, wired to the **Fux brain** on both paths (the §18 vision: Fux serves Claude Code at dev-time and Orff at runtime):
   - `concierge_service.py` — `stream_chat` streams provider tokens as SSE. **Grounded in Fux**: before streaming it calls `fux_bridge.recall(last_user_msg)` (→ `fux hook-recall`) and injects the returned rules/glossary/memory bodies as an authoritative system message (`_GROUNDING_PREAMBLE`), so replies cite the project's real formulas (e.g. `day-pnl`, `portfolio-valuation`) instead of inventing them. Best-effort: grounding failure or an empty prompt simply skips injection — chat never breaks.
   - `fux_bridge.py` — subprocess bridge to the `fux` CLI (not import, so Orff talks to the same brain across venvs; $0, deterministic). `registry()` → `fux components`, `validate(spec)` → `fux validate-spec`, `recall(prompt)` → `fux hook-recall` (runtime grounding), `record_feedback(outcome)` → `fux feedback` (learning loop)

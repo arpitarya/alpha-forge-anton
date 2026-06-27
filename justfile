@@ -192,6 +192,18 @@ backtest:
 edge id="":
     cd backend && uv run python -m app.modules.edges.edge_cli {{id}}
 
+# Null-data trust check — feed RANDOM data through the funnel; assert it finds NO edge.
+# A standing guard against fooling ourselves (overfit / look-ahead) — see docs/edges.md.
+null-data:
+    cd backend && uv run python -m app.modules.edges.null_selftest
+
+# ── Contracts ────────────────────────────────────
+
+# Regenerate the frontend TS types from the Pydantic contract models ($0, deterministic).
+# test_contracts_sync.py fails if the checked-in .ts drifts from these — see docs/contracts.md.
+contracts-gen:
+    cd backend && uv run python -m app.modules.contracts.contracts_codegen
+
 # ── Probes ───────────────────────────────────────
 
 # Run a probe by name — omit name to list all available probes (CDP :9299 required)

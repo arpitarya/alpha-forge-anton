@@ -42,6 +42,28 @@ the best-effort `plans.elgar_bridge`; see [edge_store.py](../backend/app/modules
 The journal lives in the `edges-journal` collection and carries **stats + counts only**
 (no holdings, no ₹ PII) — safe by construction.
 
+## Gate-0 — data integrity (the pre-condition for every gate)
+
+Before any backtest runs, the **data itself** must be honest. Gate-0 lives in
+[backend/app/modules/marketdata/](../backend/app/modules/marketdata/) and is the admission
+test no universe may skip:
+
+- **Ingest** ([bhavcopy_ingest.py](../backend/app/modules/marketdata/bhavcopy_ingest.py)) —
+  parses the free NSE bhavcopy (raw NSE header aliases supported) into typed `BhavRow` bars
+  and caches them **reusing the `dump_utils` I/O discipline** (`dump_dir`, `chmod 600`,
+  `# source=…` header-comment) with its own OHLCV columns (not the holdings `CSV_HEADERS`).
+- **Point-in-time universe** — `universe_as_of(rows, day)` returns exactly the symbols
+  trading on the latest session on/before `day`. No symbol that wasn't listed yet, no symbol
+  carried back from the future.
+- **The gate** ([gate0_integrity.py](../backend/app/modules/marketdata/gate0_integrity.py)) —
+  `assert_no_leak(universe, rows)` recomputes the canonical as-of universe and raises
+  `Gate0Error` on either leak: **look-ahead** (a symbol not trading at `as_of`) or
+  **survivorship** (a symbol that *was* trading at `as_of` but the universe dropped — the
+  classic "currently-listed names only" bias). Pure and deterministic.
+
+Verified offline by `just probe gate0` ([gate0_integrity_probe.py](../probes/gate0_integrity_probe.py)):
+the point-in-time universe is exact, a seeded leak is rejected, and the honest universe is accepted.
+
 ## The two gates
 
 **Gate 1 — out-of-sample backtest** ([edge_backtest.py](../backend/app/modules/edges/edge_backtest.py)).
@@ -78,6 +100,25 @@ The rule that makes a result trustworthy ([edge_register.py](../backend/app/modu
 before any data is touched or any result journaled. **A hypothesis written after seeing
 the result is rejected.**
 
+## Trial-ledger — multiple-testing integrity
+
+Try enough hypotheses and one passes by luck. The append-only **trial-ledger**
+([trial_ledger.py](../backend/app/modules/edges/trial_ledger.py)) records, per edge, the
+trial budget the author **declared up front** (`declare_budget`) and the trials actually
+spent (`record_trial`), so a later phase can deflate a result by how many shots were taken
+(`budget` / `spent` / `remaining`). It is append-only (a correction is a new line, never an
+edit) and carries **counts only** — no holdings, no ₹, no prompt text — constitutionally
+safe by construction, the same discipline as the journal.
+
+## Null-data self-test — the standing trust check
+
+A funnel that "discovers" an edge in pure noise is broken or overfit. `just null-data`
+([null_selftest.py](../backend/app/modules/edges/null_selftest.py)) feeds seeded, zero-drift
+random walks through the funnel and **asserts it finds no edge**. It defines the `Funnel`
+Protocol (the interface later phases implement) and a default `GateFunnel` that composes the
+*existing* gates into a `contracts.TestReport` (no new trading logic). Run it on every change
+— it's the cheapest possible guard against fooling ourselves.
+
 ## Data source
 
 One seam ([edge_data.py](../backend/app/modules/edges/edge_data.py)): everything depends
@@ -90,7 +131,9 @@ here later without touching the gates.
 ```bash
 just edge <edge-id>                 # load elgar://edge/<id>, run gates 1-2, print verdict
 just probe edge-discovery           # offline acceptance probe (no network, no store)
-cd backend && uv run pytest tests/test_edge_*.py -v
+just probe gate0                    # Gate-0 data-integrity probe (look-ahead / survivorship)
+just null-data                      # standing trust check — random data finds NO edge
+cd backend && uv run pytest tests/test_edge_*.py tests/test_gate0_integrity.py tests/test_null_selftest.py tests/test_trial_ledger.py -v
 ```
 
 ## Verification

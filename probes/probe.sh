@@ -49,6 +49,7 @@ Available probes:
     signals-pnl          signals_pnl_probe.py
     signals-backtest     signals_backtest_probe.py
     edge-discovery       edge_discovery_probe.py
+    gate0                gate0_integrity_probe.py
     objective            objective_probe.py
     concierge-tools      concierge_tools_probe.py
 
@@ -118,6 +119,7 @@ case "$NAME" in
     signals-pnl)       SCRIPT="signals_pnl_probe.py" ;;
     signals-backtest)  SCRIPT="signals_backtest_probe.py" ;;
     edge-discovery)    SCRIPT="edge_discovery_probe.py" ;;
+    gate0)             SCRIPT="gate0_integrity_probe.py" ;;
     objective)         SCRIPT="objective_probe.py" ;;
     concierge-tools)   SCRIPT="concierge_tools_probe.py" ;;
     pypi-publish)      SCRIPT="pypi_publish_probe.py" ;;

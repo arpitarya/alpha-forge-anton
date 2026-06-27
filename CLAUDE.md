@@ -14,7 +14,8 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 | Runtime money/PII critic (Orff live-write guard) | [docs/runtime-critic.md](docs/runtime-critic.md) |
 | Broker CSV dumps (shared dump_utils contract) | [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md) |
 | Signals engine (deterministic swing verdicts) | [docs/signals.md](docs/signals.md) |
-| Edge-discovery engine (pre-registered hypotheses, gates 1–2 + journal) | [docs/edges.md](docs/edges.md) |
+| Edge-discovery engine (pre-registered hypotheses, gates 0–2 + journal + trial-ledger + null-data) | [docs/edges.md](docs/edges.md) |
+| Phase-0 contracts (engine↔UI shapes + TS codegen) | [docs/contracts.md](docs/contracts.md) |
 | Comparison docs — how to write `<name>.compare.md` | [docs/comparison.guide.md](docs/comparison.guide.md) |
 | Graphify knowledge graph | [docs/graphify.md](docs/graphify.md) |
 | Cage LLM cost ledger (Orff integration) | [docs/cage.md](docs/cage.md) |

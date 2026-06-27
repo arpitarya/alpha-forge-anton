@@ -1,0 +1,21 @@
+# Fixed-cost opex registry — flat subscriptions the program must out-earn.
+# Deterministic, $0, NO SECRETS: public provider names + list prices only.
+# Feeds contracts.Objective.self_funding.opex_per_month (INR). cadence: monthly | annual.
+
+[[sub]]
+name = "Claude"
+amount = 20.0
+currency = "USD"
+cadence = "monthly"
+
+[[sub]]
+name = "Parallel"
+amount = 0.0
+currency = "USD"
+cadence = "monthly"
+
+[[sub]]
+name = "ElevenLabs"
+amount = 5.0
+currency = "USD"
+cadence = "monthly"
