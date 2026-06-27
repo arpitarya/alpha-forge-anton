@@ -14,6 +14,8 @@ from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
+from app.modules.edges.factor_schema import FactorConfig
+
 
 class EdgeStatus(StrEnum):
     CANDIDATE = "candidate"  # pre-registered, not yet validated
@@ -34,6 +36,7 @@ class EdgeSpec(BaseModel):
     pre_registered_at: datetime | None = None  # MUST predate any recorded result
     status: EdgeStatus = EdgeStatus.CANDIDATE
     gate_reached: int = 0  # highest gate cleared so far (0 = none)
+    factor: FactorConfig | None = None  # cross-sectional config; None = single-series signal
 
 
 class ResultStats(BaseModel):

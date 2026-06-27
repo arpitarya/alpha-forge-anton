@@ -1,0 +1,51 @@
+/* Forge Hi-Fi — trust & freshness (.of-stale / citations / what-why-how). Tokens from theme.css. */
+
+.of-stale { display: inline-flex; align-items: center; gap: 8px; padding: 7px 11px; border-radius: 7px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--accent-soft); font-weight: 700; }
+.of-stale .warn { font-size: 13px; }
+.of-stale.solid { animation: ofStale 2.4s ease-in-out infinite; }
+@keyframes ofStale { 0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent); } }
+/* error variant — honest-absence, red */
+.of-stale.err { color: var(--red); border-color: color-mix(in srgb, var(--red) 55%, transparent);
+  background: color-mix(in srgb, var(--red) 12%, transparent); }
+.of-stale.err.solid { animation: ofErr 2.4s ease-in-out infinite; }
+@keyframes ofErr { 0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--red) 16%, transparent); } }
+
+.of-stalenote { margin-top: 10px; font-size: 12.5px; line-height: 1.5; color: var(--fg); text-wrap: pretty; }
+.of-stalenote b { color: var(--accent-soft); }
+.of-zero { font-variant-numeric: tabular-nums; color: var(--fg-3); }
+
+/* citations */
+.of-cite-ref { font-family: "Space Mono", monospace; font-size: 10px; color: var(--accent);
+  vertical-align: super; line-height: 0; margin-left: 1px; }
+.of-sources { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+.of-src { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center;
+  padding: 7px 0; border-bottom: 1px solid var(--line); }
+.of-src:last-child { border-bottom: none; }
+.of-src .num { font-family: "Space Mono", monospace; font-size: 9px; color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); border-radius: 4px;
+  width: 18px; height: 18px; display: grid; place-items: center; flex-shrink: 0; }
+.of-src .ttl { font-size: 12px; color: var(--fg-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.of-src .ttl b { color: var(--fg); }
+.of-src .meta { font-family: "Space Mono", monospace; font-size: 8.5px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--fg-3); white-space: nowrap; }
+.of-src .meta.fresh { color: var(--green); }
+
+/* what / why / how explainer */
+.of-www { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.of-www .row { border: 1px solid var(--line); border-radius: 8px; background: var(--surface-hi); overflow: hidden; }
+.of-www .row .head { display: flex; align-items: center; gap: 9px; padding: 9px 12px; cursor: pointer;
+  background: none; border: none; width: 100%; text-align: left; }
+.of-www .row .head .tg { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--accent); width: 42px; flex-shrink: 0; }
+.of-www .row .head .tg.err { color: var(--red); }
+.of-www .row .head .sm { font-size: 12px; color: var(--fg); flex: 1; min-width: 0; }
+.of-www .row .head .car { color: var(--fg-3); font-size: 11px; transition: transform .2s; }
+.of-www .row.open .head .car { transform: rotate(90deg); }
+.of-www .row .body { padding: 0 12px 11px 63px; font-size: 12px; line-height: 1.5; color: var(--fg-2); text-wrap: pretty; }
+.of-www .row:not(.open) .body { display: none; }

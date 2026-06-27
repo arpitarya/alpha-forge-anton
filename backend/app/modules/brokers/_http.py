@@ -16,13 +16,12 @@ from urllib.parse import urlparse
 import httpx
 from cryptography.fernet import Fernet, InvalidToken
 
+from app.core.paths import resolve as _resolve_path
+
 try:
     from gateway import wrap_httpx as _wrap_httpx
     from gateway.policy import load as _load_policy
-    _GATEWAY_POLICY_PATH = Path(os.getenv(
-        "DANTE_GATEWAY_POLICY",
-        "~/.alphaforge-anton/dante/dante.yaml",
-    )).expanduser()
+    _GATEWAY_POLICY_PATH = _resolve_path("DANTE_GATEWAY_POLICY", "dante", "dante.yaml")
     _HAS_GATEWAY = True
 except ImportError:
     _HAS_GATEWAY = False

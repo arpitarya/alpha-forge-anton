@@ -14,7 +14,7 @@ from dataclasses import asdict, dataclass
 from datetime import date
 from pathlib import Path
 
-_CACHE = Path.home() / ".alphaforge-anton" / "signals-cache"
+from app.modules.signals.cache_utils import signals_cache_dir
 
 # Broker symbol → Yahoo symbol, for the handful that don't follow `SYMBOL.NS`.
 _OVERRIDES = {"M&M": "M&M.NS", "M&MFIN": "M&MFIN.NS", "BAJAJ-AUTO": "BAJAJ-AUTO.NS"}
@@ -37,7 +37,7 @@ def to_yahoo(symbol: str, exchange: str | None = None) -> str:
 
 
 def _cache_file(yh: str) -> Path:
-    return _CACHE / f"{yh}-{date.today().isoformat()}.json"
+    return signals_cache_dir() / f"{yh}-{date.today().isoformat()}.json"
 
 
 def _read_cache(yh: str) -> OHLCV | None:
@@ -51,8 +51,7 @@ def _read_cache(yh: str) -> OHLCV | None:
 
 
 def _write_cache(yh: str, o: OHLCV) -> None:
-    _CACHE.mkdir(parents=True, exist_ok=True)
-    _cache_file(yh).write_text(json.dumps(asdict(o)))
+    _cache_file(yh).write_text(json.dumps(asdict(o)))  # signals_cache_dir() already mkdir'd
 
 
 def _download(yh: str) -> OHLCV | None:

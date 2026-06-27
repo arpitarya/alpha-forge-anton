@@ -10,20 +10,20 @@ the machine. Config-load style (sync), matching `app.core.env_loader`.
 
 from __future__ import annotations
 
-import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
 
+from app.core.paths import elgar_dir
 from app.modules.brokers.base import AssetClass
 
 _YAML_BLOCK = re.compile(r"```yaml\s*\n(.*?)\n```", re.DOTALL)
 
 
 def _plans_dir() -> Path:
-    return Path(os.environ.get("ELGAR_DIR", "~/.alphaforge-anton/elgar")).expanduser() / "plans"
+    return elgar_dir() / "plans"
 
 
 @dataclass

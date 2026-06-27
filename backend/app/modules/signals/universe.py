@@ -19,12 +19,12 @@ from pathlib import Path
 import httpx
 import yaml
 
+from app.modules.signals.cache_utils import signals_cache_dir
 from app.modules.signals.strategy_config import StrategyConfig, load_config
 
 logger = logging.getLogger(__name__)
 
 _SEED = Path(__file__).resolve().parent / "themes.seed.md"
-_CACHE = Path.home() / ".alphaforge-anton" / "signals-cache"
 _NSE_CSV = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
 _FRONTMATTER = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 
@@ -45,7 +45,7 @@ def _themes_universe(themes: list[str]) -> list[str]:
 
 
 def _nifty500() -> list[str]:
-    cache = _CACHE / f"nifty500-{date.today().isoformat()}.json"
+    cache = signals_cache_dir() / f"nifty500-{date.today().isoformat()}.json"
     if cache.exists():
         try:
             return json.loads(cache.read_text())
@@ -60,8 +60,7 @@ def _nifty500() -> list[str]:
         logger.warning("nifty500 fetch failed (%s) — falling back to themes", e)
         return []
     if syms:
-        _CACHE.mkdir(parents=True, exist_ok=True)
-        cache.write_text(json.dumps(syms))
+        cache.write_text(json.dumps(syms))  # signals_cache_dir() already mkdir'd
     return syms
 
 

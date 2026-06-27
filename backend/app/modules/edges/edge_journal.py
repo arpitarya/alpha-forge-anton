@@ -14,6 +14,7 @@ from datetime import UTC, datetime
 
 from pydantic import BaseModel, Field
 
+from app.modules.contracts.testreport_contract import TestReport
 from app.modules.edges.edge_schema import GateResult
 from app.modules.plans import elgar_bridge
 
@@ -30,6 +31,7 @@ class JournalRecord(BaseModel):
     gate_reached: int = 0
     passed: bool = False
     gates: list[GateResult] = Field(default_factory=list)
+    report: dict | None = None  # full TestReport (stats/% — no ₹) when journaling a real result
 
 
 def build_record(edge_id: str, run_at: datetime, gates: list[GateResult]) -> JournalRecord:
@@ -41,6 +43,17 @@ def build_record(edge_id: str, run_at: datetime, gates: list[GateResult]) -> Jou
         gate_reached=reached,
         passed=passed,
         gates=gates,
+    )
+
+
+def from_report(report: TestReport, run_at: datetime) -> JournalRecord:
+    """Build a journal record from a funnel TestReport — stats only, constitutionally safe."""
+    return JournalRecord(
+        edge_id=report.edge_id,
+        run_at=run_at.astimezone(UTC).isoformat(),
+        gate_reached=max(report.gates_passed, default=0),
+        passed=report.verdict == "pass",
+        report=report.model_dump(mode="json"),
     )
 
 

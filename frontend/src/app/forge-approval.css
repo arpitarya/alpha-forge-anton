@@ -1,0 +1,81 @@
+/* Forge Hi-Fi — ProposalCard / downside-first approval (.of-*). Tokens from theme.css. */
+
+.of-ap-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.of-ap-head .name { font-size: 16px; font-weight: 600; letter-spacing: -.01em; color: var(--fg); }
+.of-ap-head .meta { margin-top: 5px; font-family: "Space Mono", monospace; font-size: 9.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--fg-3); }
+
+/* downside-first hero */
+.of-loss { margin-top: 16px; padding: 16px; border-radius: 10px; position: relative; overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--red) 38%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--red) 10%, transparent), transparent); }
+.of-loss .k { font-family: "Space Mono", monospace; font-size: 9.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--red); }
+.of-loss .ack { display: block; width: 100%; text-align: left; margin-top: 6px; background: none; border: none; }
+.of-loss .v { font-size: 42px; font-weight: 600; letter-spacing: -.02em; color: var(--red); line-height: 1;
+  font-variant-numeric: tabular-nums; text-shadow: 0 0 30px color-mix(in srgb, var(--red) 35%, transparent); }
+.of-loss .hint { margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;
+  font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--red); border: 1px dashed color-mix(in srgb, var(--red) 50%, transparent);
+  border-radius: 5px; padding: 4px 8px; }
+.of-loss.acked { border-color: color-mix(in srgb, var(--green) 38%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--green) 8%, transparent), transparent); }
+.of-loss.acked .v { color: var(--green); text-shadow: 0 0 30px color-mix(in srgb, var(--green) 30%, transparent); }
+.of-loss.acked .k { color: var(--green); }
+.of-loss.acked .hint { color: var(--green); border-style: solid;
+  border-color: color-mix(in srgb, var(--green) 45%, transparent); }
+.of-loss .secondary { display: flex; gap: 22px; margin-top: 14px; padding-top: 12px;
+  border-top: 1px solid var(--line); flex-wrap: wrap; }
+.of-loss .secondary .it .kk { font-family: "Space Mono", monospace; font-size: 8.5px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--fg-3); }
+.of-loss .secondary .it .vv { font-size: 16px; margin-top: 3px; font-variant-numeric: tabular-nums; color: var(--fg-2); }
+.of-loss .secondary .it .vv.up { color: var(--green); }
+
+/* objection rows */
+.of-obj { display: flex; flex-direction: column; gap: 8px; }
+.of-obj .row { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
+.of-obj .row p { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--fg-2); text-wrap: pretty; }
+
+/* 10th man */
+.of-tenth { margin-top: 14px; padding: 12px 14px; border-radius: 9px; border: 1px solid var(--line-hi);
+  background: var(--surface-lo); position: relative; }
+.of-tenth .k { display: flex; align-items: center; gap: 7px; font-family: "Space Mono", monospace;
+  font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-soft); }
+.of-tenth p { margin: 7px 0 0; font-size: 12.5px; line-height: 1.45; color: var(--fg); text-wrap: pretty; }
+
+/* collapsed runner-ups */
+.of-runners { display: flex; flex-direction: column; gap: 7px; }
+.of-runner { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-hi); }
+.of-runner .l { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: .06em;
+  color: var(--fg-2); white-space: nowrap; }
+.of-runner .l b { color: var(--fg); }
+.of-runner .x { font-family: "Space Mono", monospace; font-size: 14px; color: var(--fg-3); }
+.of-runner .x.note { font-size: 9.5px; letter-spacing: .02em; text-align: right; text-transform: none;
+  color: var(--fg-3); text-wrap: pretty; max-width: 58%; }
+
+/* tripwires */
+.of-trip { display: flex; flex-direction: column; gap: 7px; }
+.of-trip .t { display: flex; align-items: center; gap: 9px; font-family: "Space Mono", monospace;
+  font-size: 11px; letter-spacing: .02em; color: var(--fg-2); }
+.of-trip .t .wire { width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+  flex-shrink: 0; box-shadow: 0 0 7px var(--glow); }
+
+.of-ap-foot { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+.of-ap-foot .btnrow { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; }
+.of-cooldown { display: flex; align-items: center; gap: 7px; justify-content: center;
+  font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--fg-3); }
+
+/* execution checklist (post-approve) */
+.of-order { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--surface-lo); margin-top: 9px; }
+.of-order .ix { width: 20px; height: 20px; border-radius: 5px; display: grid; place-items: center;
+  flex-shrink: 0; font-family: "Space Mono", monospace; font-size: 10px; color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); }
+.of-order .ord { flex: 1; font-family: "Space Mono", monospace; font-size: 12px; letter-spacing: .02em;
+  color: var(--fg); font-variant-numeric: tabular-nums; }
+.of-order .side { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: .1em; font-weight: 700; }
+.of-order .side.sell { color: var(--red); }
+.of-order .side.buy { color: var(--green); }
+.of-exec .noauto { margin-top: 14px; text-align: center; font-family: "Space Mono", monospace;
+  font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-3); }

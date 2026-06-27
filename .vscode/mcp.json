@@ -2,7 +2,7 @@
   "servers": {
     "cage": {
       "type": "stdio",
-      "command": "cage",
+      "command": "/Users/arpitarya/.local/bin/cage",
       "args": [
         "mcp"
       ]

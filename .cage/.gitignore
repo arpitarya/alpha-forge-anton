@@ -4,3 +4,5 @@
 ledger/
 # Generated dashboards.
 out/
+# Machine-local hook buffers (pending edits, session state).
+state/

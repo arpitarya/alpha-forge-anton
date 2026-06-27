@@ -1,0 +1,23 @@
+/* Forge Hi-Fi — inline prediction cone (.of-fan). Tokens from theme.css. */
+
+.of-fan { margin-top: 12px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface-lo);
+  padding: 12px 12px 8px; position: relative; overflow: hidden; }
+.of-fan .ftop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 8px; }
+.of-fan svg { display: block; width: 100%; height: auto; }
+.of-fan .fanwrap { position: relative; }
+.of-fan.low .fanwrap { filter: blur(1.4px) saturate(.8); opacity: .92; }
+.of-fan.low::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(90deg, transparent 0 5px,
+    color-mix(in srgb, #000 22%, transparent) 5px 6px); opacity: .5; }
+
+.of-lowtag { display: inline-flex; align-items: center; gap: 6px; font-family: "Space Mono", monospace;
+  font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-soft);
+  border: 1px dashed color-mix(in srgb, var(--accent) 50%, transparent); border-radius: 5px; padding: 3px 7px; }
+
+.of-conecap { margin-top: 10px; font-family: "Space Mono", monospace; font-size: 11px; line-height: 1.6;
+  letter-spacing: .01em; color: var(--fg-2); }
+.of-conecap .worst { color: var(--red); font-weight: 700; }
+.of-conecap .med { color: var(--fg); }
+.of-conecap .best { color: var(--green); }
+.of-conecap .punch { display: block; margin-top: 6px; color: var(--fg-3); font-style: italic;
+  font-family: "Space Grotesk", sans-serif; letter-spacing: 0; }

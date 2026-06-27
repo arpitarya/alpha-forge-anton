@@ -11,7 +11,8 @@ from __future__ import annotations
 from app.modules.edges.edge_schema import ResultStats
 
 _TRADING_DAYS = 252.0
-_DD_EPSILON = 0.5  # min drawdown denominator (%), so a drawdown-free run isn't Calmar 0
+_DD_EPSILON = 0.5  # divide-by-zero guard only, for genuinely tiny (low-confidence) samples
+_MIN_TRADES_NO_DD = 10  # a drawdown-free curve over ≥ this many trades is implausible → fail
 
 
 def _max_drawdown_pct(curve: list[float]) -> float:
@@ -37,10 +38,14 @@ def build_stats(nets: list[float], hold_days: int) -> ResultStats:
     expectancy = sum(nets) / n
     turnover = _TRADING_DAYS / max(1, hold_days)  # round-trips per year at this cadence
     annual_return = expectancy * turnover  # mean per-trade % x trips/yr
-    # Calmar = annual return / max drawdown. A drawdown-free run is excellent, not a
-    # divide-by-zero: floor the denominator at a small epsilon so a flawless winner
-    # scores a large positive Calmar (and a no-DD loser a large negative), never 0.
-    calmar = annual_return / max(max_dd, _DD_EPSILON)
+    # Calmar = annual return / max drawdown. A drawdown-free curve over a meaningful sample is
+    # NOT a flawless edge — it is implausible (overfit / data too short / look-ahead) and must
+    # FAIL the gate, not ace it. Sub-epsilon drawdown with enough trades ⇒ calmar 0. The epsilon
+    # only guards a true divide-by-zero on genuinely tiny, low-confidence samples (n < min).
+    if max_dd < _DD_EPSILON and n >= _MIN_TRADES_NO_DD:
+        calmar = 0.0
+    else:
+        calmar = annual_return / max(max_dd, _DD_EPSILON)
     return ResultStats(
         trades=n,
         expectancy_pct=round(expectancy, 4),

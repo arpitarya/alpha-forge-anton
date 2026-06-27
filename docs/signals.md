@@ -10,7 +10,8 @@ the result (Phase 3). Design of record: [signals-engine.handoff.md](handoffs/sig
 | File (`backend/app/modules/signals/`) | Responsibility |
 |---|---|
 | `strategy_config.py` + `strategy.config.md` | Single source of truth for every decision threshold → typed `StrategyConfig`. **No threshold is hardcoded.** |
-| `quote_source.py` | yfinance 12-mo daily OHLCV; broker→Yahoo symbol map (`.NS`/`.BO`, strip `-EQ`); disk-cached 1×/day/symbol; fail-open |
+| `cache_utils.py` | `signals_cache_dir()` — `$SIGNALS_CACHE_DIR` (default `~/.alphaforge-anton/signals-cache`). The on-disk home for `quote_source` quotes + `universe`'s Nifty-500 list |
+| `quote_source.py` | yfinance 12-mo daily OHLCV; broker→Yahoo symbol map (`.NS`/`.BO`, strip `-EQ`); disk-cached 1×/day/symbol in `signals_cache_dir()`; fail-open |
 | `indicators.py` | ta-lib wrappers → `Indicators` (RSI14, ADX14, DMA50/200, ATR14, 52w-pos, trailing high, vol ratio). Pure compute |
 | `signal_rules.py` | **Pure** `(facts, indicators, config) → Verdict`; SELL > TRIM > ADD > HOLD, first match wins |
 | `signal_schema.py` | Pydantic `Verdict` / `ActionPlan` (no clock — the determinism anchor) |
@@ -149,6 +150,15 @@ over budget ⇒ degrades to free sources, Orff says so. Key from the afbach vaul
 `news/.../sources/parallel.py` mirrors the source contract but stays **out** of the free
 aggregation path. Verified by `just probe deep-search` (auto / confirm / reject / always
 / never / over-budget) + `parallel-keys`. Canonical spec: `docs/handoffs/deep-search-ask.handoff.md`.
+
+## Single-series here vs cross-sectional in `edges`
+
+This engine is **single-series**: it reviews each holding and screens each candidate on its *own*
+price history (one verdict per symbol). The **cross-sectional** factor edge — rank the whole
+universe each week, hold a top-decile sleeve — lives in the edge-discovery engine
+([docs/edges.md](edges.md), the EB-0 funnel), not here. Both reuse the same `signals` cost model
+(`CostsCfg` + `pnl_tracker.realized_pnl`); the split keeps the live swing engine and the offline
+discovery funnel as separate concerns.
 
 ## Not yet (later phases)
 

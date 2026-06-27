@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "cage": {
-      "command": "cage",
+      "command": "/Users/arpitarya/.local/bin/cage",
       "args": [
         "mcp"
       ]

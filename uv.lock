@@ -317,7 +317,7 @@ cage = [
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = ">=0.40.0" },
-    { name = "cage-flux", marker = "extra == 'cage'", specifier = "==0.3.0" },
+    { name = "cage-flux", marker = "extra == 'cage'", specifier = "==0.12.0" },
     { name = "fastapi", specifier = ">=0.100.0" },
     { name = "httpx", specifier = ">=0.27.0" },
     { name = "pydantic", specifier = ">=2.0.0" },
@@ -774,11 +774,11 @@ filecache = [
 
 [[package]]
 name = "cage-flux"
-version = "0.3.0"
+version = "0.12.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a1/86/8a950e8f396390a9eba7f7f88aefdfd71a134f653ffd37650a12ddb991c2/cage_flux-0.3.0.tar.gz", hash = "sha256:eced40cd2ea5576a3d519d21eaff409f95c7cc7af59ec0e6cceb4e50a10684da", size = 65231, upload-time = "2026-06-20T03:24:02.255Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d0/38/1915b287ef70844e7f14569c6a411dde40c87f589af1c3da6f39d5b63097/cage_flux-0.12.0.tar.gz", hash = "sha256:402ba5d03a956f81f1274bffb30e61c0b116ad783d449b84463a6cd1b4112409", size = 289885, upload-time = "2026-06-27T09:38:45.386Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f1/15/d391b4e892eddf1888685aed63e1d74bf7b08bbdc0e7e8c6c056db9ed40f/cage_flux-0.3.0-py3-none-any.whl", hash = "sha256:c32e4d055d3bfb07210d2af65875769167f88f875e7de217bbc2ff9e610cf723", size = 66303, upload-time = "2026-06-20T03:24:00.967Z" },
+    { url = "https://files.pythonhosted.org/packages/42/09/75f559a1be150df66d0c1190b994cfec1b157bb85894222af1566a38c808/cage_flux-0.12.0-py3-none-any.whl", hash = "sha256:a57c10c7fb1ca07c4b5a1f34bcef04fa6ae371c01be97f05a20850d86b40959d", size = 170853, upload-time = "2026-06-27T09:38:43.811Z" },
 ]
 
 [[package]]

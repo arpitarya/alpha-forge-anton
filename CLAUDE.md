@@ -14,7 +14,9 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 | Runtime money/PII critic (Orff live-write guard) | [docs/runtime-critic.md](docs/runtime-critic.md) |
 | Broker CSV dumps (shared dump_utils contract) | [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md) |
 | Signals engine (deterministic swing verdicts) | [docs/signals.md](docs/signals.md) |
-| Edge-discovery engine (pre-registered hypotheses, gates 1–2 + journal) | [docs/edges.md](docs/edges.md) |
+| Edge-discovery engine (pre-registered hypotheses, gates 0–2 + journal + trial-ledger + null-data) | [docs/edges.md](docs/edges.md) |
+| Phase-0 contracts (engine↔UI shapes + TS codegen) | [docs/contracts.md](docs/contracts.md) |
+| Track U — integrated Hi-Fi UI (Goals/Decisions/Orff cards, mock + honest-pending) | [docs/track-u-ui.md](docs/track-u-ui.md) |
 | Comparison docs — how to write `<name>.compare.md` | [docs/comparison.guide.md](docs/comparison.guide.md) |
 | Graphify knowledge graph | [docs/graphify.md](docs/graphify.md) |
 | Cage LLM cost ledger (Orff integration) | [docs/cage.md](docs/cage.md) |
@@ -31,6 +33,7 @@ Apply these on every file without looking up the docs:
 - Python: `async def` everywhere, absolute imports from `app.`, Pydantic v2, ruff (line-length=100)
 - TypeScript: strict mode, functional components only, pnpm, Biome v2
 - Never commit `.env` files or API keys
+- **[CONSTITUTIONAL]** No hardcoded filesystem paths — every dir/file the app reads or writes resolves through `app.core.paths`, derives from one env base `ANTON_DATA_DIR` (default `~/.alphaforge-anton`), and is individually overridable + documented in `.env`'s "Filesystem paths" section. Never write `Path.home()` or a `~/.alphaforge-anton/...` literal inline; call `paths.resolve("MY_DIR", "sub")` / `paths.data_dir()` / `paths.elgar_dir()` and add the commented default to `.env` in the same change. This is `configurable-paths`, anton's **second constitutional rule** (sealed in `.fux/constitution.lock`) — supersede + re-ratify to change. `fux why configurable-paths`
 - **[CONSTITUTIONAL]** Never commit money docs (`*.plan.md` / `*.drift.md`) or hard PII (PAN / Aadhaar / broker account-client-folio numbers) — money docs live in the private **elgar** store (`elgar save <id>`); this repo holds `elgar://plan/<id>` links only. Worked-example ₹ figures are allowed (WARN; `pii:allow` to whitelist a line). This is `plan-store`, anton's **first constitutional rule** (sealed in `.fux/constitution.lock`); it cannot change in place — supersede + re-ratify. Enforced by `dante pii` + `just probe plan-safety` via pre-commit **and** the required `just constitution` (`fux gate`) CI check — `fux why plan-store`
 - **Runtime money/PII guard** — at runtime, Orff writes to the elgar store from free text where no commit hook runs. The `runtime-note-pii` principle guards the one riskiest live path (`append_memory`): `critic_guard.review_note` BLOCKs the same PAN/Aadhaar/account patterns as `dante pii` **before** the write (→ HTTP 422). The judgment layer (`fux critic`) is advisory-first. Scoped to `append_memory` only — do not widen without review. `fux why runtime-note-pii` · `just probe critic-runtime` · [docs/runtime-critic.md](docs/runtime-critic.md)
 - All broker CSV dumps use `dump_utils.py` — see [docs/broker-csv-dumps.md](docs/broker-csv-dumps.md)

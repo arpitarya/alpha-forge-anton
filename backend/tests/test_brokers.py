@@ -36,10 +36,18 @@ def reset_sources():
 
 def _make_holding(**kwargs) -> Holding:
     defaults = dict(
-        source="zerodha", asset_class=AssetClass.EQUITY, symbol="TEST",
-        quantity=10.0, avg_price=100.0, last_price=110.0,
-        invested=1000.0, current_value=1100.0, pnl=100.0, pnl_pct=10.0,
-        exchange="NSE", as_of=datetime.now(UTC),
+        source="zerodha",
+        asset_class=AssetClass.EQUITY,
+        symbol="TEST",
+        quantity=10.0,
+        avg_price=100.0,
+        last_price=110.0,
+        invested=1000.0,
+        current_value=1100.0,
+        pnl=100.0,
+        pnl_pct=10.0,
+        exchange="NSE",
+        as_of=datetime.now(UTC),
     )
     return Holding(**(defaults | kwargs))
 
@@ -48,25 +56,66 @@ def _seed_zerodha() -> HoldingsAggregator:
     """Inject five synthetic holdings directly into the zerodha source cache."""
     src = get_source("zerodha")
     holdings = [
-        _make_holding(symbol="RELIANCE", quantity=120, avg_price=2410.0, last_price=2914.05,
-                      invested=289200.0, current_value=349686.0, pnl=60486.0, pnl_pct=20.91,
-                      isin="INE002A01018"),
-        _make_holding(symbol="HDFCBANK", quantity=50, avg_price=1600.0, last_price=1520.0,
-                      invested=80000.0, current_value=76000.0, pnl=-4000.0, pnl_pct=-5.0,
-                      isin="INE040A01034"),
-        _make_holding(symbol="INFY", quantity=30, avg_price=1500.0, last_price=1750.0,
-                      invested=45000.0, current_value=52500.0, pnl=7500.0, pnl_pct=16.67,
-                      isin="INE009A01021"),
-        _make_holding(symbol="TCS", quantity=10, avg_price=3500.0, last_price=3800.0,
-                      invested=35000.0, current_value=38000.0, pnl=3000.0, pnl_pct=8.57,
-                      isin="INE467B01029"),
-        _make_holding(symbol="WIPRO", quantity=100, avg_price=400.0, last_price=420.0,
-                      invested=40000.0, current_value=42000.0, pnl=2000.0, pnl_pct=5.0,
-                      isin="INE075A01022"),
+        _make_holding(
+            symbol="RELIANCE",
+            quantity=120,
+            avg_price=2410.0,
+            last_price=2914.05,
+            invested=289200.0,
+            current_value=349686.0,
+            pnl=60486.0,
+            pnl_pct=20.91,
+            isin="INE002A01018",
+        ),
+        _make_holding(
+            symbol="HDFCBANK",
+            quantity=50,
+            avg_price=1600.0,
+            last_price=1520.0,
+            invested=80000.0,
+            current_value=76000.0,
+            pnl=-4000.0,
+            pnl_pct=-5.0,
+            isin="INE040A01034",
+        ),
+        _make_holding(
+            symbol="INFY",
+            quantity=30,
+            avg_price=1500.0,
+            last_price=1750.0,
+            invested=45000.0,
+            current_value=52500.0,
+            pnl=7500.0,
+            pnl_pct=16.67,
+            isin="INE009A01021",
+        ),
+        _make_holding(
+            symbol="TCS",
+            quantity=10,
+            avg_price=3500.0,
+            last_price=3800.0,
+            invested=35000.0,
+            current_value=38000.0,
+            pnl=3000.0,
+            pnl_pct=8.57,
+            isin="INE467B01029",
+        ),
+        _make_holding(
+            symbol="WIPRO",
+            quantity=100,
+            avg_price=400.0,
+            last_price=420.0,
+            invested=40000.0,
+            current_value=42000.0,
+            pnl=2000.0,
+            pnl_pct=5.0,
+            isin="INE075A01022",
+        ),
     ]
     src._cached = holdings
     src._last_synced_at = datetime.now(UTC)
     from app.modules.brokers.base import SourceStatus
+
     src._status = SourceStatus.READY
     return HoldingsAggregator()
 

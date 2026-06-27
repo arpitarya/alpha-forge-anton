@@ -13,12 +13,15 @@ time that does not carry over — so out-of-sample expectancy is negative in eve
 
 from __future__ import annotations
 
+import math
+
 import pytest
 
 from app.modules.edges.edge_backtest import OOS_FRACTION, run_gate1
 from app.modules.edges.edge_data import Bars
 from app.modules.edges.edge_schema import EdgeSpec
 from app.modules.edges.edge_walkforward import run_gate2
+from app.modules.edges.factor_walkforward import walk_forward
 
 
 def _provider(b: Bars):
@@ -53,7 +56,9 @@ def _overfit_bars() -> Bars:
 
 def _real_bars() -> Bars:
     n, px = 300, 2000.0
-    closes = [px * (1 + 0.03 * i) for i in range(n)]  # steady, regime-stable uptrend
+    # uptrend with pullbacks → a real (small) drawdown, so the ca6b3fd Calmar-0 guard
+    # accepts it (a monotonic line scores Calmar 0 and would wrongly fail gate 2).
+    closes = [px * (1.004**i) * (1.0 + 0.04 * math.sin(i / 5.0)) for i in range(n)]
     return Bars(
         dates=[f"2024-{i // 28 % 12 + 1:02d}-{i % 28 + 1:02d}" for i in range(n)], close=closes
     )
@@ -86,3 +91,18 @@ async def test_gate2_is_byte_identical_across_runs():
     a = await run_gate2(_spec("overfit_dayofmonth"), _provider(_overfit_bars()))
     b = await run_gate2(_spec("overfit_dayofmonth"), _provider(_overfit_bars()))
     assert a.model_dump_json() == b.model_dump_json()
+
+
+def test_factor_walkforward_passes_a_consistent_config():
+    # Cross-sectional Gate-2: config 0 is consistently positive (with pullbacks → finite Calmar),
+    # the rest are flat, so the in-sample-best carries out-of-sample across every window.
+    series = [[2.0, -0.5] * 80] + [[0.0] * 160 for _ in range(5)]
+    g2 = walk_forward(series)
+    assert g2.passed is True and g2.stats.calmar >= 0.5
+    assert sum(1 for w in g2.windows if w.expectancy_pct > 0) / len(g2.windows) >= 0.60
+
+
+def test_factor_walkforward_kills_a_losing_grid():
+    series = [[-1.0, 0.5] * 80 for _ in range(6)]  # every config nets negative
+    g2 = walk_forward(series)
+    assert g2.passed is False

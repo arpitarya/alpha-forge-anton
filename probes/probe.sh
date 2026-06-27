@@ -18,6 +18,10 @@ Available probes:
     ui-pref-tabs         ui_pref_tabs.py
     ui-concierge         ui_concierge_probe.py
     ui-objective         ui_objective_probe.py
+    ui-goals             ui_goals_probe.py
+    ui-decisions         ui_decisions_probe.py
+    ui-proposal          ui_proposal_probe.py
+    ui-feedstate         ui_feedstate_probe.py
     ui-footer-chat       ui_footer_chat_probe.py
     ui-model-picker      ui_model_picker_probe.py
     ui-notif-time        ui_notification_time_probe.py
@@ -49,6 +53,11 @@ Available probes:
     signals-pnl          signals_pnl_probe.py
     signals-backtest     signals_backtest_probe.py
     edge-discovery       edge_discovery_probe.py
+    gate0                gate0_integrity_probe.py
+    nse-ingest           nse_ingest_probe.py
+    progress             progress_probe.py
+    eb0                  eb0_probe.py
+    eb0-real             eb0_real_probe.py
     objective            objective_probe.py
     concierge-tools      concierge_tools_probe.py
 
@@ -89,6 +98,10 @@ case "$NAME" in
     ui-pref-tabs)      SCRIPT="ui_pref_tabs.py" ;;
     ui-concierge)      SCRIPT="ui_concierge_probe.py" ;;
     ui-objective)      SCRIPT="ui_objective_probe.py" ;;
+    ui-goals)          SCRIPT="ui_goals_probe.py" ;;
+    ui-decisions)      SCRIPT="ui_decisions_probe.py" ;;
+    ui-proposal)       SCRIPT="ui_proposal_probe.py" ;;
+    ui-feedstate)      SCRIPT="ui_feedstate_probe.py" ;;
     ui-footer-chat)    SCRIPT="ui_footer_chat_probe.py" ;;
     ui-model-picker)   SCRIPT="ui_model_picker_probe.py" ;;
     ui-notif-time)     SCRIPT="ui_notification_time_probe.py" ;;
@@ -118,6 +131,11 @@ case "$NAME" in
     signals-pnl)       SCRIPT="signals_pnl_probe.py" ;;
     signals-backtest)  SCRIPT="signals_backtest_probe.py" ;;
     edge-discovery)    SCRIPT="edge_discovery_probe.py" ;;
+    gate0)             SCRIPT="gate0_integrity_probe.py" ;;
+    nse-ingest)        SCRIPT="nse_ingest_probe.py" ;;
+    progress)          SCRIPT="progress_probe.py" ;;
+    eb0)               SCRIPT="eb0_probe.py" ;;
+    eb0-real)          SCRIPT="eb0_real_probe.py" ;;
     objective)         SCRIPT="objective_probe.py" ;;
     concierge-tools)   SCRIPT="concierge_tools_probe.py" ;;
     pypi-publish)      SCRIPT="pypi_publish_probe.py" ;;

@@ -21,8 +21,14 @@ COSTS = CostsCfg()  # brokerage 20/order, stt 0.1%, friction 0.03%, stcg 20%
 
 
 def _t(buy: float, sell: float, qty: float, sell_day: int) -> RealizedTrade:
-    return RealizedTrade(symbol="X", qty=qty, buy_price=buy, sell_price=sell,
-                         buy_date=date(2024, 1, 1), sell_date=date(2024, 1, 1 + sell_day))
+    return RealizedTrade(
+        symbol="X",
+        qty=qty,
+        buy_price=buy,
+        sell_price=sell,
+        buy_date=date(2024, 1, 1),
+        sell_date=date(2024, 1, 1 + sell_day),
+    )
 
 
 # friction_net = gross - 40 - 0.0013*(buy_val+sell_val):

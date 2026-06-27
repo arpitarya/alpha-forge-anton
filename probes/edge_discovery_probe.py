@@ -13,6 +13,7 @@ Run:  just probe edge-discovery   |   uv run python probes/edge_discovery_probe.
 from __future__ import annotations
 
 import asyncio
+import math
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -42,7 +43,9 @@ def _dates(n: int) -> list[str]:
 
 def _real() -> Bars:
     n = 300
-    return Bars(dates=_dates(n), close=[2000.0 * (1 + 0.03 * i) for i in range(n)])
+    # uptrend with pullbacks → a real (small) drawdown, so the Calmar-0 guard accepts it.
+    closes = [2000.0 * (1.004**i) * (1.0 + 0.04 * math.sin(i / 5.0)) for i in range(n)]
+    return Bars(dates=_dates(n), close=closes)
 
 
 def _overfit() -> Bars:

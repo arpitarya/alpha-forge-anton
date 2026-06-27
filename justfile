@@ -192,6 +192,45 @@ backtest:
 edge id="":
     cd backend && uv run python -m app.modules.edges.edge_cli {{id}}
 
+# Null-data trust check — feed RANDOM data through the funnel; assert it finds NO edge.
+# A standing guard against fooling ourselves (overfit / look-ahead) — see docs/edges.md.
+null-data:
+    cd backend && uv run python -m app.modules.edges.null_selftest
+
+# EB-0 — push pre-registered edge-001 through the funnel (Gates 1-3) on the committed offline
+# panel and print a signed TestReport. PASS or honest KILL — never tuned. See docs/edges.md.
+eb0:
+    cd backend && uv run python -m app.modules.edges.eb0_cli
+
+# EB-0 REAL — the base-rate verdict: edge-001's frozen campaign on the committed nse-bhavcopy panel
+# (quality leg disabled-pending; per-rebalance liquidity). Journals the result to elgar — figures
+# are NOT committed to this repo. Run `just ingest-nse` + `just build-panel` first. See docs/edges.md.
+# Pass --exclusions <elgar-path> to apply the off-repo never-buy list.
+eb0-real *ARGS:
+    cd backend && uv run python -m app.modules.edges.eb0_real_cli {{ARGS}}
+
+# ── Market-data ingestion (one-time, networked) ──
+
+# One-time NSE EOD ingestion: pull cm-bhav + 2024+ UDiFF + NIFTY as raw zips into $NSE_DATA_DIR.
+# PARALLEL (--workers N / NSE_WORKERS=8), resumable + self-healing (byte-integrity manifest), $0
+# (stdlib urllib, never metered). --verify audits the cache offline; --quiet hides the progress bar;
+# --raw-dir <dir> ingests pre-downloaded archives (no network). See docs/broker-csv-dumps.md.
+ingest-nse FROM TO *ARGS:
+    cd backend && uv run python -m app.modules.marketdata.bhavcopy_cli {{FROM}} {{TO}} {{ARGS}}
+
+# Assemble the committed offline EB-0 panel from the bhavcopy cache (offline, $0, deterministic):
+# build the per-rebalance liquidity superset, densify closes + turnover, run Gate-0, write the gzip
+# panel. Pass --exclusions <elgar-path> to drop never-buy symbols. See docs/edges.md.
+build-panel *ARGS:
+    cd backend && uv run python -m app.modules.marketdata.panel_build {{ARGS}}
+
+# ── Contracts ────────────────────────────────────
+
+# Regenerate the frontend TS types from the Pydantic contract models ($0, deterministic).
+# test_contracts_sync.py fails if the checked-in .ts drifts from these — see docs/contracts.md.
+contracts-gen:
+    cd backend && uv run python -m app.modules.contracts.contracts_codegen
+
 # ── Probes ───────────────────────────────────────
 
 # Run a probe by name — omit name to list all available probes (CDP :9299 required)

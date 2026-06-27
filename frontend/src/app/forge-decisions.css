@@ -1,0 +1,44 @@
+/* Forge Hi-Fi — Decisions ledger (the replayable prove-it journal). Tokens from theme.css. */
+
+.of-calib { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.of-calib .cell { flex: 1; min-width: 120px; padding: 14px 16px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--surface-hi); }
+.of-calib .cell .n { font-size: 30px; font-weight: 500; letter-spacing: -.02em; line-height: 1;
+  font-variant-numeric: tabular-nums; color: var(--fg); }
+.of-calib .cell.cleared .n { color: var(--green); }
+.of-calib .cell.stop .n { color: var(--red); }
+.of-calib .cell .k { margin-top: 8px; font-family: "Space Mono", monospace; font-size: 9px;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--fg-3); }
+
+.of-ledger { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.of-drow { display: grid; grid-template-columns: 72px 1fr auto; gap: 14px; align-items: center;
+  padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-hi); }
+.of-drow .dt { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: .08em; color: var(--fg-3); }
+.of-drow .nm { font-size: 13.5px; font-weight: 500; color: var(--fg); }
+.of-drow .shown { margin-top: 4px; font-family: "Space Mono", monospace; font-size: 9.5px;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--fg-3); display: flex; align-items: center; gap: 8px; }
+.of-drow .shown .ds { color: var(--red); font-variant-numeric: tabular-nums; }
+.of-drow .right { display: flex; align-items: center; gap: 8px; }
+
+/* outcome chips */
+.of-oc { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: .12em;
+  text-transform: uppercase; padding: 4px 9px; border-radius: 5px; border: 1px solid var(--line-hi); color: var(--fg-2); }
+.of-oc.cleared { color: var(--green); border-color: color-mix(in srgb, var(--green) 40%, transparent);
+  background: color-mix(in srgb, var(--green) 8%, transparent); }
+.of-oc.stop { color: var(--red); border-color: color-mix(in srgb, var(--red) 45%, transparent);
+  background: color-mix(in srgb, var(--red) 8%, transparent); }
+.of-oc.open { color: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.of-oc.veto { color: var(--fg-3); }
+
+/* replay control */
+.of-replay { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: .14em;
+  text-transform: uppercase; padding: 5px 10px; border-radius: 5px; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.of-replay:disabled { color: var(--fg-4); border-color: var(--line); background: transparent; cursor: not-allowed; }
+
+/* read-only re-run summary, mock */
+.of-replay-out { margin-top: 8px; padding: 10px 12px; border-radius: 8px; border: 1px dashed var(--line-hi);
+  background: var(--surface-lo); font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: .04em;
+  line-height: 1.6; color: var(--fg-2); }

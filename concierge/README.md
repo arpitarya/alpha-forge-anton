@@ -163,6 +163,25 @@ mounts it from a fixed whitelist → `fux feedback` records the outcome. The
 CLI via [fux_bridge.py](../backend/app/modules/concierge/fux_bridge.py). Safe by
 construction — no path renders anything outside the design-system whitelist.
 
+## Track-U integrated Hi-Fi cards (mock + honest-pending)
+
+The ChatRail thread carries the integrated Hi-Fi's live surface, on Phase-0 contracts +
+MOCK data (real data lands in Phase 3 — see [docs/track-u-ui.md](../docs/track-u-ui.md)):
+
+- **`GuardrailStrip`** — pinned **READ-ONLY** objective at the top of every thread
+  (aim · Calmar · drawdown · "edit in Goals →"). The live surface is read-only; editing
+  happens only on `/goals`.
+- **`GroundedAnswer` / `ConeCard` / `ProposalCard` / `FeedToggle`** — a grounded answer
+  with an inline P5–P95 cone (bold red worst-case, low-confidence fuzzed) and a
+  downside-first proposal (Expected-Shortfall hero, tap-to-acknowledge gates Approve,
+  calibration chip, balanced reasoning, binary Approve/Veto, exec checklist; never
+  auto-executes). `FeedToggle` LIVE/STALE/ERROR: STALE freezes the cone to ₹0 ("not
+  because you're flat") and blocks Approve; ERROR withholds the forecast.
+- **`/proposal` demo event** — a **client-only** slash command (and an EmptyState seed
+  chip) that injects `ProposalDemo` into the thread from `proposal.mock.ts`. No API, no
+  backend, no storage — it's the mock trigger Track U is verified against
+  (`just probe ui-proposal` / `ui-feedstate`).
+
 ## Private holdings disclosure (chokepoint)
 
 Holdings-classified prompts never reach a free provider: [holdings_private.py](../backend/app/modules/concierge/holdings_private.py)

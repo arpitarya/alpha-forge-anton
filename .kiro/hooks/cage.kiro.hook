@@ -1,0 +1,12 @@
+{
+  "name": "cage-meter",
+  "version": "1.0.0",
+  "description": "Import Kiro LLM usage into the cage ledger after each agent turn",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "/Users/arpitarya/.local/bin/cage import --agent kiro"
+  }
+}
