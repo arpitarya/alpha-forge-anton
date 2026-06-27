@@ -13,6 +13,8 @@ time that does not carry over — so out-of-sample expectancy is negative in eve
 
 from __future__ import annotations
 
+import math
+
 import pytest
 
 from app.modules.edges.edge_backtest import OOS_FRACTION, run_gate1
@@ -53,7 +55,9 @@ def _overfit_bars() -> Bars:
 
 def _real_bars() -> Bars:
     n, px = 300, 2000.0
-    closes = [px * (1 + 0.03 * i) for i in range(n)]  # steady, regime-stable uptrend
+    # uptrend with pullbacks → a real (small) drawdown, so the ca6b3fd Calmar-0 guard
+    # accepts it (a monotonic line scores Calmar 0 and would wrongly fail gate 2).
+    closes = [px * (1.004**i) * (1.0 + 0.04 * math.sin(i / 5.0)) for i in range(n)]
     return Bars(
         dates=[f"2024-{i // 28 % 12 + 1:02d}-{i % 28 + 1:02d}" for i in range(n)], close=closes
     )
