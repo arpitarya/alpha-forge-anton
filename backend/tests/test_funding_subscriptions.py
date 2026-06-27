@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from app.modules.funding.funding_subscriptions import load_subscriptions, opex_per_month
+from app.modules.funding.funding_subscriptions import (
+    load_subscriptions,
+    opex_per_month,
+    self_funding,
+)
 
 _FIXTURE = """
 [[sub]]
@@ -48,3 +52,10 @@ def test_missing_file_is_zero_opex(tmp_path: Path) -> None:
 def test_committed_registry_loads() -> None:
     # The real subscriptions.toml is valid and yields a non-negative opex.
     assert opex_per_month() >= 0.0
+
+
+def test_covered_is_honest_pending_and_savings_never_flip_it() -> None:
+    sf = self_funding(cage_savings_per_month=99_999.0)
+    assert sf.covered is None  # no realised-P&L source yet (Gate-4 paper) — never a faked bool
+    assert sf.cage_savings_per_month == 99_999.0  # carried as its own line, not income
+    assert sf.opex_per_month == opex_per_month()  # opex unchanged by savings

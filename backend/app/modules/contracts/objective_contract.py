@@ -25,11 +25,13 @@ class DrawdownGuard(BaseModel):
 
 
 class SelfFunding(BaseModel):
-    """Is the program paying for itself? `covered` = savings/realized-P&L ≥ opex."""
+    """Is the program paying for itself? `covered` is honest-pending (None) until a
+    realised-P&L source exists (Gate-4 paper); cage savings reduce opex, not income."""
 
-    opex_per_month: float = 0.0  # INR; populated from funding.subscriptions
+    opex_per_month: float = 0.0  # INR; gross fixed opex from funding.subscriptions
+    cage_savings_per_month: float = 0.0  # tool savings that REDUCE opex — never income
     reserve: float = 0.0  # INR runway held against opex
-    covered: bool = False
+    covered: bool | None = None  # realised P&L ≥ net opex; None until Gate-4 paper
 
 
 class CapitalStructure(BaseModel):

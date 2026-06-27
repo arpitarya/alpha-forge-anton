@@ -13,8 +13,9 @@ export interface DrawdownGuard {
 
 export interface SelfFunding {
   opex_per_month: number;
+  cage_savings_per_month: number;
   reserve: number;
-  covered: boolean;
+  covered?: boolean | null;
 }
 
 export interface Objective {

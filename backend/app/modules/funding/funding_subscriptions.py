@@ -14,6 +14,7 @@ from pathlib import Path
 from pydantic import BaseModel
 
 from app.modules.brokers.fx import to_inr
+from app.modules.contracts.objective_contract import SelfFunding
 
 _DEFAULT_PATH = Path(__file__).parent / "subscriptions.toml"
 _MONTHS = {"monthly": 1.0, "annual": 1.0 / 12.0}
@@ -42,3 +43,16 @@ def load_subscriptions(path: Path | None = None) -> list[Subscription]:
 def opex_per_month(path: Path | None = None) -> float:
     """Total fixed opex, INR/month — feeds Objective.self_funding.opex_per_month."""
     return round(sum(s.monthly_inr() for s in load_subscriptions(path)), 2)
+
+
+def self_funding(
+    reserve: float = 0.0, cage_savings_per_month: float = 0.0, path: Path | None = None
+) -> SelfFunding:
+    """Build the self-funding line. `covered` stays None (honest-pending) until a realised-P&L
+    source exists (Gate-4 paper) — cage savings reduce opex, they are not income."""
+    return SelfFunding(
+        opex_per_month=opex_per_month(path),
+        cage_savings_per_month=cage_savings_per_month,
+        reserve=reserve,
+        covered=None,
+    )

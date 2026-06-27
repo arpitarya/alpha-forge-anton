@@ -22,7 +22,7 @@ alpha-forge-anton/
 │   │   ├── edges/       edge-discovery engine — pre-registered hypotheses through gates 1–2 + journal (elgar), plus trial_ledger (append-only, counts-only trial-budget integrity) + null_selftest (random-data trust check: asserts no edge in noise). See docs/edges.md
 │   │   ├── contracts/   Phase-0 engine↔UI contracts (single source of truth) — Objective/TestReport/Cone/ApprovalProposal/DecisionRow/FeedState Pydantic models + contracts_codegen → generated frontend TS types (drift-tested). See docs/contracts.md
 │   │   ├── marketdata/  Gate-0 data integrity — NSE bhavcopy ingest (reuses dump_utils I/O, own OHLCV columns) + point-in-time universe + gate0_integrity (rejects look-ahead / survivorship leakage). See docs/edges.md
-│   │   ├── funding/     fixed-cost opex registry — subscriptions.toml ($0, no secrets) → opex_per_month(), the denominator of Objective.self_funding. See docs/cage.md
+│   │   ├── funding/     fixed-cost opex registry — subscriptions.toml ($0, no secrets) → opex_per_month(), the denominator of Objective.self_funding. `covered` is honest-pending until a realised-P&L source exists (Gate-4 paper); cage savings reduce opex, not income. See docs/cage.md
 │   │   └── dashboard/   routes (cross-module aggregation)
 │   ├── app/main.py   FastAPI app factory; mounts api_router from app.modules
 │   ├── alembic/      Database migrations

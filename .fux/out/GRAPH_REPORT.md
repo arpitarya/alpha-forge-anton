@@ -1,10 +1,10 @@
 # Fux GRAPH_REPORT
 
-_2589 nodes · 16758 edges · 551 code files · 64 rules · 241 communities._
+_2591 nodes · 16766 edges · 551 code files · 64 rules · 241 communities._
 
 ## Node types
 
-- function: 1583
+- function: 1585
 - code-file: 551
 - class: 391
 - convention: 16
@@ -18,11 +18,11 @@ _2589 nodes · 16758 edges · 551 code files · 64 rules · 241 communities._
 
 ## Edges
 
-_9762 of 16758 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_9763 of 16766 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
-- references: 9762
-- calls: 4838
-- contains: 1979
+- references: 9763
+- calls: 4843
+- contains: 1981
 - related: 112
 - governs: 67
 
@@ -82,7 +82,7 @@ _9762 of 16758 are INFERRED (low-confidence `references`, down-weighted in clust
 - **community 39** (7 nodes): _slip, edge_costs.py, net_pct, test_edge_costs.py, test_known_answer_net_pct_after_all_costs, test_short_horizon_pays_stcg_long_horizon_does_not, test_slippage_lowers_the_net
 - **community 40** (8 nodes): _fake_save, _gate, build_record, test_append_writes_a_doc_through_the_bridge, test_edge_journal.py, test_kill_at_gate1_records_zero_reached, test_kill_at_gate2_records_gate1_reached_but_not_passed, test_pass_run_records_both_gates_cleared
 - **community 41** (14 nodes): _append, _path, _read, budget, declare_budget, record_trial, remaining, spent, test_declare_record_spent_remaining, test_edges_are_isolated, test_latest_declaration_wins, test_missing_ledger_reads_empty
-- **community 42** (11 nodes): Subscription, __init__.py, _write, funding_subscriptions.py, load_subscriptions, opex_per_month, test_committed_registry_loads, test_funding_subscriptions.py, test_load_parses_rows, test_missing_file_is_zero_opex, test_opex_converts_usd_and_amortizes_annual
+- **community 42** (14 nodes): SelfFunding, Subscription, __init__.py, _write, funding_subscriptions.py, load_subscriptions, opex_per_month, self_funding, test_committed_registry_loads, test_covered_is_honest_pending_and_savings_never_flip_it, test_funding_subscriptions.py, test_load_parses_rows
 - **community 45** (8 nodes): Gate0Error, _rows, assert_no_leak, check_leak, gate0_integrity.py, test_clean_universe_passes, test_gate0_integrity.py, test_seeded_leak_is_rejected
 - **community 49** (3 nodes): Order, Watchlist, portfolio_models.py
 - **community 51** (20 nodes): BTSeries, OHLCV, Ticker, Ticker.tsx, TickerProps, _bt, _cache_file, _cache_file, _download, _download, _read_cache, _read_cache
@@ -136,7 +136,7 @@ _9762 of 16758 are INFERRED (low-confidence `references`, down-weighted in clust
 - **community 111** (2 nodes): Cone, cone.types.ts
 - **community 112** (4 nodes): ApprovalProposal, Calibration, DecisionRow, decision.types.ts
 - **community 113** (2 nodes): FeedState, feedstate.types.ts
-- **community 115** (4 nodes): CapitalStructure, DrawdownGuard, SelfFunding, objective.types.ts
+- **community 115** (3 nodes): CapitalStructure, DrawdownGuard, objective.types.ts
 - **community 116** (3 nodes): AlphaBriefCard, AlphaBriefCard.tsx, useDashboardBrief
 - **community 117** (15 nodes): BlockingBoot, BootGate, BootGate.tsx, announce, diagnose, isBlocking, isBrokerRow, isCached, reloadAction, runSync, slugList, tick
 - **community 118** (4 nodes): BootScreen, BootScreen.tsx, BootScreenProps, BootStep
