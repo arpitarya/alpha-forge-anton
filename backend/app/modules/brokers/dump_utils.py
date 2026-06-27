@@ -8,6 +8,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from app.core.paths import data_dir as _data_dir
+
 try:
     from curator import safe_resolve as _safe_resolve
     _HAS_CURATOR = True
@@ -20,8 +22,9 @@ def _resolve(name: str, root: Path) -> Path:
         return _safe_resolve(name, root=root)
     return root / name
 
+
 _REPO_ROOT = Path(__file__).resolve().parents[4]  # backend/app/modules/brokers/ → alpha-forge-anton/
-DEFAULT_DUMP_DIR = Path.home() / ".alphaforge-anton" / "portfolio-dumps"
+DEFAULT_DUMP_DIR = _data_dir() / "portfolio-dumps"
 CSV_HEADERS = (
     "tradingsymbol", "name", "isin", "exchange",
     "quantity", "average_price", "last_price",

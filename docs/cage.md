@@ -99,7 +99,7 @@ reinstall the shim.
 > **Version note.** These surfaces need **cage ≥ 0.3** (`graphify` / `human-record`
 > subcommands, `record_human`). Install/upgrade the tool with
 > `uv tool install cage-flux` (or `pip install cage-flux`); anton's `[cage]`
-> extra pins `cage-flux==0.3.0` for the in-process `cage_meter` / `cage_human`
+> extra pins `cage-flux==0.12.0` for the in-process `cage_meter` / `cage_human`
 > adapters. The shim uses the global `cage` and no-ops cleanly if it's absent.
 
 ## PII / secrets

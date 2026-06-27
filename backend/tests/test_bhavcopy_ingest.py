@@ -45,6 +45,7 @@ def test_universe_as_of_is_point_in_time() -> None:
 
 def test_cache_round_trip(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setenv("PORTFOLIO_DUMP_DIR", str(tmp_path))
+    monkeypatch.setenv("NSE_DATA_DIR", str(tmp_path))  # bhavcopy cache dir
     rows = parse_bhavcopy(_FIX / "2024-01-02.csv")
     dst = write_bhavcopy(rows, "2024-01-02")
     assert dst.exists() and (dst.stat().st_mode & 0o777) == 0o600

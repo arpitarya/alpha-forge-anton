@@ -1,6 +1,6 @@
 # Fux INDEX
 
-_52 active entries across 11 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_53 active entries across 11 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
 
 ## architecture
 - **mutation-confirm-rmw** (rule) — every Orff-initiated mutation (memory note, exclusion-list edit, strategy/obj…
@@ -62,6 +62,7 @@ _52 active entries across 11 domains. Read this first; open a rule (`fux why <id
 
 ## security
 - **afbach-vault** (glossary) — afbach vault (alpha-forge-bach)
+- **configurable-paths** (convention) — Configurable paths — no hardcoded filesystem path; one env-driven base
 - **context-docs-figure-free** (rule) — Orff's standing-context / memory docs hold durable preferences and rules only…
 - **knowledge-location** (convention) — every authored knowledge document lives in exactly one of two
 - **no-secrets-in-vcs** (convention) — Never commit secrets — `.env` files, API keys, tokens, private _[global]_

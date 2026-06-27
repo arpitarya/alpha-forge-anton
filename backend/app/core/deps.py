@@ -14,8 +14,8 @@ try:
     from posture import decide, engine as posture_engine
     from posture.policy_engine import PostureRules
     from posture.step_up import Action
-    from pathlib import Path as _Path
-    _POSTURE_YAML = _Path("~/.alphaforge-anton/dante/posture.yaml").expanduser()
+    from app.core.paths import resolve as _resolve_path
+    _POSTURE_YAML = _resolve_path("DANTE_POSTURE_YAML", "dante", "posture.yaml")
     _posture_rules = PostureRules.load(_POSTURE_YAML) if _POSTURE_YAML.exists() else None
     _POSTURE = _posture_rules is not None
 except ImportError:

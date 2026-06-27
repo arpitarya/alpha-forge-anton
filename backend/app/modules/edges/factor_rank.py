@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from app.modules.edges.factor_panel import Panel
 from app.modules.edges.factor_schema import FactorConfig, Slice
+from app.modules.edges.factor_universe import liquid_as_of
 
 _FRACTION: dict[str, float] = {"decile": 0.10, "quartile": 0.25}
 
@@ -25,9 +26,9 @@ def momentum_score(closes: list[float], t: int, lookback_d: int, skip_d: int) ->
 
 
 def rank_desc(panel: Panel, t: int, cfg: FactorConfig) -> list[str]:
-    """Universe symbols ranked by momentum descending; ties broken by symbol (deterministic)."""
+    """Point-in-time liquid universe ranked by momentum desc; ties broken by symbol."""
     scored: list[tuple[float, str]] = []
-    for sym in panel.symbols():
+    for sym in liquid_as_of(panel, t):  # eligible liquid cross-section as of bar t
         s = momentum_score(panel.closes[sym], t, cfg.lookback_days, cfg.skip_days)
         if s is not None:
             scored.append((s, sym))

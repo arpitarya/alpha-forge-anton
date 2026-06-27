@@ -35,10 +35,12 @@ class SleeveResult:
     pending: int = 0  # honest-pending quality screens skipped (count only)
 
 
-def _sleeve(panel: Panel, t: int, cfg: FactorConfig, fund: FundamentalsProvider):
+def _sleeve(panel: Panel, t: int, cfg: FactorConfig, fund: FundamentalsProvider, quality_on: bool):
     if cfg.trend_on and not nifty_above_200dma(panel.nifty, t):
         return [], []  # cash week
     picked = select(rank_desc(panel, t, cfg), cfg.slice)
+    if not quality_on:  # no point-in-time feed → momentum+trend only; names counted as pending
+        return picked, picked
     return quality_filter(picked, cfg, fund)
 
 
@@ -48,7 +50,11 @@ def _start(cfg: FactorConfig) -> int:
 
 
 def simulate(
-    panel: Panel, cfg: FactorConfig, fund: FundamentalsProvider, costs: CostsCfg | None = None
+    panel: Panel,
+    cfg: FactorConfig,
+    fund: FundamentalsProvider,
+    costs: CostsCfg | None = None,
+    quality_on: bool = True,
 ) -> SleeveResult:
     costs = costs or CostsCfg()
     last = len(panel.dates) - 1
@@ -57,7 +63,7 @@ def simulate(
     pending = 0
     t = _start(cfg)
     while t + _WEEK <= last:
-        kept, pend = _sleeve(panel, t, cfg, fund)
+        kept, pend = _sleeve(panel, t, cfg, fund, quality_on)
         pending += len(pend)
         legs: list[float] = []
         for sym in kept:

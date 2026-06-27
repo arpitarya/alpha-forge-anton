@@ -165,12 +165,75 @@ on the `BarsProvider` protocol, never a concrete feed. The default `NSEDailyBars
 the free NSE daily cache from `signals.backtest_data`. A paid/intraday source swaps in
 here later without touching the gates.
 
+### The committed offline panel — `nse-bhavcopy` (real)
+
+EB-0's `FixturePanelProvider` reads a committed `Panel` JSON ({dates, closes, nifty}). A
+**one-time, networked ingestion helper** produces the real one (`data_provenance =
+nse-bhavcopy (real)`) — the network lives only here; the funnel stays offline / $0 /
+deterministic against the cached output:
+
+- **`just ingest-nse FROM TO`** ([bhavcopy_cli.py](../backend/app/modules/marketdata/bhavcopy_cli.py)
+  → [bhavcopy_fetch.py](../backend/app/modules/marketdata/bhavcopy_fetch.py) +
+  [bhavcopy_service.py](../backend/app/modules/marketdata/bhavcopy_service.py)) — primes NSE
+  cookies (browser UA), pulls the era-appropriate daily bhavcopy (legacy **cm-bhav** + 2024+
+  **UDiFF**, parsed by the pure [bhavcopy_parse.py](../backend/app/modules/marketdata/bhavcopy_parse.py))
+  + the NIFTY close, and caches the **raw `.zip`/`.csv` per day** under `$NSE_DATA_DIR`. **Parallel**
+  (stdlib `urllib`+`ThreadPoolExecutor`, `--workers`), **resumable + self-healing** via a sha256/CRC
+  integrity manifest (`cache_manifest` — a day is "done" only if its bytes still match; atomic writes;
+  `--verify` audits offline), **$0** (not LLM — never metered). Survivorship-safe by construction;
+  No-network host: `--raw-dir DIR`. See [docs/broker-csv-dumps.md](broker-csv-dumps.md).
+- **`just build-panel`** ([panel_build.py](../backend/app/modules/marketdata/panel_build.py),
+  offline/$0) — emits the survivorship-safe **liquidity superset** (the union of the weekly
+  point-in-time top-250-by-60-day-median-turnover sets,
+  [panel_universe.py](../backend/app/modules/marketdata/panel_universe.py)) with **closes**
+  (forward-filled, to hold a delisted position's value) **and a turnover series** (0 on non-trading
+  days — never forward-filled, so a pre-listing / post-delisting name has no liquidity), then runs
+  the **byte-integrity Gate-0** (`cache_read` re-hashes every cache file vs `cache-manifest.json` and
+  refuses corrupt bytes) + **Gate-0 at every weekly rebalance** (eligible ⊆ that day's traders) before
+  emitting a **deterministic gzip** `panel.json.gz` (`factor_panel.dump_panel`,
+  `gzip … mtime=0` ⇒ byte-identical re-runs, ~3–4 MB vs ~20–25 MB raw; `load_panel` gunzips it
+  transparently and still reads plain `.json`) + the manifest.
+
+### The real verdict — per-rebalance universe, quality honest-pending, journaled to elgar
+
+`just eb0-real` ([eb0_real_cli.py](../backend/app/modules/edges/eb0_real_cli.py)) runs edge-001's
+**frozen 24-config campaign** on the committed real panel and prints the search-corrected verdict
+(`data_provenance = nse-bhavcopy`). Three honesty rules:
+
+- **Per-rebalance liquidity universe** — `factor_rank.rank_desc` ranks momentum over
+  `factor_universe.liquid_as_of(panel, t)`, the **top-250 by trailing-60-day median turnover as of
+  each rebalance**, reconstituted weekly — not pinned. A panel with no turnover (the synthetic
+  `eb0/panel.json`) falls back to the full symbol set, so `just eb0` stays byte-identical.
+- **Never-buy exclusions loaded at runtime, never committed** — the hard list is an elgar money doc
+  (`elgar://plan/hard-exclusion-symbols`); anton holds only `factor_universe.load_exclusions`. Pass
+  `--exclusions <path>` (`{"symbols":[…], "price_floor_inr": int}`) to **both** `build-panel` (excluded
+  symbols never enter the committed superset) and `eb0-real`; `liquid_as_of` also drops any name whose
+  **point-in-time close at `t`** is below the floor (no look-ahead, Gate-0 stays green). The
+  `TestReport` records `exclusions_count` + `exclusions_source` — **counts/label only, never tickers**.
+  An empty default ⇒ `just eb0` unchanged. `Exclusions` is scoped per run (set→restore), so concurrent
+  synthetic/real runs never leak.
+- **Quality leg disabled-pending** — there is no point-in-time ROCE/D-E feed, and applying today's
+  fundamentals to history is look-ahead (Gate-0 forbids it). The real run executes **momentum +
+  trend only** (`quality_on=False`) and records `quality_status="disabled-pending"` +
+  `quality_pending` (names that could not be screened) in the `TestReport`. Point-in-time
+  fundamentals (Screener.in / Tickertape) are the next data dependency.
+- **Result journaled, never committed** — the `TestReport` (PBO/DSR/Calmar/verdict — stats/%, no ₹)
+  is appended to the elgar `edges-journal` (`elgar://edge/<id>`) via `edge_journal.from_report`;
+  **no figures are written into this repo** (the `plan-store` constitution). A PASS and a KILL are
+  both valid — nothing is tuned.
+
 ## Run it
 
 ```bash
 just edge <edge-id>                 # load elgar://edge/<id>, run gates 1-2, print verdict
 just probe edge-discovery           # offline acceptance probe (no network, no store)
 just probe gate0                    # Gate-0 data-integrity probe (look-ahead / survivorship)
+just ingest-nse FROM TO [--workers N|--verify|--raw-dir P|--quiet]  # parallel resumable NSE ingest ($0)
+just build-panel [--exclusions P]   # offline: assemble the committed EB-0 panel.json.gz (gzip) + Gate-0
+just eb0-real [--exclusions P]      # the base-rate verdict on the real panel → journaled to elgar
+just probe nse-ingest               # offline acceptance: parse·cache·build·Gate-0·manifest·idempotent
+just probe progress                 # ingest progress bar: TTY renders, off-TTY silent (deterministic)
+just probe eb0-real                 # offline: provenance + quality-pending + per-rebalance + determinism
 just null-data                      # standing trust check — random data finds NO edge
 just eb0                            # EB-0 — edge-001 through Gates 1-3 → signed TestReport
 just probe eb0                      # EB-0 end-to-end: determinism + pre-registration + null-data
@@ -194,6 +257,25 @@ cd backend && uv run pytest tests/test_edge_*.py tests/test_factor_*.py tests/te
 - `tests/test_funnel.py` — **byte-identical signed TestReport** (same panel+seed) + pre-registration reject.
 - `probes/eb0_probe.py` (`just probe eb0`) — EB-0 end-to-end offline: determinism, pre-registration,
   null-data still finds no edge.
+- `tests/test_bhavcopy_parse.py` — **both** raw formats (cm-bhav + UDiFF) normalize identically;
+  turnover is ₹; `parse_index_close` reads the named NIFTY close.
+- `tests/test_panel_build.py` — universe pinned point-in-time, delisted name kept (forward-filled),
+  post-start listing excluded, Gate-0 passes, panel byte-identical across re-runs + manifest counts.
+- `probes/nse_ingest_probe.py` (`just probe nse-ingest`) — offline, via `--raw-dir`: resume downloads
+  0 days; corrupting a cached zip re-fetches exactly that day; `--verify` flags it (exit≠0, no network);
+  `build-panel` refuses a hash-mismatched cache (byte-integrity Gate-0); fingerprint is `--workers`-
+  independent; `panel.json.gz` byte-identical. `tests/test_bhavcopy_integrity.py` +
+  `tests/test_cache_manifest.py` cover sha/CRC/atomic-write + is_done/verify_all/rollup.
+- `tests/test_factor_universe.py` — `liquid_as_of`: trailing-median top-N, delisted/pre-listing names
+  excluded at `t`, the never-buy symbol + **point-in-time price-floor** filters, and the no-turnover
+  full-universe fallback (all with dummy symbols, never real tickers).
+- `tests/test_panel_build.py` — the per-rebalance superset reconstitutes (later listing enters), keeps
+  delisted names (closes forward-filled, turnover 0-filled), excludes the illiquid; **deterministic
+  gzip round-trip** (`load_panel(.gz)` == built panel, byte-identical re-runs); `--exclusions` drops a
+  dummy symbol from the committed superset.
+- `tests/test_eb0_real.py` + `probes/eb0_real_probe.py` (`just probe eb0-real`) — the real-run path:
+  `data_provenance=nse-bhavcopy`, quality `disabled-pending` with pending counted, per-rebalance
+  universe, deterministic signature, best-effort journaling — all offline, on a synthetic-shaped panel.
 
 ## Not yet (later slices)
 

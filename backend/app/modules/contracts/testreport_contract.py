@@ -14,6 +14,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 Verdict = Literal["pass", "fail"]
+QualityStatus = Literal["validated", "disabled-pending"]
 
 
 class Walkforward(BaseModel):
@@ -34,3 +35,11 @@ class TestReport(BaseModel):
     walkforward: Walkforward = Field(default_factory=Walkforward)
     verdict: Verdict = "fail"
     pre_registered_at: datetime | None = None
+    data_provenance: str = "synthetic-fixture"  # nse-bhavcopy (real) vs the offline fixture
+    date_from: str = ""  # ISO start of the panel the verdict was computed on
+    date_to: str = ""  # ISO end
+    quality_status: QualityStatus = "validated"  # disabled-pending when no point-in-time feed
+    quality_pending: int = 0  # sleeve names that could not be quality-screened (honest gap)
+    universe_status: str = "full-fixture"  # per-rebalance-liquid on a real turnover panel
+    exclusions_count: int = 0  # never-buy names applied (COUNT only — tickers never enter the repo)
+    exclusions_source: str = "none"  # provenance label of the off-repo exclusions doc

@@ -8,6 +8,14 @@
             "command": "fux context"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/arpitarya/.local/bin/cage import --agent codex --since 7d"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -38,6 +46,14 @@
           {
             "type": "command",
             "command": "fux hook-check"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/arpitarya/.local/bin/cage import --agent codex --since 7d"
           }
         ]
       }

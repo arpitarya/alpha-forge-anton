@@ -7,12 +7,12 @@ defaults. Re-exported by `objective_config`; import `load_objective` from there.
 from __future__ import annotations
 
 import logging
-import os
 import re
 from pathlib import Path
 
 import yaml
 
+from app.core.paths import elgar_dir
 from app.modules.signals.objective_config import Objective
 
 logger = logging.getLogger(__name__)
@@ -28,8 +28,7 @@ def _parse(text: str) -> dict:
 
 def _objective_paths() -> tuple[Path, Path]:
     here = Path(__file__).resolve().parent
-    elgar = Path(os.environ.get("ELGAR_DIR", "~/.alphaforge-anton/elgar")).expanduser()
-    return elgar / "strategy" / "objective.md", here / "objective.md"
+    return elgar_dir() / "strategy" / "objective.md", here / "objective.md"
 
 
 def load_objective() -> Objective:

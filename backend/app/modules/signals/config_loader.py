@@ -8,12 +8,12 @@ Resolution: elgar `strategy/` (live, Orff-editable) → git-safe repo seed
 from __future__ import annotations
 
 import logging
-import os
 import re
 from pathlib import Path
 
 import yaml
 
+from app.core.paths import elgar_dir
 from app.modules.signals.strategy_config import StrategyConfig
 
 logger = logging.getLogger(__name__)
@@ -29,8 +29,7 @@ def _parse(text: str) -> dict:
 
 def _config_paths() -> tuple[Path, Path]:  # (elgar live copy, repo seed)
     here = Path(__file__).resolve().parent
-    elgar = Path(os.environ.get("ELGAR_DIR", "~/.alphaforge-anton/elgar")).expanduser()
-    return elgar / "strategy" / "strategy.config.md", here / "strategy.config.md"
+    return elgar_dir() / "strategy" / "strategy.config.md", here / "strategy.config.md"
 
 
 def load_config() -> StrategyConfig:

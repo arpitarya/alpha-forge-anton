@@ -54,7 +54,10 @@ Available probes:
     signals-backtest     signals_backtest_probe.py
     edge-discovery       edge_discovery_probe.py
     gate0                gate0_integrity_probe.py
+    nse-ingest           nse_ingest_probe.py
+    progress             progress_probe.py
     eb0                  eb0_probe.py
+    eb0-real             eb0_real_probe.py
     objective            objective_probe.py
     concierge-tools      concierge_tools_probe.py
 
@@ -129,7 +132,10 @@ case "$NAME" in
     signals-backtest)  SCRIPT="signals_backtest_probe.py" ;;
     edge-discovery)    SCRIPT="edge_discovery_probe.py" ;;
     gate0)             SCRIPT="gate0_integrity_probe.py" ;;
+    nse-ingest)        SCRIPT="nse_ingest_probe.py" ;;
+    progress)          SCRIPT="progress_probe.py" ;;
     eb0)               SCRIPT="eb0_probe.py" ;;
+    eb0-real)          SCRIPT="eb0_real_probe.py" ;;
     objective)         SCRIPT="objective_probe.py" ;;
     concierge-tools)   SCRIPT="concierge_tools_probe.py" ;;
     pypi-publish)      SCRIPT="pypi_publish_probe.py" ;;

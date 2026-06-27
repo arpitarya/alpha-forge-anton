@@ -10,7 +10,8 @@ the result (Phase 3). Design of record: [signals-engine.handoff.md](handoffs/sig
 | File (`backend/app/modules/signals/`) | Responsibility |
 |---|---|
 | `strategy_config.py` + `strategy.config.md` | Single source of truth for every decision threshold → typed `StrategyConfig`. **No threshold is hardcoded.** |
-| `quote_source.py` | yfinance 12-mo daily OHLCV; broker→Yahoo symbol map (`.NS`/`.BO`, strip `-EQ`); disk-cached 1×/day/symbol; fail-open |
+| `cache_utils.py` | `signals_cache_dir()` — `$SIGNALS_CACHE_DIR` (default `~/.alphaforge-anton/signals-cache`). The on-disk home for `quote_source` quotes + `universe`'s Nifty-500 list |
+| `quote_source.py` | yfinance 12-mo daily OHLCV; broker→Yahoo symbol map (`.NS`/`.BO`, strip `-EQ`); disk-cached 1×/day/symbol in `signals_cache_dir()`; fail-open |
 | `indicators.py` | ta-lib wrappers → `Indicators` (RSI14, ADX14, DMA50/200, ATR14, 52w-pos, trailing high, vol ratio). Pure compute |
 | `signal_rules.py` | **Pure** `(facts, indicators, config) → Verdict`; SELL > TRIM > ADD > HOLD, first match wins |
 | `signal_schema.py` | Pydantic `Verdict` / `ActionPlan` (no clock — the determinism anchor) |

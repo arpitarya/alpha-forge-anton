@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 64,
+  "count": 65,
   "rules": [
     {
       "id": "async-everywhere",
@@ -279,6 +279,33 @@
       "examples": [],
       "created": "2026-06-10",
       "updated": "2026-06-19"
+    },
+    {
+      "id": "configurable-paths",
+      "type": "convention",
+      "domain": "security",
+      "status": "active",
+      "title": "Configurable paths — no hardcoded filesystem path; one env-driven base",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/configurable-paths.md",
+      "code_refs": [
+        "backend/app/core/paths.py",
+        "backend/app/modules/brokers/dump_utils.py",
+        "backend/app/modules/signals/cache_utils.py",
+        "backend/app/modules/edges/trial_ledger.py",
+        "backend/app/core/deps.py"
+      ],
+      "related": [
+        "knowledge-location",
+        "plan-store",
+        "no-secrets-in-vcs",
+        "dump-utils-single-source"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-27",
+      "updated": "2026-06-27"
     },
     {
       "id": "context-docs-figure-free",
@@ -749,7 +776,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-21"
+      "updated": "2026-06-27"
     },
     {
       "id": "projection-disclosure",
@@ -1198,7 +1225,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-21"
+      "updated": "2026-06-27"
     },
     {
       "id": "source-kind-status",

@@ -1,0 +1,30 @@
+{
+  "fetched_at": "2026-06-27T15:55:31.315975+00:00",
+  "from_date": "2018-01-01",
+  "missing_days": [
+    "2018-01-26",
+    "2018-02-13",
+    "2018-03-02",
+    "2018-03-29",
+    "2018-03-30",
+    "2018-05-01",
+    "2018-08-15",
+    "2018-08-22",
+    "2018-09-13",
+    "2018-09-20",
+    "2018-10-02",
+    "2018-10-18",
+    "2018-11-08",
+    "2018-11-23",
+    "2018-12-25"
+  ],
+  "sessions": 0,
+  "source": "nse-bhavcopy",
+  "source_urls": [
+    "https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_{ymd}_F_0000.csv.zip",
+    "https://nsearchives.nseindia.com/content/historical/EQUITIES/{yyyy}/{mon}/cm{dd}{mon}{yyyy}bhav.csv.zip",
+    "https://nsearchives.nseindia.com/content/indices/ind_close_all_{dmy}.csv"
+  ],
+  "symbol_count": 0,
+  "to_date": "2018-12-31"
+}

@@ -9,8 +9,9 @@ shipping a different JSON — no code change.
 
 from __future__ import annotations
 
+import gzip
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Protocol
 
@@ -20,6 +21,7 @@ class Panel:
     dates: list[str]  # ISO trading dates
     closes: dict[str, list[float]]  # symbol → closes aligned 1:1 with dates
     nifty: list[float]  # NIFTY index aligned 1:1 with dates
+    turnover: dict[str, list[float]] = field(default_factory=dict)  # ₹ traded value; 0 if untraded
 
     def symbols(self) -> list[str]:
         return sorted(self.closes)
@@ -30,9 +32,19 @@ class PanelProvider(Protocol):
 
 
 def load_panel(path: Path) -> Panel:
-    """Read a committed offline panel JSON ({dates, closes, nifty})."""
-    d = json.loads(Path(path).read_text(encoding="utf-8"))
-    return Panel(dates=d["dates"], closes=d["closes"], nifty=d["nifty"])
+    """Read a panel JSON ({dates, closes, nifty, turnover?}); `.gz` is gunzipped transparently."""
+    path = Path(path)
+    raw = gzip.decompress(path.read_bytes()) if path.suffix == ".gz" else path.read_bytes()
+    d = json.loads(raw)
+    return Panel(
+        dates=d["dates"], closes=d["closes"], nifty=d["nifty"], turnover=d.get("turnover", {})
+    )
+
+
+def dump_panel(panel: dict, path: Path) -> None:
+    """Write the panel as DETERMINISTIC gzip (mtime=0 ⇒ byte-identical re-runs); ~3-4 MB."""
+    body = (json.dumps(panel, sort_keys=True) + "\n").encode("utf-8")
+    Path(path).write_bytes(gzip.compress(body, mtime=0))
 
 
 class FixturePanelProvider:

@@ -5,7 +5,8 @@ luck. This ledger records, per edge, the trial budget the author *declared up fr
 trials actually spent, so Phase 1 can deflate results by how many shots were taken. It is
 **append-only** (a correction is a new line, never an edit) and carries **counts only** — no
 holdings, no ₹, no prompt text — so it is constitutionally safe by construction, the same
-discipline as `edge_journal`. The path is injectable for offline, deterministic tests.
+discipline as `edge_journal`. The path is injectable for offline, deterministic tests, and
+defaults to `$EDGES_TRIAL_LEDGER` (else `$ANTON_DATA_DIR/edges-trials.jsonl`).
 """
 
 from __future__ import annotations
@@ -13,11 +14,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-_DEFAULT = Path.home() / ".alphaforge-anton" / "edges-trials.jsonl"
+from app.core.paths import resolve as _resolve_path
 
 
 def _path(path: Path | None) -> Path:
-    p = path or _DEFAULT
+    p = path or _resolve_path("EDGES_TRIAL_LEDGER", "edges-trials.jsonl")
     p.parent.mkdir(parents=True, exist_ok=True)
     return p
 

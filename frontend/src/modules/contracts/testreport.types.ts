@@ -14,4 +14,12 @@ export interface TestReport {
   walkforward: Walkforward;
   verdict: "pass" | "fail";
   pre_registered_at?: string | null;
+  data_provenance: string;
+  date_from: string;
+  date_to: string;
+  quality_status: "validated" | "disabled-pending";
+  quality_pending: number;
+  universe_status: string;
+  exclusions_count: number;
+  exclusions_source: string;
 }

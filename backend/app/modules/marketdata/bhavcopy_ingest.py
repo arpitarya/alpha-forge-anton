@@ -1,8 +1,8 @@
 """Ingest NSE bhavcopy CSVs into a cache, and derive the point-in-time universe.
 
-Reuses the broker `dump_utils` I/O discipline — `dump_dir()` (chmod 700), a chmod-600
-write, and the `# source=…` header-comment — but defines its own OHLCV column set rather
-than the holdings `CSV_HEADERS` (a bhavcopy bar is not a holding). Parsing accepts the
+Cache lives in `nse_data_dir()` (`$NSE_DATA_DIR`, default `$ANTON_DATA_DIR/nse` via the
+`app.core.paths` resolver — constitutional `configurable-paths`), reusing the chmod-700/600 write
+discipline with its own OHLCV column set rather than the holdings `CSV_HEADERS`. Parsing accepts the
 common raw NSE header aliases (OPEN_PRICE, TOTTRDQTY, TIMESTAMP, …) so a real dump and our
 normalized cache both load. `universe_as_of` is the only honest, look-ahead-free universe.
 """
@@ -14,10 +14,12 @@ import os
 from datetime import UTC, datetime
 from pathlib import Path
 
-from app.modules.brokers.dump_utils import dump_dir
+from app.core.paths import resolve
 from app.modules.marketdata.bhavcopy_schema import BhavRow, UniverseSnapshot
 
-_COLUMNS = ("date", "symbol", "series", "isin", "open", "high", "low", "close", "volume")
+_COLUMNS = (
+    "date", "symbol", "series", "isin", "open", "high", "low", "close", "volume", "turnover"
+)
 _ALIAS = {
     "open_price": "open",
     "high_price": "high",
@@ -26,10 +28,12 @@ _ALIAS = {
     "last_price": "close",
     "tottrdqty": "volume",
     "ttl_trd_qnty": "volume",
+    "tottrdval": "turnover",  # cm-bhav traded value (₹)
+    "ttl_trf_val": "turnover",  # UDiFF traded value (₹)
     "timestamp": "date",
     "date1": "date",
 }
-_FLOATS = ("open", "high", "low", "close", "volume")
+_FLOATS = ("open", "high", "low", "close", "volume", "turnover")
 
 
 def _key(header: str) -> str:
@@ -56,8 +60,16 @@ def parse_bhavcopy(path: Path, day: str | None = None) -> list[BhavRow]:
         return [_to_row(raw, day) for raw in reader if (raw.get("SYMBOL") or raw.get("symbol"))]
 
 
+def nse_data_dir() -> Path:
+    """Raw NSE cache dir — `$NSE_DATA_DIR`, default `$ANTON_DATA_DIR/nse` (chmod 700)."""
+    p = resolve("NSE_DATA_DIR", "nse")
+    p.mkdir(parents=True, exist_ok=True)
+    os.chmod(p, 0o700)
+    return p
+
+
 def cache_path(day: str) -> Path:
-    return dump_dir() / f"bhavcopy-{day}.csv"
+    return nse_data_dir() / f"bhavcopy-{day}.csv"
 
 
 def write_bhavcopy(rows: list[BhavRow], day: str) -> Path:

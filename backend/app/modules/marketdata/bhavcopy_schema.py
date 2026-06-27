@@ -22,6 +22,7 @@ class BhavRow(BaseModel):
     low: float = 0.0
     close: float = 0.0
     volume: float = 0.0
+    turnover: float = 0.0  # traded value in ₹ — feeds the 60-day-median liquidity universe
 
 
 class UniverseSnapshot(BaseModel):

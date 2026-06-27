@@ -21,6 +21,14 @@
         "hooks": [
           {
             "type": "command",
+            "command": "/Users/arpitarya/.local/bin/cage import-claude --project ."
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
             "command": "fux context"
           }
         ]
@@ -29,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cage hook-session-start"
+            "command": "/Users/arpitarya/.local/bin/cage hook-session-start"
           }
         ]
       }
@@ -43,6 +51,14 @@
           }
         ],
         "matcher": "Edit|Write"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/arpitarya/.local/bin/cage hook-post-tool-use"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -51,6 +67,14 @@
           {
             "type": "command",
             "command": "fux hook-check"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/arpitarya/.local/bin/cage hook-stop"
           }
         ]
       }
@@ -70,7 +94,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cage hook-session-end"
+            "command": "/Users/arpitarya/.local/bin/cage hook-session-end"
           },
           {
             "type": "command",
