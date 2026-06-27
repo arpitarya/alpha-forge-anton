@@ -18,6 +18,10 @@ Available probes:
     ui-pref-tabs         ui_pref_tabs.py
     ui-concierge         ui_concierge_probe.py
     ui-objective         ui_objective_probe.py
+    ui-goals             ui_goals_probe.py
+    ui-decisions         ui_decisions_probe.py
+    ui-proposal          ui_proposal_probe.py
+    ui-feedstate         ui_feedstate_probe.py
     ui-footer-chat       ui_footer_chat_probe.py
     ui-model-picker      ui_model_picker_probe.py
     ui-notif-time        ui_notification_time_probe.py
@@ -90,6 +94,10 @@ case "$NAME" in
     ui-pref-tabs)      SCRIPT="ui_pref_tabs.py" ;;
     ui-concierge)      SCRIPT="ui_concierge_probe.py" ;;
     ui-objective)      SCRIPT="ui_objective_probe.py" ;;
+    ui-goals)          SCRIPT="ui_goals_probe.py" ;;
+    ui-decisions)      SCRIPT="ui_decisions_probe.py" ;;
+    ui-proposal)       SCRIPT="ui_proposal_probe.py" ;;
+    ui-feedstate)      SCRIPT="ui_feedstate_probe.py" ;;
     ui-footer-chat)    SCRIPT="ui_footer_chat_probe.py" ;;
     ui-model-picker)   SCRIPT="ui_model_picker_probe.py" ;;
     ui-notif-time)     SCRIPT="ui_notification_time_probe.py" ;;

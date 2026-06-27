@@ -19,6 +19,14 @@
 @import "@alphaforge-anton/solar-ui/src/styles/notifications.css";
 @import "@alphaforge/solar-orb-ball/styles";
 
+/* Forge Hi-Fi (Track U) — .of-* component styles; tokens inherited from theme.css above. */
+@import "./forge-shared.css";
+@import "./forge-goals.css";
+@import "./forge-approval.css";
+@import "./forge-cone.css";
+@import "./forge-trust.css";
+@import "./forge-decisions.css";
+
 @source "../../../packages/solar-ui/src";
 @source "../../../packages/solar-orb-ball/src";
 

@@ -41,7 +41,10 @@ alpha-forge-anton/
 │   └── src/modules/  Feature modules — mirrors backend/app/modules layout
 │       ├── portfolio/   portfolio.{api,query,types}.ts + components (Ledger, Treemap, SourcesPanel, ...)
 │       ├── plans/       plans.{api,query,types}.ts — /plans client: plan, drift, projection, save-to-elgar
-│       ├── concierge/   Orff chat (ChatRail, AlphaBar) + composed UI: SpecCard/SpecHost render Fux-validated UISpecs from the chat stream; compose.registry.ts is the client whitelist (mirror of backend COMPOSABLE_COMPONENTS); SavePlanButton → POST /plans → elgar store
+│       ├── concierge/   Orff chat (ChatRail, AlphaBar) + composed UI: SpecCard/SpecHost render Fux-validated UISpecs from the chat stream; compose.registry.ts is the client whitelist (mirror of backend COMPOSABLE_COMPONENTS); SavePlanButton → POST /plans → elgar store. Track-U live surface: GuardrailStrip (pinned read-only objective) + inline ConeCard/ProposalCard/GroundedAnswer/FeedToggle via the /proposal demo. See docs/track-u-ui.md
+│       ├── goals/        Track-U editable north-star (/goals) — GoalsPanel (Calmar hero + drawdown guard + self-funding + collapsed capital-structure) + GoalsAside; Phase-0 Objective on mock
+│       ├── decisions/    Track-U replayable prove-it ledger (/decisions) — DecisionsLedger + CalibrationSummary (13·4·3) + DecisionRowCard (proposal→downside→decision→outcome + REPLAY); Phase-0 DecisionRow on mock
+│       ├── forge/        Track-U shared Hi-Fi primitives — Num, UChip, FanChart (+fan.utils), Www. Styling in src/app/forge-*.css (.of-* classes, tokens inherited from theme.css)
 │       ├── ai/          ai.{api,query}.ts + AIChat
 │       ├── trade/       trade.{api,query}.ts
 │       ├── screener/    ScreenerPanel (hardcoded stub — no live API)

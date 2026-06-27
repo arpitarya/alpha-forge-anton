@@ -269,6 +269,10 @@ This decouples probe selectors from styling changes.
 | `probes/_probe_auth.py` | Credential resolver (env → vault) |
 | `probes/ui_probe.py` | Main UI auth + navigation probe |
 | `probes/ui_portfolio_probe.py` | Portfolio filter / sort / search probe |
+| `probes/ui_goals_probe.py` | Track-U Goals (`/goals`) — Calmar hero + −12/−20 drawdown marks; edges/structure render dashed pending (not a 0% bar); "Propose change" opens chat (no silent write); `just probe ui-goals` |
+| `probes/ui_decisions_probe.py` | Track-U Decisions (`/decisions`) — ledger rows + calibration 13·4·3; REPLAY enabled only on replayable rows + read-only re-run summary; `just probe ui-decisions` |
+| `probes/ui_proposal_probe.py` | Track-U inline Orff proposal (`/proposal` demo) — pinned guardrail strip; cone red worst-case; calibration chip (13 cleared); Approve gated until the ES loss is tapped; `just probe ui-proposal` |
+| `probes/ui_feedstate_probe.py` | Track-U feed liveness — STALE freezes the cone to ₹0 ("not because you're flat") + blocks Approve even after ack; LIVE restores both; `just probe ui-feedstate` |
 | `probes/<broker>_probe.py` | Broker-specific XHR / REST probes |
 | `probes/pypi_publish_probe.py` | Release health — fux-engine / cage-flux are live on PyPI |
 | `probes/github_publish_probe.py` | Release health — the fux/cage publish & CI workflows are green |

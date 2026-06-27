@@ -21,6 +21,7 @@ from app.modules.edges.edge_backtest import OOS_FRACTION, run_gate1
 from app.modules.edges.edge_data import Bars
 from app.modules.edges.edge_schema import EdgeSpec
 from app.modules.edges.edge_walkforward import run_gate2
+from app.modules.edges.factor_walkforward import walk_forward
 
 
 def _provider(b: Bars):
@@ -90,3 +91,18 @@ async def test_gate2_is_byte_identical_across_runs():
     a = await run_gate2(_spec("overfit_dayofmonth"), _provider(_overfit_bars()))
     b = await run_gate2(_spec("overfit_dayofmonth"), _provider(_overfit_bars()))
     assert a.model_dump_json() == b.model_dump_json()
+
+
+def test_factor_walkforward_passes_a_consistent_config():
+    # Cross-sectional Gate-2: config 0 is consistently positive (with pullbacks → finite Calmar),
+    # the rest are flat, so the in-sample-best carries out-of-sample across every window.
+    series = [[2.0, -0.5] * 80] + [[0.0] * 160 for _ in range(5)]
+    g2 = walk_forward(series)
+    assert g2.passed is True and g2.stats.calmar >= 0.5
+    assert sum(1 for w in g2.windows if w.expectancy_pct > 0) / len(g2.windows) >= 0.60
+
+
+def test_factor_walkforward_kills_a_losing_grid():
+    series = [[-1.0, 0.5] * 80 for _ in range(6)]  # every config nets negative
+    g2 = walk_forward(series)
+    assert g2.passed is False

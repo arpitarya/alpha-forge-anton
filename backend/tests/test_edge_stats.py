@@ -33,3 +33,13 @@ def test_normal_run_with_drawdown_unaffected() -> None:
     s = build_stats(nets, hold_days=5)
     assert s.max_dd_pct > 0.0
     assert s.calmar != 0.0
+
+
+def test_weekly_portfolio_series_is_scored_identically() -> None:
+    # The cross-sectional funnel feeds a WEEKLY portfolio-return series into the same
+    # build_stats (hold_days=5). A series with pullbacks scores a finite positive Calmar;
+    # a drawdown-free weekly run still trips the guard — both gates measure identically.
+    weekly = [1.5, 1.5, -1.0] * 10
+    s = build_stats(weekly, hold_days=5)
+    assert s.max_dd_pct > 0.0 and s.calmar > 0.0
+    assert build_stats([0.7] * 30, hold_days=5).calmar == 0.0

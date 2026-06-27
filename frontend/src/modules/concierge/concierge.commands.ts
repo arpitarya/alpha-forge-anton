@@ -15,7 +15,8 @@ export type CommandAction =
   | "artifacts"
   | "clear"
   | "stop"
-  | "voice";
+  | "voice"
+  | "proposal";
 
 export interface SlashCommand {
   name: string;
@@ -78,6 +79,11 @@ export const COMMANDS: SlashCommand[] = [
     name: "artifacts",
     hint: "Open composed UI panel",
     body: { kind: "action", action: "artifacts" },
+  },
+  {
+    name: "proposal",
+    hint: "Demo: downside-first cone + approval (mock)",
+    body: { kind: "action", action: "proposal" },
   },
   { name: "export", hint: "Download this thread", body: { kind: "action", action: "export" } },
   { name: "clear", hint: "Clear the conversation", body: { kind: "action", action: "clear" } },

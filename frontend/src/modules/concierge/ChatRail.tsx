@@ -19,11 +19,13 @@ import {
 } from "./concierge.types";
 import { DeepSearchMode } from "./DeepSearchMode";
 import { FollowupChips } from "./FollowupChips";
+import { GuardrailStrip } from "./GuardrailStrip";
 import { HistoryPanel } from "./HistoryPanel";
 import { ImageAttach } from "./ImageAttach";
 import { MemoryPanel } from "./MemoryPanel";
 import { ModelPicker } from "./ModelPicker";
 import { ObjectivePanel } from "./ObjectivePanel";
+import { ProposalDemo } from "./ProposalDemo";
 import { SaveActionPlanButton } from "./SaveActionPlanButton";
 import { SavePlanButton } from "./SavePlanButton";
 import { SessionMeter } from "./SessionMeter";
@@ -162,6 +164,7 @@ export function ChatRail({
   const [lastSubmitted, setLastSubmitted] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [panel, setPanel] = useState<Panel>("none");
+  const [demo, setDemo] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [cmdActive, setCmdActive] = useState(0);
   const [speakReplies, setSpeakReplies] = useState(false);
@@ -241,6 +244,10 @@ export function ChatRail({
         break;
       case "voice":
         setSpeakReplies((s) => !s);
+        break;
+      case "proposal":
+        setPanel("none");
+        setDemo(true);
         break;
     }
   }
@@ -647,8 +654,10 @@ export function ChatRail({
                 scrollbarColor: "var(--line-hi) transparent",
               }}
             >
-              {turns.length === 0 ? (
-                <EmptyState onSeed={(q) => onSend(q)} />
+              {/* Pinned READ-ONLY guardrail — the mandate every answer is measured against. */}
+              <GuardrailStrip />
+              {turns.length === 0 && !demo ? (
+                <EmptyState onSeed={(q) => onSend(q)} onProposal={() => setDemo(true)} />
               ) : (
                 turns.map((turn) => (
                   <TurnPair
@@ -661,6 +670,7 @@ export function ChatRail({
                   />
                 ))
               )}
+              {demo && <ProposalDemo />}
             </div>
           )}
 
@@ -1204,7 +1214,13 @@ function Kbd({ children }: { children: React.ReactNode }) {
   );
 }
 
-function EmptyState({ onSeed }: { onSeed: (q: string) => void }) {
+function EmptyState({
+  onSeed,
+  onProposal,
+}: {
+  onSeed: (q: string) => void;
+  onProposal: () => void;
+}) {
   return (
     <div
       style={{
@@ -1255,6 +1271,26 @@ function EmptyState({ onSeed }: { onSeed: (q: string) => void }) {
         {SEEDS.map((s) => (
           <FuChip key={s.q} seed={s} onSeed={onSeed} />
         ))}
+        <button
+          type="button"
+          onClick={onProposal}
+          style={{
+            marginTop: 4,
+            padding: "10px 14px",
+            borderRadius: 10,
+            textAlign: "left",
+            fontFamily: "Space Mono, monospace",
+            fontSize: 10,
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            color: "var(--accent)",
+            background: "color-mix(in srgb, var(--accent) 6%, transparent)",
+            border: "1px solid color-mix(in srgb, var(--accent) 35%, var(--line))",
+            cursor: "pointer",
+          }}
+        >
+          ◆ Show the RBI proposal — downside-first cone + approval (demo)
+        </button>
       </div>
     </div>
   );
