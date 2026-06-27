@@ -119,6 +119,45 @@ Protocol (the interface later phases implement) and a default `GateFunnel` that 
 *existing* gates into a `contracts.TestReport` (no new trading logic). Run it on every change
 — it's the cheapest possible guard against fooling ourselves.
 
+## EB-0 — the cross-sectional factor edge through the full funnel (Gates 1–3)
+
+The single-series `momentum` signal above is the toy/acceptance case. **edge-001** is a real
+**cross-sectional portfolio** edge, and EB-0 pushes it through a richer funnel. Still pure,
+deterministic, offline, **$0 — no LLM on the funnel path**. A PASS and an honest KILL are both
+valid; nothing is tuned to force a pass.
+
+**Factor engine** (rank → filter → trade → weekly net-return series):
+
+| File | Role |
+|---|---|
+| [factor_schema.py](../backend/app/modules/edges/factor_schema.py) | `FactorConfig` + `grid_24()` — the **locked 24-config trial grid** (lookback {9,12,15} × slice {decile,quartile} × θ_roce {12,15,18} at θ_de 0.5 → 18, plus decile θ_de 1.0 × lookback {9,12,15} × θ_roce {12,15} → 6). Headline: lookback 12 / decile / θ_roce 15 / θ_de 0.5 / trend+stop on |
+| [factor_rank.py](../backend/app/modules/edges/factor_rank.py) | `ret_12_1` momentum (`price[t-21]/price[t-252]-1`), deterministic rank, top decile/quartile |
+| [factor_quality.py](../backend/app/modules/edges/factor_quality.py) | ROCE/D-E overlay — **honest-pending** when the fundamentals feed is absent (counted, never faked) |
+| [factor_trend.py](../backend/app/modules/edges/factor_trend.py) | dual-momentum: cash when NIFTY < its 200-DMA (or unconfirmed) |
+| [factor_exits.py](../backend/app/modules/edges/factor_exits.py) | −20% guard / 20-day-low stop / end-of-hold, first to fire |
+| [factor_rebalance.py](../backend/app/modules/edges/factor_rebalance.py) | weekly simulator → net-return series via `edge_costs.net_pct`. **v1 cost model is conservative** (full round-trip cost per week — overcharges turnover, the honest direction) |
+| [factor_panel.py](../backend/app/modules/edges/factor_panel.py) | aligned multi-symbol + NIFTY `Panel`; injectable `PanelProvider` (offline fixture now, real cached snapshot later) |
+
+**The funnel** ([funnel.py](../backend/app/modules/edges/funnel.py)) runs pre-registration first, then:
+
+- **Gate 1** — backtest the headline config + overfitting statistics over the 24-config grid:
+  **PBO** (CSCV, [cscv_pbo.py](../backend/app/modules/edges/cscv_pbo.py)), **Deflated Sharpe**
+  ([deflated_sharpe.py](../backend/app/modules/edges/deflated_sharpe.py)) and the **Harvey-Liu
+  haircut** ([harvey_liu.py](../backend/app/modules/edges/harvey_liu.py)), with **N read from the
+  trial-ledger** (edge-001 declares **24**). Pass = positive OOS expectancy AND PBO < 0.5 AND DSR ≥ 0.95.
+- **Gate 2** — walk-forward over the 24-config return matrix
+  ([factor_walkforward.py](../backend/app/modules/edges/factor_walkforward.py)), reusing the gate-2
+  kill criterion (agg OOS Calmar ≥ 0.5 AND ≥ 60% windows positive).
+- **Gate 3** — seeded block-bootstrap Monte-Carlo
+  ([gate3_montecarlo.py](../backend/app/modules/edges/gate3_montecarlo.py)) → a Phase-0 `Cone`;
+  **KILL if the P5 path drawdown breaches −20%**. The
+  [scenario_library.py](../backend/app/modules/edges/scenario_library.py) (2008 / Mar-2020 /
+  2024-25 −31%) rides along as red-team context.
+
+The funnel emits a Phase-0 `TestReport` plus a **deterministic sha256 signature** (same panel +
+seed ⇒ byte-identical signed report). `just eb0` ([eb0_cli.py](../backend/app/modules/edges/eb0_cli.py))
+runs edge-001 (pre_registered_at 2026-06-23) on the committed offline panel and prints it.
+
 ## Data source
 
 One seam ([edge_data.py](../backend/app/modules/edges/edge_data.py)): everything depends
@@ -133,7 +172,9 @@ just edge <edge-id>                 # load elgar://edge/<id>, run gates 1-2, pri
 just probe edge-discovery           # offline acceptance probe (no network, no store)
 just probe gate0                    # Gate-0 data-integrity probe (look-ahead / survivorship)
 just null-data                      # standing trust check — random data finds NO edge
-cd backend && uv run pytest tests/test_edge_*.py tests/test_gate0_integrity.py tests/test_null_selftest.py tests/test_trial_ledger.py -v
+just eb0                            # EB-0 — edge-001 through Gates 1-3 → signed TestReport
+just probe eb0                      # EB-0 end-to-end: determinism + pre-registration + null-data
+cd backend && uv run pytest tests/test_edge_*.py tests/test_factor_*.py tests/test_funnel.py tests/test_cscv_pbo.py tests/test_deflated_sharpe.py tests/test_harvey_liu.py tests/test_gate3_montecarlo.py tests/test_gate0_integrity.py tests/test_null_selftest.py tests/test_trial_ledger.py -v
 ```
 
 ## Verification
@@ -145,6 +186,14 @@ cd backend && uv run pytest tests/test_edge_*.py tests/test_gate0_integrity.py t
 - `tests/test_edge_register.py` — missing / post-result `pre_registered_at` rejected; valid passes.
 - `tests/test_edge_journal.py` — PASS and KILL both journaled with the right `gate_reached`.
 - `probes/edge_discovery_probe.py` (`just probe edge-discovery`) — all of the above, offline.
+- `tests/test_factor_*.py` — momentum rank/select, quality honest-pending, 200-DMA trend, exit
+  rules, weekly-simulator determinism.
+- `tests/test_cscv_pbo.py` / `test_deflated_sharpe.py` / `test_harvey_liu.py` — PBO low/high,
+  DSR + haircut monotonic in N.
+- `tests/test_gate3_montecarlo.py` — seeded cone determinism + the P5 −20% kill.
+- `tests/test_funnel.py` — **byte-identical signed TestReport** (same panel+seed) + pre-registration reject.
+- `probes/eb0_probe.py` (`just probe eb0`) — EB-0 end-to-end offline: determinism, pre-registration,
+  null-data still finds no edge.
 
 ## Not yet (later slices)
 

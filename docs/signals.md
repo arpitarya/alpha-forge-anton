@@ -150,6 +150,15 @@ over budget ⇒ degrades to free sources, Orff says so. Key from the afbach vaul
 aggregation path. Verified by `just probe deep-search` (auto / confirm / reject / always
 / never / over-budget) + `parallel-keys`. Canonical spec: `docs/handoffs/deep-search-ask.handoff.md`.
 
+## Single-series here vs cross-sectional in `edges`
+
+This engine is **single-series**: it reviews each holding and screens each candidate on its *own*
+price history (one verdict per symbol). The **cross-sectional** factor edge — rank the whole
+universe each week, hold a top-decile sleeve — lives in the edge-discovery engine
+([docs/edges.md](edges.md), the EB-0 funnel), not here. Both reuse the same `signals` cost model
+(`CostsCfg` + `pnl_tracker.realized_pnl`); the split keeps the live swing engine and the offline
+discovery funnel as separate concerns.
+
 ## Not yet (later phases)
 
 LTCG tax + a broker realized-trade ledger · a capital-constrained portfolio backtest

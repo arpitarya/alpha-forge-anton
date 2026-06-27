@@ -197,6 +197,11 @@ edge id="":
 null-data:
     cd backend && uv run python -m app.modules.edges.null_selftest
 
+# EB-0 — push pre-registered edge-001 through the funnel (Gates 1-3) on the committed offline
+# panel and print a signed TestReport. PASS or honest KILL — never tuned. See docs/edges.md.
+eb0:
+    cd backend && uv run python -m app.modules.edges.eb0_cli
+
 # ── Contracts ────────────────────────────────────
 
 # Regenerate the frontend TS types from the Pydantic contract models ($0, deterministic).
