@@ -18,13 +18,13 @@
     "2018-11-23",
     "2018-12-25"
   ],
-  "sessions": 0,
+  "sessions": 2585,
   "source": "nse-bhavcopy",
   "source_urls": [
     "https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_{ymd}_F_0000.csv.zip",
     "https://nsearchives.nseindia.com/content/historical/EQUITIES/{yyyy}/{mon}/cm{dd}{mon}{yyyy}bhav.csv.zip",
     "https://nsearchives.nseindia.com/content/indices/ind_close_all_{dmy}.csv"
   ],
-  "symbol_count": 0,
+  "symbol_count": 1051,
   "to_date": "2018-12-31"
 }

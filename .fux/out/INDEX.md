@@ -1,6 +1,6 @@
 # Fux INDEX
 
-_57 active entries across 12 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_58 active entries across 12 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
 
 ## architecture
 - **mutation-confirm-rmw** (rule) — every Orff-initiated mutation (memory note, exclusion-list edit, strategy/obj…
@@ -14,6 +14,7 @@ _57 active entries across 12 domains. Read this first; open a rule (`fux why <id
 - **holding** (glossary) — Holding
 - **probe-cdp-not-playwright** (convention) — UI and broker verification is done with scripts in `probes/` that
 - **source-kind-status** (glossary) — SourceKind / SourceStatus
+- **ui-probe-spa-auth-nav** (rule) — A CDP probe for an authed SPA page must not reach it with a full
 
 ## code-quality
 - **async-everywhere** (convention) — In async services, I/O-bound code is `async` end-to-end — no _[global]_

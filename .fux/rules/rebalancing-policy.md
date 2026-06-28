@@ -4,13 +4,26 @@ domain: portfolio
 type: rule
 status: active
 created: 2026-06-12
-updated: 2026-06-12
+updated: 2026-06-28
+aliases:
+  - rebalance
+  - band-rebalancing
+  - drift-action
+keywords:
+  - rebalance
+  - band
+  - drift
+  - hot
+  - cold
+  - tax-aware
+  - inflow
 code_refs:
   - backend/app/modules/plans/plan_drift.py
   - backend/app/modules/plans/plan_loader.py
-related: [core-allocation, capital-market-assumptions, plan-store]
-aliases: [rebalance, band-rebalancing, drift-action]
-keywords: [rebalance, band, drift, hot, cold, tax-aware, inflow]
+related:
+  - core-allocation
+  - capital-market-assumptions
+  - plan-store
 ---
 **Rule:** Rebalancing is **band-triggered, not calendar-triggered**, and follows
 a fixed order of preference that minimises tax and friction:

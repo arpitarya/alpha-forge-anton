@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 70,
+  "count": 71,
   "rules": [
     {
       "id": "async-everywhere",
@@ -348,7 +348,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-27",
-      "updated": "2026-06-27"
+      "updated": "2026-06-28"
     },
     {
       "id": "context-docs-figure-free",
@@ -869,7 +869,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-27"
+      "updated": "2026-06-28"
     },
     {
       "id": "projection-disclosure",
@@ -915,7 +915,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-12",
-      "updated": "2026-06-27"
+      "updated": "2026-06-28"
     },
     {
       "id": "runtime-note-pii",
@@ -981,7 +981,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-16",
-      "updated": "2026-06-16"
+      "updated": "2026-06-28"
     },
     {
       "id": "strategy-knob-tradeoffs",
@@ -1006,7 +1006,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-15",
-      "updated": "2026-06-15"
+      "updated": "2026-06-28"
     },
     {
       "id": "tax-loss-harvesting",
@@ -1088,6 +1088,30 @@
       "examples": [],
       "created": "2026-06-09",
       "updated": "2026-06-13"
+    },
+    {
+      "id": "ui-probe-spa-auth-nav",
+      "type": "rule",
+      "domain": "brokers",
+      "status": "active",
+      "title": "A CDP probe for an authed SPA page must not reach it with a full",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/ui-probe-spa-auth-nav.md",
+      "code_refs": [
+        "probes/ui_goals_probe.py",
+        "probes/ui_decisions_probe.py",
+        "frontend/src/modules/auth/auth.guard.tsx",
+        "frontend/src/modules/auth/useAuthStore.ts",
+        "probes/Probes.md"
+      ],
+      "related": [
+        "probe-cdp-not-playwright"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-28",
+      "updated": "2026-06-28"
     },
     {
       "id": "vault-only-credentials",

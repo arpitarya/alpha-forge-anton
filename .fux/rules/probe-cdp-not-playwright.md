@@ -4,7 +4,7 @@ domain: brokers
 type: convention
 status: active
 created: 2026-06-09
-updated: 2026-06-27
+updated: 2026-06-28
 keywords:
   - probe
   - cdp

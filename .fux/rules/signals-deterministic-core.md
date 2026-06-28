@@ -4,15 +4,30 @@ domain: portfolio
 type: rule
 status: active
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-06-28
+aliases:
+  - deterministic-signals
+  - signal-engine-law
+  - llm-narrates-not-computes
+keywords:
+  - signals
+  - verdict
+  - deterministic
+  - config
+  - thresholds
+  - review
+  - screener
+  - llm
 code_refs:
   - backend/app/modules/signals/signal_rules.py
   - backend/app/modules/signals/screener_rules.py
   - backend/app/modules/signals/strategy_config.py
   - backend/app/modules/signals/review_service.py
-related: [strategy-knob-tradeoffs, secure-holdings-plan, finance-feature-playbook, position-concentration]
-aliases: [deterministic-signals, signal-engine-law, llm-narrates-not-computes]
-keywords: [signals, verdict, deterministic, config, thresholds, review, screener, llm]
+related:
+  - strategy-knob-tradeoffs
+  - secure-holdings-plan
+  - finance-feature-playbook
+  - position-concentration
 ---
 **Rule:** the signals engine is a **deterministic core with a probabilistic edge**.
 Every buy/hold/trim/sell verdict, stop, target, and screener rank is produced by typed
