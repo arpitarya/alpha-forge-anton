@@ -44,7 +44,7 @@ def test_kill_at_gate1_records_zero_reached():
 
 
 @pytest.mark.asyncio
-async def test_append_writes_a_doc_through_the_bridge(monkeypatch):
+async def test_append_writes_a_doc_through_the_bridge(monkeypatch, tmp_path):
     captured: dict[str, object] = {}
 
     async def _fake_save(doc_id, content, message=None, collection=None):
@@ -52,9 +52,14 @@ async def test_append_writes_a_doc_through_the_bridge(monkeypatch):
         return f"elgar://plan/{doc_id}"
 
     monkeypatch.setattr(edge_journal.elgar_bridge, "save", _fake_save)
+    # Isolate the JSONL mirror to a tmp path — never touch the real elgar store.
+    monkeypatch.setattr(edge_journal, "jsonl_path", lambda: tmp_path / "journal.jsonl")
     rec = build_record("edge-4", _RUN, [_gate(1, False)])
     ref = await edge_journal.append(rec)
 
     assert ref is not None
     assert captured["collection"] == "edges-journal"
     assert "KILL" in captured["content"] and "edge-4" in captured["content"]
+    # The mirror got exactly one structured line, stats-only (no markdown to parse).
+    lines = (tmp_path / "journal.jsonl").read_text().splitlines()
+    assert len(lines) == 1 and '"edge_id":"edge-4"' in lines[0]

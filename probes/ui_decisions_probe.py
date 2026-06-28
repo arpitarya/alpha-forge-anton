@@ -60,16 +60,24 @@ def _mint_token() -> str:
 
 
 async def _inject_auth_and_navigate(page, base: str, token: str) -> bool:
-    await page.goto(base, wait_until="domcontentloaded")
+    """Auth, then reach /decisions WITHOUT racing the auth guard. `zustand/persist`
+    rehydrates asynchronously, so a full `goto(/decisions)` runs `AuthGuard` with a null
+    token and bounces to /login. Instead: seed storage before any app script (init
+    script), land on / so the store rehydrates, then CLIENT-navigate via the in-app
+    Decisions button — the hydrated store stays in memory across the SPA transition."""
     auth_state = json.dumps({"state": {"accessToken": token, "refreshToken": None,
                                        "user": FAKE_USER}, "version": 0})
-    await page.evaluate(f"""() => {{
+    await page.add_init_script(f"""() => {{ try {{
         localStorage.setItem('af_token', {json.dumps(token)});
         localStorage.setItem('af-auth', {json.dumps(auth_state)});
         sessionStorage.setItem('af-booted', '1');
-    }}""")
-    await page.goto(f"{base}/decisions", wait_until="networkidle")
-    return "/login" not in page.url
+    }} catch (e) {{}} }}""")
+    await page.goto(base, wait_until="domcontentloaded")
+    decisions = page.get_by_role("button", name="Decisions")
+    await decisions.first.wait_for(timeout=15_000)
+    await decisions.first.click()
+    await page.wait_for_url("**/decisions", timeout=10_000)
+    return "/decisions" in page.url
 
 
 async def run(base: str, cdp_port: int) -> bool:
@@ -101,8 +109,10 @@ async def run(base: str, cdp_port: int) -> bool:
         _record("Decision-journal rows render", rows >= 4, f"{rows} rows")
         nums = await page.locator(".of-calib .cell .n").all_inner_texts()
         _record("Calibration shows 13 · 4 · 3", nums[:3] == ["13", "4", "3"], str(nums))
+        # chips render UPPERCASE via CSS text-transform (innerText reflects it) — match lower.
+        oc = body.lower()
         _record("Outcome chips render (cleared / hit stop / open)",
-                "cleared cone" in body and "hit stop" in body and "open" in body)
+                "cleared cone" in oc and "hit stop" in oc and "open" in oc)
         await page.screenshot(path=str(SHOT_DIR / "decisions-01-ledger.png"))
 
         print("\n── Replay gating")

@@ -42,6 +42,17 @@ the best-effort `plans.elgar_bridge`; see [edge_store.py](../backend/app/modules
 The journal lives in the `edges-journal` collection and carries **stats + counts only**
 (no holdings, no ₹ PII) — safe by construction.
 
+### Read side — the edge-library funnel (`GET /edges/summary`)
+
+Every `append` also mirrors the run as one JSONL line in the store
+(`edges-journal/journal.jsonl`, via [edge_journal.py](../backend/app/modules/edges/edge_journal.py)`.jsonl_path`),
+so reads never parse markdown. [edge_library.py](../backend/app/modules/edges/edge_library.py)`.library_summary()`
+aggregates the jsonl **and** tolerates legacy markdown-only entries (parsing their embedded
+```json block, never crashing), dedupes by `(edge_id, run_at)`, then groups by edge — one
+edge tested many times counts once. It returns `{tested, killed, passed, live, kill_rate,
+recent[]}` (`live=0` until a promotion source exists; `kill_rate = killed/tested`). Served
+read-only at `GET /edges/summary` for the Goals edge-library band.
+
 ## Gate-0 — data integrity (the pre-condition for every gate)
 
 Before any backtest runs, the **data itself** must be honest. Gate-0 lives in

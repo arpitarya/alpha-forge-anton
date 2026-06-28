@@ -2,24 +2,20 @@
 
 Orff never mutates the strategy silently: a change is surfaced as an **ApprovalCard**
 (reusing the `action_service` confirm shape) and only written on the user's approval.
-On apply, the new config is written to the elgar `strategy/` copy that
-`strategy_config.load_config` reads — by the exact path, then a git commit (one
-commit = an audit trail of how the strategy evolved). Best-effort: a missing store
-logs and degrades, never blocks. Writing the path directly (vs the elgar CLI) keeps
-the write consistent with the sync file reader.
+On apply, the new config is saved into the elgar `strategy` collection that
+`strategy_config.load_config` reads — through the elgar API (`elgar_bridge.save`),
+which git-commits and fail-loud-validates the store. Anton owns no store path; a
+bad/unreachable store raises (never a silent write).
 """
 
 from __future__ import annotations
 
-import asyncio
-import logging
 import re
 
 import yaml
 
-from app.modules.signals.strategy_config import StrategyConfig, _config_paths, load_config
-
-logger = logging.getLogger(__name__)
+from app.modules.plans import elgar_bridge
+from app.modules.signals.strategy_config import StrategyConfig, load_config
 
 _CHANGE = re.compile(r"\b(?:set|change|make)\s+([a-z_]+\.[a-z_]+)\s+(?:to|=)\s+([\w.\-]+)", re.I)
 
@@ -69,30 +65,12 @@ def _to_md(cfg: StrategyConfig) -> str:
     return f"---\n{body}---\n\n# Strategy config (Orff-tuned)\n"
 
 
-async def _git_commit(path) -> None:
-    root = path.parents[1]  # <elgar>/strategy/strategy.config.md → <elgar>
-    for args in (["add", str(path)], ["commit", "-m", "orff: tune strategy config"]):
-        proc = await asyncio.create_subprocess_exec(
-            "git",
-            "-C",
-            str(root),
-            *args,
-            stdout=asyncio.subprocess.DEVNULL,
-            stderr=asyncio.subprocess.DEVNULL,
-        )
-        await proc.wait()
-
-
 async def apply(knob: str, value: object) -> StrategyConfig:
-    """Validate, write to the elgar strategy copy, commit. Raises on a bad knob/value."""
+    """Validate, save via the elgar API. Raises on a bad knob/value or unreachable store."""
     data = load_config().model_dump(mode="json")
     _set(data, knob, value)  # KeyError on an unknown knob path
     new = StrategyConfig(**data)  # ValidationError on a bad value
-    path = _config_paths()[0]
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(_to_md(new))
-    try:
-        await _git_commit(path)
-    except Exception as e:  # commit is best-effort; the write already landed
-        logger.warning("strategy config commit skipped: %s", e)
+    await elgar_bridge.save(
+        "strategy.config", _to_md(new), message="orff: tune strategy config", collection="strategy"
+    )
     return new

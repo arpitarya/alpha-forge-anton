@@ -1,7 +1,8 @@
-"""Bridge to the elgar plan store — subprocess, same pattern as `fux_bridge`.
+"""Bridge to the elgar plan store — the elgar CLI is Anton's ONLY door to it.
 
-Saving goes through the `elgar` CLI so Anton and the operator share one write
-path (one git commit per save, store stays outside any public work tree).
+Anton owns no elgar path; elgar maintains the store + path. Writes go through
+`save` (git-committed; a bad/unreachable store raises `ElgarStoreError`, never a
+silent local fallback); reads through `get`/`get_sync` (memoised for hot loaders).
 """
 
 from __future__ import annotations
@@ -11,8 +12,14 @@ import json
 import os
 import re
 import shutil
+import subprocess
 
 _SLUG_RE = re.compile(r"[^a-z0-9]+")
+_read_cache: dict[tuple[str, str | None], str | None] = {}  # sync reads; cleared by `save`
+
+
+class ElgarStoreError(RuntimeError):
+    """An elgar write could not reach a valid store — fail loud, never write elsewhere."""
 
 
 def slugify(title: str) -> str:
@@ -43,9 +50,23 @@ async def save(
     """Write a doc into the store; returns its `elgar://plan/<id>` ref."""
     args = ["save", plan_id, *_dir(collection)] + (["-m", message] if message else [])
     code, out = await _run(*args, stdin=content.encode())
-    if code != 0:
-        raise RuntimeError(f"elgar save failed: {out[:200]}")
+    if code != 0:  # elgar self-validates its store; a bad/unreachable store fails loud here
+        raise ElgarStoreError(f"elgar save failed (store unreachable/invalid): {out[:200]}")
+    _read_cache.pop((plan_id, collection), None)
     return f"elgar://plan/{plan_id}"
+
+
+def get_sync(doc_id: str, collection: str | None = None) -> str | None:
+    """Cached sync read via the elgar CLI (memoised; cleared on save). None when absent."""
+    if (key := (doc_id, collection)) not in _read_cache:
+        try:
+            p = subprocess.run(  # noqa: S603
+                [_bin(), "get", doc_id, *_dir(collection)], capture_output=True, text=True
+            )
+            _read_cache[key] = p.stdout if p.returncode == 0 else None
+        except OSError:
+            _read_cache[key] = None
+    return _read_cache[key]
 
 
 async def get(doc_id: str, collection: str | None = None) -> str | None:

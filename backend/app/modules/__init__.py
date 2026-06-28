@@ -6,6 +6,7 @@ from fastapi import APIRouter
 
 from app.modules.concierge import router as concierge_router
 from app.modules.dashboard import router as dashboard_router
+from app.modules.goals import router as goals_router
 from app.modules.health import router as health_router
 from app.modules.iam import router as iam_router
 from app.modules.news import router as news_router
@@ -22,5 +23,6 @@ api_router.include_router(dashboard_router, prefix="/dashboard", tags=["dashboar
 api_router.include_router(news_router, tags=["news"])
 api_router.include_router(concierge_router, prefix="/concierge", tags=["concierge"])
 api_router.include_router(signals_router, prefix="/signals", tags=["signals"])
+api_router.include_router(goals_router, tags=["goals"])
 
 __all__ = ["api_router"]

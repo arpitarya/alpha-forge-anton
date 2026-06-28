@@ -33,6 +33,7 @@ def resolve(env_var: str, *default_suffix: str) -> Path:
     return p if p.is_absolute() else data_dir() / p
 
 
-def elgar_dir() -> Path:
-    """Private elgar money-doc store. Override with `ELGAR_DIR`."""
-    return resolve("ELGAR_DIR", "elgar")
+# NOTE: there is deliberately no `elgar_dir()` here. The elgar store is an
+# independent sibling tool that maintains its own store + path; Anton owns no
+# elgar filesystem path and reaches it only through the elgar CLI API
+# (`app.modules.plans.elgar_bridge`). See ADR `anton-delegates-elgar-store`.

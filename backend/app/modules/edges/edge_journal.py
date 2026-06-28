@@ -11,16 +11,25 @@ from __future__ import annotations
 
 import logging
 from datetime import UTC, datetime
+from pathlib import Path
 
 from pydantic import BaseModel, Field
 
 from app.modules.contracts.testreport_contract import TestReport
 from app.modules.edges.edge_schema import GateResult
 from app.modules.plans import elgar_bridge
+from app.modules.plans.elgar_store import store_root
 
 logger = logging.getLogger(__name__)
 
 _COLLECTION = "edges-journal"
+
+
+def jsonl_path() -> Path:
+    """Append-only structured mirror of the journal — one JSON record per run, so
+    the read side (`edge_library`) never parses markdown. Lives in the elgar store
+    (root from elgar; Anton owns no path)."""
+    return store_root() / _COLLECTION / "journal.jsonl"
 
 
 class JournalRecord(BaseModel):
@@ -66,7 +75,19 @@ def _doc(rec: JournalRecord) -> str:
     )
 
 
+def _append_jsonl(rec: JournalRecord) -> None:
+    """Mirror the record as one JSONL line — best-effort, stats-only (no ₹/PII)."""
+    try:
+        path = jsonl_path()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as fh:
+            fh.write(rec.model_dump_json() + "\n")
+    except Exception as e:  # never block discovery on the mirror
+        logger.warning("journal jsonl append failed: %s", e)
+
+
 async def append(rec: JournalRecord) -> str | None:
+    _append_jsonl(rec)
     entry_id = f"{rec.edge_id}-{rec.run_at.replace(':', '').replace('-', '')[:15]}"
     try:
         return await elgar_bridge.save(

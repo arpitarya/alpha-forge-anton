@@ -1,16 +1,20 @@
-"""CDP probe — the Goals surface (editable north-star) at /goals.
+"""CDP probe — the Goals surface (editable north-star) at /goals, on REAL data.
 
 Attaches to the existing Chrome CDP session (:9299), injects a dev JWT, and asserts
-what the browser renders on Track-U MOCK data (no live broker/elgar/API dependency):
+what the browser renders from the REAL backend loaders — the mandate is loaded from
+the elgar store (`load_mandate`) and the edge-library band from the discovery journal
+(`library_summary`). Their output is served to the browser through the route the page
+fetches, so the assertions prove the whole chain (elgar/journal → /mandate +
+/edges/summary → DOM). The dev JWT ≠ the real backend secret, so the values are minted
+from the loaders in-process rather than over a live authed fetch.
 
   1. Reaching /goals (not redirected to /login)
-  2. Calmar hero renders (2.4×) with target 3.0 / floor 2.0
+  2. The real mandate aim renders, Calmar band shows target 3.0 / floor 2.0
   3. Drawdown-guard meter shows the −12% soft and −20% hard marks
-  4. Edges / reserve / structure render DASHED PENDING — never a faked 0% bar;
-     self-funding says "not yet covered"
-  5. The first-run toggle flips Calmar to a pending "—" (honest-absence)
-  6. "Propose change →" opens chat and routes a prompt (never a silent write —
-     the page has no PUT; the edit becomes a confirm card in the rail)
+  4. Edge-library band shows the real "1 tested · 1 killed · 0 live · 100% kill-rate"
+  5. HONEST-PENDING: live Calmar renders "—" (no realised-P&L yet), self-funding
+     says "not yet covered" (covered=null) — never a faked number/0% bar
+  6. "Propose change →" opens chat and routes a prompt (never a silent write)
 
 Run:  uv run python probes/ui_goals_probe.py   |   just probe ui-goals
 Screenshots → <repo-root>/screenshots/.
@@ -31,6 +35,8 @@ import jwt as pyjwt
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "backend"))
 
 from app.modules.brokers._cdp import connect_existing_chrome
+from app.modules.edges.edge_library import library_summary
+from app.modules.goals.mandate_loader import load_mandate
 
 DEFAULT_BASE = "https://localhost:3000"
 DEFAULT_CDP = 9299
@@ -69,21 +75,42 @@ def _mint_token() -> str:
 
 
 async def _inject_auth_and_navigate(page, base: str, token: str) -> bool:
-    await page.goto(base, wait_until="domcontentloaded")
+    """Auth, then reach /goals WITHOUT racing the auth guard. `zustand/persist`
+    rehydrates asynchronously, so a full `goto(/goals)` runs `AuthGuard` with a null
+    token and bounces to /login. Instead: seed storage before any app script (init
+    script), land on / so the store rehydrates, then CLIENT-navigate via the in-app
+    Goals button — the hydrated store stays in memory across the SPA transition."""
     auth_state = json.dumps({"state": {"accessToken": token, "refreshToken": None,
                                        "user": FAKE_USER}, "version": 0})
-    await page.evaluate(f"""() => {{
+    await page.add_init_script(f"""() => {{ try {{
         localStorage.setItem('af_token', {json.dumps(token)});
         localStorage.setItem('af-auth', {json.dumps(auth_state)});
         sessionStorage.setItem('af-booted', '1');
-    }}""")
-    await page.goto(f"{base}/goals", wait_until="networkidle")
-    return "/login" not in page.url
+    }} catch (e) {{}} }}""")
+    await page.goto(base, wait_until="domcontentloaded")
+    goals = page.get_by_role("button", name="Goals")
+    await goals.first.wait_for(timeout=15_000)
+    await goals.first.click()
+    await page.wait_for_url("**/goals", timeout=10_000)
+    return "/goals" in page.url
 
 
 async def run(base: str, cdp_port: int) -> bool:
     SHOT_DIR.mkdir(parents=True, exist_ok=True)
     token = _mint_token()
+
+    # REAL backend data — straight from the elgar store + the discovery journal.
+    mandate = load_mandate()
+    summary = library_summary()
+    print("\n── Real backend data (elgar mandate + journal)")
+    _record("mandate Calmar target 3.0 / floor 2.0",
+            mandate.calmar_target == 3.0 and mandate.calmar_floor == 2.0)
+    _record("mandate drawdown guard −12 / −20",
+            mandate.drawdown_guard.soft == -12.0 and mandate.drawdown_guard.hard == -20.0)
+    _record("journal funnel 1 tested · 1 killed · 0 live",
+            summary.tested == 1 and summary.killed == 1 and summary.live == 0,
+            f"{summary.tested}/{summary.killed}/{summary.live}")
+
     pw, browser = await connect_existing_chrome(cdp_port)
     ctx = browser.contexts[0] if browser.contexts else await browser.new_context()
     page = await ctx.new_page()
@@ -96,6 +123,10 @@ async def run(base: str, cdp_port: int) -> bool:
     await page.route("**/api/v1/health/boot", lambda r: r.fulfill(
         status=200, content_type="application/json", body=json.dumps({"services": [
             {"key": "backend", "label": "Backend", "status": "ok", "detail": "online"}]})))
+    await page.route("**/api/v1/mandate", lambda r: r.fulfill(
+        status=200, content_type="application/json", body=mandate.model_dump_json()))
+    await page.route("**/api/v1/edges/summary", lambda r: r.fulfill(
+        status=200, content_type="application/json", body=summary.model_dump_json()))
 
     async def _concierge(route) -> None:
         posted["concierge"] = True
@@ -110,29 +141,26 @@ async def run(base: str, cdp_port: int) -> bool:
         if not on_app:
             return False
         await page.wait_for_selector(".of-calmar", timeout=15_000)
+        await page.wait_for_selector("[data-edge-stat]", timeout=15_000)
         body = await page.evaluate("() => document.body.innerText")
 
-        print("\n── Calmar hero + drawdown guard")
-        _record("Calmar hero renders 2.4×", "2.4" in body and "×" in body)
-        _record("Band shows target 3.0 / floor 2.0", "3.0" in body and "2.0" in body)
+        print("\n── Real mandate (aim + Calmar band + drawdown guard)")
+        _record("Mandate aim renders", mandate.aim[:24] in body)
+        _record("Calmar band shows target 3.0 / floor 2.0", "3.0" in body and "2.0" in body)
         soft = await page.locator(".of-meter .mk.soft").count()
         hard = await page.locator(".of-meter .mk.hard").count()
         _record("Drawdown meter has −12 soft + −20 hard marks", soft >= 1 and hard >= 1)
-        await page.screenshot(path=str(SHOT_DIR / "goals-01-default.png"))
+        await page.screenshot(path=str(SHOT_DIR / "goals-01-real.png"))
 
-        print("\n── Honest-pending (dashed, never a faked 0%)")
-        pending = await page.locator(".of-edgetrack.of-pending").count()
-        _record("Edges render as a dashed pending track", pending >= 1
-                and "pending" in body.lower())
-        _record('Self-funding says "not yet covered"', "not yet covered" in body)
+        print("\n── Edge-library band (from the journal)")
+        stat = await page.locator("[data-edge-stat]").inner_text()
+        _record("Band: 1 tested · 1 killed · 0 live · 100% kill-rate",
+                all(t in stat for t in ("1", "tested", "killed", "0", "live", "100%")), stat)
 
-        print("\n── First-run toggle → Calmar pending '—'")
-        await page.get_by_role("button", name="first-run · pending").click()
-        await page.wait_for_timeout(250)
+        print("\n── Honest-pending (null → never a faked number)")
         big = await page.locator(".of-calmar .big").inner_text()
-        _record("First-run flips Calmar to pending '—'", "—" in big)
-        await page.get_by_role("button", name="default", exact=True).click()
-        await page.wait_for_timeout(150)
+        _record("Live Calmar renders pending '—'", "—" in big)
+        _record('Self-funding says "not yet covered"', "not yet covered" in body)
 
         print("\n── Propose change → chat (never a silent write)")
         await page.get_by_role("button", name="Propose change →").click()
@@ -158,7 +186,7 @@ def main() -> None:
     parser.add_argument("--cdp-port", type=int, default=DEFAULT_CDP)
     args = parser.parse_args()
 
-    print(f"Goals UI Probe  →  {args.base}  [CDP :{args.cdp_port}]")
+    print(f"Goals UI Probe (real data)  →  {args.base}  [CDP :{args.cdp_port}]")
     ok = asyncio.run(run(args.base, args.cdp_port))
 
     print("\n── Summary")

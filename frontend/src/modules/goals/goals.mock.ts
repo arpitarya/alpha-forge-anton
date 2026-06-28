@@ -23,15 +23,21 @@ export const OBJECTIVE_MOCK: Objective = {
   capital_structure: { groww: 620000, zerodha: 480000, reserve: 200000 },
 };
 
-/** Observed/measured side — honest-pending where there is not yet enough data. */
+/** Observed/measured side — honest-pending where there is not yet enough data.
+ * `edges` is the LIVE (promoted-to-capital) count; `tested`/`killed`/`kill_rate`
+ * are the edge-library funnel from the discovery journal (GET /edges/summary). */
 export interface GoalsLive {
   /** Realised Calmar so far, or null when < 90 trading days (renders pending). */
   calmar: number | null;
   /** Current trailing drawdown %, or null when pending. */
   current_dd: number | null;
-  /** Validated live edges and the target band. */
+  /** Validated live edges (promoted to capital) and the target band. */
   edges: number;
   edges_target: string;
+  /** Edge-library funnel — edges tested, killed, and the kill-rate (0.0–1.0). */
+  tested: number;
+  killed: number;
+  kill_rate: number;
 }
 
 export const GOALS_LIVE_MOCK: GoalsLive = {
@@ -39,6 +45,9 @@ export const GOALS_LIVE_MOCK: GoalsLive = {
   current_dd: -8.2,
   edges: 0,
   edges_target: "2–3",
+  tested: 1,
+  killed: 1,
+  kill_rate: 1,
 };
 
 /** First-run variant — nothing measurable yet; everything renders dashed/pending. */
@@ -47,4 +56,7 @@ export const GOALS_LIVE_PENDING: GoalsLive = {
   current_dd: null,
   edges: 0,
   edges_target: "2–3",
+  tested: 0,
+  killed: 0,
+  kill_rate: 0,
 };

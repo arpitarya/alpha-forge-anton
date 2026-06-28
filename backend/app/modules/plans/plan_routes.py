@@ -34,7 +34,7 @@ async def get_plan(plan_id: str = "core-allocation"):
         "targets": {k.value: v for k, v in plan.targets.items()},
         "bands": plan.bands,
         "rules": plan.rules,
-        "available": available_plans(),
+        "available": await available_plans(),
     }
 
 

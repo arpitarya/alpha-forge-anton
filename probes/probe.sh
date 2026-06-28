@@ -34,6 +34,7 @@ Available probes:
     graphify-cage        graphify_cage_probe.py
     plan-safety          plan_safety_probe.py
     critic-runtime       critic_runtime_probe.py
+    elgar-store-guard    elgar_store_guard_probe.py
     holdings-disclosure  holdings_disclosure_probe.py
     memory-context       memory_context_probe.py
     context-drift        context_drift_probe.py
@@ -112,6 +113,7 @@ case "$NAME" in
     graphify-cage)     SCRIPT="graphify_cage_probe.py" ;;
     plan-safety)       SCRIPT="plan_safety_probe.py" ;;
     critic-runtime)    SCRIPT="critic_runtime_probe.py" ;;
+    elgar-store-guard) SCRIPT="elgar_store_guard_probe.py" ;;
     holdings-disclosure) SCRIPT="holdings_disclosure_probe.py" ;;
     memory-context)    SCRIPT="memory_context_probe.py" ;;
     context-drift)     SCRIPT="context_drift_probe.py" ;;
