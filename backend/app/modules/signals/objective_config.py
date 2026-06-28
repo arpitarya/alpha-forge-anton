@@ -50,4 +50,4 @@ class Objective(BaseModel):
 
 # Loading split to objective_loader for the line budget; re-exported here so
 # objective_config stays the single import surface.
-from app.modules.signals.objective_loader import _objective_paths, load_objective  # noqa: E402, F401
+from app.modules.signals.objective_loader import load_objective  # noqa: E402, F401

@@ -26,6 +26,19 @@ Shared primitives live in `modules/forge/` (`Num`, `UChip`, `FanChart` + `fan.ut
 `Www`). The existing `concierge/ObjectivePanel.tsx` (old `signals/objective` shape) and
 its `ui-objective` probe are left untouched — Goals is the new Phase-0 surface.
 
+### Phase 3a — Goals wired to REAL data
+
+The Goals tab no longer renders `OBJECTIVE_MOCK`/`GOALS_LIVE_*`: `GoalsPanel` fetches the
+program mandate from `GET /mandate` (`goals/mandate_loader.py` → the elgar-stored
+`Objective`, `opex_per_month` filled at runtime from the funding registry, `covered` kept
+`None`) and the edge-library band from `GET /edges/summary` (the discovery-journal funnel,
+see [edges.md](edges.md)). Mock is retained only as the **typed loading fallback**. Live
+Calmar / drawdown stay honest-pending (`null` → "—", never a faked number) because no
+realised-P&L source exists yet; `live=0` edges render as an honest empty band, not a 0%
+bar; the edge band shows the real `1 tested · 1 killed · 0 live · 100% kill-rate`. Personal
+₹ amounts live ONLY in elgar and are loaded per-request — never committed to anton.
+**Decisions / Approval / Cone stay on mock this pass.** Verified by `just probe ui-goals`.
+
 ## The LIVE/STALE/ERROR feed contract
 
 `FeedToggle` drives the honest-pending story on the inline proposal:

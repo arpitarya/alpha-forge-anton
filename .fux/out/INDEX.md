@@ -1,6 +1,6 @@
 # Fux INDEX
 
-_53 active entries across 11 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
+_58 active entries across 12 domains. Read this first; open a rule (`fux why <id>`) only when relevant._
 
 ## architecture
 - **mutation-confirm-rmw** (rule) — every Orff-initiated mutation (memory note, exclusion-list edit, strategy/obj…
@@ -14,6 +14,7 @@ _53 active entries across 11 domains. Read this first; open a rule (`fux why <id
 - **holding** (glossary) — Holding
 - **probe-cdp-not-playwright** (convention) — UI and broker verification is done with scripts in `probes/` that
 - **source-kind-status** (glossary) — SourceKind / SourceStatus
+- **ui-probe-spa-auth-nav** (rule) — A CDP probe for an authed SPA page must not reach it with a full
 
 ## code-quality
 - **async-everywhere** (convention) — In async services, I/O-bound code is `async` end-to-end — no _[global]_
@@ -27,6 +28,9 @@ _53 active entries across 11 domains. Read this first; open a rule (`fux why <id
 
 ## frontend
 - **ui-component-contract** (convention) — A UI Orff generates on the fly is a declarative UISpec — a JSON
+
+## governance
+- **fux-mandate** (convention) — Fux mandate — the suite's knowledge engine, bound to a $0 / deterministic / n…
 
 ## market-structure
 - **market-hours-nse** (regulatory) — NSE/BSE equity continuous trading runs 09:15–15:30 IST
@@ -62,17 +66,23 @@ _53 active entries across 11 domains. Read this first; open a rule (`fux why <id
 
 ## security
 - **afbach-vault** (glossary) — afbach vault (alpha-forge-bach)
+- **bach-mandate** (convention) — Bach mandate — the suite's single secrets vault
 - **configurable-paths** (convention) — Configurable paths — no hardcoded filesystem path; one env-driven base
 - **context-docs-figure-free** (rule) — Orff's standing-context / memory docs hold durable preferences and rules only…
+- **elgar-mandate** (convention) — Elgar mandate — the suite's private money store
 - **knowledge-location** (convention) — every authored knowledge document lives in exactly one of two
 - **no-secrets-in-vcs** (convention) — Never commit secrets — `.env` files, API keys, tokens, private _[global]_
 - **plan-store** (convention) — Plan store (elgar) — money documents & hard PII never enter the public repo
 - **runtime-note-pii** (invariant) — Any text the Orff agent writes
 - **trusted-lane-tools** (rule) — Orff's tool-calling and paid web grounding are governed by the trusted lane.
 - **vault-only-credentials** (convention) — Broker credentials — user IDs, client IDs, API keys — live only
+- **wagner-mandate** (convention) — Wagner mandate — identity & access, fully delegated
 
 ## tax
 - **capital-gains-debt-gold** (regulatory) — Non-equity assets follow different holding-period and rate
 - **capital-gains-equity** (regulatory) — For listed Indian equity / equity mutual funds, the holding
 - **crypto-tax-vda** (regulatory) — Crypto and other Virtual Digital Assets (VDAs) have their
 - **tax-loss-harvesting** (regulatory) — Capital losses offset capital gains under fixed asymmetric
+
+## deprecated (excluded from context)
+- ~~anton-delegates-elgar-store~~ — This ADR's decision — Anton holds no elgar filesystem path; all elgar I/O goes

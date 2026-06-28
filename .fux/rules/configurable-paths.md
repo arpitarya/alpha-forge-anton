@@ -5,7 +5,7 @@ type: convention
 status: active
 tier: constitutional
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-06-28
 keywords:
   - path
   - paths
@@ -27,7 +27,7 @@ related:
   - plan-store
   - no-secrets-in-vcs
   - dump-utils-single-source
-seal: 84b9c043a9e4320d
+seal: 6afea8220c1c89a8
 ratification:
   by: arpit arya
   date: 2026-06-27

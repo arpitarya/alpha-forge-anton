@@ -4,11 +4,22 @@ domain: brokers
 type: convention
 status: active
 created: 2026-06-09
-updated: 2026-06-09
+updated: 2026-06-27
+keywords:
+  - csv
+  - dump
+  - cache
+  - dump_utils
+  - ttl
+  - path
+  - headers
+  - single-source
 code_refs:
   - backend/app/modules/brokers/dump_utils.py
-related: [broker-source-contract, broker-csv-dumps, inr-normalization]
-keywords: [csv, dump, cache, dump_utils, ttl, path, headers, single-source]
+related:
+  - broker-source-contract
+  - broker-csv-dumps
+  - inr-normalization
 ---
 **Convention:** All broker CSV I/O goes through
 [dump_utils.py](../../backend/app/modules/brokers/dump_utils.py) — path resolution

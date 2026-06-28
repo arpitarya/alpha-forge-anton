@@ -1,8 +1,8 @@
 """Strategy-config loading — split from `strategy_config` for the line budget.
 
-Resolution: elgar `strategy/` (live, Orff-editable) → git-safe repo seed
-`strategy.config.md` → defaults; a parse error falls through. Re-exported by
-`strategy_config`, so import `load_config` / `_config_paths` from there.
+Resolution: elgar `strategy/strategy.config` (via the elgar API — Anton owns no
+store path) → git-safe repo seed `strategy.config.md` → defaults; a parse error
+falls through. Re-exported by `strategy_config`, so import `load_config` from there.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from pathlib import Path
 
 import yaml
 
-from app.core.paths import elgar_dir
+from app.modules.plans import elgar_bridge
 from app.modules.signals.strategy_config import StrategyConfig
 
 logger = logging.getLogger(__name__)
@@ -27,18 +27,22 @@ def _parse(text: str) -> dict:
     return yaml.safe_load(m.group(1) if m else text) or {}
 
 
-def _config_paths() -> tuple[Path, Path]:  # (elgar live copy, repo seed)
-    here = Path(__file__).resolve().parent
-    return elgar_dir() / "strategy" / "strategy.config.md", here / "strategy.config.md"
+def _seed() -> Path:
+    return Path(__file__).resolve().parent / "strategy.config.md"
 
 
 def load_config() -> StrategyConfig:
-    """Typed config from elgar → repo seed → defaults; a parse error falls through."""
-    for path in _config_paths():
-        try:
-            if path.exists():
-                return StrategyConfig(**_parse(path.read_text()))
-        except Exception as e:  # a malformed copy degrades to the next source
-            logger.warning("strategy config at %s is unreadable (%s) — falling through", path, e)
+    """Typed config from elgar (API) → repo seed → defaults; a parse error falls through."""
+    seed = _seed()
+    sources = [
+        elgar_bridge.get_sync("strategy.config", collection="strategy"),
+        seed.read_text() if seed.exists() else None,
+    ]
+    for text in sources:
+        if not text:
             continue
+        try:
+            return StrategyConfig(**_parse(text))
+        except Exception as e:  # a malformed copy degrades to the next source
+            logger.warning("strategy config source unreadable (%s) — falling through", e)
     return StrategyConfig()

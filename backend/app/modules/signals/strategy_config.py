@@ -77,5 +77,5 @@ class StrategyConfig(BaseModel):
 
 
 # Loading lives in config_loader (line budget); re-exported here so strategy_config
-# stays the import surface for `load_config` / `_config_paths`. After StrategyConfig.
-from app.modules.signals.config_loader import _config_paths, load_config  # noqa: E402, F401
+# stays the import surface for `load_config`. After StrategyConfig.
+from app.modules.signals.config_loader import load_config  # noqa: E402, F401

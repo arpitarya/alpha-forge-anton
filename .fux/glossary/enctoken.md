@@ -4,12 +4,23 @@ domain: brokers
 type: glossary
 status: active
 created: 2026-06-09
-updated: 2026-06-09
+updated: 2026-06-27
+aliases:
+  - enc token
+  - kite token
+  - session token
+keywords:
+  - enctoken
+  - zerodha
+  - kite
+  - cookie
+  - auth
+  - session
 code_refs:
   - backend/app/modules/brokers/_http.py
-related: [cdp-chrome, broker-source-integration]
-aliases: [enc token, kite token, session token]
-keywords: [enctoken, zerodha, kite, cookie, auth, session]
+related:
+  - cdp-chrome
+  - broker-source-integration
 ---
 **Term:** enctoken
 

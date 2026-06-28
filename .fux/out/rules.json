@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 65,
+  "count": 71,
   "rules": [
     {
       "id": "async-everywhere",
@@ -69,6 +69,26 @@
       "updated": "2026-06-01"
     },
     {
+      "id": "anton-delegates-elgar-store",
+      "type": "adr",
+      "domain": "security",
+      "status": "deprecated",
+      "title": "This ADR's decision — Anton holds no elgar filesystem path; all elgar I/O goes",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/anton-delegates-elgar-store.md",
+      "code_refs": [],
+      "related": [
+        "elgar-mandate",
+        "configurable-paths",
+        "plan-store"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-28",
+      "updated": "2026-06-28"
+    },
+    {
       "id": "anton-overview",
       "type": "narrative",
       "domain": "product",
@@ -103,6 +123,29 @@
       "examples": [],
       "created": "2026-06-04",
       "updated": "2026-06-04"
+    },
+    {
+      "id": "bach-mandate",
+      "type": "convention",
+      "domain": "security",
+      "status": "active",
+      "title": "Bach mandate — the suite's single secrets vault",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/bach-mandate.md",
+      "code_refs": [
+        "backend/app/core/vault_client.py",
+        "backend/app/modules/brokers/broker_env.py"
+      ],
+      "related": [
+        "vault-only-credentials",
+        "wagner-mandate",
+        "plan-store"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-28",
+      "updated": "2026-06-28"
     },
     {
       "id": "broker-csv-dumps",
@@ -305,7 +348,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-27",
-      "updated": "2026-06-27"
+      "updated": "2026-06-28"
     },
     {
       "id": "context-docs-figure-free",
@@ -443,7 +486,39 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-09"
+      "updated": "2026-06-27"
+    },
+    {
+      "id": "elgar-mandate",
+      "type": "convention",
+      "domain": "security",
+      "status": "active",
+      "title": "Elgar mandate — the suite's private money store",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/elgar-mandate.md",
+      "code_refs": [
+        "backend/app/core/paths.py",
+        "backend/app/modules/plans/elgar_bridge.py",
+        "backend/app/modules/plans/elgar_store.py",
+        "backend/app/modules/plans/plan_loader.py",
+        "backend/app/modules/signals/objective_loader.py",
+        "backend/app/modules/signals/config_loader.py",
+        "backend/app/modules/signals/objective_tuning.py",
+        "backend/app/modules/signals/strategy_tuning.py",
+        "backend/app/modules/goals/mandate_loader.py",
+        "backend/app/modules/edges/edge_journal.py",
+        "probes/elgar_store_guard_probe.py"
+      ],
+      "related": [
+        "plan-store",
+        "knowledge-location",
+        "configurable-paths"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-28",
+      "updated": "2026-06-28"
     },
     {
       "id": "emergency-fund-first",
@@ -510,7 +585,25 @@
       "check": null,
       "examples": [],
       "created": "2026-06-19",
-      "updated": "2026-06-22"
+      "updated": "2026-06-27"
+    },
+    {
+      "id": "fux-mandate",
+      "type": "convention",
+      "domain": "governance",
+      "status": "active",
+      "title": "Fux mandate — the suite's knowledge engine, bound to a $0 / deterministic / n…",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/fux-mandate.md",
+      "code_refs": [
+        "pyproject.toml"
+      ],
+      "related": [],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-28",
+      "updated": "2026-06-28"
     },
     {
       "id": "getting-started",
@@ -776,7 +869,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-27"
+      "updated": "2026-06-28"
     },
     {
       "id": "projection-disclosure",
@@ -822,7 +915,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-12",
-      "updated": "2026-06-12"
+      "updated": "2026-06-28"
     },
     {
       "id": "runtime-note-pii",
@@ -888,7 +981,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-16",
-      "updated": "2026-06-16"
+      "updated": "2026-06-28"
     },
     {
       "id": "strategy-knob-tradeoffs",
@@ -913,7 +1006,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-15",
-      "updated": "2026-06-15"
+      "updated": "2026-06-28"
     },
     {
       "id": "tax-loss-harvesting",
@@ -997,6 +1090,30 @@
       "updated": "2026-06-13"
     },
     {
+      "id": "ui-probe-spa-auth-nav",
+      "type": "rule",
+      "domain": "brokers",
+      "status": "active",
+      "title": "A CDP probe for an authed SPA page must not reach it with a full",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/ui-probe-spa-auth-nav.md",
+      "code_refs": [
+        "probes/ui_goals_probe.py",
+        "probes/ui_decisions_probe.py",
+        "frontend/src/modules/auth/auth.guard.tsx",
+        "frontend/src/modules/auth/useAuthStore.ts",
+        "probes/Probes.md"
+      ],
+      "related": [
+        "probe-cdp-not-playwright"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-28",
+      "updated": "2026-06-28"
+    },
+    {
       "id": "vault-only-credentials",
       "type": "convention",
       "domain": "security",
@@ -1017,6 +1134,30 @@
       "examples": [],
       "created": "2026-06-09",
       "updated": "2026-06-09"
+    },
+    {
+      "id": "wagner-mandate",
+      "type": "convention",
+      "domain": "security",
+      "status": "active",
+      "title": "Wagner mandate — identity & access, fully delegated",
+      "layer": "project",
+      "path": "/Users/arpitarya/my_programs/anton/.fux/rules/wagner-mandate.md",
+      "code_refs": [
+        "backend/app/modules/iam/iam_proxy.py",
+        "backend/app/core/config.py",
+        "backend/alembic/versions/b3d6f8a2c9e1_remove_iam_tables.py"
+      ],
+      "related": [
+        "bach-mandate",
+        "elgar-mandate",
+        "configurable-paths"
+      ],
+      "edges": {},
+      "check": null,
+      "examples": [],
+      "created": "2026-06-28",
+      "updated": "2026-06-28"
     },
     {
       "id": "what",
@@ -1157,7 +1298,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-09"
+      "updated": "2026-06-27"
     },
     {
       "id": "holding",

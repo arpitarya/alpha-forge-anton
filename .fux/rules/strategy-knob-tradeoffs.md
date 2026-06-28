@@ -4,15 +4,31 @@ domain: portfolio
 type: rule
 status: active
 created: 2026-06-15
-updated: 2026-06-15
+updated: 2026-06-28
+aliases:
+  - strategy-knobs
+  - signal-config-tradeoffs
+  - tunable-strategy
+keywords:
+  - strategy
+  - config
+  - knob
+  - tradeoff
+  - trim
+  - trail
+  - universe
+  - adx
+  - rsi
+  - budget
 code_refs:
   - backend/app/modules/signals/strategy_config.py
   - backend/app/modules/signals/strategy_tuning.py
   - backend/app/modules/signals/signal_rules.py
   - backend/app/modules/signals/screener_rules.py
-related: [position-concentration, rebalancing-policy, capital-market-assumptions]
-aliases: [strategy-knobs, signal-config-tradeoffs, tunable-strategy]
-keywords: [strategy, config, knob, tradeoff, trim, trail, universe, adx, rsi, budget]
+related:
+  - position-concentration
+  - rebalancing-policy
+  - capital-market-assumptions
 ---
 **Rule:** the signals engine's behaviour is governed by a small set of tunable
 knobs (`strategy.config.md` → `StrategyConfig`). Orff explains each knob's
