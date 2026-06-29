@@ -8075,7 +8075,7 @@
       "label": "_parts",
       "type": "function",
       "file": "backend/app/modules/marketdata/bhavcopy_fetch.py",
-      "line": 34,
+      "line": 38,
       "community": 0,
       "centrality": 0.000201
     },
@@ -8084,7 +8084,7 @@
       "label": "make_opener",
       "type": "function",
       "file": "backend/app/modules/marketdata/bhavcopy_fetch.py",
-      "line": 42,
+      "line": 46,
       "community": 0,
       "centrality": 0.000105
     },
@@ -8093,7 +8093,7 @@
       "label": "prime",
       "type": "function",
       "file": "backend/app/modules/marketdata/bhavcopy_fetch.py",
-      "line": 48,
+      "line": 52,
       "community": 0,
       "centrality": 0.000129
     },
@@ -8102,7 +8102,7 @@
       "label": "fetch_bytes",
       "type": "function",
       "file": "backend/app/modules/marketdata/bhavcopy_fetch.py",
-      "line": 56,
+      "line": 60,
       "community": 0,
       "centrality": 0.00017
     },
@@ -8111,7 +8111,7 @@
       "label": "eq_urls",
       "type": "function",
       "file": "backend/app/modules/marketdata/bhavcopy_fetch.py",
-      "line": 76,
+      "line": 80,
       "community": 0,
       "centrality": 0.000185
     },
@@ -8120,7 +8120,7 @@
       "label": "idx_url",
       "type": "function",
       "file": "backend/app/modules/marketdata/bhavcopy_fetch.py",
-      "line": 82,
+      "line": 86,
       "community": 0,
       "centrality": 0.000172
     },
