@@ -28,8 +28,10 @@ logger = logging.getLogger(__name__)
 _BLOCK_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("pan", re.compile(r"\b[A-Z]{5}[0-9]{4}[A-Z]\b")),
     ("aadhaar", re.compile(r"\b\d{4}\s\d{4}\s\d{4}\b")),
-    ("account-id",
-     re.compile(r"(?i)\b(account|a/c|acct|client[_ -]?(id|code)|folio)\b\W{0,8}\d{6,}")),
+    (
+        "account-id",
+        re.compile(r"(?i)\b(account|a/c|acct|client[_ -]?(id|code)|folio)\b\W{0,8}\d{6,}"),
+    ),
 ]
 
 
@@ -52,9 +54,19 @@ def _deterministic_block(note: str) -> tuple[str, str] | None:
     """First hard-identifier match → (kind, detail), else None. $0, in-process."""
     for kind, pat in _BLOCK_PATTERNS:
         if pat.search(note or ""):
-            return kind, (f"hard identifier ({kind}) detected — money/PII never enters the "
-                          "elgar store from a runtime note; remove it or use the operator path")
+            return kind, (
+                f"hard identifier ({kind}) detected — money/PII never enters the "
+                "elgar store from a runtime note; remove it or use the operator path"
+            )
     return None
+
+
+def pii_block(text: str) -> str | None:
+    """The deterministic PAN/Aadhaar/account block, reusable by ANY runtime free-text write to
+    elgar (e.g. a flow veto reason). Returns the block reason, or None when clean. $0, no LLM —
+    same patterns as `append_memory`'s guard so every elgar write boundary stays consistent."""
+    hit = _deterministic_block(text)
+    return hit[1] if hit else None
 
 
 async def review_note(note: str) -> CriticVerdict:

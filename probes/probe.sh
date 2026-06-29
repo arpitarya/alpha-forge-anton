@@ -20,6 +20,7 @@ Available probes:
     ui-objective         ui_objective_probe.py
     ui-goals             ui_goals_probe.py
     ui-decisions         ui_decisions_probe.py
+    ui-flow              ui_flow_probe.py
     ui-proposal          ui_proposal_probe.py
     ui-feedstate         ui_feedstate_probe.py
     ui-footer-chat       ui_footer_chat_probe.py
@@ -59,6 +60,13 @@ Available probes:
     progress             progress_probe.py
     eb0                  eb0_probe.py
     eb0-real             eb0_real_probe.py
+    flow-author          flow_author_probe.py
+    flow-run             flow_run_probe.py   (--heavy adds the ~30s determinism check)
+    flow-sizing          flow_sizing_probe.py
+    flow-redteam         flow_redteam_probe.py
+    flow-approve         flow_approve_probe.py
+    flow-live            flow_live_probe.py
+    flow-watch           flow_watch_probe.py
     objective            objective_probe.py
     concierge-tools      concierge_tools_probe.py
 
@@ -101,6 +109,7 @@ case "$NAME" in
     ui-objective)      SCRIPT="ui_objective_probe.py" ;;
     ui-goals)          SCRIPT="ui_goals_probe.py" ;;
     ui-decisions)      SCRIPT="ui_decisions_probe.py" ;;
+    ui-flow)           SCRIPT="ui_flow_probe.py" ;;
     ui-proposal)       SCRIPT="ui_proposal_probe.py" ;;
     ui-feedstate)      SCRIPT="ui_feedstate_probe.py" ;;
     ui-footer-chat)    SCRIPT="ui_footer_chat_probe.py" ;;
@@ -138,6 +147,13 @@ case "$NAME" in
     progress)          SCRIPT="progress_probe.py" ;;
     eb0)               SCRIPT="eb0_probe.py" ;;
     eb0-real)          SCRIPT="eb0_real_probe.py" ;;
+    flow-author)       SCRIPT="flow_author_probe.py" ;;
+    flow-run)          SCRIPT="flow_run_probe.py" ;;
+    flow-sizing)       SCRIPT="flow_sizing_probe.py" ;;
+    flow-redteam)      SCRIPT="flow_redteam_probe.py" ;;
+    flow-approve)      SCRIPT="flow_approve_probe.py" ;;
+    flow-live)         SCRIPT="flow_live_probe.py" ;;
+    flow-watch)        SCRIPT="flow_watch_probe.py" ;;
     objective)         SCRIPT="objective_probe.py" ;;
     concierge-tools)   SCRIPT="concierge_tools_probe.py" ;;
     pypi-publish)      SCRIPT="pypi_publish_probe.py" ;;

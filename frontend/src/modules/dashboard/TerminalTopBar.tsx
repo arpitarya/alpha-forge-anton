@@ -11,6 +11,7 @@ import { useAuthStore } from "@/modules/auth/useAuthStore";
 const NAV_ITEMS: Array<{ id: string; label: string; href: string }> = [
   { id: "terminal", label: "Terminal", href: "/" },
   { id: "portfolio", label: "Portfolio", href: "/portfolio" },
+  { id: "flow", label: "Flow", href: "/flow" },
   { id: "goals", label: "Goals", href: "/goals" },
   { id: "decisions", label: "Decisions", href: "/decisions" },
 ];

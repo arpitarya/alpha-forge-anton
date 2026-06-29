@@ -32,3 +32,13 @@ just contracts-gen     # regenerate the TS after changing a model
 `tests/test_contracts_sync.py` regenerates each file in-memory and asserts byte-equality
 with the checked-in `.ts`. **Change a model and forget `just contracts-gen` ⇒ the test
 fails.** That is the entire sync guarantee — $0, deterministic, no runtime dependency.
+
+## Not all shapes are codegen contracts
+
+A **frozen engine↔UI contract** (`Objective`, `TestReport`, `Cone`, …) lives here and is
+codegen'd. A **view-model that evolves with a surface** — the cockpit's `FlowState`
+(`app/modules/flow/flow_schema.py`) or `goals.api`'s `EdgeSummary`/`RecentRun` — is
+hand-mirrored in TS next to its fetcher (`flow.types.ts`, `goals.api.ts`), deliberately
+**outside** the codegen barrel. Rule of thumb: if it's a stable shape multiple phases
+read/write, add it to `contracts_codegen.MODELS`; if it's a per-surface view that changes
+as the feature grows, hand-mirror it and keep it local.

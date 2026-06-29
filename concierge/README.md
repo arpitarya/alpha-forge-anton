@@ -198,6 +198,17 @@ missing plan once killed the SSE stream before its first byte and surfaced as
 messages (persona + Fux grounding + disclosure) — keeping only the first silently
 dropped the disclosure rules and produced fabricated demo holdings tables.
 
+## Flow cockpit — Red-team is the only LLM stage
+
+The process-flow cockpit ([docs/flow-cockpit.md](../docs/flow-cockpit.md)) is **deterministic
+end to end except one stage**. Idea/Rule/Test/Range/Plan are $0, LLM-free. The **Red-team** stage
+([flow_redteam.py](../backend/app/modules/flow/flow_redteam.py)) is the sole LLM caller: it reuses
+the same `create_gateway().complete()` path as the concierge (so it is **cage-metered by
+construction**) to produce a two-tier critique (severity-tagged evidence objections + a forced
+10th-Man dissent + runner-ups + tripwires). It is kept strictly **off the deterministic
+funnel/number path** — it critiques numbers handed to it, never recomputes them — and its output
+is advisory, gating nothing deterministic.
+
 ## Implementation entry point
 
 Start with the implementation order in [4-news-llm-architecture.md section 16](4-news-llm-architecture.md#16-implementation-order).
