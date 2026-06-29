@@ -15,15 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        # No fetch-depth: 0 — constitutional tamper/lock findings are content-hash
-        # based (history-independent). Git history only feeds advisory staleness.
+        with:
+          # fetch-depth: 0 is REQUIRED. `fux gate` staleness is a *blocking* finding,
+          # and it derives each governed file's change date from `git log`. A shallow
+          # (depth-1) checkout collapses every file's last-change to the PR HEAD commit,
+          # so every rule whose `updated:` predates HEAD falsely reports stale → red gate.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.14"
 
-      - name: Install fux-engine (pinned in pyproject.toml)
-        run: pip install "fux-engine>=0.4.0"
+      - name: Install fux-engine (exact pin — see fux-engine-exact-pin rule)
+        run: pip install "fux-engine==0.16.0"
 
       - uses: extractions/setup-just@v2
 
@@ -60,8 +64,8 @@ jobs:
         with:
           python-version: "3.14"
 
-      - name: Install fux-engine (pinned in pyproject.toml)
-        run: pip install "fux-engine>=0.4.0"
+      - name: Install fux-engine (exact pin — see fux-engine-exact-pin rule)
+        run: pip install "fux-engine==0.16.0"
 
       - name: Constitutional review of the PR diff (separation of duties enforced)
         env:

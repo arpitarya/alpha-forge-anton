@@ -1,11 +1,11 @@
 # Fux GRAPH_REPORT
 
-_3038 nodes · 22028 edges · 652 code files · 71 rules · 277 communities._
+_3024 nodes · 21710 edges · 651 code files · 71 rules · 278 communities._
 
 ## Node types
 
-- function: 1896
-- code-file: 652
+- function: 1883
+- code-file: 651
 - class: 419
 - convention: 21
 - narrative: 12
@@ -19,11 +19,11 @@ _3038 nodes · 22028 edges · 652 code files · 71 rules · 277 communities._
 
 ## Edges
 
-_13412 of 22028 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_13166 of 21710 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
-- references: 13412
-- calls: 6070
-- contains: 2323
+- references: 13166
+- calls: 6011
+- contains: 2310
 - related: 129
 - governs: 94
 
@@ -31,21 +31,21 @@ _13412 of 22028 are INFERRED (low-confidence `references`, down-weighted in clus
 
 - **get** (function) — 270 edges
 - **get** (function) — 267 edges
-- **claude_cache_probe.py** (code-file) — 203 edges
-- **claude_tiering_probe.py** (code-file) — 202 edges
-- **claude_stream_probe.py** (code-file) — 186 edges
-- **ui_deep_search_close_probe.py** (code-file) — 175 edges
-- **ui_objective_probe.py** (code-file) — 167 edges
-- **ui_deep_search_probe.py** (code-file) — 166 edges
-- **null_selftest.py** (code-file) — 165 edges
-- **ui_voice_probe.py** (code-file) — 156 edges
-- **ui_goals_probe.py** (code-file) — 155 edges
-- **ui_concierge_probe.py** (code-file) — 151 edges
+- **claude_cache_probe.py** (code-file) — 201 edges
+- **claude_tiering_probe.py** (code-file) — 200 edges
+- **claude_stream_probe.py** (code-file) — 185 edges
+- **ui_deep_search_close_probe.py** (code-file) — 173 edges
+- **ui_objective_probe.py** (code-file) — 165 edges
+- **ui_deep_search_probe.py** (code-file) — 164 edges
+- **null_selftest.py** (code-file) — 163 edges
+- **ui_voice_probe.py** (code-file) — 154 edges
+- **ui_goals_probe.py** (code-file) — 153 edges
+- **ui_concierge_probe.py** (code-file) — 149 edges
 
 ## Chokepoints (PageRank centrality)
 
 - **get** (function) — 0.0094
-- **get** (function) — 0.0093
+- **get** (function) — 0.0094
 - **append** (function) — 0.0045
 - **ChatRail.tsx** (code-file) — 0.0036
 - **post** (function) — 0.0022
@@ -59,7 +59,7 @@ _13412 of 22028 are INFERRED (low-confidence `references`, down-weighted in clus
 
 ## Communities
 
-- **community 0** (1898 nodes): AccountSection, Action, ActionPlan, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AngelOneSource, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, Assembled, AssetClass
+- **community 0** (1878 nodes): AccountSection, Action, ActionPlan, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AngelOneSource, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, Assembled, AssetClass
 - **community 1** (4 nodes): 1d8f1014a7d4_dashboard_ticker_watchlist_items.py, _table, downgrade, upgrade
 - **community 2** (12 nodes): 640eee61bc50_initial_schema_with_pgvector_memory.py, Text, Text.tsx, TextProps, a3c9f2e1b4d7_iam_tables.py, b3d6f8a2c9e1_remove_iam_tables.py, downgrade, downgrade, downgrade, upgrade, upgrade, upgrade
 - **community 5** (3 nodes): Settings, _validate_secrets, config.py
@@ -254,6 +254,7 @@ _13412 of 22028 are INFERRED (low-confidence `references`, down-weighted in clus
 - **community 250** (2 nodes): onSuccess, tsup.config.ts
 - **community 251** (6 nodes): WHY_PROBES_NOT_MCP.md, broker-source-integration, cdp-chrome, enctoken, probe-cdp-not-playwright, project-cdp-prerequisite
 - **community 252** (4 nodes): _adapter, _tiers, _toggle, check
-- **community 253** (2 nodes): _run, check
-- **community 255** (4 nodes): fux-engine-exact-pin, fux-mandate, pyproject.toml, uv.lock
-- **community 259** (7 nodes): capital-market-assumptions, core-allocation, drawdown-recovery, emergency-fund-first, position-concentration, rebalancing-policy, strategy-knob-tradeoffs
+- **community 253** (6 nodes): _RFinal, _RTool, _assembled, _reset, _run, check
+- **community 254** (2 nodes): _run, check
+- **community 256** (4 nodes): fux-engine-exact-pin, fux-mandate, pyproject.toml, uv.lock
+- **community 260** (7 nodes): capital-market-assumptions, core-allocation, drawdown-recovery, emergency-fund-first, position-concentration, rebalancing-policy, strategy-knob-tradeoffs

@@ -213,8 +213,11 @@ eb0-real *ARGS:
 
 # One-time NSE EOD ingestion: pull cm-bhav + 2024+ UDiFF + NIFTY as raw zips into $NSE_DATA_DIR.
 # PARALLEL (--workers N / NSE_WORKERS=8), resumable + self-healing (byte-integrity manifest), $0
-# (stdlib urllib, never metered). --verify audits the cache offline; --quiet hides the progress bar;
-# --raw-dir <dir> ingests pre-downloaded archives (no network). See docs/broker-csv-dumps.md.
+# (stdlib urllib, never metered). Resume is manifest-based — a day already recorded (sha-matched)
+# in cache-manifest.json is never re-downloaded, so re-run freely. For a big historical backfill,
+# go polite-serial to avoid NSE throttling: NSE_WORKERS=2 NSE_REQUEST_DELAY=1.0 just ingest-nse ...
+# --verify audits the cache offline; --quiet hides the progress bar; --raw-dir <dir> ingests
+# pre-downloaded archives (no network). See docs/broker-csv-dumps.md.
 ingest-nse FROM TO *ARGS:
     cd backend && uv run python -m app.modules.marketdata.bhavcopy_cli {{FROM}} {{TO}} {{ARGS}}
 

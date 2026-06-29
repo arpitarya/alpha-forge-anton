@@ -8,7 +8,7 @@ authors = [{ name = "Arpit Arya" }]
 
 # The root project has no runtime deps; member projects own their own.
 dependencies = [
-    "fux-engine==0.8.0",
+    "fux-engine==0.16.0",
 ]
 
 [tool.uv.workspace]
