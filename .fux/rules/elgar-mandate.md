@@ -5,7 +5,7 @@ type: convention
 status: active
 tier: constitutional
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-06-29
 keywords:
   - elgar
   - money-store
@@ -32,10 +32,9 @@ related:
   - configurable-paths
 seal: 5044e48b80a12141
 ratification:
-  by: arpit arya
-  date: 2026-06-27
+  by: Arpit
+  date: 2026-06-29
   content_seal: 77f0fc840af4f0ed
-  debate_hash: d0e461d99116c734
 ---
 # Elgar mandate — the suite's private money store
 

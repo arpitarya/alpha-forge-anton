@@ -2,10 +2,10 @@
 id: ui-probe-spa-auth-nav
 domain: brokers
 type: rule
-status: active
 scope: shared
+status: active
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-06-29
 code_refs:
   - probes/ui_goals_probe.py
   - probes/ui_decisions_probe.py

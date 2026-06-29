@@ -4,7 +4,7 @@ domain: portfolio
 type: rule
 status: active
 created: 2026-06-15
-updated: 2026-06-28
+updated: 2026-06-29
 aliases:
   - strategy-knobs
   - signal-config-tradeoffs

@@ -6,7 +6,7 @@ status: active
 principle: money/PII
 enforcement: deterministic
 created: 2026-06-18
-updated: 2026-06-19
+updated: 2026-06-29
 aliases:
   - runtime-pii-guard
   - orff-note-guard

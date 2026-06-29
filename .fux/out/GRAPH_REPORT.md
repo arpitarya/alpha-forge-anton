@@ -1,11 +1,11 @@
 # Fux GRAPH_REPORT
 
-_3396 nodes · 26662 edges · 730 code files · 71 rules · 277 communities._
+_3381 nodes · 26311 edges · 728 code files · 71 rules · 277 communities._
 
 ## Node types
 
-- function: 2110
-- code-file: 730
+- function: 2097
+- code-file: 728
 - class: 485
 - convention: 21
 - narrative: 12
@@ -19,11 +19,11 @@ _3396 nodes · 26662 edges · 730 code files · 71 rules · 277 communities._
 
 ## Edges
 
-_16148 of 26662 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
+_15871 of 26311 are INFERRED (low-confidence `references`, down-weighted in clustering/centrality)._
 
-- references: 16148
-- calls: 7686
-- contains: 2605
+- references: 15871
+- calls: 7625
+- contains: 2592
 - related: 129
 - governs: 94
 
@@ -33,19 +33,19 @@ _16148 of 26662 are INFERRED (low-confidence `references`, down-weighted in clus
 - **get** (function) — 299 edges
 - **get** (function) — 297 edges
 - **get** (function) — 296 edges
-- **claude_cache_probe.py** (code-file) — 222 edges
-- **claude_tiering_probe.py** (code-file) — 221 edges
-- **claude_stream_probe.py** (code-file) — 203 edges
-- **flow_redteam_probe.py** (code-file) — 202 edges
-- **run** (function) — 194 edges
-- **ui_deep_search_close_probe.py** (code-file) — 188 edges
-- **ui_objective_probe.py** (code-file) — 180 edges
-- **ui_deep_search_probe.py** (code-file) — 179 edges
+- **claude_cache_probe.py** (code-file) — 220 edges
+- **claude_tiering_probe.py** (code-file) — 219 edges
+- **claude_stream_probe.py** (code-file) — 202 edges
+- **flow_redteam_probe.py** (code-file) — 200 edges
+- **run** (function) — 193 edges
+- **ui_deep_search_close_probe.py** (code-file) — 186 edges
+- **ui_objective_probe.py** (code-file) — 178 edges
+- **ui_deep_search_probe.py** (code-file) — 177 edges
 
 ## Chokepoints (PageRank centrality)
 
-- **get** (function) — 0.0076
-- **get** (function) — 0.0076
+- **get** (function) — 0.0077
+- **get** (function) — 0.0077
 - **get** (function) — 0.0076
 - **get** (function) — 0.0076
 - **append** (function) — 0.0039
@@ -59,7 +59,7 @@ _16148 of 26662 are INFERRED (low-confidence `references`, down-weighted in clus
 
 ## Communities
 
-- **community 0** (2284 nodes): AccountSection, Action, ActionPlan, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AngelOneSource, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, ApprovalProposal, ApprovalProposal
+- **community 0** (2269 nodes): AccountSection, Action, ActionPlan, AlphaSection, AlphaSection.tsx, AlphaSectionProps, AngelOneSource, AppearanceSection, AppearanceSection.tsx, AppearanceSectionProps, ApprovalProposal, ApprovalProposal
 - **community 1** (4 nodes): 1d8f1014a7d4_dashboard_ticker_watchlist_items.py, _table, downgrade, upgrade
 - **community 2** (12 nodes): 640eee61bc50_initial_schema_with_pgvector_memory.py, Text, Text.tsx, TextProps, a3c9f2e1b4d7_iam_tables.py, b3d6f8a2c9e1_remove_iam_tables.py, downgrade, downgrade, downgrade, upgrade, upgrade, upgrade
 - **community 5** (3 nodes): Settings, _validate_secrets, config.py

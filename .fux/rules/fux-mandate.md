@@ -5,7 +5,7 @@ type: convention
 status: active
 tier: constitutional
 created: 2026-06-28
-updated: 2026-06-28
+updated: 2026-06-29
 keywords:
   - fux
   - knowledge-engine
@@ -16,10 +16,9 @@ code_refs:
   - pyproject.toml
 seal: b3f0ea94f987ffd7
 ratification:
-  by: arpit arya
-  date: 2026-06-27
+  by: Arpit
+  date: 2026-06-29
   content_seal: 041a6d2556369671
-  debate_hash: 669c99c46fbc70cc
 ---
 # Fux mandate — the suite's knowledge engine, bound to a $0 / deterministic / no-LLM version
 
