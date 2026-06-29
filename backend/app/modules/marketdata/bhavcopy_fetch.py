@@ -3,12 +3,15 @@
 NSE blocks non-browser agents, so we prime cookies from the home page (once, shared across worker
 threads via a single opener over a thread-safe `CookieJar`) with a realistic browser User-Agent.
 `fetch_bytes` retries 429/403/5xx with exponential backoff + jitter and returns the HTTP status so
-the CLI's circuit-breaker can react; 404 → `None` (an honest missing day). UDiFF is authoritative
-from 2024-07; legacy cm-bhav covers older dates. The ONLY networked module — downstream is offline.
+the CLI's circuit-breaker can react; 404 → `None` (an honest missing day). It also paces each GET by
+`NSE_REQUEST_DELAY` seconds (+jitter, default 0 = off) so a low-`--workers` run stays polite enough
+that NSE never throttles a large historical backfill. UDiFF is authoritative from 2024-07; legacy
+cm-bhav covers older dates. The ONLY networked module — downstream is offline.
 """
 
 from __future__ import annotations
 
+import os
 import random
 import time
 import urllib.error
@@ -29,6 +32,7 @@ _UA = (
 )
 _HEADERS = [("User-Agent", _UA), ("Accept", "*/*"), ("Accept-Language", "en-US,en;q=0.9")]
 _RETRY = {429, 403, 500, 502, 503, 504}
+_PACE = max(0.0, float(os.getenv("NSE_REQUEST_DELAY", "0") or 0))  # seconds before each GET (+jitter)
 
 
 def _parts(day: str) -> dict[str, str]:
@@ -57,6 +61,8 @@ def fetch_bytes(opener, url: str, retries: int = 4) -> tuple[bytes | None, int]:
     """GET, backoff+jitter on 429/403/5xx; 404→(None,404); ok→(bytes,200); gave-up→(None,code)."""
     last = 0
     for attempt in range(retries):
+        if _PACE:
+            time.sleep(_PACE + random.uniform(0, _PACE))  # noqa: S311  politeness pace (non-crypto)
         try:
             with opener.open(url, timeout=60) as r:
                 return r.read(), 200
