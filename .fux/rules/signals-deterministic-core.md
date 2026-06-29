@@ -4,7 +4,7 @@ domain: portfolio
 type: rule
 status: active
 created: 2026-06-16
-updated: 2026-06-28
+updated: 2026-06-29
 aliases:
   - deterministic-signals
   - signal-engine-law
