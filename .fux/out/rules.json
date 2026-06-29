@@ -348,7 +348,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-27",
-      "updated": "2026-06-28"
+      "updated": "2026-06-29"
     },
     {
       "id": "context-docs-figure-free",
@@ -869,7 +869,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-09",
-      "updated": "2026-06-28"
+      "updated": "2026-06-29"
     },
     {
       "id": "projection-disclosure",
@@ -915,7 +915,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-12",
-      "updated": "2026-06-28"
+      "updated": "2026-06-29"
     },
     {
       "id": "runtime-note-pii",
@@ -981,7 +981,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-16",
-      "updated": "2026-06-28"
+      "updated": "2026-06-29"
     },
     {
       "id": "strategy-knob-tradeoffs",
@@ -1006,7 +1006,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-15",
-      "updated": "2026-06-28"
+      "updated": "2026-06-29"
     },
     {
       "id": "tax-loss-harvesting",
@@ -1111,7 +1111,7 @@
       "check": null,
       "examples": [],
       "created": "2026-06-28",
-      "updated": "2026-06-28"
+      "updated": "2026-06-29"
     },
     {
       "id": "vault-only-credentials",

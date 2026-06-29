@@ -17,6 +17,7 @@ Python 3.14/FastAPI backend + Next.js 15/TypeScript frontend monorepo. Self-host
 | Edge-discovery engine (pre-registered hypotheses, gates 0–2 + journal + trial-ledger + null-data) | [docs/edges.md](docs/edges.md) |
 | Phase-0 contracts (engine↔UI shapes + TS codegen) | [docs/contracts.md](docs/contracts.md) |
 | Track U — integrated Hi-Fi UI (Goals/Decisions/Orff cards, mock + honest-pending) | [docs/track-u-ui.md](docs/track-u-ui.md) |
+| Process-flow cockpit (`/flow` — 8 stages; UI edge authoring + pre-registration) | [docs/flow-cockpit.md](docs/flow-cockpit.md) |
 | Comparison docs — how to write `<name>.compare.md` | [docs/comparison.guide.md](docs/comparison.guide.md) |
 | Graphify knowledge graph | [docs/graphify.md](docs/graphify.md) |
 | Cage LLM cost ledger (Orff integration) | [docs/cage.md](docs/cage.md) |
