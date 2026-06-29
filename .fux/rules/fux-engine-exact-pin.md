@@ -4,7 +4,7 @@ domain: process
 type: convention
 status: active
 created: 2026-06-19
-updated: 2026-06-27
+updated: 2026-06-29
 aliases:
   - fux-version-pin
 keywords:
